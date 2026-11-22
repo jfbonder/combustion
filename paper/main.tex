@@ -1,0 +1,261 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\ve}{\varepsilon}
+\newcommand{\R}{\mathbb{R}}
+
+\title[Numerics for the high activation energy limit]{Computing the high activation energy limit\\ of an equidiffusional flame model}
+
+\author{Juli\'an Fern\'andez Bonder}
+\address{Departamento de Matem\'atica, FCEyN, Universidad de Buenos Aires, Argentina}
+
+\date{DRAFT, \today}
+
+\begin{abstract}
+We study numerically the singular limit $\ve\to0$ of the system
+$\Delta u-u_t=Yf_\ve(u)$, $\Delta Y-Y_t=Yf_\ve(u)$, $f_\ve(s)=\ve^{-2}f(s/\ve)$,
+which models premixed flames with unit Lewis number in the limit of high
+activation energy. When $(Y-u)/\ve\to w_0$, limit functions solve the free
+boundary problem $u_t=\Delta u$ in $\{u>0\}$, $|\nabla u|=\sqrt{2M(w_0)}$ on
+$\partial\{u>0\}$, so the limit depends on order-$\ve$ perturbations of the
+data. We propose a finite volume method on a mesh that follows the flame
+front (refining ahead of it and coarsening behind it), validate it against
+exact travelling waves and the self-similar solution of Caffarelli and
+V\'azquez, and observe first-order convergence in $\ve$ of the flame position
+and speed in one space dimension and in radial symmetry ($N=2,3$). For
+travelling waves we derive the first-order correction of the flame speed,
+$c_\ve=c_0\big[1+\tfrac{\ve}{A}\big(1-\tfrac{3\sqrt3-2}{5}(1+w_0)\big)\big]+o(\ve)$
+for $f(s)=(1-s)^+$, which changes sign at $w_0\approx0.564$, and confirm it
+numerically.
+\end{abstract}
+
+\maketitle
+
+% ---------------------------------------------------------------------------
+\section{Introduction}
+
+The system
+\begin{equation}\label{eq:system}
+\Delta u^\ve-u^\ve_t=Y^\ve f_\ve(u^\ve),\qquad
+\Delta Y^\ve-Y^\ve_t=Y^\ve f_\ve(u^\ve),\qquad f_\ve(s)=\frac1{\ve^2}f\Big(\frac s\ve\Big),
+\end{equation}
+arises in the theory of equidiffusional premixed flames (Lewis number one)
+\cite{BuckmasterLudford1982,ZeldovichFrankKamenetskii1938}: $Y^\ve\ge0$ is the
+mass fraction of the reactant, $u^\ve=\lambda(T_f-T^\ve)$ a rescaled
+temperature, and $\ve$ is essentially the inverse of the activation energy;
+$f$ is Lipschitz, positive on $(-\infty,1)$ and zero on $[1,\infty)$. Since
+$w^\ve=Y^\ve-u^\ve$ is caloric, \eqref{eq:system} reduces to
+\begin{equation}\label{eq:Peps}\tag{$P_\ve$}
+u_t=\Delta u-(u+w^\ve)f_\ve(u),\qquad w^\ve_t=\Delta w^\ve.
+\end{equation}
+
+In the case $u^\ve=Y^\ve$ the limit $\ve\to0$ was studied by Caffarelli and
+V\'azquez \cite{CaffarelliVazquez1995}, by Caffarelli, Lederman and Wolanski
+\cite{CLW1997a,CLW1997b} and, regarding uniqueness, by Lederman, V\'azquez and
+Wolanski \cite{LVW2001} and Petrosyan \cite{Petrosyan2002}. In
+\cite{FBW2000} Wolanski and the author showed that if
+$w^\ve/\ve\to w_0>-1$ then limits of $u^\ve$ solve
+\begin{equation}\label{eq:P}\tag{$P$}
+u_t=\Delta u\ \text{ in }\{u>0\},\qquad |\nabla u|=\sqrt{2M}\ \text{ on }\partial\{u>0\},\qquad
+M=\int_{-w_0}^1(s+w_0)f(s)\,ds,
+\end{equation}
+in a pointwise and viscosity sense, and in \cite{FBW2004} that, under
+geometric assumptions, the limit is unique and coincides with the classical
+solution when one exists. Thus the high activation energy limit is
+\emph{unstable}: perturbations of order $\ve$ of the initial data, which do
+not change the limit of $u^\ve_0$, change the free boundary condition.
+
+To the best of our knowledge [TO BE CONFIRMED WITH THE LITERATURE REVIEW] no
+numerical study of the limit $\ve\to0$ in \eqref{eq:system} is available. The
+difficulty is the reaction layer of width $O(\ve)$, which moves with the
+flame and must be resolved: a uniform mesh needs $O(\ve^{-N})$ cells. In this
+paper we
+\begin{enumerate}
+\item propose a finite volume method on a mesh that follows the flame,
+with $O(\ve^{-1})$ cells in the layer and a geometric transition to a coarse
+mesh elsewhere (Section~\ref{sec:method});
+\item build exact reference solutions: travelling waves of \eqref{eq:Peps}
+computed by a shooting method with a monotone energy, and the radial
+self-similar solution of \eqref{eq:P}, which we write in terms of Kummer's
+function (Section~\ref{sec:exact});
+\item derive the first-order correction of the travelling wave speed
+(Proposition~\ref{prop:speed});
+\item observe first-order convergence in $\ve$ of front positions and
+speeds, and display the instability of the limit with respect to $w_0$
+(Section~\ref{sec:experiments}).
+\end{enumerate}
+
+Throughout, $f(s)=(1-s)^+$, for which
+\begin{equation}\label{eq:M}
+M(w_0)=\frac{(1+w_0)^3}{6}.
+\end{equation}
+
+% ---------------------------------------------------------------------------
+\section{Exact solutions}\label{sec:exact}
+
+\subsection{Travelling waves}
+For \eqref{eq:P} in one dimension, $u=A\big(1-e^{-c_0(x-c_0t)}\big)^+$ is a
+solution moving into the fresh region $\{u>0\}$ with speed
+$c_0=\sqrt{2M}/A$, where $A=\lim_{x\to\infty}u$.
+
+For \eqref{eq:Peps} with $w^\ve\equiv\ve w_0$ constant, travelling waves
+$u=U(x-ct)$ satisfy $U''+cU'=(U+\ve w_0)f_\ve(U)$, $U(-\infty)=-\ve w_0$,
+$U(+\infty)=A$. Ahead of the reaction zone ($U\ge\ve$) we have
+$U=A-(A-\ve)e^{-c(\xi-\xi_1)}$. In the variables $U=\ve\varphi$,
+$\xi-\xi_1=\ve z$, $\sigma=\ve c$,
+\begin{equation}\label{eq:tw}
+\varphi''+\sigma\varphi'=(\varphi+w_0)f(\varphi),\qquad
+\varphi(0)=1,\quad \varphi'(0)=\sigma\Big(\frac A\ve-1\Big),\qquad \varphi(-\infty)=-w_0.
+\end{equation}
+Let $G(\varphi)=\int_{-w_0}^{\varphi}(s+w_0)f(s)\,ds$ (so $G(1)=M$) and
+$E=\tfrac12\varphi'^2-G(\varphi)$. Along solutions,
+$\frac{d}{dz}E=-\sigma\varphi'^2\le0$. Integrating \eqref{eq:tw} backwards from
+$z=0$, if $\sigma$ is too large $E$ remains positive and $\varphi$ crosses
+$-w_0$; if $\sigma$ is too small, $\varphi'$ vanishes before. This gives a
+bisection for $\sigma$ (hence $c_\ve=\sigma/\ve$) to machine precision,
+independent of the PDE solver.
+
+\begin{proposition}\label{prop:speed}
+Let $I=\int_{-w_0}^1\sqrt{2G(\varphi)}\,d\varphi$. Then
+\[
+c_\ve=c_0\Big[1+\frac\ve A\Big(1-\frac{I}{\sqrt{2M}}\Big)\Big]+o(\ve).
+\]
+For $f(s)=(1-s)^+$, $I/\sqrt{2M}=\kappa(1+w_0)$ with
+$\kappa=\frac{3\sqrt3-2}{5}\approx0.6392$.
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+Integrating $\frac{d}{dz}E=-\sigma\varphi'^2$ on $(-\infty,0)$ and using
+$E(-\infty)=0$, $E(0)=\frac12\varphi'(0)^2-M$,
+\[
+\tfrac12\varphi'(0)^2=M-\sigma\int_{-\infty}^0\varphi'^2\,dz
+=M-\sigma\int_{-w_0}^{1}\varphi'\,d\varphi .
+\]
+As $\sigma\to0$, $\varphi'\to\sqrt{2G(\varphi)}$ uniformly as a function of
+$\varphi$, so the last integral is $I+o(1)$. Since
+$\varphi'(0)=c(A-\ve)$ and $\sigma=\ve c$, we get
+$c(A-\ve)=\sqrt{2M}-\ve cI/\sqrt{2M}+o(\ve)$, which is the claim. For
+$f=(1-s)^+$ and $a=1+w_0$, $G=\frac a2t^2-\frac13t^3$ with $t=\varphi+w_0$, and
+$I=\int_0^at\sqrt{a-\tfrac23t}\,dt=\tfrac94a^{5/2}\big[\tfrac4{15}-\tfrac23 3^{-3/2}+\tfrac25 3^{-5/2}\big]$;
+with $\sqrt{2M}=a^{3/2}/\sqrt3$ this gives $I/\sqrt{2M}=\frac{3\sqrt3-2}5\,a$.
+\end{proof}
+
+In particular the first-order correction is positive for
+$w_0<w_0^*=\frac5{3\sqrt3-2}-1\approx0.564$ and negative for $w_0>w_0^*$.
+Table~\ref{tab:speedcoef} compares the prediction with the shooting method.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rcccc}
+\toprule
+$w_0$ & Prop.~\ref{prop:speed} & $\ve=10^{-2}$ & $\ve=10^{-3}$ & $\ve=10^{-4}$\\
+\midrule
+$-0.5$ & $+0.138883$ & $+0.139876$ & $+0.138982$ & $+0.138893$\\
+$0$    & $+0.208290$ & $+0.209515$ & $+0.208412$ & $+0.208303$\\
+$1$    & $-0.454725$ & $-0.448230$ & $-0.454072$ & $-0.454660$\\
+\bottomrule
+\end{tabular}
+\caption{$(c_\ve-c_0)/\ve$ from Proposition~\ref{prop:speed} and from the
+shooting method ($A=1$).}\label{tab:speedcoef}
+\end{table}
+
+\subsection{The radial self-similar solution}
+Caffarelli and V\'azquez \cite{CaffarelliVazquez1995} showed that \eqref{eq:P}
+has solutions $V(x,t)=(T-t)^{1/2}h\big(|x|(T-t)^{-1/2}\big)$ with compact
+support shrinking to a point at $t=T$; they are used in \cite[Prop.~4.3]{FBW2004}
+to show that limit solutions vanish in finite time. Substituting,
+$V$ is caloric in its positivity set if and only if
+\begin{equation}\label{eq:h}
+h''+\Big(\frac{N-1}r-\frac r2\Big)h'+\frac12h=0.
+\end{equation}
+(In \cite[(4.6)]{FBW2004} the sign of $r/2$ is misprinted.) The change of
+variables $z=r^2/4$ turns \eqref{eq:h} into Kummer's equation
+$zh_{zz}+(\frac N2-z)h_z+\frac12h=0$, so the solution regular at the origin is
+\[
+h(r)=\kappa_N\,{}_1F_1\big(-\tfrac12;\tfrac N2;\tfrac{r^2}4\big).
+\]
+Since $-1<-\frac12<0$, ${}_1F_1(-\frac12;\frac N2;\cdot)$ has exactly one
+positive zero $z_N$; then $R=2\sqrt{z_N}$ and $\kappa_N$ is fixed by
+$h'(R)=-\sqrt{2M}$. Numerically $R=1.8483$, $2.5139$, $3.0040$ for $N=1,2,3$.
+The free boundary is the sphere of radius $R\sqrt{T-t}$.
+
+% ---------------------------------------------------------------------------
+\section{Numerical method}\label{sec:method}
+
+We solve \eqref{eq:Peps} for $u$ and $w$ in planar ($N=1$) or radial
+($N=2,3$) symmetry on $[0,L]$ with zero flux at both ends.
+
+\emph{Space.} Vertex-centred finite volumes on a non-uniform mesh
+$0=x_0<\dots<x_n=L$: with faces $x_{i\pm1/2}$ at the midpoints,
+$|K_i|=(x_{i+1/2}^N-x_{i-1/2}^N)/N$ and
+\[
+(\Delta_hu)_i=\frac1{|K_i|}\Big(x_{i+1/2}^{N-1}\frac{u_{i+1}-u_i}{x_{i+1}-x_i}
+-x_{i-1/2}^{N-1}\frac{u_i-u_{i-1}}{x_i-x_{i-1}}\Big).
+\]
+The scheme is conservative, exact on quadratics, and needs no special
+treatment at $r=0$, where the weight $r^{N-1}$ vanishes.
+
+\emph{Time.} The resulting stiff system is integrated with the variable
+order, variable step BDF method of SciPy with the analytic sparse Jacobian
+($\mathrm{rtol}=10^{-5}$, $\mathrm{atol}=10^{-4}\ve$).
+
+\emph{Following the flame.} Every remeshing interval we
+(i) locate the front $x_f$ as the point where $u=\ve$ (for $u\ge\ve$ there is
+no reaction); (ii) define a band that covers the reaction layer ($5\ve$ on the
+fresh side, $20\ve$ on the burnt side, where $u$ decays exponentially to
+$-\ve w_0$) plus a margin of $15\ve$ on each side; (iii) build a new mesh
+with spacing $h_f=\ve/8$ in the band and cells growing geometrically by a
+factor $1.1$ away from it up to $h_c=0.01$; (iv) transfer $u,w$ to the new mesh
+by monotone cubic (PCHIP) interpolation. The remeshing interval is chosen so
+that the front, at its measured speed, moves at most half the margin.
+Refinement ahead of the front and coarsening behind it happen in the same
+step, and the number of nodes,
+$O(L/h_c)+O(1/\ve\cdot\ve/h_f)+O(\log(h_c/h_f))$, does not depend on how far the
+front travels.
+
+\emph{Initial data.} Given the initial datum $u_0\ge0$ of \eqref{eq:P} we take
+\[
+u_0^\ve=u_0-\ve w_0\Big(1-\frac{u_0}\ve\Big)^+,\qquad Y_0^\ve=u_0^\ve+\ve w_0,
+\]
+so that $(Y_0^\ve-u_0^\ve)/\ve=w_0$ exactly, $Y_0^\ve=0$ in the burnt region
+$\{u_0=0\}$, $Y_0^\ve\ge0$, and $u_0^\ve\to u_0$ uniformly with uniformly bounded
+Lipschitz constants, as required in \cite{FBW2004}.
+
+\begin{remark}
+The cost is dominated by the number of time steps, which grows like
+$\ve^{-1}$ to $\ve^{-3/2}$: on a mesh fixed between remeshings, the front
+crosses $O(\ve^{-1})$ fine cells. A genuinely moving mesh (ALE or MMPDE
+\cite{HuangRussell2011}), whose nodes travel with the front, would allow time
+steps independent of $\ve$ in travelling-wave regimes.
+\end{remark}
+
+% ---------------------------------------------------------------------------
+\section{Numerical experiments}\label{sec:experiments}
+
+\subsection{Flame speed}
+RESULTS_TW_TABLE
+
+\subsection{Instability with respect to $w_0$}
+RESULTS_TW_INSTABILITY
+
+\subsection{Radial extinction}
+RESULTS_RADIAL
+
+% ---------------------------------------------------------------------------
+\section{Conclusions and outlook}
+OUTLOOK
+
+\bibliographystyle{amsplain}
+\bibliography{references}
+
+\end{document}

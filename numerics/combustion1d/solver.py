@@ -68,7 +68,7 @@ def laplacian(x, N):
 @dataclass
 class MeshParams:
     pts_per_eps: float = 8.0    # h_fine = eps / pts_per_eps
-    h_coarse: float = 0.02
+    h_coarse: float = 0.01
     K_fresh: float = 5.0        # band extent on the fresh side (units of eps)
     K_burnt: float = 20.0       # band extent on the burnt side (units of eps)
     K_margin: float = 15.0      # safety margin on both sides (units of eps)
