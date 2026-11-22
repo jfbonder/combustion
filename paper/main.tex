@@ -257,6 +257,165 @@ steps independent of $\ve$ in travelling-wave regimes.
 \end{remark}
 
 % ---------------------------------------------------------------------------
+\section{A provably monotone version of the scheme}\label{sec:theory}
+
+The free boundary community will rightly ask which properties of
+\eqref{eq:Peps} survive the discretization. In this section we isolate a
+simple version of the method for which the basic structural properties can
+be proved: a discrete comparison principle that holds for every time step,
+positivity of the reactant, and $L^\infty$ bounds uniform in $\ve$. These are
+the discrete counterparts of the tools used in
+\cite{CaffarelliVazquez1995,FernandezBonderWolanski2000,FernandezBonderWolanski2004}.
+
+\subsection{The scheme}
+Let $\{\mathcal T^n\}$ be the sequence of meshes of Section~\ref{sec:method}
+(one per time level; most consecutive meshes coincide), $\Delta_h^n$ the
+finite volume Laplacian on $\mathcal T^n$ and $\Pi^n$ the piecewise
+\emph{linear} interpolation from $\mathcal T^n$ to $\mathcal T^{n+1}$. Given
+$(U^n,Y^n)$ on $\mathcal T^n$, the scheme (S) computes, on $\mathcal T^{n+1}$,
+\begin{align}
+\frac{Y^{n+1}-\Pi^nY^n}{\Delta t}&=\Delta_h^{n+1}Y^{n+1}-f_\ve(\Pi^nU^n)\,Y^{n+1},\label{eq:SY}\\
+\frac{U^{n+1}-\Pi^nU^n}{\Delta t}&=\Delta_h^{n+1}U^{n+1}-f_\ve(\Pi^nU^n)\,Y^{n+1}.\label{eq:SU}
+\end{align}
+The reaction is linearly implicit: its rate is frozen at the previous time
+level while the reactant is implicit. Subtracting, $W^n=Y^n-U^n$ solves the
+implicit Euler scheme for the heat equation, exactly as $w^\ve=Y^\ve-u^\ve$
+is caloric. Each step requires two tridiagonal solves.
+
+We assume
+\begin{itemize}
+\item[(F)] $f$ is Lipschitz and \emph{nonincreasing}, $f>0$ on $(-\infty,1)$,
+$f=0$ on $[1,\infty)$.
+\end{itemize}
+Monotonicity of $f$ is not needed in \cite{FernandezBonderWolanski2000}; it
+holds for $f(s)=(1-s)^+$ and for Arrhenius-type rates (recall that $u$ is
+minus the temperature).
+
+The two facts about the discretization that we use are:
+(a) $-\Delta_h^n$ is a singular M-matrix: positive diagonal, nonpositive
+off-diagonal entries, zero row sums (zero flux); and
+(b) $\Pi^n$ has nonnegative weights adding up to one, so it is order
+preserving and $\min V\le\Pi^nV\le\max V$.
+
+\begin{lemma}[Positivity and bounds]\label{lem:bounds}
+Assume (F), $\Delta t>0$ and $Y^0\ge0$. Then for all $n$:
+\begin{enumerate}
+\item (S) has a unique solution and $Y^n\ge0$;
+\item $W^n$ satisfies $\min W^0\le W^n\le\max W^0$;
+\item $-\max W^0\le U^n\le\max U^0$.
+\end{enumerate}
+In particular, if $U^0=u^\ve_0$ and $W^0=\ve w_0$, then
+$\|U^n\|_\infty\le\max(\|u_0\|_\infty,\ve\|w_0\|_\infty)+\ve\|w_0\|_\infty$,
+uniformly in $\ve$, $h$ and $\Delta t$.
+\end{lemma}
+
+\begin{proof}
+The matrix $A=\Delta t^{-1}I-\Delta_h^{n+1}+\operatorname{diag}f_\ve(\Pi^nU^n)$
+is strictly diagonally dominant with positive diagonal and nonpositive
+off-diagonal entries, hence a nonsingular M-matrix with $A^{-1}\ge0$. By
+\eqref{eq:SY}, $Y^{n+1}=A^{-1}\Pi^nY^n/\Delta t\ge0$. The same argument with
+$f_\ve\equiv0$ gives the maximum principle for $W$. From \eqref{eq:SU} and
+$f_\ve Y^{n+1}\ge0$, $(\Delta t^{-1}I-\Delta_h^{n+1})U^{n+1}\le\Pi^nU^n/\Delta t$,
+hence $\max U^{n+1}\le\max U^n$; and $U^{n+1}=Y^{n+1}-W^{n+1}\ge-W^{n+1}\ge-\max W^0$.
+\end{proof}
+
+\subsection{Discrete comparison}
+Fix the discrete caloric function $W^n$. We say that $V=(V^n)$ is a
+\emph{discrete supersolution} if $V^{n+1}+W^{n+1}\ge0$ and
+\[
+\frac{V^{n+1}-\Pi^nV^n}{\Delta t}-\Delta_h^{n+1}V^{n+1}+f_\ve(\Pi^nV^n)\,(V^{n+1}+W^{n+1})\ \ge\ 0
+\]
+for every $n$, and a \emph{discrete subsolution} if the reverse inequality
+holds (no sign condition is needed in that case).
+
+\begin{lemma}[Comparison]\label{lem:comparison}
+Assume (F) and let $U$ be the solution of (S). If $V$ is a discrete
+supersolution with $V^0\ge U^0$, then $V^n\ge U^n$ for all $n$. If $V$ is a
+discrete subsolution with $V^0\le U^0$, then $V^n\le U^n$ for all $n$. This
+holds for every $\Delta t>0$ and every sequence of meshes.
+\end{lemma}
+
+\begin{proof}
+Assume $U^n\le V^n$ and let $D=U^{n+1}-V^{n+1}$, $F_U=f_\ve(\Pi^nU^n)$,
+$F_V=f_\ve(\Pi^nV^n)$. By (b), $\Pi^nU^n\le\Pi^nV^n$, and since $f_\ve$ is
+nonincreasing, $F_U\ge F_V$. Subtracting the inequalities,
+\[
+\Big(\frac1{\Delta t}-\Delta_h^{n+1}\Big)D+F_U(U^{n+1}+W^{n+1})-F_V(V^{n+1}+W^{n+1})
+\le\frac{\Pi^n(U^n-V^n)}{\Delta t}\le0 .
+\]
+The reaction terms equal $F_UD+(F_U-F_V)(V^{n+1}+W^{n+1})\ge F_UD$, so
+$\big(\Delta t^{-1}I-\Delta_h^{n+1}+\operatorname{diag}F_U\big)D\le0$, and the
+M-matrix property gives $D\le0$. For subsolutions write the reaction terms as
+$F_VD'+(F_V-F_U)(U^{n+1}+W^{n+1})$ with $D'=V^{n+1}-U^{n+1}$ and use
+$U^{n+1}+W^{n+1}=Y^{n+1}\ge0$ (Lemma~\ref{lem:bounds}).
+\end{proof}
+
+Lemma~\ref{lem:comparison} is the discrete form of the comparison principle
+for \eqref{eq:Peps} on which the barrier arguments of
+\cite{LedermanVazquezWolanski2001,Petrosyan2002,FernandezBonderWolanski2004}
+rest. Note that it does not require $\Delta t\lesssim\ve^2$: a fully implicit
+treatment of $(u+w)f_\ve(u)$ would, because that function is not monotone
+in $u$.
+
+\subsection{Towards $\ve$-uniform error estimates}
+Lemma~\ref{lem:comparison} reduces error estimates to the construction of
+barriers.
+
+\begin{proposition}\label{prop:barriers}
+Let $u$ be a solution of \eqref{eq:P} and $\delta\ge0$. Suppose that there
+are a discrete supersolution $V^+$ and a discrete subsolution $V^-$ with
+$V^{-,0}\le U^0\le V^{+,0}$ and $|V^{\pm,n}-u(\cdot,t_n)|\le\delta$ on
+$\mathcal T^n$ for $t_n\le T$. Then $\max_{t_n\le T}\|U^n-u(\cdot,t_n)\|_\infty\le\delta$.
+\end{proposition}
+
+The proof is immediate from Lemma~\ref{lem:comparison}. For fixed $\ve$, taking
+$V^\pm$ as the interpolant of $u^\ve$ plus a correction growing in time
+yields convergence of (S) to $u^\ve$ as $h,\Delta t\to0$, with constants that
+depend on $\ve$ (through the Lipschitz constant $\ve^{-2}$ of the reaction).
+The relevant question is an estimate uniform in $\ve$. In the planar
+travelling wave case we expect barriers of the form
+\[
+V^\pm(x,t)=U_\ve\big(x-ct\mp\xi(t)\big)\pm q(t),
+\]
+in the spirit of Fife and McLeod, where $U_\ve$ is the travelling wave of
+Section~\ref{sec:exact}, $\xi$ absorbs the truncation error inside the
+reaction layer (where $U_\ve'$ is bounded below), and $q$ absorbs it in the
+burnt region (where the state $-\ve w_0$ is exponentially stable) and ahead
+of the front (where $u$ is caloric and $q$ grows at most linearly in time).
+The truncation error of (S) on $U_\ve$ is
+$O(\Delta t/\ve^2+h_f^2/\ve^2)$ inside the layer, which suggests
+\begin{equation}\label{eq:conj}
+\max_{t_n\le T}\|U^n-u(\cdot,t_n)\|_\infty\le C_T\Big(\ve+\frac{\Delta t}{\ve}+\frac{h_f^2}{\ve}+h_c^2\Big).
+\end{equation}
+We have not completed the proof; the case of a general classical solution of
+\eqref{eq:P} requires, in addition, a quantitative version of the barrier
+construction of \cite[Theorem~4.1]{FernandezBonderWolanski2004}. The
+experiments in Table~\ref{tab:simple} are consistent with the term
+$\Delta t/\ve$: with $\Delta t=\kappa\ve^2$, the error in the flame speed is
+$\approx-0.23\,\kappa\,\ve$.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rccc}
+\toprule
+$\ve$ & $\Delta t=4\ve^2$ & $\Delta t=\ve^2$ & $\Delta t=\ve^2/4$\\
+\midrule
+0.02 & $-1.85\cdot10^{-2}$ & $-4.60\cdot10^{-3}$ & $-9.30\cdot10^{-4}$\\
+0.01 & $-9.41\cdot10^{-3}$ & $-2.21\cdot10^{-3}$ & $-3.69\cdot10^{-4}$\\
+\bottomrule
+\end{tabular}
+\caption{Scheme (S), planar travelling wave, $w_0=0$: speed error
+$c_{\rm(S)}-c_\ve$ with respect to the exact speed of \eqref{eq:Peps}.}\label{tab:simple}
+\end{table}
+
+In practice we use the higher order version of Section~\ref{sec:method}
+(variable order BDF, monotone cubic transfer), which allows much larger time
+steps; the experiments below were run with it. Both versions were checked
+against the exact speed $c_\ve$: the error of the BDF version is below
+$10^{-4}$ (Section~\ref{sec:experiments}), and that of (S) is the
+$O(\Delta t/\ve)$ term of Table~\ref{tab:simple}.
+
+% ---------------------------------------------------------------------------
 \section{Numerical experiments}\label{sec:experiments}
 
 \subsection{Flame speed}
