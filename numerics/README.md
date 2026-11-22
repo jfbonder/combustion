@@ -19,7 +19,7 @@ Tomamos $f(s)=(1-s)^+$, que da $M(w_0)=(1+w_0)^3/6$ en forma cerrada.
 - **Malla que persigue el frente.** En cada intervalo de re-mallado:
   1. se ubica el frente $\{u=\varepsilon\}$; para $u\ge\varepsilon$ la reacción es nula;
   2. se arma una banda que cubre la zona de reacción, más un margen que el frente no alcanza a cruzar antes del próximo re-mallado;
-  3. se construye una malla con tamaño $h_f=\varepsilon/8$ en la banda, celdas que crecen geométricamente (factor 1,1) hacia afuera, y tamaño $h_c$ lejos;
+  3. se construye una malla con tamaño $h_f=\varepsilon/16$ en la banda, celdas que crecen geométricamente (factor 1,1) hacia afuera, y tamaño $h_c$ lejos;
   4. $u$ y $w$ se transfieren por interpolación cúbica monótona (PCHIP).
 
   El refinamiento delante del frente y el des-refinamiento detrás ocurren en el mismo paso. El intervalo entre re-mallados se adapta a la velocidad medida del frente. La cantidad de nodos es $O(1/h_c)+O(\text{banda}/h_f)+O(\log(h_c/h_f))$, independiente del recorrido del frente: entre 500 y 900 nodos en todos los casos.

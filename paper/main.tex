@@ -231,7 +231,7 @@ order, variable step BDF method of SciPy with the analytic sparse Jacobian
 no reaction); (ii) define a band that covers the reaction layer ($5\ve$ on the
 fresh side, $20\ve$ on the burnt side, where $u$ decays exponentially to
 $-\ve w_0$) plus a margin of $15\ve$ on each side; (iii) build a new mesh
-with spacing $h_f=\ve/8$ in the band and cells growing geometrically by a
+with spacing $h_f=\ve/16$ in the band and cells growing geometrically by a
 factor $1.1$ away from it up to $h_c=0.01$; (iv) transfer $u,w$ to the new mesh
 by monotone cubic (PCHIP) interpolation. The remeshing interval is chosen so
 that the front, at its measured speed, moves at most half the margin.
