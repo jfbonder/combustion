@@ -1,0 +1,2310 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       A free boundary problem in combustion
+%                 Revised version  December  1999
+%                 sent to editors December 1999
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentstyle[12pt,leqno]{amsart}
+\vsize=27.9cm
+\hsize=21cm
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{21.5cm}
+\setlength{\oddsidemargin}{0.0cm}
+\setlength{\evensidemargin}{0.0cm}
+%\setlength{\topmargin}{-1.5cm}
+\parskip 6pt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\ve}{\varepsilon}
+\newcommand{\car}{{\cal X}}
+\newcommand{\R}{{\Bbb R}}
+\newcommand{\cald}{{\cal D}}
+\newcommand{\bep}{{\cal B}_\ve}
+\newcommand{\wep}{w^\ve}
+\newcommand{\uep}{u^\ve}
+\newcommand{\vep}{v^\ve}
+\newcommand{\uepk}{u^{\ve_k}}
+\newcommand{\vepk}{v^{\ve_k}}
+\newcommand{\wepk}{w^{\ve_k}}
+\newcommand{\ep}{\varepsilon}
+\newcommand{\epk}{{\ve_k}}
+\newcommand{\epn}{\ve_{n}}
+\newcommand{\epnk}{\ve_{n_k}}
+\newcommand{\uepn}{u^{\ve_{n}}}
+\newcommand{\uepnk}{u^{\ve_{n_k}}}
+\newcommand{\uepkn}{u^{\ve_{k_n}}}
+\newcommand{\vepkn}{v^{\ve_{k_n}}}
+\newcommand{\wepkn}{w^{\ve_{k_n}}}
+\newcommand{\epkn}{{\ve_{k_n}}}
+\newcommand{\bepk}{{\cal B}_{\epk}}
+\newcommand{\uepj}{u^{\ve_j}}
+\newcommand{\vepj}{v^{\ve_j}}
+\newcommand{\wepj}{w^{\ve_j}}
+\newcommand{\epj}{{\ve_j}}
+\newcommand{\bepj}{{\cal B}_{\epj}}
+\newcommand{\vepjn}{v^{\ve_{j_n}}}
+\newcommand{\uepjn}{u^{\ve_{j_n}}}
+\newcommand{\wepjn}{w^{\ve_{j_n}}}
+\newcommand{\epjn}{{\ve_{j_n}}}
+\newcommand{\vepjk}{v^{\ve_{j_k}}}
+\newcommand{\uepjk}{u^{\ve_{j_k}}}
+\newcommand{\wepjk}{w^{\ve_{j_k}}}
+\newcommand{\epjk}{{\ve_{j_k}}}
+\newcommand{\pepj}{P_{\ve_j}}
+\newtheorem{defi}{Definition}[section]
+\newtheorem{lema}{Lemma}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{teo}{Theorem}[section]
+%\theoremstyle{remark}
+\newtheorem{rem}{Remark}[section]
+%\renewcommand{\therem}{}
+\newtheorem{ack}{Acknowledgements}
+\renewcommand{\theack}{}
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+
+\begin{document}
+
+\title{\bf A free boundary problem in combustion theory}
+
+\author[J. Fernandez Bonder]{Juli\'an Fern\'andez Bonder}
+\author[N. Wolanski]{Noemi  Wolanski}
+\thanks{Partially supported by Universidad de Buenos Aires under grant TX47,
+by ANPCyT PICT No. 03-00000-00137 and CONICET PIP0660/98.
+N. I. Wolanski is a member of CONICET}
+\address{Departamento  de Matem\'atica, FCEyN, UBA (1428) 
+Buenos Aires, Argentina.}
+\email{\tt jfbonder@@dm.uba.ar \\ 
+wolanski@@dm.uba.ar}
+
+\maketitle
+
+\begin{abstract}
+In this paper we consider the following problem arising in combustion theory
+$$\left\{\begin{array}{rcll}
+\Delta u^{\ve} - u^{\ve}_{t} & = & v^{\ve} f_{\ve}(u^{\ve}) 
+& \mbox{in } {\cal D},\\
+\Delta v^{\ve} - v^{\ve}_{t} & = & v^{\ve} f_{\ve}(u^{\ve}) 
+& \mbox{in } {\cal D},\\
+\end{array}\right.$$
+where ${\cal D}\subset \R^{N+1}$, $f_\ve(s) = \frac1{\ve^2}
+f(\frac s\ve)$ with $f$ a Lipschitz continuous function with support in
+$(-\infty,1]$.
+
+Here $\vep$ is the mass fraction of some reactant, $\uep$ the rescaled
+temperature of the mixture and $\ep$ is essentially the inverse of the activation energy.
+This model is derived in the framework of the theory of
+equidiffusional premixed flames for Lewis number 1.
+
+We prove that, under suitable assumptions on the functions $\uep$ and $\vep$, 
+we can pass to the limit ($\ve\to0$) -- the so called high activation energy
+limit -- and that the limit function
+$u=\lim u^{\ve}=\lim v^\ve$ is a solution of the following free boundary problem
+\begin{equation}
+\begin{aligned}
+&\Delta u - u_t = 0\quad \mbox{in } \{ u>0 \}\\
+&|\nabla u| = \sqrt{2M(x,t)}\quad \mbox{on } \partial\{ u>0 \}
+\end{aligned}
+\end{equation}
+ in a pointwise sense at regular free boundary 
+points and in a viscosity sense. Here $M(x,t)=\int_{-w_0(x,t)}^1(s+w_0(x,t))
+f(s)ds$ and $-1<w_0=\lim_{\ve\to0}\frac{v^\ve-u^\ve}{\ve}$.
+
+Since $\vep-\uep$ is a solution of the heat equation it is fully determined by
+its initial-boundary datum. In particular, the free boundary condition only (but
+strongly) depends
+on the approximation of the initial-boundary datum.
+
+Moreover, if ${\cal D}\cap\partial\{u>0\}$ is a Lipschitz surface, $u$ is
+a classical solution to (0.1).
+\end{abstract}
+
+\begin{section}{Introduction}
+\setcounter{equation}{0}
+In this paper we consider the following problem arising in combustion theory
+
+\begin{equation}
+\label{1.1}
+\left\{\begin{array}{rcll}
+\Delta u^{\ve} - u^{\ve}_{t} & = & v^{\ve} f_{\ve}(u^{\ve}) 
+& \mbox{in } {\cal D},\\
+\Delta v^{\ve} - v^{\ve}_{t} & = & v^{\ve} f_{\ve}(u^{\ve}) 
+& \mbox{in } {\cal D},\\
+\end{array}\right.
+\end{equation}
+where ${\cal D}\subset\R^{N+1}$.
+
+This model appears in combustion theory in the analysis of the propagation 
+of curved flames. It is derived in the framework of the theory of 
+equidiffusional premixed flames analyzed in the relevant limit of high 
+activation energy for Lewis number 1. In this application, $v^{\ve}$ represents the fraction of 
+some reactant (and hence it is assumed to be nonnegative), and $u^{\ve}$ its 
+temperature (more precisely, $u^{\ve}=\lambda(T_f-T^{\ve})$ where $T_f$ is 
+the flame temperature  and $\lambda$ is a 
+normalization factor). Observe that the term $v^{\ve}f_{\ve}(u^{\ve})$ acts 
+as an absorption term in the equation (\ref{1.1}). 
+Since $T^{\ve} = T_f - (u^{\ve}/\lambda)$, it is in fact a reaction term for 
+the temperature. In the flame model, such a term represents the effect of the 
+exothermic chemical reaction and $f$ has accordingly a number of properties: 
+it is a nonnegative Lipschitz continuous function which is positive in an 
+interval $(-\infty, \ve)$ and vanishes otherwise (i.e., reaction occurs only 
+when $T>T_f-\frac\ve\lambda$). The parameter $\ve$ is essentially the inverse of the activation 
+energy of the chemical reaction. For the sake of simplicity we will
+assume that $f_{\ve}(s)=\frac{1}{\ve^2}f(\frac{s}{\ve}),$ where
+$f$ is a nonnegative, Lipschitz continuous function with support in 
+$(-\infty,1]$.
+
+For the derivation of the model, we cite \cite{BL}.
+
+Here we are interested in high activation energy limits (i.e. $\ve\to 0$).
+These limits, are currently the subject of active investigation, specially
+ in the case
+$u^{\ve}=v^{\ve}$. This is a natural assumption in the case of traveling waves.
+
+The study of the limit as $\ep\to 0$ was proposed
+in the  30's by Zeldovich and Frank-Kamenetski \cite{ZF} and has been much 
+discussed in the combustion literature. 
+In the case $\uep=\vep$ the reaction function  $\uep f_\ep(\uep)$  
+tends to a Dirac delta, $M_0\delta(u)$ where $M_0=\int_0^1sf(s)ds$. 
+In this way the reaction  
+zone where $\uep f_\ep(\uep)$  acts is reduced to a surface, the flame 
+front,  and a free boundary problem arises. The fact that $M_0>0$ 
+ensures that a nontrivial combustion process takes place so that a 
+non-empty free  boundary actually appears.
+
+
+Although  the  convergence of  
+the most relevant propagation modes, i.e. the  traveling  waves, was 
+already discussed by Zeldovich and  Frank-Kamenetski, and an
+enormous progress in this direction has been made, 
+a rigorous  mathematical investigation of the 
+convergence of
+general solutions is still in progress. Berestycki and his
+collaborators have rigorously studied the  convergence  problem for
+traveling waves and, more generally in the  elliptic stationary case,
+cf. \cite{BCN} and  its references. See also \cite{LW}. The study  of the 
+limit in the general evolution case for the heat operator has been 
+performed
+in  \cite{CV} for the one  phase case (this is, with $\uep\ge0$) and in \cite{C, CLW1, CLW2} 
+for the two-phase 
+case, where no sign restriction on $\uep$ is made.
+
+
+
+ In \cite{CV} the authors show that, under certain assumptions on the initial
+datum and its approximations, for every sequence $\epn\to0$ there exists
+a subsequence $\epnk$ and a limit  function $u=\lim u^{\ve_{n_k}}$ 
+which solves
+the following free boundary problem 
+\begin{equation}
+\label{1.1p}
+\left\{\begin{aligned}
+&\Delta u - u_t  =  0  \quad\ \ \ \mbox{in } {\cal D}\cap \{u>0\}\\
+&|\nabla u^+|  =  \sqrt{2M_0} \quad \mbox{on } {\cal D}\cap\partial\{u>0\}
+\end{aligned}\right.
+\end{equation}
+in a weak integral sense. Here $M_0=\int^1_0sf(s)ds$.
+
+
+In  \cite{CLW1} and \cite{CLW2} the authors
+show that the free boundary condition for the two phase 
+case (when it is assumed that no reaction takes place if $\uep\le 0$) is 
+$$|\nabla u^+|^2 - |\nabla u^-|^2 = 2M_0$$ 
+and that the limit function is a solution of the
+free boundary problem in a pointwise sense at
+regular free boundary points when $\{ u=0 \}$ has zero ``parabolic density'' 
+and in a viscosity sense in the absence of a zero phase (i.e. when 
+$\{ u=0 \}^\circ\cap{\cal D}=\emptyset$)
+
+
+On the other hand, in \cite{LVW} it was shown for the one phase problem
+in a cylinder with Neumann boundary conditions,
+that when a classical solution to the free boundary problem (\ref
+{1.1p}) exists, it is the
+limit of the whole family $\uep$, not just of a subsequence. Moreover, this
+classical solution is the limit of $\uep$ independently of the choice of the 
+approximate initial data $\uep(x,0)$. A similar result has been obtain for the
+two phase case in \cite{LVW2}.
+
+So that a natural question is if a classical solution to the free boundary
+problem (\ref{1.1p}) is also the limit of $\uep$ if $(\uep,\vep)$ is the solution
+to the system (\ref{1.1}) and both $\uep(x,0)$ and $\vep(x,0)$ converge 
+to $u(x,0)$  but $\uep(x,0)\neq\vep(x,0)$.
+
+Or we may ask a more elementary question: Will a sequence of uniformly
+bounded solutions $(\uep,\vep)$ with $(\vep-\uep)\to0$ as $\ep\to0$ be such
+that $\uep$ converges to a solution of the free boundary problem (\ref{1.1p})?
+This is, will the asymptotic limit for activation energy going to infinity, in the case
+in which $(\vep-\uep)\to0$ but $\uep\neq\vep$, be a solution of the same free boundary
+problem as in the case in which $\uep=\vep$?
+
+In order to understand the relation between both assertions it is important
+to point out that in the case under consideration this is, when Lewis number
+is 1, the function $\wep=\vep-\uep$ is a solution of the heat equation. So that
+it is fully determined by its initial-boundary datum. Moreover,
+the system (\ref{1.1}) may be rewritten as a single equation for $\uep$, namely
+\begin{equation}
+\label{reduced}
+\Delta\uep-\uep_t=(\uep+\wep)f_\ep(\uep).
+\end{equation}
+
+In this paper we consider the case in which $\wep/\ep$ converges to a 
+function $w_0$ (so that in particular, $\vep-\uep\to0$). In this way, at least
+formally, the reaction term still converges to a delta function and a free
+boundary problem appears. {\it But we prove that the free boundary condition strongly
+depends on the limit function $w_0$, so that it is different for different
+approximations of the initial-boundary datum of $u$}.
+
+In fact, we prove that for every sequence $\epn\to0$ there exists a subsequence
+$\epnk$ and a limit function $u=\lim \uepnk$ which is a solution of the
+following free boundary problem
+\begin{equation}
+\label{FBP}
+\left\{
+\begin{aligned}
+&\Delta u - u_t  =  0  \quad\ \ \ \mbox{in } {\cal D}\cap \{u>0\}\\
+&|\nabla u^+|  =  \sqrt{2M(x,t)} \quad \mbox{on } {\cal D}\cap\partial\{u>0\}
+\end{aligned}
+\right.
+\end{equation}
+where $M(x,t)=\int_{-w_0(x,t)}^1\big(s+w_0(x,t)\big)f(s)ds$.
+
+The presence of the function $w_0$ in the limit of integration gives the
+necessary positive sign of the function $M(x,t)$.
+
+In conclusion, {\it the combustion problem is very unstable in the sense that
+the asymptotic limit
+for activation energy going to infinity depends on order $\ep$ perturbations
+of the initial-boundary data}.
+
+In this paper we prove that the limit function $u$ is a ``viscosity''
+solution to (\ref{FBP}), so that, as a consequence of our results and of
+the regularity results for viscosity solutions to (\ref{FBP}) of \cite{F},
+we deduce that, when the free boundary of a limit function $u$ is given by $x_1 = g(x',t)$, 
+$x=(x_1,x')$ with $g$ Lipschitz continuous, $u$ is a classical solution. 
+
+
+
+We want to stress, that because of our
+assumption that $\vep-\uep\to0$ and since $\vep\ge0$, the limit function $u$ must be nonnegative, so our
+result is new even in the case $u^\ve=v^\ve$.
+
+In particular, as a consequence
+of our results we see that limit functions $u$ with $u^\ve(x,0)$
+ constructed as in \cite{CV}, and $v^\ve(x,0)$ small perturbations of $u^\ve
+(x,0)$
+ are viscosity solutions to (\ref{FBP}). In this construction, $w_0$ is any
+constant such that $w_0\ge -\eta$ where $\eta>0$ is small enough.
+
+ \bigskip
+
+\noindent{\bf Notation, hypotheses and outline of the paper}
+
+
+Throughout this paper $N$ will denote the spatial dimension and, in addition, 
+the following notation will be used:
+
+For any $x_0\in\R^N,\ t_0\in\R$ and $\tau>0$
+\begin{align*}
+B_{\tau}(x_0) &\equiv \{ x\in \R^N/\ |x-x_0|<\tau \},\\
+B_{\tau}(x_0,t_0) &\equiv \{ (x,t)\in \R^{N+1}/\ |x-x_0|^2+|t-t_0|^2<\tau^2 \},\\
+Q_{\tau}(x_0,t_0) &\equiv B_{\tau}(x_0)\times (t_0-\tau^2,t_0+\tau^2),\\
+Q^-_{\tau}(x_0,t_0) &\equiv B_{\tau}(x_0)\times (t_0-\tau^2,t_0],
+\end{align*}
+and for any set $K\subset \R^{N+1}$
+
+\begin{align*}
+{\cal N}_{\tau}(K) &\equiv \bigcup_{(x_0,t_0)\in K} Q_{\tau}(x_0,t_0),\\
+{\cal N}^-_{\tau}(K) &\equiv \bigcup_{(x_0,t_0)\in K} Q^-_{\tau}(x_0,t_0).
+\end{align*}
+
+When necessary, we will denote points in $\R^N$ by $x=(x_1,x')$, with 
+$x'\in\R^{N-1}$. Also, $\langle \cdot,\cdot \rangle$ will mean the usual 
+scalar product in $\R^{N}$. Given a function $v$, we will denote 
+$v^+ = \max(v,0),\ v^-=\max(-v,0)$.
+
+In addition, the symbols $\Delta$ and $\nabla$ will denote the corresponding 
+operators in the space variables; the symbol $\partial_p$ will denote 
+parabolic boundary.
+
+Finally, we will say that a function $v$ is in the class $Lip_{loc}(1,1/2)$ 
+in a domain ${\cal D}\subset \R^{N+1}$, if for every ${\cal D}'\subset\subset 
+{\cal D}$, there exists a constant $L=L({\cal D}')$ such that
+$$|v(x,t) - v(y,s)| \le L (|x-y| + |t-s|^{1/2})$$
+for every $(x,t),(y,s)\in {\cal D}'$. If the constant $L$ does not depend on 
+the set ${\cal D}'$, we will say that $v\in Lip(1,1/2)$ in ${\cal D}$.
+
+\bigskip
+
+For the existence of a limit function for a subsequence
+$\uepnk$ we only need the weaker condition
+that
+for every compact $K\subset {\cal N}_{\tau}^-(K)\subset{\cal D}$, 
+\begin{equation}
+\label{1.2}
+\| v^{\ve} - u^{\ve} \|_{L^{\infty}({\cal N}_{\tau}^-(K))} = \mbox{O}(\ve).
+\end{equation}
+Then, we have (see \cite{LSU})
+\begin{equation}
+\label{1.3}
+\| v^{\ve} - u^{\ve} \|_{C^{2,1}(K)} = \mbox{O}(\ve).
+\end{equation}
+
+Under this assumption, we are able to apply the results of \cite{C} and get 
+the uniform Lipschitz estimates needed to pass to the limit in (\ref{1.1}). 
+ This is done in \S 2 where
+we also prove some technical lemmas that are 
+used throughout the paper.
+
+\medskip
+
+In \S 3 and \S 4 we assume that $u^{\ve}\to 0$ in $\{ u=0 \}$ fast enough. 
+This is an essential condition that was already considered in \cite{CV}.
+This assumption is a natural one in applications, roughly speaking it means 
+that the mixture temperature reaches the flame temperature only if some 
+combustion is taking place.
+
+ We also assume that
+there exists $\lim_{\ve\to0}(v^\ve- u^\ve)/\ve=:w_0$ and, as a consequence
+of the hypothesis that $\uep\to0$ in $\{u=0\}$ fast enough, we
+show that necessarily $w_0>-1$ in $\{u\equiv0\}^\circ$.
+So that, in \S 3 and \S 4 we assume that for
+every $K\subset \cal N_\tau^-(K)\subset
+\cald$ compact
+\begin{equation}
+\label{ochica}
+\frac{ v^{\ve} - u^{\ve}}{\ve}\to w_0 \qquad\mbox{uniformly in }N_\tau^-(K).
+\end{equation}
+Thus,
+\begin{equation}
+\label{ochica2}
+\big\| \frac{v^{\ve} - u^{\ve}}{\ve}-w_0\big \|_{C^{2,1}(K)} \to 0.
+\end{equation}
+And, for the sake of simplicity, we  assume that $w_0>-1$ in  $\cald$.
+
+\medskip
+
+In \S 3, we show that the limit function $u$ is a solution to the free
+boundary problem (\ref{FBP}) 
+in a pointwise sense. 
+
+\medskip
+
+Finally, in \S 4 we prove
+that the limit function $u$ is in fact a viscosity solution of the free
+boundary problem 
+(\ref{FBP}) under a nondegeneracy assumption on the limit function $u$. We also
+prove some results that give the necessary nondegeneracy of $u$.
+
+Our presentation is of a local nature, so that our hypotheses are stated in terms of the
+solution $(\uep,\vep)$.  As can be seen in the example
+treated in Corollary \ref{cor4}  it is possible to deduce our hypotheses on $(\uep,\vep)$ from 
+conditions on its initial-boundary datum.
+
+\end{section}
+
+\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%			SECTION 2			%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{section}{Uniform estimates}
+\setcounter{equation}{0}
+
+In this section we consider a family $u^{\ve}, v^{\ve}$ of solutions to
+(\ref{1.1}) in a domain $\cal D$ which are uniformly bounded in $L^{\infty}$ 
+norm in $\cal D$. We show that the functions $u^{\ve}, v^{\ve}$ are locally 
+uniformly bounded in the seminorm $Lip(1,1/2)$.
+Then, we get further local uniform estimates and pass to the limit as 
+$\ve\to 0$. We also show that the limit function $u$ is a solution to the 
+free boundary problem (\ref{FBP}) in a very weak sense. Finally, we prove an approximation 
+lemma that will be used throughout the rest of the paper and some lemmas
+concerning particular limit functions. Also, we prove a proposition that
+justifies the hypothesis we make in the following sections.
+
+For convenience, let us define the following function
+\begin{equation}
+\label{w}
+w^{\ve}(x,t) = v^{\ve}(x,t) - u^{\ve}(x,t),
+\end{equation}
+then, $w^\ve$ is a caloric function with $\| w^\ve\|_{C^{2,1}(K)}=\mbox{O}(\ve)$ for 
+every compact set $K\subset {\cal D}$.
+
+We begin with a proposition (which is a consequence of \cite{C}) that gives 
+us the uniform control on the gradients of solutions of (\ref{1.1}).
+
+\begin{prop}
+\label{regx}
+Let $(u^{\ve},v^{\ve})$ be solutions of $(\ref{1.1})$ such that 
+$\| u^{\ve} \|_{\infty}\leq {\cal A}$, $v^{\ve}\ge0$ and verify $(\ref{1.2})$. 
+Let $K\subset {\cal D}$ compact and $\tau>0$ such that 
+${\cal N}_{\tau}^{-}(K)\subset {\cal D}$. Then, there exists 
+$L=L(\tau,{\cal A})$ such that
+$$|\nabla u^{\ve}(x,t)|\leq L,\quad |\nabla v^{\ve}(x,t)|\leq L.$$
+\end{prop}
+
+\begin{pf}
+Let us start by making the following observation
+$$u^{\ve}=v^{\ve}-w^{\ve}\ge -w^{\ve}\ge -C\ve.$$
+
+Then, let $z^{\ve}=\frac{1}{C+1}(u^{\ve}+C\ve)$ and we define, for 
+$(x_0,t_0)\in K$
+$$z^{\ve}_{\tau}(x,t)=\frac{1}{\tau}z^{\ve}(x_0+\tau x,t_0+\tau^2 t).$$
+In $B_1(0)\times [-1,0]$, $z^{\ve}_{\tau}$ verifies  (with $B\ge \|f\|_\infty$)
+\begin{align*}
+0\le\Delta z^{\ve}_{\tau}-\frac{\partial z^{\ve}_{\tau}}{\partial t}&\le
+\frac{\tau}{C+1}(C\ve+|u^{\ve}|)\frac{1}{\ve^2}f(\frac{u^{\ve}}{\ve})\\
+&\le B{\tau}\frac{1}{\ve}\car_{[-C\ve,\ve]}(u^{\ve})=
+\frac{B}{\ve/\tau}\car_{[0,\ve/\tau]}(z^{\ve}_{\tau}).
+\end{align*}
+On the other hand
+$$|z^{\ve}_{\tau}(x,t)|\le\frac{ |u^{\ve}(x,t)|+C}{\tau(1+C)}\le
+\frac{1}{\tau}\frac{{\cal A}+C}{1+C}.$$
+Therefore, by Theorem 2 of \cite{C} it follows that
+$$|\nabla z^{\ve}_{\tau}(x,t)|\le \bar L=\bar L(\tau,{\cal A})\qquad 
+\mbox{in } B_{1/2}(0)\times(-1/2,0].$$
+In particular,
+\begin{align*}
+|\nabla u^{\ve}(x_0,t_0)| &=(C+1)|\nabla z^{\ve}(x_0,t_0)|=
+(C+1)|\nabla z^{\ve}_{\tau}(0,0)|\le (C+1)\bar L,\\
+|\nabla v^{\ve}(x_0,t_0)| &\le|\nabla u^{\ve}(x_0,t_0)|+
+|\nabla w^{\ve}(x_0,t_0)|\le (C+1)\bar L+C.
+\end{align*}
+The proof is finished\end{pf}
+
+
+
+As is usual in parabolic theory, Lipschitz regularity in space, gives 
+H\"older 1/2 regularity in time. We follow here ideas in \cite{CLW1} and 
+\cite{CV}.
+
+\begin{prop}
+\label{regt}
+Let $(u^{\ve}, v^{\ve})$ be solutions of $(\ref{1.1})$ such that 
+$\| u^{\ve} \|_{\infty}\leq {\cal A}$, $v^{\ve}\ge0$, and verify $(\ref{1.2})$. 
+Let $K\subset {\cal D}$ compact and $\tau>0$ such that 
+${\cal N}_{\tau}(K)\subset {\cal D}$. Then there exists $C=C(\tau,{\cal A})$ 
+such that
+$$| u^{\ve}(x,t+\Delta t) - u^{\ve}(x,t)|\leq C |\Delta t|^{1/2},\quad
+| v^{\ve}(x,t+\Delta t) - v^{\ve}(x,t)|\leq C |\Delta t|^{1/2}, $$
+for every $(x,t), (x,t+\Delta t)\in K$.
+\end{prop}
+
+\begin{pf}
+As in Proposition \ref{regx} we define $z^{\ve}=\frac{1}{C+1}(u^{\ve}+C\ve)$ and
+$$z^{\ve}_{\lambda}(x,t)=\frac{1}{\lambda}z^{\ve}(x_0+\lambda x,
+t_0+\lambda^2 t),$$
+for $0<\lambda<\tau$ and $(x_0,t_0)\in K$.
+
+By a simple computation we get, as in Prop. 2.1
+$$0\le \Delta z^{\ve}_{\lambda} - \frac{\partial z^{\ve}_{\lambda}}{\partial t}
+\le\frac{B}{\ve/\lambda}\car_{[0,\ve/\lambda]}(z^{\ve}_{\lambda}).$$
+Now, $z^{\ve}_{\lambda}\ge0$, and in $\{ z^{\ve}_{\lambda}>1 \}$ we have
+$$|\Delta z^{\ve}_{\lambda} - \frac{\partial z^{\ve}_{\lambda}}{\partial t}|
+\left\{\begin{array}{cc}
+		\le B & \mbox{ if } \ve/\lambda\ge1\\
+		= 0   & \mbox{ if } \ve/\lambda<1.\\
+	\end{array}\right.$$
+Moreover, we have that
+$$|\nabla z_{\lambda}^{\ve}(x,t)|=
+\frac1{C+1}|\nabla u^{\ve}(x_0+\lambda x,t_0+\lambda^2 t)|\le \bar L$$
+in $B_{\tau/\lambda}(0)\times[0,\tau^2/\lambda^2]$.
+Then, by Proposition 2.2 of \cite{CLW1}, we have
+$$|z^{\ve}_{\lambda}(0,t)-z^{\ve}_{\lambda}(0,0)|\le C(\bar L)\qquad
+\forall\ 0\le t\le\frac{1}{4N+B}$$
+which, in terms of $u^{\ve}$, is
+$$|u^{\ve}(x_0,t_0+\lambda^2 t)-u^{\ve}(x_0,t_0)|\le C(\bar L)\lambda.$$
+In particular
+$$|u^{\ve}(x_0,t_0+\frac{\lambda^2}{4N+B})-u^{\ve}(x_0,t_0)|\le C(\bar L)\lambda.$$
+
+Let $(x_0,t_0+\Delta t)\in K$. If $0<\Delta t<\frac{\tau^2}{4N+B}$, we take
+$\lambda=\Delta t^{1/2}\sqrt{4N+B}<\tau$ to get
+$$|u^{\ve}(x_0,t_0+\Delta t)-u^{\ve}(x_0,t_0)|\le C(\bar L)\sqrt{4N+B}
+\Delta t^{1/2}.$$
+If $\Delta t\ge\frac{\tau^2}{4N+B}$, we have
+$$|u^{\ve}(x_0,t_0+\Delta t)-u^{\ve}(x_0,t_0)|\le 2{\cal A}\le
+\frac{2{\cal A}}{\tau}\sqrt{4N+B}\Delta t^{1/2}.$$
+
+The analogous inequality for $v^{\ve}$ is an immediate consequence of 
+(\ref{1.3}).\end{pf}
+
+\medskip
+
+\begin{rem} Under the hypothesis of the previous propositions, 
+we have that 
+$$u^{\ve}\in Lip_{\mbox{loc}}(1,1/2).$$
+\end{rem}
+
+\medskip
+
+\begin{prop}
+\label{lim}
+Let $(u^{\ve}, v^{\ve})$ be solutions of $(\ref{1.1})$ such that 
+$\| u^{\ve} \|_{\infty}\leq {\cal A}$, $ v^{\ve}\ge0$ and verify
+$(\ref{1.2})$. Then, for every sequence
+$\ve_{n}\to 0$, there exists $\ve_{n'}\to 0$ a subsequence and 
+$u\in Lip_{\mbox{loc}}(1,1/2)$ such that
+\begin{enumerate}
+\item $u^{\ve_{n'}}\to u$ uniformly on compacts subsets of ${\cal D}$.
+\item $\nabla u^{\ve_{n'}}\to \nabla u$ in $L^{2}_{\mbox{loc}}$.
+\item $\frac{\partial u^{\ve_{n'}}}{\partial t}\to 
+\frac{\partial u}{\partial t}$ weakly in $L^{2}_{\mbox{loc}}$.
+\item $\Delta u - \frac{\partial u}{\partial t} = 0$ in 
+$\{ u>0 \}$
+\item For every compact $K\subset {\cal D}$, exists $C_{K}>0$ such that
+$$\left\| \frac{\partial u^{\ve}}{\partial t} \right\|_{L^{2}(K)}\leq C_{K}$$
+for every $\ve>0$.
+\end{enumerate}
+\end{prop}
+
+\begin{pf}
+The proof is similar to lemma 3.1 of \cite{CLW1}.
+
+Let $K\subset{\cal D}$ be a compact set, and $\tau>0$ such that
+${\cal N}_{3\tau}(K)\subset{\cal D}$.
+Let $L=L(K)$ such that
+$$| u^{\ve}(x,t)-u^{\ve}(y,s) |\le L\left( |x-y|+|t-s|^{1/2}\right),$$
+where $(x,t), (y,s)\in {\cal N}_{\tau}(K)$.
+
+Then, by Arzela-Ascoli's theorem, there exists $\ve_{n^{\prime}}\to 0$ and
+$u\in Lip(1,1/2)$ in ${\cal N}_{\tau}(K)$ such that
+$u^{\ve_{n^{\prime}}}\to u$ uniformly in ${\cal N}_{\tau}(K)$.
+By a standard diagonal argument, (1) follows.
+
+Let us now find uniform bounds for $\frac{\partial u^{\ve}}{\partial t}$ in
+$L^2_{\mbox{loc}}({\cal D})$. In fact, $u^{\ve}$ verifies
+$$\Delta u^{\ve} - \frac{\partial u^{\ve}}{\partial t} = 
+v^{\ve}f_{\ve}(u^{\ve}).$$
+
+Now, let $(x_0,t_0)\in K$ and let us multiply the equation by 
+$u^{\ve}_{t}\psi^2$ where $\psi\ge0$, 
+$\psi=\psi(x)\in C^{\infty}_{c}(B_{\tau}(x_0))$, $\psi\equiv 1$ in 
+$B_{\tau/2}(x_0)$. Then, integrating by parts, we get
+
+\begin{align*}
+\iint_{Q_{\tau}(x_0,t_0)}(u^{\ve}_{t})^2\psi^2 dxdt &+
+\frac12 \iint_{Q_{\tau}(x_0,t_0)} (|\nabla u^{\ve}|^2)_t \psi^2 dxdt +
+2 \iint_{Q_{\tau}(x_0,t_0)} \nabla u^{\ve} u^{\ve}_t \psi \nabla \psi dxdt\\
+& = -\iint_{Q_{\tau}(x_0,t_0)} v^{\ve}f_{\ve}(u^{\ve})u^{\ve}_t \psi^2 dxdt.
+\end{align*}
+Now we use Young's inequality to obtain
+
+\begin{align*}
+&\frac12 \iint_{Q_{\tau}(x_0,t_0)}(u^{\ve}_{t})^2\psi^2 dxdt +
+\frac12 \int_{B_{\tau}(x_0)} |\nabla u^{\ve}(x_0,t_0+\tau^2)|^2 \psi^2 dx \le\\
+&\frac12 \int_{B_{\tau}(x_0)} |\nabla u^{\ve}(x_0,t_0-\tau^2)|^2 \psi^2 dx 
+- \iint_{Q_{\tau}(x_0,t_0)} v^{\ve}f_{\ve}(u^{\ve})u^{\ve}_t \psi^2 dxdt\\ 
+&+C\iint_{Q_{\tau}(x_0,t_0)}|\nabla u^{\ve}|^2|\nabla \psi|^2 dxdt.
+\end{align*}
+Then, by Proposition \ref{regx}
+\begin{align*}
+&\int_{B_{\tau/2}(x_0)}\int_{t_0-\tau^2}^{t_0+\tau^2}(u^{\ve}_{t})^2 dxdt\le
+\int_{B_{\tau}(x_0)} |\nabla u^{\ve}(x_0,t_0-\tau^2)|^2 \psi^2 dx \\
+&+2\left|\iint_{Q_{\tau}(x_0,t_0)} v^{\ve}f_{\ve}(u^{\ve})u^{\ve}_t \psi^2 
+dxdt\right|
++ C\iint_{Q_{\tau}(x_0,t_0)}|\nabla u^{\ve}|^2|\nabla \psi|^2 dxdt\\
+&\le C(\tau) +2 \left|\iint_{Q_{\tau}(x_0,t_0)} v^{\ve}f_{\ve}(u^{\ve})
+u^{\ve}_t \psi^2 dxdt\right|.
+\end{align*}
+Hence, it only remains to get bounds on
+$$\iint_{Q_{\tau}}\psi^{2} u^{\ve}_{t} v^{\ve}f_{\ve}(u^{\ve}) dx dt = I.$$
+
+Let 
+$${\cal G}_{\ve}(u,x,t) = \int_{0}^{u}(w^{\ve}(x,t)+s)f_{\ve}(s) ds,$$
+then
+$$\frac{\partial}{\partial t}\left({\cal G}_{\ve}(u^{\ve},x,t)\right)=
+\frac{\partial u^{\ve}}{\partial t} v^{\ve}f_{\ve}(u^{\ve}) +
+\frac{\partial {\cal G}_{\ve}}{\partial t}(u^{\ve},x,t),$$
+so that we get
+$$I=\iint_{Q_{\tau}}\psi^{2}\frac{\partial}{\partial t}\left(
+{\cal G}_{\ve}(u^{\ve},x,t)\right) dx dt
+- \iint_{Q_{\tau}}\psi^{2}\frac{\partial {\cal G}_{\ve}}
+{\partial t}(u^{\ve},x,t) dx dt = A - B.$$
+Let us first get bounds on $A$:
+\begin{align*}
+A&=\int_{t_{0}-\tau^{2}}^{t_{0}+\tau^{2}}\int_{B_{\tau}(x_{0})}
+\psi^{2}\frac{\partial}{\partial t}\left({\cal G}_{\ve}(u^{\ve},x,t)\right) dx dt =
+\int_{B_{\tau}(x_{0})}\psi^{2}\left[\int_{t_{0}-\tau^{2}}^{t_{0}+\tau^{2}}
+\frac{\partial}{\partial t}\left({\cal G}_{\ve}(u^{\ve},x,t)\right) dt \right] dx\\
+&=\int_{B_{\tau}(x_{0})}\psi^{2}\left[ 
+{\cal G}_{\ve}(u^{\ve}(x,t_0+\tau^2),x,t_{0}+\tau^{2})-
+{\cal G}_{\ve}(u^{\ve}(x,t_0-\tau^2),x,t_{0}-\tau^{2})\right] dx.
+\end{align*}
+Since $u^{\ve}\ge -C\ve$, $f_{\ve}(s)=0$ if $s\ge\ve$ and 
+$|w^{\ve}|=\mbox{O}(\ve)$, we have 
+$$|{\cal G}_{\ve}(u^{\ve},x,t)|\leq C\ve\int_{-C\ve}^{\ve}
+f_{\ve}(s) ds+\int_{-C\ve}^{\ve}sf_{\ve}(s)ds\le C,$$ 
+so that
+$$|A|\leq C(\tau).$$
+
+It only remains to get bounds on $B$. For that purpose, let us first make the 
+following observation:
+$$\left|\frac{\partial {\cal G}_{\ve}}{\partial t}(u^{\ve},x,t)\right|=
+\left|\frac{\partial w^{\ve}}{\partial t}(x,t)
+\int_{0}^{u^{\ve}}f_{\ve}(s) ds\right|
+\leq \frac{C}{\ve}\left|\frac{\partial w^{\ve}}{\partial t}(x,t)\right|.$$
+By (\ref{1.3}), 
+$$\left| \frac{\partial w^{\ve}}{\partial t}\right|\le C\ve 
+\quad  \mbox{ for } (x,t)\in{\cal N}_{\tau}(K).$$
+Therefore, using the fact that $0\leq \psi \leq 1$, we get
+$$B\leq \frac{C}{\ve}\iint_{Q_{\tau}}\left|\frac{\partial w^{\ve}}
+{\partial t}(x,t)\right| dx dt  \le \frac C\ve|Q_\tau|
+\left| \frac{\partial w^{\ve}}{\partial t}\right|\leq  C(K,\tau).$$
+Thus, 
+$$\int_{B_{\tau/2}(x_0)}\int_{t_0-\tau^2}^{t_0+\tau^2} (u^{\ve}_t)^2 dxdt
+\le C,$$ 
+with $C$ independent of $\ve$ and $(x_0,t_0)\in K$. Now, as $K$ is compact, 
+$$\iint_{K}(u^{\ve}_t)^2 dxdt\le C,$$
+so that, for a subsequence, $\frac{\partial}{\partial t}u^{\ve_{n^\prime}}
+\to \frac{\partial}{\partial t}u$ weakly in $L^2(K)$ and by a standard 
+diagonal argument, (3) follows.
+
+Let us see that $u$ is a solution of the heat equation in $\{ u>0\}$ .
+In fact, from the fact that $u^{\ve}\to u$ uniformly on compact subsets of 
+${\cal D}$, we deduce that every point $(x_0,t_0)\in\{ u>0\}$ has a 
+neighborhood $V$ such that $u^{\ve}(x,t)\ge\lambda>0$ for some $\lambda>0$. 
+Therefore, for $\ve<\lambda$, $f_{\ve}(u^{\ve}(x,t))=0$ in $V$. Thus 
+$u^{\ve}$ is caloric in $V$ for every $\ve<\lambda$, and then, the same fact 
+holds for $u$.
+
+Let us finally analyze the convergence of the gradients. We already know that 
+\linebreak $\|\nabla u^{\ve}\|_{L^{\infty}({\cal N}_{\tau}(K))}\le L$. So we can assume 
+that $\nabla u^{\ve}\to \nabla u$ weakly in $L^{2}({\cal N}_{\tau}(K))$. 
+In particular
+$$\iint_{{\cal N}_{\tau}(K)}\phi |\nabla u|^2\le 
+\liminf_{\ve\to0}\iint_{{\cal N}_{\tau}(K)}\phi |\nabla u^{\ve}|^2,$$
+for every nonnegative $\phi\in L^{\infty}({\cal D})$.
+
+We follow here ideas from \cite{BCN} and \cite{CV} in order to prove that we 
+have strong convergence.
+
+Since $\Delta u - u_t = 0$ in $\{ u>0 \}$, if we take $\delta>0$ and multiply 
+this equation by $(u-\delta)^+ \psi(x)$ with $\psi\in L^{\infty}({\cal D})$ 
+and nonnegative, we get after integration by parts in $Q_{\tau}(x_0,t_0)$, 
+\begin{align*}
+&\iint_{\{ u>\delta\}}|\nabla u|^2 \psi =
+-\iint_{\{ u>\delta\}}u\nabla u\nabla \psi +
+\delta\iint_{\{ u>\delta\}}\nabla u\nabla\psi \\
+&- \frac12 \int_{\{ u>\delta\}} (u-\delta)^2(x,t_0+\tau^2)\psi(x)
++ \frac12 \int_{\{ u>\delta\}} (u-\delta)^2(x,t_0-\tau^2)\psi(x).
+\end{align*}
+Now, letting $\delta\to 0$, we get
+\begin{align*}
+\iint_{\{ u>0\}}|\nabla u|^2\psi=&
+-\iint_{\{ u>0\}} u\nabla u\nabla\psi -\\
+&-\frac12\int_{\{ u>0\}} u^2(x,t_0+\tau^2)\psi(x)
++ \frac12\int_{\{ u>0\}} u^2(x,t_0-\tau^2)\psi(x).
+\end{align*}
+
+On the other hand, since $\psi\ge0$, $f_{\ve}\ge0$ and $u^{\ve}\ge-C\ve$, 
+multiplying (\ref{1.1}) by $(u^{\ve}+C\ve)\psi$ and integrating by parts 
+we get
+\begin{align*}
+&\iint_{Q_{\tau}(x_0,t_0)}|\nabla u^{\ve}|^2\psi\le
+-\iint_{Q_{\tau}(x_0,t_0)} u^{\ve}\nabla u^{\ve}\nabla\psi -
+C\ve\iint_{Q_{\tau}(x_0,t_0)} \nabla u^{\ve}\nabla\psi \\
+&- \frac12\int_{B_{\tau}(x_0)} (u^{\ve}+C\ve)^2(x,t_0+\tau^2)\psi(x) +
+\frac12\int_{B_{\tau}(x_0)} (u^{\ve}+C\ve)^2(x,t_0-\tau^2)\psi(x).
+\end{align*}
+Thus, 
+$$\limsup_{\ve\to0}\iint_{Q_{\tau}(x_0,t_0)}|\nabla u^{\ve}|^2\psi\le
+\iint_{Q_{\tau}(x_0,t_0)}|\nabla u|^2\psi,$$
+so that
+$$\|\psi^{1/2}\nabla u^{\ve}\|_{L^2(Q_{\tau}(x_0,t_0))}\to
+\|\psi^{1/2}\nabla u\|_{L^2(Q_{\tau}(x_0,t_0))}.$$
+Since, in addition, 
+$$\psi^{1/2}\nabla u^{\ve}\to\psi^{1/2}\nabla u
+\ \mbox{ weakly in } L^2(Q_{\tau}(x_0,t_0)),$$
+it follows that
+$$\psi^{1/2}\nabla u^{\ve}\to\psi^{1/2}\nabla u
+\ \mbox{ in } L^2(Q_{\tau}(x_0,t_0)).$$
+Therefore, as $\psi\equiv 1$ in $B_{\tau/2}(x_0)$, 
+$$\nabla u^{\ve}\to\nabla u\ \mbox{ in } L^2(Q_{\tau/2}(x_0,t_0))$$
+and since $K$ is compact, this implies that
+$$\nabla u^{\ve}\to\nabla u\ \mbox{ in } L^2(K).$$
+By the same standard diagonal argument used before, the assertion of the 
+theorem follows. 
+\end{pf}
+
+
+
+Next we show that the limit function $u$ is a solution of the free
+boundary problem in a very 
+weak sense.
+
+
+\begin{prop}
+Let $(u^{\ve_{j}}, v^{\ve_{j}})$ be a family of solutions of $(\ref{1.1})$ in a 
+domain ${\cal D}\subseteq \R^{N+1}$ such that $u^{\ve_{j}}\to u$ 
+uniformly on compact subsets of ${\cal D}$, $v^{\ve_{j}}\ge0$ and verify 
+$(\ref{1.2})$. Then, there exists a locally finite measure $\mu$ supported on 
+the free boundary ${\cal D}\cap \partial \{ u>0 \}$ such that
+$v^{\ve_j}f_{\ve_{j}}(u^{\ve_{j}})\to \mu$ weakly in ${\cal D}$ and 
+therefore
+$$\Delta u - \frac{\partial u}{\partial t} = \mu\ \mbox{ in } {\cal D},$$
+that is $\forall \ \phi \in C^{\infty}_{c}({\cal D})$
+$$\iint_{\cal D} (u\phi_{t} - \nabla u \nabla \phi) dx dt = 
+\iint_{\cal D} \phi\ d\mu.$$
+\end{prop}
+
+\begin{pf}
+The proof follows as that of proposition 3.1 of \cite{CLW1}
+\end{pf}
+
+
+Now we state an approximation lemma that will be used throughout the rest of 
+the paper.
+
+\begin{lema} 
+\label{lim2}
+Let $(u^{\ve_{j}}, v^{\ve_{j}})$ be a family of solutions of $(\ref{1.1})$ in a 
+domain ${\cal D}\subseteq \R^{N+1}$ such that $u^{\ve_{j}}\to u$ 
+uniformly on compact subsets of ${\cal D}$, $v^{\ve_{j}}\ge0$ and verify 
+$(\ref{1.2})$. Let $(x_0,t_0)\in{\cal D}\cap\partial\{ u>0 \}$ and let 
+$(x_n,t_n)\in{\cal D}\cap\partial\{ u>0 \}$ be such that 
+$(x_n,t_n)\to (x_0,t_0)$ as $n\to \infty$. 
+Let $\lambda_n\to 0,\ u_{\lambda_n}(x,t)=\frac{1}{\lambda_n}
+u(x_n+\lambda_n x, t_n+\lambda_n^2 t)$ and $(u^{\ve_j})_{\lambda_n}(x,t)=
+\frac{1}{\lambda_n} u^{\ve_j}(x_n+\lambda_n x, t_n+\lambda_n^2 t)$.
+Assume that $u_{\lambda_n}\to U$ as $n\to\infty$ uniformly on compact sets 
+of $R^{N+1}$. Then, there exists $j(n)\to\infty$ such that for every 
+$j_n\ge j(n)$ there holds that $\frac{\ve_{j_n}}{\lambda_n}\to 0$ and
+\begin{enumerate}
+\item $(u^{\ve_{j_n}})_{\lambda_n}\to U$ uniformly on compact sets of 
+$R^{N+1}$,
+\item $\nabla(u^{\ve_{j_n}})_{\lambda_n}\to \nabla U$ in $L^2_{loc}(R^{N+1})$, 
+\item $\frac{\partial}{\partial t}(u^{\ve_{j_n}})_{\lambda_n}\to
+\frac{\partial}{\partial t}U$ weakly in $L^2(R^{N+1})$.
+
+Also, we deduce that
+\item $\nabla u_{\lambda_n}\to \nabla U$ in $L^2(R^{N+1})$,
+\item $\frac{\partial}{\partial t}u_{\lambda_n}\to 
+\frac{\partial}{\partial t}U$ weakly in $L^2(R^{N+1})$.
+\end{enumerate}
+\end{lema}
+
+\begin{pf}
+The proof is a straightforward adaptation of lemma 3.2 of \cite{CLW1}
+\end{pf}
+
+Now we state some lemmas on special limits of solutions to $P_{\ve}$ that
+will be used throughout the paper.
+
+\begin{lema}
+\label{global1}
+Let $(\uepj,\vepj)$ be a solution to $(1.1)$ in a domain $\cald\subset\R^{N+1}$
+such that $\vepj\ge0$,  and verify $(\ref{ochica})$ in $\cald$ with
+$w_0=\mbox{constant}$. 
+Let $(x_0,t_0)\in\cald$ and assume that $\uepj$ converges
+to $u=\alpha(x-x_0)_1^+$ uniformly on compact subsets of $\cald$, with $\alpha\in\R$
+and $\epj\to0$. Then,
+\begin{equation}
+0\le\alpha\le\sqrt{2M}.
+\end{equation}
+where $M=\int_{-w_0}^1 (s+w_0)f(s)\,ds$.
+\end{lema}
+
+\begin{pf}
+The proof is an adaptation of Proposition 5.2 of \cite{CLW1}.
+
+Without loss of generality we may assume that $(x_0,t_0)=(0,0)$.
+
+First we see that necessarily $\alpha\ge0$ since $u$ is subcaloric in $\cald$
+and $u(0,0)=0$. If  $\alpha=0$ there is nothing to prove. So let us assume
+that $\alpha>0$. 
+
+Let $\psi\in C_c^\infty(\cald)$. Multiplying $(1.1)$ by $u^\ve_{x_1}\psi$
+and integrating by parts we get
+\begin{equation}
+\begin{aligned}
+\label{equepx1}
+\iint_{\cald}\uepj_t\uepj_{x_1}\psi=&\frac12\iint_{\cald}|\nabla\uepj|^2\psi_{x_1}
+-\iint_{\cald}\uepj_{x_1}\nabla\uepj\nabla\psi\\
+&\iint_{\cald}\bepj(\uepj,x,t)\psi_{x_1}
++\iint_{\cald}\wepj_{x_1}\big(\int_{-w_0}^{\uepj}f_{\epj}(s)ds\big)\psi,
+\end{aligned}
+\end{equation}
+where $\bep(u,x,t)=\int_{-w_0\ve}^u(s+\wep)f_\ve(s)ds$.
+
+In order to pass to the limit in $(\ref{equepx1})$ we observe that, by Proposition
+$\ref{lim}$
+$$
+(\uepj)_t\to 0\qquad\mbox{weakly in }L^2_{loc}(\cald),
+$$
+$$
+\nabla\uepj\to\alpha\car_{\{x_1>0\}} e_1\qquad\mbox{in }L^2_{loc}(\cald).
+$$
+On the other hand,
+$$
+\frac{\nabla\wepj}{\epj} \to 0\qquad\mbox{uniformly on compact subsets of }\cald.
+$$
+Therefore, in order to pass to the limit in $(\ref{equepx1})$ we only need
+to analyze the limit of $\bepj(\uepj,x,t)$. On one hand, it is easy to see
+that
+\begin{equation}
+\label{limbepj}
+\bepj(\uepj(x,t),x,t)\to M
+\end{equation}
+for every $(x,t)$ such that $x_1>0$. In fact,
+$$
+\bepj(\uepj,x,t)=\int_{-w_0}^{\frac{\uepj}{\epj}}\big(s+\frac{\wepj}{\epj}\big)
+f(s)ds=
+\int_{-w_0}^1\big(s+\frac{\wepj}{\epj}\big)f(s)ds
+$$
+if $j$ is large enough. Since $|\bepj(\uepj,x,t)|\le C$ there holds that
+(\ref{limbepj}) holds in $L^1_{loc}(\{x_1\ge0\}$.
+
+On the other hand, there exists $\bar M(x,t)\in L^\infty(\cald)$ such that
+$\bepj(\uepj,x,t)\to \bar M(x,t)$ weakly in $L^2_{loc}(\cald)$. Clearly,
+$\bar M(x,t)=M$ in $\{x_1>0\}$. Let us see that
+$\bar M(x,t)=\bar M(t)$ in $\{x_1<0\}$. In fact,
+\begin{align*}
+\nabla(\bepj(\uepj(x,t),x,t))&=\frac{\partial\bepj}{\partial u}(\uepj,x,t)
+\nabla\uepj+\nabla\bepj(\uepj,x,t)\\
+&=(\uepj+\wepj)f_{\epj}(\uepj)\nabla\uepj+\nabla\wepj\int_{-w_0\epj}^{\uepj}
+f_{\epj}(s)ds\\
+&= \vepj f_{\epj}(\uepj)\nabla\uepj+ \frac{\nabla\wepj}{\epj}\int_{-w_0}
+^{\frac{\uepj}{\epj}}f(s)ds.
+\end{align*}
+Since $\vepj f_{\epj}(\uepj)\to 0$ in $L^1_{loc}(\{x_1<0\})$, $\nabla\uepj$
+is uniformly bounded in $L^\infty(\cald')$ if $\cald'\subset\subset\cald$ and
+$\frac{\nabla\wepj}{\epj}\to 0$ uniformly on compact subsets of $\cald$, there
+holds that
+$$
+\nabla(\bepj(\uepj(x,t),x,t))\to 0\qquad\mbox{in }L^1_{loc}(\{x_1<0\}).
+$$
+So that, passing to the limit in (\ref{equepx1}) we get
+$$
+\frac{\alpha^2}2\iint_{\{x_1>0\}}\psi_{x_1}=M\iint_{\{x_1>0\}}\psi_{x_1}+
+\int_{\{x_1<0\}}\bar M(t)\psi_{x_1}.
+$$
+Thus, integrating in the variable $x_1$ we get
+$$
+\int_{\{x_1=0\}}\big(\frac{\alpha^2}2-M+\bar M(t)\big)\psi=0.
+$$
+Since $\psi$ is arbitrary, we conclude that
+$$
+\frac{\alpha^2}2-M+\bar M(t)=0.
+$$
+Finally, we notice that $\bar M(t)\ge0$. In fact,
+\begin{align*}
+\bepj(\uepj,x,t)=\int_{-\frac{\wepj}{\epj}}^{\frac{\uepj}{\epj}}&\big(s+\frac{\wepj}
+{\epj}\big)f(s)ds +\int_{-w_0}^{-\frac{\wepj}{\epj}}\big(s+\frac{\wepj}{\epj}\big)
+f(s)ds\\
+&\ge\int_{-w_0}^{-\frac{\wepj}{\epj}}\big(s+\frac{\wepj}{\epj}\big) f(s)ds\to0
+\end{align*}
+since  $ \frac{\wepj}{\epj}\to w_0$ uniformly on compact subsets of $\cald$.
+
+            Thus,
+            $$
+            \alpha=\sqrt{2(M-\bar M(t))}\le\sqrt{2M}
+            $$
+            and the proof is complete.\end{pf}
+
+
+\begin{lema}
+\label{global2}
+Let $(\uepj,\vepj)$ be a solution to $(1.1)$ in a domain $\cald\subset\R^{N+1}$
+such that $\vepj\ge0$ and verify $(\ref{ochica})$ with $w_0=\mbox{constant}$
+in $\cald$.
+Let $(x_0,t_0)\in\cald$ and assume that $\uepj$ converges
+to $u=\alpha(x-x_0)_1^++\bar\alpha(x-x_0)_1^-$ uniformly on compact subsets of 
+$\cald$, with $\alpha,\bar\alpha>0$ and $\epj\to0$. Then,
+\begin{equation}
+\bar\alpha=\alpha\le\sqrt{2M}
+\end{equation}
+where $M=\int_{-w_0}^1 (s+w_0)f(s)\,ds$.
+\end{lema}
+
+
+\begin{pf}
+We argue in a similar way as in Proposition 5.3 of \cite{CLW1}.
+
+We will denote $Q_r = Q_r(0,0)$. Without loss of generality we will assume 
+that $(x_0,t_0)=(0,0)$ and that $Q_2\subset\subset \cal D$.
+
+As before, $u^{\ve}$ satisfies 
+\begin{align*}
+\iint_{\cal D} u^{\ve}_t u^{\ve}_{x_1}\psi =&
+\frac12\iint_{\cal D}|\nabla u^{\ve}|^2 \psi_{x_1} - 
+\iint_{\cal D} u^{\ve}_{x_1}\nabla u^{\ve}\nabla\psi\\
+& + \iint_{\cal D}{{\cal B}}_{\ve}(u^{\ve},x,t)\psi_{x_1} + 
+\iint_{\cal D}w^{\ve}_{x_1}\left(\int_0^{u^{\ve}} f_{\ve}(s) ds\right)\psi.
+\end{align*}
+
+We want to pass to the limit. By Proposition \ref{lim} and the fact that 
+$u^{\ve_j}$ converge to $\alpha x_1^+ + \bar{\alpha} x_1^-$ we have 
+that
+$$u^{\ve_j}_t\to 0  \qquad \mbox{weakly in } L^2_{loc}(\cal D),$$
+$$\nabla u^{\ve_j}\to \alpha \car_{\{x_1>0\}}e_1 - 
+\bar{\alpha} \car_{\{x_1<0\}} e_1
+\quad \mbox{in } L^2_{loc}(\cal D).$$
+
+Clearly, as $\alpha,\bar{\alpha}>0$, ${\cal B}(u^{\ve_j},x,t)\to M$ in 
+$L^1_{loc}(\cal D)$.
+
+So, passing to the limit in the latter equation for the subsequence $\ve_j$, 
+we get 
+$$ - \frac{\alpha^2}{2}\iint_{\{x_1>0\}}\psi_{x_1} - 
+\frac{\overline{\alpha}^2}{2}\iint_{\{x_1<0\}}\psi_{x_1}+
+M\iint \psi_{x_1} = 0.$$
+Integrating in the $x_1$ variable, we conclude that 
+$$\alpha = \bar{\alpha}.$$
+
+Next, we will assume that $\alpha>\sqrt{2M}$ and arrive at a contradiction.
+
+First, let us consider  $z^{\ve_j}$, defined in 
+$Q_2$, the solution to 
+
+\begin{equation}
+\label{eqz}
+\Delta z^{\ve_j} - z^{\ve_j}_t = \left(\beta_{\ve_j}(z^{\ve_j}) +
+W_{\ve_j} f_{\ve_j}(z^{\ve_j})\right)\rho_{\ve_j}(z^{\ve_j}/\epj)\quad\mbox{ in }
+Q_2
+\end{equation}
+with  boundary conditions
+$$
+z^{\ve_j} = u - b^{\ve_j} \quad\mbox{ on } \partial_p Q_2
+$$
+where $\beta_{\ve}(s) = sf_{\ve}(s)$, $W_{\ve} = \sup_{Q_2} w^{\ve}$, 
+$b^{\ve_j} = \sup_{Q_2}|u^{\ve_j} - u|$ and $\rho_{\ve_j}$ is a smooth cutoff 
+function with support in $[-(w_0+2C_{\ve_j}),2]$ and $\rho_{\ve_j}\equiv1$ in 
+$[-(w_0+C_{\ve_j}),1]$ (Here $C_{\epj}\to0^+$ is such that $\big|\wepj/\epj
+-w_0\big|\le C_{\epj}$ in $Q_2$
+so that $\uepj/\epj\ge-(w_0+C_{\epj})$ in $Q_2$).
+
+
+Observe that $z^{\ve_j}(x_1,x',t) = z^{\ve_j}(-x_1,x',t)$ in $Q_2$.
+
+It is easy to see that the proofs of Propositions \ref{regx} and \ref{regt}
+can be adapted to $z^{\ve_j}$
+so that, for a subsequence, that we still call $\epj$, there holds that
+$z^{\ve_j}\to z$ uniformly on compact sets of $Q_2$.
+We will show that $z = u$.
+
+First,
+\begin{align*}
+\Delta\uepj-\uepj_t &=\vepj f_{\epj}(\uepj)=(\uepj+\wepj) f_{\epj}(\uepj) \le 
+\beta_{\epj}(\uepj)+W_{\epj} f_{\epj}(\uepj)  \\
+&=\big(\beta_{\epj}(\uepj)+W_{\epj} f_{\epj}(\uepj)\big) \rho_{\epj}(\uepj/\epj)
+ \quad\qquad\mbox{ in } Q_2.
+\end{align*}
+
+
+From the fact that $z^{\ve_j}\le u^{\ve_j}$ on $\partial_p Q_2$,
+we deduce that $z^{\ve_j}\le u^{\ve_j}$ in $Q_2$ and therefore $z\le u$.
+
+In order to see that $u\le z$, we consider $a^{\ve_j}\in C^2(\R)$ such that 
+$$\begin{array}{l}
+a^{\ve_j}_{ss} = \left(\beta(a^{\ve_j}) + \frac{W_{\ve_j}}{\ve_j} f(a^{\ve_j})
+\right)\rho_{\ve_j}(a^{\ve_j}),\ s\in\R\\
+a^{\ve_j}(0) = 1,\ a^{\ve_j}_s(0) = \alpha
+\end{array}$$
+
+Integrating the equation we get, for every $s\in\R$, that
+$$0<\gamma - \kappa_{\ve_j}\le a^{\ve_j}_s(s)\le \alpha$$
+where $\frac12 \gamma^2 \equiv \frac12 \alpha^2 - M >0$ and 
+$\kappa_{\ve_j}\to 0$ when $j\to\infty$.
+
+It follows that there exists $\overline{s}_{\ve_j}<0$ such that
+$$a^{\ve_j}(s) = \left\{\begin{array}{ll}
+1+\alpha s & s\ge0\\
+(\gamma - \kappa_{\ve_j})(s-\overline{s}_{\ve_j}) & s\le\overline{s}_{\ve_j}
+\end{array}\right.$$
+and it is easy to see that $\overline{s}_{\ve_j}$ are uniformly bounded by 
+below and moreover, there exists $\overline{s}<0$ such that
+$\overline{s}_{\ve_j}\to\overline{s}$.
+
+Now let
+$$\tilde{a}^{\ve_j}(x) = \ve_j a^{\ve_j}\big(\frac{x_1}{\ve_j} - 
+\frac{b^{\ve_j}}{(\gamma - \kappa_{\ve_j})\ve_j} + \overline{s}_{\ve_j}\big).$$
+
+Using that $\tilde{a}^{\ve_j}(0,x',t) = -b^{\ve_j}$ and the bounds on 
+$a^{\ve_j}_s$, we deduce that
+$$\tilde{a}^{\ve_j}\le u - b^{\ve_j} \mbox{ in } Q_2.$$
+
+Now, since $\tilde{a}^{\ve_j}\le z^{\ve_j}$ on $\partial_p Q_2$, and
+$\tilde a^{\epj}$ is a one dimensional stationary solution to (\ref{eqz}), we have that
+$\tilde{a}^{\ve_j}\le z^{\ve_j}$ in $Q_2$. Since $\tilde{a}^{\ve_j}\to u$ 
+uniformly on compact subsets of $\{ x_1>0 \}$, we deduce that 
+$u\le z$ in $Q_2\cap \{ x_1>0 \}$.
+
+Finally, we notice that $z^{\ve_j}(x_1,x',t) = z^{\ve_j}(-x_1,x',t)$, so we 
+conclude that $u\le z$ in $Q_2$.
+
+\medskip
+
+Now, the proof of the Lemma follows as in \cite{CLW1} where it is shown, for 
+the case in which $w^{\ve}\equiv 0$, that if $z^{\epj}\to \alpha x_1^+
++\alpha x_1^-$  uniformly on compact subsets of $Q_2$, where $z^{\epj}$ are
+solutions to  (\ref{eqz}) which are symmetric in the $x_1$ variable, 
+and $\alpha>0$, there holds that
+$\alpha\le \sqrt{2M}$. So that we arrive at a contradiction since we have
+assumed that $\alpha>\sqrt{2M}$. Here we use again that $\frac{\wepj}{\epj}
+\to w_0$ and  $\mbox{liminf}\,\bepj(\uepj,x,t)\ge0$. The proof is finished.
+\end{pf}
+
+\begin{lema}
+\label{global3}
+Let $(\uepj,\vepj)$ be a solution to $(1.1)$ in a domain ${\cald}_j$ such that
+$\vepj\ge0$ and
+satisfies $(\ref{ochica})$ in ${\cald}_j$ with $w_0=\mbox{constant}$.
+Here ${\cald}_j$ is such
+that ${\cald}_j\subset\cald_{j+1}$ and $\cup_j{\cald}_j=\R^{N+1}$. Let us assume
+that $\uepj\to U$ uniformly on compact subsets of ${\R}^{N+1}$ as $j\to\infty$
+and $\epj\to0$, with $U\ge0$,  $U\in Lip(1,1/2)$  and $\partial\{U>0\}\neq
+\emptyset$.  Then,
+\begin{equation}
+|\nabla U|\le \sqrt{2M}\qquad\mbox{in }\R^{N+1}
+\end{equation}
+with $M=\int_{-w_0}^1(s+w_0)f(s)ds$.
+\end{lema}
+
+\begin{pf} The proof is similar to that of Theorem 6.2 in \cite{CLW1}. Here
+we use Lemmas \ref{global1} and \ref{global2} instead of Propositions 5.2
+and 5.3 in \cite{CLW1}.
+\end{pf}
+
+
+
+\end{section}
+
+\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%			SECTION 3                               %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{section}{The free boundary condition}
+\setcounter{equation}{0}
+
+In this section, we find the free boundary condition for the limit problem 
+and we show that the limit function $u$ is a solution to the free boundary
+problem (\ref{FBP}) 
+in a pointwise sense, under the assumption that the free boundary admits an 
+inward spatial normal in a parabolic measure theoretic sense (Definition 
+\ref{def1}). 
+
+Throughout this section we will assume that
+$(\ref{ochica})$ holds
+and that
+for every
+$K\subset\{u\equiv0\}^\circ$
+compact there exists $0<\eta<1$ and $\ve_0>0$ such that, for $\ve<\ve_0$
+\begin{equation}
+\label{umenordelta}
+\frac{u^\ve}\ve\le \eta\qquad\mbox{in }K.
+\end{equation}
+
+This assumption is a natural one in applications, roughly speaking it means
+that the mixture temperature reaches the flame temperature only if some
+combustion is taking place.
+
+As a consequence there holds that
+\begin{equation*}
+w_0=\lim_{\ep\to0}\frac{\vep-\uep}\ep\ge-\limsup_{\ep\to0}\frac{\uep}\ep\ge-\eta
+>-1\quad\mbox{in }K.
+\end{equation*}
+So that, for the sake of simplicity we will assume from now on that $w_0>-1$
+in $\cald$.
+
+We start this section with a lemma that is the essential ingredient in the 
+subsequent proofs.
+
+\begin{lema} 
+\label{Bepsilon}
+Let $(u^{\ve_k},v^{\ve_k})$ be a solution to $(1.1)$ in a domain $\cald\subset
+\R^{N+1}$ such that $v^{\ve_k}\ge0$ and $(\ref{ochica})$ and
+$(\ref{umenordelta})$ are satisfied with $w_0>-1$. Let
+$u=\lim u^{\ve_k}$, with $\ve_k\to0$, and $\bepk(u,x,t)=\int_{-w_0\epk}^{u}
+\big(s+{\wepk})f_{\epk}(s)ds$. Then,
+$$
+{{\cal B}}_{\ve_k}(u^{\ve_k},x,t)\to M(x,t)\car_{ \{ u>0 \} },\quad
+\mbox{in } L^1_{loc}(\cald).
+$$
+where $M(x,t)=\int_{-w_0(x,t)}^1(s+w_0(x,t))f(s)ds$.
+\end{lema}
+
+\begin{pf}
+First, let us observe that 
+\begin{align*}
+\int_{-w_0\ve}^{\ve}(w^{\ve}+s)f_{\ve}(s)ds&=\int_{-w_0\ve}^{\ve}
+(w^{\ve}+s)\frac{1}{\ve^2}f\left(\frac{s}{\ve}\right)ds\\
+&=\int_{-w_0}^1\big(\frac{w^\ve}{\ve}+s\big)f(s)ds.
+\end{align*}
+Therefore, 
+$$\lim_{\epk\to0}\int_{-w_0\epk}^{\epk}(\wepk+s)f_{\epk}(s)ds=M(x,t).$$
+
+\medskip
+
+Let us now see that ${\cal B}_{\ve_k}(u^{\ve_k},x,t)\to M(x,t)$
+uniformly on compact subsets of $\{ u>0 \}$.
+
+Let $K\subset\subset \{ u>0 \}$, then there exists $\lambda>0$ and $\ve_0$
+such that $u^{\ve_k}(x,t)>\lambda\ \ \forall \ve_k<\ve_0\,,\,(x,t)\in K$.
+Thus, we have
+
+\begin{align*}
+\lim_{k\to\infty}{\cal B}_{\ve_k}(u^{\ve_k}(x,t),x,t)&=
+\lim_{k\to\infty}\int_{-w_0\epk}^{u^{\ve_k}(x,t)}(w^{\ve}+s)f_{\ve_k}(s)ds\\
+&=\lim_{k\to\infty}\int_{-w_0\epk}^{\ve_k}(w^{\ve}+s)f_{\ve_k}(s)ds=M(x,t).
+\end{align*}
+
+ 
+Since $|\bepk(\uepk,x,t)|\le C$ on every compact subset of $\cald$,
+there holds, for a subsequence that we still call $\epk$ that
+$$
+\bepk(\uepk,x,t)\to \bar M(x,t)\qquad\mbox{weakly in }L^2_{loc}(\cald).
+$$
+Clearly, $\bar M(x,t)=M(x,t)$ in $\{u>0\}$. Let us see that $\bar M(x,t)=0$
+in $\{u\equiv0\}^\circ$. In fact, let $K$ be a compact subset of $\{u\equiv0\}
+^\circ$.
+For every $\ve_1,\ve_2>0$ there holds that, for $k$ large enough
+\begin{align*}
+&|\{(x,t)\in K\,/\,\ve_1<\bepk(\uepk,x,t)<M(x,t)-\ve_2\}|\\
+&\quad\le |\{(x,t)\in K\,/\,\frac{\uepk}{\epk}(x,t)>-w_0(x,t)\,,\,\frac
+{\ve_1}2<\int_{-w_0}^{\frac{\uepk}{\epk}}(s+w_0)f(s)ds<M-\frac{\ve_2}2\}|\\
+&\quad\le |\{(x,t)\in K\,/\, -w_0(x,t)+\mu\le\frac{\uepk}{\epk}\le 1-\mu\}|\\
+&\quad\le |\{(x,t)\in K\,/\,\frac{\vepk}{\epk}\ge\frac\mu2\,,\,\frac{\uepk}
+{\epk}\le 1-\mu\}|\\
+&\quad\le|\{(x,t)\in K\,/\, \vepk f_{\epk}(\uepk)\ge \frac{C_\mu}{2\epk}\}|.
+\end{align*}
+Since $\vepk f_{\epk}(\uepk)\to 0$ as measures in $K$ and $\vepk\ge0$,
+$f_{\epk}\ge0$ there holds that
+$$
+\vepk f_{\epk}(\uepk)\to 0 \qquad\mbox{in }L^1(K).
+$$
+Therefore,
+$$
+|\{ (x,t)\in K\,/\,\ve_1<\bepk(\uepk,x,t)<M(x,t)-\ve_2\}|\to 0.
+$$
+On the other hand,
+let $1>\eta>\sup_K(-w_0)$ be the constant in (\ref{umenordelta})  in $K$, there holds that
+\begin{align*}
+&\bepk(\uepk,x,t)= \int_{-\frac{\wepk}{\epk}}^{\frac{\uepk}{\epk}}\big(
+s+\frac{\wepk}{\epk}\big)f(s)ds+
+\int_{-w_0}^{-\frac{\wepk}{\epk}}\big(s+\frac{\wepk}{\epk}\big)f(s)ds\\
+&\qquad\le  \int_{-\frac{\wepk}{\epk}}^{\eta}\big(s+\frac{\wepk}{\epk}\big)
+f(s)ds+
+\int_{-w_0}^{-\frac{\wepk}{\epk}}\big(s+\frac{\wepk}{\epk}\big)f(s)ds\\
+&\qquad=\int_{-w_0}^\eta\big(s+\frac{\wepk}{\epk}\big)f(s)ds\to
+\int_{-w_0}^\eta(s+w_0)f(s)ds<M(x,t)
+\end{align*}
+since $-\frac{\wepk}{\epk}\le \frac{\uepk}{\epk}\le \eta$ in $K$.
+Therefore,
+$$
+\limsup\bepk(\uepk,x,t)\le\int_{-w_0}^{\eta}(s+w_0)f(s)ds<M(x,t).
+$$
+ So that, for $\ve_2>0$ small we get
+$$
+|\{(x,t)\in K\,/\,\ve_1<\bepk(\uepk,x,t)\}|=|\{(x,t)\in K\,/\,
+\ve_1<\bepk(\uepk,x,t)<M-\ve_2\}|\to 0.
+$$
+
+Let us now see that $\bar M(x,t)=0$ in $K$. As in Lemma \ref{global1} we see that
+$\bar M(x,t)\ge0$. Now assume that for some $\ve_1>0$ we have $|\{\bar M(x,t)>\ve_1\}|>0$.
+Then, there exists $m$ such that $|\{\bar M(x,t)>\ve_1+\frac1m\}|:=|A_m|>0$.
+
+Now,
+$$
+\int_{A_m}\bepk(\uepk,x,t)\to\int_{A_m}\bar M(x,t)>\big(\ve_1+\frac1m\big)|A_m|
+$$
+but,
+\begin{align*}
+\int_{A_m}\bepk(\uepk,x,t)&
+=\int_{A_m\cap\{\bepk(\uepk,x,t)>\ve_1\}}\bepk(\uepk,x,t)\\
+&+\int_{A_m\cap\{\bepk(\uepk,x,t)\le \ve_1\}}\bepk(\uepk,x,t).
+\end{align*}
+Since the first term in the right hand side goes to zero and the second is
+bounded by $\ve_1|A_m|$, we get a contradiction.
+
+The proof is finished.
+\end{pf}
+
+Let us give the definition of regular point.
+
+\begin{defi}
+\label{def1}
+We say that $\nu$ is the interior unit spatial normal to the free boundary 
+$\partial\{ u>0 \}$ at a point $(x_0,t_0)\in\partial\{ u>0 \}$ in the 
+parabolic measure theoretic sense, if $\nu\in \R^N,\ |\nu|=1$ and
+$$\lim_{r\to 0}\frac{1}{r^{N+2}}\iint_{Q_r(x_0,t_0)}
+|\car_{\{ u>0 \}}-\car_{\{ (x,t)/\ \langle x-x_0,\nu \rangle>0\}}| dxdt=0.$$
+\end{defi}
+
+\begin{defi}
+\label{def2}
+We say that $(x_0,t_0)$ is a regular point of $\partial\{ u>0 \}$ if there 
+exists an interior unit spatial normal to $\partial\{ u>0 \}$ at $(x_0,t_0)$ in 
+the parabolic measure theoretic sense.
+\end{defi}
+
+We can  now prove the main result of this section.
+
+
+
+\begin{teo}
+\label{puntual}
+Let $(u^{\ve_j},v^{\ve_j})$ be a family of uniformly bounded solutions of $(\ref{1.1})$ in a domain
+${\cal D}\subset \R^{N+1}$ such that $u^{\ve_j}\to u$ uniformly on 
+compact subset of ${\cal D}$, $v^{\ve_j}\ge0$ and verify $(\ref{ochica})$
+and $(\ref{umenordelta})$, with $w_0>-1$.  If $(x_0,t_0)$ is 
+a regular point of $\cald\cap\partial\{ u>0 \}$, then  
+$u$ has the asymptotic development
+$$u(x,t) = \alpha\langle x-x_0,\nu \rangle^+ + 
+\mbox{o}(|x-x_0|+|t-t_0|^{1/2})$$
+with $\alpha = \sqrt{2M(x_0,t_0)}$, where $M=\int_{-w_0}^1 (s+w_0)f(s)\,ds$.
+Here $\nu$ is the interior unit 
+spatial normal
+to the free boundary at $(x_0,t_0)$ in the parabolic measure theoretic sense.
+\end{teo}
+
+\begin{pf}
+We assume, without loss of generality, that $(x_0,t_0)=(0,0)$ and $\nu=e_1=(1,0,...,0)$.
+
+Let $\psi\in C^{\infty}_c({\cal D})$. We proceed as in Lemma \ref{global1}.
+Let us multiply the equation for
+$u^\ve$ by $u_{x_1}^{\ve}\psi$ and integrate by parts. We have
+\begin{align*}
+\iint_{\cal D}u^{\ve}_t u^{\ve}_{x_1}\psi = &\frac12 \iint_{\cal D} 
+|\nabla u^{\ve}|^2 \psi_{x_1} - 
+\iint_{\cal D}u^{\ve}_{x_1}\nabla u^{\ve} \nabla \psi \\
+&+\iint_{\cal D} {\cal B}_{\ve}(u^{\ve},x,t)\psi_{x_1} + 
+\iint_{\cald}\left(\frac{w^\ve}\ve-w_0\right)f(-w_0)(w_0)_{x_1}\psi\\
+&+\iint_{\cal D} \frac{w^{\ve}_{x_1}}\ve \left(\int_{-w_0}^{\frac{u^{\ve}}\ve}
+f(s) ds\right)\psi
+\end{align*}
+
+Since
+$$
+\bepj(\uepj,x,t)=\int_{-w_0}^{\frac{\uepj}{\epj}}(s+w_0)f(s)ds +\int_{-w_0}^
+{\frac{\uepj}{\epj}}\big(\frac{\wepj}{\epj}-w_0\big)f(s)ds,
+$$
+and $\bepj(\uepj,x,t)\to 0$ weakly in $L^1(K)$ for every $K\subset\{u\equiv0\}^\circ$
+compact, there holds that
+$$
+F_{\epj}(x,t):=\int_{-w_0}^{\frac{\uepj}{\epj}}(s+w_0)f(s)ds\to0\qquad\mbox{weakly in }L^1(K).
+$$
+Since $F_{\epj}$ is nonnegative there holds that
+$$
+F_{\epj}\to0\qquad\mbox{in }L^1(K).
+$$
+So that, for a subsequence that we still call $\epj$ there holds that
+$$
+F_{\epj}\to0\qquad a.e.\ K.
+$$
+Thus,  
+$$
+\frac{\uepj}{\epj}\to -w_0\qquad a. e.\ K.
+$$
+Therefore,
+\begin{equation}
+\label{integralf}
+\int_{-w_0}^{\frac{\uepj}{\epj}}f(s)ds\to\left(\int_{-w_0}^1f(s)ds\right)\car_
+{\{u>0\}}\qquad a.e.\ \cald.
+\end{equation}
+
+
+
+By using Proposition \ref{lim}, Lemma \ref{Bepsilon} and (\ref{integralf})
+we can pass to
+the limit (for the sequence $\ve_j\to 0$) in the latter equation and get
+\begin{equation}
+\begin{aligned}
+\label{u1}
+&\iint_{\cal D} u_t u_{x_1}\psi = \frac12 \iint_{\cal D} 
+|\nabla u|^2 \psi_{x_1} - \iint_{\cal D} u_{x_1}\nabla u \nabla \psi + 
+\iint_{\{ u>0 \}}M(x,t) \psi_{x_1}\\
+&\qquad+\iint_{\{u>0\}} {(w_0)}_{x_1} \left(\int_{-w_0}^1 f(s) ds\right)\psi
+\end{aligned}
+\end{equation}
+for every $\psi\in C^{\infty}_c({\cal D})$.
+
+Now, let $\psi^{\lambda}(x,t)=\lambda\psi(\frac{x-x_0}{\lambda},
+\frac{t-t_0}{\lambda^2})$. Replacing $\psi$ by $\psi^\lambda$ in (\ref{u1}) 
+and changing variables, we get for $u_{\lambda}(x,t)=
+\frac{1}{\lambda}u(x_0+\lambda x,t_0+\lambda^2 t)$,
+\begin{equation}
+\begin{aligned}
+\label{ulambda}
+&\iint (u_{\lambda})_t (u_{\lambda})_{x_1}\psi = \frac12 
+\iint |\nabla u_{\lambda}|^2 \psi_{x_1} - 
+\iint (u_{\lambda})_{x_1}\nabla u_{\lambda} \nabla \psi\\
+&\qquad +
+\iint_{\{ u_{\lambda}>0 \}}M(\lambda x,\lambda^2 t) \psi_{x_1}
++\iint_{\{u>0\}} {(w_0)}_{x_1} \left(\int_{-w_0}^1 f(s) ds\right)\psi^\lambda.
+\end{aligned}
+\end{equation}
+
+Let $r>0$ be such that $Q_r(x_0,t_0)\subset\subset{\cal D}$. We have that 
+$u_{\lambda}\in Lip(1,1/2)$ in $Q_{r/\lambda}(0,0)$ uniformly in $\lambda$, 
+and $u_{\lambda}(0,0)=0$. Therefore, for every $\lambda_n\to 0$, there 
+exists a subsequence $\lambda_{n'}\to 0$ and a function $U\in Lip(1,1/2)$ in 
+$\R^{N+1}$ such that $u_{\lambda_{n'}}\to U$ uniformly on compact sets of 
+$\R^{N+1}$.
+
+By our assumption on $(x_0,t_0)$, we can easily see that for every $k>0$
+\begin{equation}
+\label{ulposit}
+|\{ u_{\lambda}>0 \}\cap \{ x_1<0 \}\cap Q_k(0,0)|\to 0
+\mbox{ as } \lambda\to 0,
+\end{equation}
+and
+\begin{equation}
+\label{ulcero}
+|\{ u_{\lambda}=0 \}\cap \{ x_1>0 \}\cap Q_k(0,0)|\to 0
+\mbox{ as } \lambda\to 0.
+\end{equation}
+
+Now, using lemma \ref{lim2} and the fact that $\psi^\lambda
+\to0$ uniformly in $\cald$ and $\mbox{supp}\,\psi^\lambda\subset\mbox{supp}\,
+\psi$, we can pass to the limit in (\ref{ulambda}) and
+get
+\begin{equation}
+\begin{aligned}
+\iint_{\{ x_1>0 \}} U_t U_{x_1}\psi =&\\
+ \frac12
+\iint_{\{ x_1>0 \}} |\nabla U|^2& \psi_{x_1} - 
+\iint_{\{ x_1>0 \}} U_{x_1}\nabla U \nabla \psi + 
+M(0,0)\iint_{\{ x_1>0 \}} \psi_{x_1}.
+\end{aligned}
+\label{equgrande}
+\end{equation}
+
+
+Our aim is to prove that $U=\alpha x_1^+$. First, by (\ref{ulposit}) and
+(\ref{ulcero}), we deduce that $U=0$ in $\{x_1<0\}$. On the other hand,
+$U$ is a solution to the heat equation in $\{U>0\}\subset\{x_1>0\}$. By
+Corollary A.1 in \cite{CLW1}, for every $\bar x'\in \R^{N-1}$, $\bar t\in \R$ there
+exists $\alpha\ge0$ such that
+$$
+U(x,t)=\alpha x_1^++o(|(x_1,x')-(0,\bar x')|+|t-\bar t|^{1/2})\ \ \mbox{in }
+\{x_1>0\}\cap\{t<\bar t\}.
+$$
+Replacing  the test function $\psi$ by $\Phi^\lambda(x,t)= \lambda \Phi
+(\frac{x_1}\lambda,\frac{x'-\bar x'}\lambda,\frac{t-\bar t}{\lambda^2})$
+with $\Phi\in C^\infty_c(\{t<0\})$ and proceeding as above we get
+\begin{equation}
+\label{eqalpha}
+-\frac{\alpha^2}2\iint_{\{x_1>0\}}\Phi_{x_1}+M(0,0)\iint_{\{x_1>0\}} \Phi_{x_1}=0.
+\end{equation}
+In order to pass to the limit for a sequence $\lambda_n\to0$ we have used
+Lemma \ref{lim2}. (See \cite{CLW2}, Theorem 3.1 for the details).
+
+Thus, $\alpha=\sqrt{2M(0,0)}$.
+
+In order to see that $U=\alpha x_1^+$ we use Lemma \ref{global3}. In fact,
+by  Lemma \ref{lim2} there exists a sequence $j_n\to\infty$ such that
+$$
+u^{\delta_n}:=\frac 1{\lambda_n}\uepjn(\lambda_n x,\lambda_n^2 t)\to U(x,t)
+$$
+uniformly on compact subsets of $\R^{N+1}$. We recall that $(u^{\delta_n},v^
+{\delta_n})$ is a solution to (1.1) with $\ve$ replaced by $\delta_n$.
+Moreover,
+$$
+\frac{w^{\delta_n}}{\delta_n}=\frac{\wepjn(\lambda_n x,\lambda_n^2 t)}{\epjn}
+\to w_0(0,0)
+$$
+uniformly on compact sets of $\R^{N+1}$.
+
+Moreover, $U\ge0$ and $\partial\{U>0\}\neq\emptyset$. By Lemma \ref{global3}
+we have that $|\nabla U|\le \alpha(=\sqrt{2M(0,0)}$. Since $U\equiv0$
+in $\{x_1=0\}$ we deduce that
+$$
+U\le\alpha x_1\qquad\mbox{in }\{x_1>0\}.
+$$
+By Hopf's Principle, we deduce that
+$$
+U=\alpha x_1 \qquad\mbox{in }\{x_1>0\}.
+$$
+
+The theorem is proved.
+\end{pf}
+
+\medskip
+
+\begin{rem}
+It is clear from the proof that the result is still true if we replace
+condition $(\ref{umenordelta})$ by the following property: $\frac{\uepj}{\epj}
+\to -w_0\ \ a.e.\ \ \{u\equiv0\}^\circ$.
+\end{rem}
+
+\end{section}
+
+\bigskip
+
+\begin{section}{Viscosity solutions}
+\setcounter{equation}{0}
+
+In this section we prove that, under suitable assumptions, the limit function $u$ is a viscosity solution 
+of the free boundary problem (\ref{FBP}).
+
+For the sake of completeness, we state here the definition of viscosity 
+solution that was introduced in \cite{CLW2} for the two phase case of this 
+problem when $w_0=0$.
+
+
+\begin{defi}
+Let $Q$ be a cylinder in $\R^N\times (0,T)$ and let $v\in C(\overline{Q})$. 
+Then $v$ is called a classical subsolution (supersolution) of $(\ref{FBP})$
+in $Q$ if $v\ge0$ 
+and
+\begin{enumerate}
+\item $\Delta v - v_t \ge 0\ (\le 0)\qquad \mbox{in } \Omega^+ \equiv 
+Q\cap\{ v>0 \}$.
+\item $v\in C^1(\overline{\Omega^+})$.
+\item For any $(x,t)\in \partial\Omega^+\cap Q$, $\nabla v(x,t)\ne 0$, and
+$$|\nabla v(x,t)|\ge \sqrt{2M}\quad (\le \sqrt{2M}).$$
+\end{enumerate}
+
+We say that $v$ is a classical solution in $Q$ if it is both a classical 
+subsolution and a classical supersolution.
+\end{defi}
+
+
+\begin{defi}
+Let $u$ be a continuous nonnegative function in $Q$; $u$ is called a 
+viscosity subsolution (supersolution) of $(\ref{FBP})$ in $Q$ if, for every subcylinder 
+$Q'\subset\subset Q$ and for every classical supersolution (subsolution) 
+$v$ in $Q'$, 
+$$\begin{array}{ll}
+u\le v \ \mbox{on }\partial_p Q'  & (u\ge v\quad \mbox{on } \partial_p Q')\ \ \mbox{ and }\\
+v>0 \mbox{ on } \overline{\{ u>0 \}}\cap \partial_p Q' &
+(u>0 \mbox{ on } \overline{\{ v>0 \}}\cap \partial_p Q')\\
+\end{array}$$
+implies that $u\le v\ (u\ge v)$ in $Q'$.
+
+The function $u$ is called a viscosity solution if it is both a viscosity 
+subsolution and a viscosity supersolution.
+\end{defi}
+
+\medskip
+
+\begin{defi}
+Let $u$ be a continuous nonnegative function in $\cal D$ and let 
+$(x_0,t_0)\in\partial\{ u>0 \}\cap \cal D$. We say that $(x_0,t_0)$ is a regular 
+point from the nonpositive side, if there exists a regular nonnegative
+function $v$ in
+$\cal D$ such that $v>u$ in $\{u>0\}$ for $t<t_0$ and $v(x_0,t_0)=u(x_0,t_0)$.
+\end{defi}
+
+Finally we need the following definition on nondegeneracy.
+
+\begin{defi}
+Let $u$ be a continuous nonnegative function in $\cald$. Let $(x_0,t_0)\in\cald$
+be such that $u(x_0,t_0)=0$. We say that $u$ does not degenerate at $(x_0,t_0)$
+if there exist $r_0>0$ and $C>0$ such that
+$$
+\sup_{\partial_p Q_r^-(x_0,t_0)}u\ge C\,r\qquad\mbox{for }0<r\le r_0.
+$$
+\end{defi}
+
+We now prove that, under suitable assumptions on the limit function $u$, 
+there holds that $u$ is a viscosity solution to the free boundary problem.
+
+\begin{teo} 
+\label{viscosa}
+Let $u=\lim u^{\ve_k}$, where $(u^{\ve_k},v^{\ve_k})$ are uniformly
+bounded solutions to $(1.1)$ with   $v^{\ve_k}\ge0$, satisfying
+$(\ref{ochica})$ 
+in $\cal D$, with $w_0>-1$,  and such that $u^{\ve_k}$ either satisfies $(\ref{umenordelta})$
+of $\uepk_t\le 0$ in $\cald$.
+
+ If $u^+$ does not degenerate at every point of the free 
+boundary which is regular from the nonpositive side, then $u$ is a viscosity 
+solution of $(\ref{FBP})$.
+\end{teo}
+
+\begin{pf}
+
+By Proposition \ref{lim} and Lemma \ref{lim2}, Theorem 4.1 of \cite{CLW2}
+can be stated for our system, thus $u$ is a viscosity supersolution.
+
+In order to see that it is a viscosity  subsolution, let $v$ be a classical
+supersolution such that
+$$u\le v \mbox{ in } \partial_p Q \mbox{ and } v>0 \mbox{ in }
+\overline{\{u>0\}}\cap\partial_pQ$$
+we want to see that $u\le v$ in $Q$.
+
+\medskip
+
+If not, we define
+$$t_0 = \sup\{ 0<s<T:\ v>0 \mbox{ in } \overline{\{ u>0 \}}\cap Q\cap
+\{ 0\le t<s \}\}$$
+
+From the definition of $t_0$, it follows that $t_0>0$ and, from our
+hypotheses we deduce that $v\ge u$ in
+$Q\cap\{ 0\le t<t_0 \}$. In addition, there exists a sequence $(x(s),t(s))\to
+(x_0,t_0)\in \overline{Q}$ such that $v(x(s),t(s)) = 0$, $(x(s),t(s))\in
+\overline{\{ u>0 \}}\cap Q$. Clearly, $u(x_0,t_0) = v(x_0,t_0) = 0$ and 
+$(x_0,t_0)\in\partial\{ u>0 \}\cap Q$. If $(x_0,t_0)\in \{ v = 0 \}^\circ$ 
+then, for $\tau$ small we have $u\le v = 0$ in $B_{\tau}(x_0,t_0)\cap
+\{ t<t_0 \}$ and therefore, $u\equiv 0$ there, which contradicts our 
+hypothesis. Thus
+$$v\ge u \mbox{ in } Q\cap \{ 0\le t\le t_0 \},$$
+$$(x_0,t_0)\in \partial\{ u>0 \}\cap \partial\{ v>0 \}\cap Q.$$ 
+
+We may assume, without loss of generality, that $(x_0,t_0)=(0,0)$ and
+$Q_1(0,0)=Q_1\subset Q$ (consider instead of $u$ the function
+$\frac{1}{\lambda_0}u(x_0+\lambda_0 x,t_0+\lambda_0^2 t)$ for certain $\lambda_0>0$
+small, and analogously with $v$). Let us take
+$$v_{\lambda}(x,t)=\frac{1}{\lambda}v(\lambda x,\lambda^2 t),\quad 
+u_{\lambda}(x,t)=\frac{1}{\lambda}u(\lambda x,\lambda^2 t).$$
+
+It is easy to see that there exists a sequence $\lambda_n\to 0$ and functions 
+$u_0,\ v_0$ such that $v_{\lambda}\to v_0,\ u_{\lambda}\to u_0$.
+
+Since $v$ is regular, we have that $v_0(x,t)=\beta x_1^+$ with 
+$0\le\beta\le\sqrt{2M(0,0)}$ (for some system of coordinates).
+
+Let us see that also $u_0(x,t)=\alpha x_1^+$ for some $\alpha\ge0$, 
+
+We may think that in $Q_1$,  $\partial\{v>0\}$ is the graph of some function 
+$\psi(x',t)=x_1,\ x=(x_1,x')$ with $\psi\in Lip(1,1/2)$, where $\psi(0,0)=0$ 
+and $\{ v>0 \} = \{ x_1>\psi(x',t) \}$.
+
+Hence, we have that
+$$|\psi(x',t)|\le C\left(|x'| + |t|^{1/2}\right).$$
+
+Let  ${\cal R}=\left\{(x,t)\in Q_1:\ x_1<-C\left(|x'| + 
+|t|^{1/2}\right)\right\}$. Then ${\cal R}\cap\{ v>0 \}=\emptyset$ and let 
+$w$ be the caloric function in ${\cal O}=Q_1^-\setminus {\cal R}$ with $w=0$ 
+in $\partial_p{\cal R}$ and $w=L\ge\|u\|_{\infty}$ in the rest of
+$\partial_p{\cal O}$.
+
+Since $u$ is globally subcaloric and $u\le w$ on $\partial_p{\cal O}$, 
+then $u < w$ in ${\cal O}$.
+
+Now, $w-u$ is supercaloric in ${\cal O}$, $w-u>0$ in the interior and 
+$w-u=0$ at $(0,0)$, then, by lemma A.1 of \cite{CLW1}, we have that 
+$w-u=\delta x_1^+ + o(|x|+|t|^{1/2})$ and, since by the same lemma, $w$ has 
+an asymptotic development at $(0,0)$, 
+$$u(x,t)=\alpha x_1^+ + o(|x|+|t|^{1/2}),\quad \mbox{with } \alpha\ge0.$$
+
+Since by hypothesis $u^+$ does not degenerate, there follows that $\alpha>0$.
+
+On the other hand, since $v$ is regular, $v$ admits an asymptotic development 
+at the origin in the form $v(x,t)=\beta x_1^+ + o(|x|+|t|^{1/2})$. Clearly, 
+$\beta\ge \alpha$.
+
+Now, let $h$ be the caloric function in $\tilde {\cal O}:=
+Q_1^-\cap\{ v>0 \}\cap\{-\mu<t<0\}$ for some small $\mu>0$,  with $h=v-u$
+on $\partial_p\tilde{\cal O}$. And, let $g$ be the caloric function
+in $\tilde{\cal O}$ with $g=v$ on $\partial_p\tilde{\cal O}$. 
+Then, $h=g=0$ in $Q_1^-\cap\partial
+\{ v>0 \}\cap\{-\mu<t<0\}$ and $h>0$, $g>0$ in $\tilde{\cal O}$.
+
+Therefore, by \cite{ACS}, there exists $\sigma>0$ such that $h\ge\sigma g$
+in $Q_{1/2}^-\cap\{ v>0 \}\cap\{-\frac\mu 2<t<0\}$.
+
+Since $u$ is subcaloric in $Q_1^-$ and $u\le v$ in $Q_1^-$ we deduce that
+$v-u\ge\sigma u$ in
+$Q_{1/2}^-\cap\{ v>0 \}\cap\{-\frac\mu 2<t<0\}$. In particular
+$\beta-\alpha\ge\sigma\alpha>0$.
+
+
+The theorem will be finished if we show that $\alpha=\sqrt{2M(0,0)}$.
+
+\medskip
+
+\underline{Case 1:} $u^{\ve_k}$ verifies (\ref{umenordelta}).
+\medskip
+
+As in Theorem \ref{puntual}, we obtain 
+\begin{align*}
+&\iint_{\cal D} u_t u_{x_1} \psi = \frac12 \iint_{\cal D} |\nabla u|^2 
+\psi_{x_1} - \iint_{\cal D} u_{x_1} \nabla u \nabla \psi \\
+&\quad+ 
+ \iint_{{\cal D}\cap \{u>0\}}M(x,t) \psi_{x_1}+ \iint_{\cald\cap\{u>0\}}
+(w_0)_{x_1}\left(\int_{-w_0}^1f(s)ds\right)\psi
+\end{align*}
+for every test function $\psi$. Then, taking $\psi^{\lambda}(x,t) = 
+\lambda \psi(\frac{x}{\lambda},\frac{t}{\lambda^2})$ and changing variables, 
+we get 
+\begin{align*}
+&\iint_{\cal D} (u_\lambda)_t (u_\lambda)_{x_1} \psi = 
+\frac12 \iint_{\cal D} |\nabla u_\lambda|^2 \psi_{x_1} - 
+\iint_{\cal D} (u_\lambda)_{x_1} \nabla u_\lambda \nabla \psi \\
+&\quad+ \iint_{{\cal D}\cap \{u_\lambda>0\}}M(\lambda x,\lambda^2 t) 
+\psi_{x_1} +\iint_{\cald\cap\{u>0\}}(w_0)_{x_1}\left(\int_{-w_0}^1f(s)ds\right)
+\psi^\lambda
+\end{align*}
+
+By Lemma \ref{lim2}, we get (for some sequence $\lambda_k\to0$)
+$$0 = -\frac12 \alpha^2 \iint_{{\cal D}\cap\{x_1>0\}} \psi_{x_1} + 
+\lim_{k\to\infty}\iint_{{\cal D}\cap\{u_{\lambda_k}>0\}}M(\lambda_k x,
+\lambda_k^2 t)\psi_{x_1}.$$
+
+We want to check that $\car_{\{ u_{\lambda_k}>0 \}}\to\car_{\{ x_1>0 \}}$ 
+a.e. or, equivalently, 
+\begin{enumerate}
+\item \label{a}
+$\{ x_1>0 \}\subset \cup_{n=1}^{\infty}\cap_{k\ge n}\{ u_{\lambda_k}>0 \} 
+= \liminf \{ u_{\lambda_k}>0 \}$ a.e.
+\item \label{b}
+$\cap_{n=1}^{\infty}\cup_{k\ge n}\{ u_{\lambda_k}>0 \} = 
+\limsup \{ u_{\lambda_k}>0 \} \subset \{ x_1>0 \}$ a.e.
+\end{enumerate}
+
+
+Let us see (\ref{a}). If $x_1>0$, we get that $\alpha x_1>0$ and since 
+$u_{\lambda_k}(x,t)\to\alpha x_1$ it follows that $u_{\lambda_k}(x,t)>0\quad 
+\forall k\ge k_0$.
+
+Let us see (\ref{b}). If exists $k_j\to\infty$ with 
+$u_{\lambda_{k_j}}(x,t)>0$ then it must be $x_1\ge0$, because if $x_1<0$, 
+we have that $v_{\lambda_{k_j}}(x,t)=0$ for $j\ge j_0$ (because as $v$ is regular, 
+$\{ v_{\lambda_k}>0 \}\to \{ x_1>0 \}$). Since $u_{\lambda_{k_j}}\le 
+v_{\lambda_{k_j}}$ we get a contradiction.
+
+\medskip
+
+Therefore, 
+$$0 = -\frac12\alpha^2\iint_{{\cal D}\cap\{x_1>0\}}\psi_{x_1} + 
+M(0,0)\iint_{{\cal D}\cap\{x_1>0\}}\psi_{x_1}.$$
+So that, 
+$$0=\int_{{\cal D}\cap\{x_1=0\}}\left(\frac12\alpha^2 - M(0,0)\right)\psi dx'dt.$$
+
+Since $\psi$ is arbitrary, $\frac12\alpha^2 = M(0,0)$, so that, 
+$$\alpha = \sqrt{2M(0,0)}$$
+and the proof is finished
+
+\medskip
+
+\underline{Case 2:} $u^{\ve_k}_t\le 0$
+\medskip
+
+We already now that, if we consider $u_{\lambda}(x,t) = \frac{1}{\lambda}
+u(\lambda x,\lambda^2 t)$, then it follows that
+$$u_{\lambda}(x,t)\to u_0(x,t)\equiv \alpha x_1^+$$
+uniformly on compact subsets of $\R^{N+1}$.
+
+As before
+\begin{align*}
+&\iint_{\cal D} u^{\ve_k}_t u^{\ve_k}_{x_1}\psi = \frac12 
+\iint_{\cal D}|\nabla u^{\ve_k}|^2\psi_{x_1} - \iint_{\cal D} u^{\ve_k}_{x_1}
+\nabla u^{\ve_k}\nabla\psi
+ + \iint_{\cal D}{{\cal B}}_{\ve_k}(u^{\ve_k},x,t)\psi_{x_1}\\
+& \quad+ \iint_{\cal D} w^{\ve_k}_{x_1}\left(\int_{-w_0\ve_k}^{u^{\ve_k}} 
+f_{\ve_k}(s) ds\right)\psi+\iint_{\cald}(w_0)_{x_1}\big(\frac{\wepk}{\epk}-w_0\big)
+f(-w_0)\psi
+\end{align*}
+
+Now, as in the previous case, if we consider first $\psi^{\lambda}(x,t) = 
+\lambda\psi(\frac{x}{\lambda},\frac{t}{\lambda^2})$ and change variables, 
+we obtain
+\begin{equation}
+\label{velam}
+\begin{aligned}
+&\iint (u^{\ve_k}_{\lambda})_t (u^{\ve_k}_{\lambda})_{x_1}\psi = 
+\frac12 \iint|\nabla u^{\ve_k}_{\lambda}|^2\psi_{x_1} - 
+\iint (u^{\ve_k}_{\lambda})_{x_1}\nabla u^{\ve_k}_{\lambda}
+\nabla\psi\\
+&\quad + \iint{{\cal B}}^\lambda_{\ve_k/\lambda}(u^{\ve_k}_{\lambda}, x,
+ t)\psi_{x_1}
+ + \iint_{\cald}\frac{ (w^{\ve_k})_{x_1}}{\epk}\left(\int_{-w_0}
+^{\frac{u^\ve_k}{\epk}} 
+f(s) ds\right)\psi^\lambda\\
+&\quad+\iint_{\cald}(w_0)_{x_1}\big(\frac{\wepk}{\epk}-w_0\big)f(-w_0)\psi^\lambda
+\end{aligned}
+\end{equation}
+where $\bep^\lambda(u,x,t)=\int_{-w_0(\lambda x,\lambda^2 t)\ve}^{u}
+(s+{w^\ve}(x,t))f_{\ve}(s)ds$.
+\medskip
+We want to pass to the limit as both $\ve_k$ and $\lambda$ go to zero.
+
+Using Lemma \ref{lim2}, we see that for every sequence
+$\lambda_n\to0$ there exists a sequence $k_n\to\infty$ such that $\delta_n:=
+\ve_{k_n}/\lambda_n\to 0$ and $u^{\delta_n}:=(u^{\ve_{k_n}})_{\lambda_n}\to
+u_0$ uniformly on compact sets of $\R^{N+1}$. By Proposition \ref{lim}  
+we see that 
+we can pass to the limit in the first three terms of (\ref{velam})
+(with $\ve=\ve_{k_n}$ and $\lambda=\lambda_n$).
+\medskip
+
+Let us study the limit of
+${{\cal B}}^{\lambda_n}_{\delta_n}(u^{\delta_n}(x,t), x,t)$.
+
+It is easy to see that in $\{ x_1>0 \}$, 
+${{\cal B}}^{\lambda_n}_{\delta_n}(u^{\delta_n}(x,t),x, t)\to M(0,0)$
+uniformly on compact sets. Now, let $K\subset\{ x_1<0\}$ be compact. 
+We will show that 
+$$\nabla({{\cal B}}^{\lambda_n}_{\delta_n}(u^{\delta_n}(x,t), x, t))\to
+0\quad \mbox{in } L^1(K)$$
+In fact,
+\begin{align*}
+&\nabla({\cal B}^{\lambda_n}_{\delta_n}(u^{\delta_n}(x,t), x,t))=
+v^{\delta_n}f_{\delta_n}(u^{\delta_n})\nabla u^{\delta_n}\\
+&\quad+\lambda_n\nabla w_0(\lambda_nx,\lambda_n^2t) \big(\frac{w^{\delta_n}}
+{\delta_n}(x,t)-w_0(\lambda_nx,\lambda_n^2t)\big)f(-w_0(\lambda_n x,\lambda_n^2t))\\
+&\quad\qquad+\frac{\nabla w^{\delta_n}}{\delta_n}
+\int_{-w_0(\lambda_n x,\lambda_n^2t)}
+^{\frac{u^{\delta_n}}{\delta_n}}f(s) ds
+\end{align*}
+Since $v^{\delta_n}f_{\delta_n}(u^{\delta_n})\to 0$ as measures in $K$ and is
+nonnegative, we deduce that the convergence takes place in $L^1(K)$. On
+the other hand, $\nabla u^{\delta_n}$ is uniformly bounded. Therefore,
+the first term goes to zero in $L^1(K)$.
+
+In order to see that the second and third terms go to zero uniformly
+in $K$ we only need to observe that
+$$
+\frac{u^{\delta_n}}{\delta_n}(x,t)=\frac{\uepkn}{\epkn}(\lambda_nx,\lambda_n^2t)
+$$
+and a similar formula holds for $\frac{w^{\delta_n}}{\delta_n}$. So that
+\begin{align*}
+&\big|\frac{w^{\delta_n}}{\delta_n}(x,t)-w_0(\lambda_nx,\lambda_n^2t)|\to0
+\quad\mbox{uniformly on compact sets of }\R^{N+1},\\
+&\frac{u^{\delta_n}}{\delta_n}\ge-\frac{w^{\delta_n}}{\delta_n}\ge-C,\\
+&\frac{|\nabla w^{\delta_n}|}{\delta_n}(x,t)=
+\lambda_n\frac{|\nabla\wepkn|}{\epkn}(\lambda_nx,\lambda_n^2t)\to
+0\qquad\mbox{uniformly on compact sets of }\R^{N+1}. 
+\end{align*}
+On the other hand,
+$|{\cal B}^{\lambda_n}_{\delta_n}(u^{\delta_n}(x,t),x,t)|\le C_K$, 
+so that we have, 
+$$
+{\cal B}^{\lambda_n}_{\delta_n}(u^{\delta_n}(x,t), x, t)\to \bar M(t) 
+\qquad\mbox{weakly in }L^2(K).
+$$
+
+Let us now see that, actually,  the convergence takes place in $L^1(K)$.
+
+There holds that 
+\begin{align*}
+&\frac{\partial}{\partial t}\left({\cal B}^{\lambda_n}_{\delta_n}
+(u^{\delta_n}(x,t), x, t)\right) = 
+v^{\delta_n}f_{\delta_n}(u^{\delta_n})(u^{\delta_n})_t + 
+\frac{\partial}{\partial t}{\cal B}^{\lambda_n}_{\delta_n}
+(u^{\delta_n},x, t)\\
+&\qquad\quad\le \frac{\partial}{\partial t}{\cal B}^{\lambda_n}_{\delta_n}
+(u^{\delta_n}, x, t)
+\le C_K\quad\mbox{ in } K.
+\end{align*}
+On the other hand, for every $(x_0,t_0)\in K,\mbox{ and }\ Q_\tau(x_0,t_0)\subset\{x_1<0\}$
+\begin{align*}
+\iint_{Q_\tau(x_0,t_0)}&\frac{\partial}{\partial t}\left(
+{\cal B}^{\lambda_n}_{\delta_n}(u^{\delta_n}(x,t), x, t)\right) =
+\int_{B_\tau(x_0)}{\cal B}^{\lambda_n}_{\delta_n}
+(u^{\delta_n}(x,t_0+\tau^2), x,(t_0+\tau^2))\, dx\\
+& \qquad- \int_{B_\tau(x_0)}{\cal B}^{\lambda_n}_{\delta_n}
+(u^{\delta_n}(x,t_0-\tau^2),x, (t_0-\tau^2))\, dx\\
+&\quad\qquad\qquad \ge\ -C_\tau
+\end{align*}
+since $|{\cal B}^{\lambda_n}_{\delta_n}(u^{\delta_n}(x,t), x, t)|
+\le  C_K$ 
+for every compact set $K$.
+
+Therefore there exists $C_K>0$ such that $\| {\cal B}^{\lambda_n}_{\delta_n}
+(u^{\delta_n}(x,t), x,t)\|_{W^{1,1}(K)}\le C_K$. Hence the convergence takes
+place in $L^1(K)$ (for a subsequence).
+
+Now arguing  as in Lemma \ref{Bepsilon}, we get that $\bar M(t)=0$ or 
+$\bar M(t)=M(0,0)$.
+
+We can now take the limit in (\ref{velam}) for the sequences $\ve_{k_n}$ and
+$\lambda_n$ and  we
+obtain
+$$0 = -\frac12 \alpha^2\iint_{{\cal D}\cap\{x_1>0\}} \psi_{x_1} + 
+M(0,0)\iint_{{\cal D}\cap\{x_1>0\}} \psi_{x_1} + 
+\iint_{{\cal D}\cap\{x_1<0\}} \bar M(t) \psi_{x_1}.$$
+So that,
+$$0 = \int_{{\cal D}\cap\{x_1=0\}}\left(\frac12 \alpha^2 - M(0,0) - \bar M(t)\right)
+\psi\, dx' dt.$$
+
+Since $\psi$ is arbitrary we get $\frac12 \alpha^2 = M(0,0) -\bar M(t)$. So that, 
+in particular, $\bar M(t)$ is constant and then we have that 
+$\bar M(t)\equiv 0$ or $\bar M(t)\equiv M(0,0)$. Since $\alpha>0$ we deduce that $M(t)\equiv 0$ 
+and 
+$$\alpha = \sqrt{2M(0,0)}.$$
+The proof is finished.
+\end{pf}
+
+
+
+
+
+Now we prove a 
+proposition that says that, under suitable assumptions, $u^+$ does 
+not degenerate on the free boundary. The proof is similar to theorem 6.3 in 
+\cite{CLW1}, where the nondegeneracy of $u^+$ was proved in the strictly two 
+phase case. Here we assume, instead of $(\ref{umenordelta})$ the somewhat
+stronger condition that for every $K\subset\cald$ compact, there exist $0<
+\eta<1$
+and $\ve_0>0$ such that for every $0<\ve\le\ve_0$
+\begin{equation}\label{H2}
+\frac{u^\ve}{\ve}\le \eta\qquad\mbox{in }K\cap{\{u\equiv0\}^\circ}.
+\end{equation}
+
+
+\begin{prop} 
+\label{degeneracy}
+Let $u=\lim u^{\ve_k}$, where $(u^{\ve_k},v^{\ve_k})$ are uniformly bounded
+solutions to $(1.1)$ satisfying $(\ref{ochica})$ with $w_0>-1$, such that
+$v^{\ve_k}\ge0$
+and the functions $u^{\ve_k}$ satisfy $(\ref{H2})$.
+Let $(x_0,t_0)\in\partial\{ u>0 \}$. 
+ 
+Let us assume that there exists $\nu\in \R^N$, with $|\nu|=1$ such that
+$$\liminf_{r\to 0^+}\frac{|\{u>0\}\cap\{\langle x-x_0,\nu\rangle>0\}\cap
+Q^-_r(x_0,t_0)|}{|Q^-_r(x_0,t_0)|}>\alpha_1$$
+and
+$$\liminf_{r\to 0^+}\frac{|\{ u=0 \}^\circ\cap\{\langle x-x_0,\nu\rangle<0\}\cap
+Q^-_r(x_0,t_0)|}{|Q^-_r(x_0,t_0)|}>\alpha_2$$
+with $\alpha_1+\alpha_2>\frac12$, then there exists a constant $C>0$ and 
+$r_0>0$ which depends on $N$ and $f$ such that, if $0<r\le r_0$, 
+$$\sup_{\partial_p Q_r^-(x_0,t_0)} u\ge C r.$$
+\end{prop}
+
+\begin{pf}
+Without loss of generality, we may assume that $(x_0,t_0)=(0,0)$ and that  
+$\nu=e_1=(1,0,...,0)$. 
+
+We will note $Q_r^-=Q_r^-(0,0)$ and
+$$
+(u^\ve)_r(x,t)=\frac{1}{r}u^\ve(rx,r^2t),\quad (v^\ve)_r(x,t)=\frac{1}{r}
+v^\ve(rx,r^2t),\quad
+u_r(x,t)=\frac{1}{r}u(rx,r^2t).$$
+
+Let us see that there exists $r_0>0$ and a constant $c$ such that if
+$r<r_0$ and $\ve<\ve_0=\ve_0(r)$, then
+$$\iint_{Q_1^-}(v^\ve)_r f_{\ve/r}((u^\ve)_r) dx\ge c.$$
+
+
+Following \cite{CLW1}, there exists $\gamma>0$ small such that, for some 
+$\lambda>0$, 
+$$\frac{|\{u_r>\gamma\}\cap\{ x_1>0 \}\cap Q^-_1|}{|Q^-_1|} + 
+\frac{|\{ u_r=0 \}^\circ\cap\{ x_1<0 \}\cap Q^-_1|}{|Q^-_1|}\ge \frac12 + \lambda$$
+
+Let us now define
+$$A_r=\{ u_r>\gamma \}\cap\{ x_1>0 \}\cap Q_1^-,\quad
+B_r=\{ u_r=0 \}^\circ\cap\{ x_1<0 \}\cap Q_1^-$$
+$$\mbox{and } -B_r=\{(x_1,x',t)/\ (-x_1,x',t)\in B_r\}.$$
+Then, we have
+$$|A_r\cap (-B_r)|\ge \lambda |Q_1^-| = \tilde{\lambda}.$$
+Once again, following \cite{CLW1} we have for $0<\rho<1$ fixed, that there  
+exists $0<x_1^r<1$ such that
+$$|\Lambda_r|=|\{ (x',t)/\ (x_1^r,x',t)\in A_r\cap (-B_r)\}|>
+\rho\tilde{\lambda}$$
+
+Let $\eta>0$ be the constant in $(\ref{H2})$ in $Q_1(0,0)$, let
+$0<\delta'<\delta$, $0<b<b'<1$ be such that
+$$
+\eta< -w_0(0,0)+\delta<b.
+$$
+Let $\kappa>0$ be such that
+$$f(s)>\kappa>0\quad \mbox{for } s\le b'.$$
+Then, for $(x',t)\in\Lambda_r$ we have
+$$\frac{1}{\ve/r}(u^\ve)_r(x_1^r,x',t)>\frac{\gamma}{2(\ve/r)}>b,\quad
+\frac{1}{\ve/r}(u^\ve)_r(-x_1^r,x',t)< -w_0(0,0)+\delta$$
+if $\ve_k<\ve_1=\ve_1(r)$ is small.
+ So that, for
+every $(x',t)\in \Lambda_r$ there exists $\tilde x_1^r\in(-1,1)$ such that
+$-w_0(0,0)
++\delta\le\frac1{\ve/r}(u^\ve)_r(\tilde x_1^r,x',t)\le b$.
+
+Now, by the uniform Lipschitz regularity of $(u^\ve)_r$ and $(v^\ve)_r$,  and
+$(\ref{ochica})$,
+we have that for $\ve\le\ve_0(\le\ve_1)$ and $r\le r_0$,
+$$
+\frac{(u^\ve)_r}{\ve/r}(x_1,x',t)\le b'\quad
+\mbox{and}\quad\frac{(v^\ve)_r}{\ve/r}
+(x_1,x',t)\ge \delta'
+\quad \mbox{if }
+|x_1-\tilde x_1^r|<C\frac{\ve}{r}
+$$
+where $C$ depends on $\delta,\delta',b,b'$, on the Lipschitz constant of 
+$u^\ve$ and $v^\ve$ in $Q_1^-$  and $r_0$ depends only $w_0$.
+
+Finally we have
+\begin{align*}
+\iint_{Q_1^-}(v^\ve)_r &f_{\ve/r}((u^\ve)_r)=
+\iint_{Q_1^-}\frac{(v^\ve)_r}{\ve/r}\frac1{\ve/r}f\big(
+\frac{(u^\ve)_r}{\ve/r}\big)\\
+&\ge \delta'\frac{\kappa}{\ve/r}
+\left|\left\{(x,t)\in Q_1^-/\ \frac{(v^\ve)_r}{\ve/r}\ge\delta'\mbox{ and }
+f\big(\frac{(u^\ve)_r}{\ve/r}\big)\ge \kappa\right\}\right|\\
+&\qquad\qquad\qquad\ge\delta'\frac{\kappa}{\ve/r}|\Lambda_r|2C\frac{\ve}{r}\ge
+2C\delta'\kappa\rho\tilde{\delta}\equiv c.
+\end{align*}
+
+The rest of the proof follows as in \cite{CLW1}
+\end{pf}
+
+\begin{rem}
+\label{otrodegen}
+ Proposition \ref{degeneracy} remains true if we change the 
+hypothesis that $\uepk$ satisfies $(\ref{H2})$ by 
+\begin{equation}
+\label{H3}
+\frac{u^{\ve_k}}{\ve_k}\to -w_0\qquad a.e. \ \ \{u\equiv0\}^\circ.
+\end{equation}
+In fact, as in the proof of Prop. \ref{degeneracy} we consider for each
+$0<r<1$ the sets $A_r$ and $B_r$. So that, for some $0<\lambda<1$
+$$
+|A_r\cap(-B_r)|\ge\lambda |Q_1^-|.
+$$
+Since $B_r\subset\{u_r\equiv0\}^\circ$, there holds that
+$$
+\frac{(u^\ve)_r}{\ve/r}(-x_1,x',t)\to -w_0(-r{x_1},rx',r^2t)\qquad a.e. \ \ A_r\cap(-B_r).
+$$
+Let $0<\mu<1$. There exists $C_r\subset \big(A_r\cap(-B_r)\big)$ such that
+$|C_r|=\mu|A_r\cap(-B_r)|$ and 
+$$
+\frac{(u^\ve)_r}{\ve/r}(-x_1,x',t)\to -w_0(-rx_1,rx',r^2t)\quad\mbox{uniformly in }C_r.
+$$
+Let $\delta>0$. There exists $\ve_1=\ve_1(r)$ such that
+$$
+\frac{(u^\ve)_r}{\ve/r}(-x_1,x',t)\le -w_0(-rx_1,rx',r^2t)+\frac\delta2\le
+-w_0(0,0)+\delta\quad\mbox{in }C_r
+$$
+if $\ve<\ve_1$ and $r<r_0= r_0(\delta)$.
+Now, the proof follows as in Prop. \ref{degeneracy} by taking $\tilde\lambda=
+\mu\lambda|Q_1^-|$ and 
+$$
+\Lambda_r:=\{(x',t)\,/\,(x_1^r,x',t)\in C_r\}.
+$$
+\end{rem}
+
+
+\begin{rem}
+\label{otrodegen2}
+Proposition \ref{degeneracy} remains true if we change
+condition $(\ref{H2})$ by condition $(\ref{umenordelta})$. In fact,
+as in the proof of Theorem \ref{puntual} we see that condition 
+$(\ref{umenordelta})$ implies that 
+$$
+\bepk(\uepk, x,t)\to0\qquad L^1_{loc}(\{u\equiv0\}^\circ).
+$$
+As in Theorem \ref{puntual} we deduce that $\uepk$ satisfies $(\ref{H3})$.
+
+\end{rem}
+
+\bigskip
+
+
+Using  Remark \ref{otrodegen}, Remark \ref{otrodegen2} and Theorem \ref{viscosa}
+ we get the following
+Corollaries.
+
+
+
+
+\begin{cor}
+\label{cor1}
+Let $u=\lim u^{\ve_k}$ where $(u^{\ve_k},v^{\ve_k})$ are unifomly bounded
+solutions to $(1.1)$ in a domain $\cald\subset\R^{N+1}$ with $v^{\ve_k}\ge0$,
+which verify $(\ref{ochica})$ with $w_0>-1$ and such that 
+$u^{\ve_k}$ satisfies $(\ref{umenordelta})$.
+If the free
+boundary $\cald\cap\partial\{u>0\}$ is given by $x_1 = g(x',t)$ with
+$g\in Lip(1,1/2)$, then, $u$ is a 
+viscosity solution of the free boundary problem $(\ref{FBP})$.
+\end{cor}
+
+
+
+
+\begin{cor}
+\label{cor0}
+Let $u=\lim u^{\ve_k}$ where $(u^{\ve_k},v^{\ve_k})$ are unifomly bounded
+solutions to $(1.1)$ in a domain $\cald\subset\R^{N+1}$ with $v^{\ve_k}\ge0$,
+which verify $(\ref{ochica})$ with $w_0>-1$ and such that $\uepk$ 
+satisfies $(\ref{H3})$ and $u^{\ve_k}_t\le 0$.
+If, for every $(x_0,t_0)\in \cald\cap\partial\{u>0\}$,  
+$\{x\in \R^N\,/\, (x,t_0)\in \cald\cap\{u>0\}\}$ is given by 
+$x_1>\Phi(x')$ with
+$\Phi$, Lipschitz continuous  then, $u$ is a 
+viscosity solution of the free boundary problem $(\ref{FBP})$.
+\end{cor}
+\begin{pf} We only need to see that $u$ does not degenerate at points
+of the free boundary which are regular from the zero side. Let $(x_0,t_0)$ be
+any such point. We see that
+we can apply Remark \ref{otrodegen} at that point. In fact, since $\uepk_t
+\le0$, $u$ is decreasing in time. Therefore,
+$$
+\{(x,t)\,/\,x_1>\Phi(x)\,,\,t\le t_0\}\subset\{u>0\}
+$$  
+and the parabolic density of this set is positive.
+\end{pf}
+
+
+
+In particular, Corollary \ref{cor0} can be applied to solutions of (1.1) with
+$u_0^\ve$
+constructed as in \cite{CV} and $v_0^\ve$ a small perturbation of $u_0^\ve$.
+
+
+\begin{cor}
+\label{cor4}
+Let $u_0\in C(\R^N)\cap C^2(\overline{\{u_0>0\}})$ be such that
+ $||u_0||_{C^2(\overline{\{u_0>0\}})}<\infty$, $ \Delta u_0\le0$ and
+$(u_0)_{x_1}-\lambda|\nabla u_0|\ge 0$ in $\{u_0>0\}$ with $\lambda>0$.
+Assume, moreover that   $0<a_2\le |\nabla u_0|\le a_1<\sqrt{2M_0}$ in
+a neighborhood of the free boundary: $\{x\in \{u_0>0\}\,/\, dist(x,
+\{u_0=0\})\le \gamma\}$, and $M_0=\int_0^1sf(s)$. Then, there exists a 
+sequence $(u_0^\ve,v_0^\ve)\in \big(C^1(\R^N)\big)^2$
+with $u_0^\ve\to u_0$ uniformly in $\R^N$ (so that $u_0^\ve$ are uniformly
+bounded) and, moreover, they satisfy
+\begin{equation}
+\label{u0ep}
+\begin{aligned}
+&1)\ \Delta u_0^\ve-v_0^\ve f_\ve(u_0^\ve)\le0\\
+&2)\ (u_0^\ve)_{x_1}-\lambda|\nabla u_0^\ve|\ge 0\\
+&3)\ \frac{v_0^\ve-u_0^\ve}{\ve}\to w_0\ \ \mbox{uniformly on compact sets, with
+}\ \ w_0>-1.
+\end{aligned}
+\end{equation} 
+ $w_0\in \R$ is any constant  such that $w_0\ge-\eta$ with $\eta>0$ small
+enough.
+
+
+Let $(u^\ve,v^\ve)$ be the solution to $(\ref{1.1})$ with initial datum 
+$(u_0^\ve,v_0^\ve)$ (so that, in particular, $u^\ve$ and $v^\ve$ are
+uniformly bounded).  For every sequence $\epj\to 0$ there exists
+a subsequence $\epjk$ such that there exists
+$$
+u=\lim_{k\to\infty}\uepjk
+$$
+and $u$ is a viscosity solution to the free boundary problem $(\ref{FBP})$.
+
+\end{cor}
+
+\begin{pf}  Let $u_0^\ve$ be the approximations constructed in \cite{CV}.
+The approximations are constructed in the following way. First we extend
+$u_0$ to a neighborhood of $\{u_0>0\}$: $S:=\{x\in \R^N\,/\,\mbox{dist}\,(x,
+\{u_0>0\})\le\gamma\}$ in such a way that $||u_0||_{C^2(S)}<\infty$. 
+For $\ve$ small enough we define
+$$
+u_0^\ve(x)=\ve F\left(\frac1{\sqrt{2M_0}}\big(1-\frac{u_0(x)}{\ve}\big)\right)
+\qquad\mbox{in }\ \{-C\ve\le u_0\le \ve\}.
+$$
+where $F\in C^2(\R)$ is such that
+$$
+F''\le (1+\delta)F f(F)+\alpha F',\ \ F(0)=1,\ \ F'(0)=-\sqrt{2M_0}.
+$$
+Here $\delta>0,\ \alpha>0$ are such that $F$ has a strict minimum at
+a finite point $\bar s$ such that $\bar s\sqrt{2M_0}>1$. ($\bar s\to+
+\infty$ as $\delta\to 0$), and $F$ is decreasing for $s<\bar s$. 
+
+The constant $C$ is taken as $C=\bar s\sqrt{2M_0}-1$.
+
+We define 
+\begin{align*}
+u^\ve_0&=u_0\ \,\qquad\mbox{in }\ \{u_0>\ve\}\\
+u_0^\ve&=\ve F(\bar s)\quad\mbox{in }\ \R^N\setminus\{u_0>-C\ve\}.
+\end{align*}
+
+
+As in \cite{CV}, we see that  $u_0^\ve\in C^1(\R^N)$.
+
+Let $w_0\in\R$ be such that $w_0\ge-\eta>-F(\bar s) $  with
+$\eta>0$ to
+be fixed  later and let
+$$
+v_0^\ve=u_0^\ve+\ve w_0.
+$$
+Then, $v_0^\ve\ge0$. 
+It is immediate to verify that (\ref{u0ep}) 1) is satisfied
+in $\{u_0>\ve\}$ and $\R^N\setminus\{u_0>-C\ve\}$. Let us see that it is
+satisfied in $\{-C\ve\le u_0\le \ve\}$. In fact,
+\begin{align*}
+\Delta u_0^\ve&-v_0^\ve f_\ve(u_0^\ve)=\frac1{2M_0\ve}F''|\nabla u_0|^2-
+\frac1{\sqrt{2M_0}}F'\Delta u_0
+-\frac1\ve F f(F)-\frac{w_0}\ve f(F)\\
+&\le \frac{1+\delta}{2M_0\ve}
+F f(F)|\nabla u_0|^2
++\frac\alpha{2M_0\ve}F'|\nabla u_0|^2-\frac a{\sqrt{2M_0}} F'-
+\frac1\ve F f(F) -\frac{w_0}\ve f(F)
+\end{align*}
+where $a>0$ is such that $|\Delta u_0|\le a$.
+
+
+Let $0<\mu<1$  be such that $a_1\le (1-\mu)^{1/2}A\sqrt{2M_0}$ with $0<A<1$,
+and let $\delta$ in the definition of $F$ be such that $(1+\delta)A^2\le 1$.
+Then, if $\ve$ is small enough so that ${\alpha a^2_2}/\sqrt{2M_0}>{a\ve}$
+there holds that
+\begin{align*}
+\Delta u_0^\ve&-v_0^\ve f_\ve(u_0^\ve)\le \frac1\ve\left[[(1+\delta)(1-\mu)A^2
+-1]F f(F)+\big(\frac{\alpha a^2_2}{2M_0}-\frac{a\ve}{\sqrt{2M_0}}\big) F'-w_0 f(F)
+\right]\\
+&\le \frac1\ve[-\mu F-w_0]f(F)\le \frac1\ve[-\mu F(\bar s)-w_0]f(F)\le0
+\end{align*}
+ if $\eta=\mu F(\bar s)$.
+
+Clearly, (\ref{u0ep}) 3)  holds. Let us see that (\ref{u0ep}) 2) also
+holds. We only need to verify this property in the set $\{-C\ve< u_0<\ve\}$
+and this is clear from the fact that
+$$
+\nabla u_0^\ve=-\frac1{\sqrt{2M_0}}F'\left(\frac1{\sqrt{2M_0}}\big({1-
+\frac{u_0}\ve}\big)\right)\nabla u_0.
+$$
+
+
+Now, by the results of Section 2, for every sequence
+$\epj\to0$ there exists a subsequence and a continuous function $u$ such
+that $\uepjk\to u$ uniformly on compact subsets of $\R^N\times(0,\infty)$.
+
+
+On the other hand,
+ $u^\ve_t$ is a solution to the following equation
+$$
+\Delta U-U_t=\beta_\ve'(u)U.
+$$
+Here $\beta_\ve  (s)=sf_\ve(s)$. Since, for $\ve$ small enough $u^\ve_t(x,0)\le0$
+we conclude that
+\begin{equation}
+\label{ut}
+u^\ve_t\le0\qquad\mbox{in }\R^N\times(0,\infty).
+\end{equation}
+
+In a similar way we see that $u_{x_1}-\lambda u_{x_i}\ge0$ for every $i$. So
+that
+\begin{equation}
+\label{ux1}
+u^\ve_{x_1}-\frac\lambda N|\nabla u^\ve|\ge0\qquad\mbox{in }\R^N\times(0,\infty).
+\end{equation}
+
+Clearly (\ref{ut}) and (\ref{ux1}) imply that
+$$
+u_t\le0\qquad\mbox{and }\quad u_{x_1}-\frac\lambda N|\nabla u|\ge0\qquad
+\mbox{in }\{u>0\}.
+$$
+
+In particular, the free boundary is Lipschitz in space.
+
+So that, in order to apply Corollary \ref{cor0} we only need to verify that
+$\uepk$ satisfies (\ref{H3}).
+On one hand, given $K\subset\{u_0\equiv0\}^\circ$ compact, there exists
+$\ve_0$ such that for $\ve<\ve_0$
+$$
+{\cal B}_\ve(u^\ve_0,x,0)=\int_{-w_0}^{\frac{u_0^\ve}\ve(x)}(s+w_0)
+f(s)=\int_{-w_0}^{F(\bar s)}(s+w_0)f(s).
+$$
+On the other hand,
+$$
+\frac\partial{\partial t}\big({\cal B}_\ve(u^\ve,x,t)\big)=
+v^\ve f_\ve(u^\ve)u^\ve_t\le0.
+$$
+Therefore,
+$$
+{\cal B}_\ve(u^\ve,x,t)\le \int_{-w_0}^{F(\bar s)}(s+w_0)f(s)\qquad\mbox{for }
+x \mbox{ in }K\,,\, t>0.
+$$
+
+As in the proof of Theorem \ref{viscosa} we see that, since $u^\ve_t\le0$,
+there holds that ${\cal B}_\ve(u^\ve,x,t)\to \bar M(x,t)$ in $L^1_{loc}(\{u\equiv
+0\}^\circ)$ and, for almost every $(x,t)$ we either have $\bar M(x,t)=0$ or $\bar M(x,t)=M
+=\int_{-w_0}^1(s+w_0)f(s)$.
+Since
+$$
+\nabla \big(B_\ve(u^\ve,x,t)\big)=v^\ve f_\ve(u^\ve)\nabla u^\ve\to 0\quad\mbox
+{in }L^1_{loc}(\{u\equiv0\}^\circ)
+$$
+there holds that $\bar M(x,t)=\bar M(t)$ in $\{u\equiv0\}^\circ$. Therefore,
+$$
+\bar M(t)\le \int_{-w_0}^{F(\bar s)}(s+w_0)f(s)\quad a.e.\ \ \{u\equiv0\}^\circ.
+$$
+
+Since $F(\bar s)<1$, there holds that $\bar M(t)\equiv0$. 
+
+Thus, for every sequence $\epk\to 0$
+$$
+\int_{-w_0}^{\frac{\uepk}{\epk}}(s+w_0)f(s)\to 0\qquad a.e.\ \  \{u\equiv0\}^\circ
+$$
+and we deduce that $\uepk$ satisfies (\ref{H3}).
+\end{pf}
+
+
+
+
+
+
+Combining the regularity results for viscosity solutions of \cite{F},
+Corollary \ref{cor1} and Corollary \ref{cor0} we have
+the following regularity result for limit functions.
+
+\begin{cor}
+\label{cor3}
+Let $u$ as in Corollary \ref{cor1} or Corollary \ref{cor0}.
+If, moreover,  the free
+boundary $\cald\cap\partial\{u>0\}$ is given by $x_1 = g(x',t)$ with $g$
+ Lipschitz continuous,
+then, $u$ is a classical solution of the free boundary problem $(\ref{FBP})$.
+\end{cor}
+
+
+
+\begin{ack}
+The first author wants to thank J. D. Rossi for his constant support and 
+several interesting discussions.
+\end{ack}
+
+\end{section}
+
+
+
+
+
+
+
+
+\begin{thebibliography}{[xxx]}
+
+\bibitem{ACS} I. Athanasopoulos, L.A. Caffarelli, S. Salsa, {\it Caloric 
+functions in Lipschitz domains and the regularity of solutions to phase 
+transitions problems}, Ann. Math. 143(3) (1996), 413--434.
+
+\bibitem{BCN} H. Berestycki, L.A. Caffarelli, L. Nirenberg, 
+{\it Uniform estimates for regularization of free boundary problems}, Annal. 
+and Partial Diff. Eq., Cora Sadosky eds., Lecture Notes in Pure and Applied 
+Math., V. 122, Marcel Dekker, 1988.
+
+\bibitem{BL} J.D. Buckmaster, G.S.S. Ludford, Theory of laminar flames, 
+Cambridge Univ. Press, Cambridge, 1982.
+
+\bibitem{C} L.A. Caffarelli, {\it Uniform Lipschitz regularity of a 
+singular perturbation problem}, Diff. and Int. Eq., V. 8, N. 7, (1995), 
+1585--1590.
+
+\bibitem{CLW1} L.A. Caffarelli, C. Lederman, N. Wolanski, {\it Uniform 
+estimates and limits for a two phase parabolic singular perturbation
+problem}, Indiana Univ. Math. J. 46 (2) (1997), 453--490.
+
+\bibitem{CLW2} L.A. Caffarelli, C. Lederman, N. Wolanski, {\it Pointwise 
+and viscosity solutions for the limit of a two phase parabolic singular 
+perturbation problem}, Indiana Univ. Math. J. 46 (3) (1997), 719--740.
+
+\bibitem{CV} L.A. Caffarelli, J.L. V\'azquez, {\it A free boundary 
+problem for the heat equation arising in flame propagation}, Trans. Amer. 
+Math. Soc. {\bf 347} (1995), 411--441.
+
+\bibitem{F} L. Fornari, {\it Regularity of the solution and of the free 
+boundary for free boundary problems arising in combustion theory}, preprint.
+
+
+\bibitem{LSU} O.A. Ladyzhenskaya, V.A. Solonnikov, N.N. Ural'tseva, 
+Linear and Quasilinear Equations of Parabolic Type, Transl. Math. 
+Monographs, Vol. 23, Amer. Math. Soc., Providence, R.I., 1968.
+
+\bibitem{LVW} C. Lederman, J. L. Vazquez, N. Wolanski, {\it Uniqueness
+of solution in a free boundary problem from combustion}, to appear in Trans. AMS.
+
+\bibitem{LVW2} C. Lederman, J. L. Vazquez, N. Wolanski, {\it Uniqueness
+of solution to a two phase free boundary problem} preprint.
+
+\bibitem{LW} C. Lederman, N. Wolanski, {\it Viscosity solutions and 
+regularity of the free boundary for the limit of an elliptic two phase 
+singular perturbation problem},  Analli della Scuola Normale
+Sup. Pisa. Serie IV, Vol. XXVII. Fasc. 2, (1998), 253--288.
+
+\bibitem{ZF} Ya.B. Zeldovich, D.A. Frank-Kamenetski,
+{\it The theory of thermal propagation of flames},
+ Zh. Fiz. Khim. 12,  (1938), 100--105  (in Russian);
+English translation in ``Collected Works of  Ya.B.   Zeldovich",
+vol. 1, Princeton Univ. Press,  1992.
+
+
+\end{thebibliography}
+
+
+\end{document}
