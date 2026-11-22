@@ -97,12 +97,19 @@ def build_mesh(x, u, eps, L, mp):
     a = max(0.0, xf - (lo_K + mp.K_margin) * eps)
     b = min(L, xf + (hi_K + mp.K_margin) * eps)
     h_fine = eps / mp.pts_per_eps
-    n_band = max(2, int(np.ceil((b - a) / h_fine)))
-    band = np.linspace(a, b, n_band + 1)
-    h0 = (b - a) / n_band
+    # snap the band to the global lattice h_fine * Z: consecutive bands share
+    # their nodes, so the transfer of the solution is exact inside the band
+    # (interpolation only acts in the graded transition, where u is smooth)
+    ia = int(np.floor(a / h_fine))
+    ib = int(np.ceil(b / h_fine))
+    ib = min(ib, int(np.floor(L / h_fine)))
+    band = h_fine * np.arange(ia, ib + 1)
+    a, b = band[0], band[-1]
+    h0 = h_fine
     left = a - _graded(a, h0, mp.h_coarse, mp.growth)[::-1]
     right = b + _graded(L - b, h0, mp.h_coarse, mp.growth)
     xn = np.concatenate((left[:-1], band, right[1:]))
+    xn[0], xn[-1] = 0.0, L          # remove round-off at the ends
     return xn, xf
 
 
