@@ -21,6 +21,8 @@
 
 \date{DRAFT, \today}
 
+\begin{document}
+
 \begin{abstract}
 We study numerically the singular limit $\ve\to0$ of the system
 $\Delta u-u_t=Yf_\ve(u)$, $\Delta Y-Y_t=Yf_\ve(u)$, $f_\ve(s)=\ve^{-2}f(s/\ve)$,
@@ -75,11 +77,22 @@ solution when one exists. Thus the high activation energy limit is
 \emph{unstable}: perturbations of order $\ve$ of the initial data, which do
 not change the limit of $u^\ve_0$, change the free boundary condition.
 
-To the best of our knowledge [TO BE CONFIRMED WITH THE LITERATURE REVIEW] no
-numerical study of the limit $\ve\to0$ in \eqref{eq:system} is available. The
-difficulty is the reaction layer of width $O(\ve)$, which moves with the
-flame and must be resolved: a uniform mesh needs $O(\ve^{-N})$ cells. In this
-paper we
+To the best of our knowledge, no numerical study of the limit $\ve\to0$ in
+\eqref{eq:system}, or even in the case $u^\ve=Y^\ve$, is available: the
+analysis of the limit
+\cite{CaffarelliVazquez1995,CaffarelliLedermanWolanski1997a,Weiss2003,PetrosyanYip2008,WeissZhang2009}
+is purely theoretical, and Weiss and Zhang \cite{WeissZhang2009} point out that
+some limit behaviours are hard to capture numerically. Adaptive methods for
+thin combustion fronts at large activation energy have a long history
+\cite{Smooke1982,BaylissGottliebMatkowskyMinkoff1989,DenetHaldenwang1992},
+but they work at fixed activation energy and do not study the convergence to
+the free boundary problem. On the side of the limit problem, the elliptic
+(Bernoulli) analogue of \eqref{eq:P} has a substantial numerical literature
+\cite{FlucherRumpf1997,Tiihonen1997,KarkkainenTiihonen1999,BouchonClainTouzani2005,HarbrechtMitrou2014},
+including a moving mesh method \cite{ShenDaiHuang2024}. The difficulty in the
+parabolic singular perturbation problem is the reaction layer of width
+$O(\ve)$, which moves with the flame and must be resolved: a uniform mesh needs
+$O(\ve^{-N})$ cells. In this paper we
 \begin{enumerate}
 \item propose a finite volume method on a mesh that follows the flame,
 with $O(\ve^{-1})$ cells in the layer and a geometric transition to a coarse
@@ -249,11 +262,79 @@ RESULTS_TW_TABLE
 RESULTS_TW_INSTABILITY
 
 \subsection{Radial extinction}
-RESULTS_RADIAL
+We take $w_0=0.5$, $T=1$, the exact solution $V$ of Section~\ref{sec:exact}
+as initial datum ($u_0=V(\cdot,0)$, so $u_0^\ve$ and $Y_0^\ve$ are as in
+Section~\ref{sec:method}), and integrate \eqref{eq:Peps} up to $t=0.75$, when the
+radius of the ball $\{V>0\}$ has halved. The initial datum is radially
+decreasing, hence starshaped, and $w_0$ is constant, so the uniqueness result
+of \cite{FernandezBonderWolanski2004} applies: $u^\ve\to V$.
+Figure~\ref{fig:radial} shows $u^\ve$ and $V$ for $\ve=0.01$, $N=2$, and the
+errors as $\ve\to0$; Table~\ref{tab:radial} lists them.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.48\textwidth]{../numerics/figures/radial_snapshots.png}\hfill
+\includegraphics[width=0.5\textwidth]{../numerics/figures/radial_convergence.png}
+\caption{Radial extinction, $w_0=0.5$. Left: $u^\ve$ (solid) and the exact
+solution $V$ (dashed) for $N=2$, $\ve=0.01$. Right: front error
+$\max_{t\in[0.05,0.75]}|r_\ve(t)-R\sqrt{T-t}|$ and
+$\max_x|(u^\ve)^+-V|$ at $t=0.75$, for $N=2,3$.}\label{fig:radial}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rcccc}
+\toprule
+& \multicolumn{2}{c}{front error$/\ve$} & \multicolumn{2}{c}{$\|(u^\ve)^+-V\|_\infty/\ve$}\\
+$\ve$ & $N=2$ & $N=3$ & $N=2$ & $N=3$\\
+\midrule
+0.05  & 1.123 & 1.119 & 0.138 & 0.135\\
+0.02  & 1.063 & 1.061 & 0.108 & 0.106\\
+0.01  & 1.043 & 1.049 & 0.096 & 0.103\\
+0.005 & 1.042 & 1.056 & 0.101 & 0.111\\
+0.002 & 0.968 & 1.002 & 0.111 & 0.100\\
+0.001 & 0.916 & 0.918 & 0.213 & 0.206\\
+\bottomrule
+\end{tabular}
+\caption{Radial extinction: errors divided by $\ve$.}\label{tab:radial}
+\end{table}
+
+The front error is $O(\ve)$, and most of it is the distance between the level
+set $\{u^\ve=\ve\}$ that we track and the free boundary: since
+$|\nabla V|=\sqrt{2M}$ there, this distance is $\ve/\sqrt{2M}+o(\ve)$, that is
+$0.943\,\ve$ for $w_0=0.5$, consistent with the first two columns (between $0.92$ and $1.12$); the remainder is of higher order.
+The sup error is attained inside the reaction layer, where
+$(u^\ve)^+$ has the shape $\ve\psi(d/\ve)$ of the inner profile while $V$ is
+linear in the distance $d$ to the free boundary; it is therefore of order
+$\ve$, and stays below $0.25\,\ve$ in all runs. Away from the layer
+($r<R(t)-20\ve$) the error is between $4\cdot10^{-5}$ and
+$2\cdot10^{-3}$ and shows no clean rate. The increase of the ratio at
+$\ve=10^{-3}$ is small in absolute terms ($2\cdot10^{-4}$) and is at the level
+of the position of the inner layer relative to the mesh; we did not
+investigate it further.
 
 % ---------------------------------------------------------------------------
 \section{Conclusions and outlook}
-OUTLOOK
+The experiments support first-order convergence in $\ve$ of the flame
+position and speed for \eqref{eq:Peps}, in planar and radial geometry,
+including in the presence of the $O(\ve)$ perturbation $w_0$ that changes the
+limit problem, and they make visible the instability proved in
+\cite{FernandezBonderWolanski2000}. Proposition~\ref{prop:speed} gives the
+first-order correction of the speed of planar waves; whether an $O(\ve)$ rate
+holds for general (non travelling-wave) limits, as the radial experiments
+suggest, is open.
+
+Natural next steps are: (i) the elliptic problem in two dimensions, where the
+annulus provides explicit solutions with zero, one or two free boundaries, and
+the Bernoulli literature \cite{FlucherRumpf1997,ShenDaiHuang2024} provides
+comparisons; (ii) the parabolic problem in two and three dimensions with
+adaptive refinement and coarsening of a finite element mesh, which follows
+the strategy of Section~\ref{sec:method} with a cell indicator instead of an
+interval; (iii) a moving mesh (MMPDE) version in which time steps do not
+degrade as $\ve\to0$ \cite{HuangRussell2011,BuddHuangRussell2009}; and
+(iv) experiments without the geometric assumptions of
+\cite{FernandezBonderWolanski2004}, in search of the non-uniqueness and
+degenerate behaviours of \cite{PetrosyanYip2008,WeissZhang2009}.
 
 \bibliographystyle{amsplain}
 \bibliography{references}
