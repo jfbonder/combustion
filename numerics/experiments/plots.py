@@ -101,21 +101,20 @@ def radial_figures():
     rs = json.loads((RES / "radial.json").read_text())
     Ns = sorted({r["N"] for r in rs})
 
-    fig, axs = plt.subplots(1, 3, figsize=(11, 3.4), sharey=True)
+    fig, axs = plt.subplots(1, 2, figsize=(8.4, 3.4), sharey=True)
     for k, N in enumerate(Ns):
         g = sorted((r for r in rs if r["N"] == N), key=lambda r: r["eps"])
         e = np.array([r["eps"] for r in g])
-        for ax, key in zip(axs, ("front_err", "sup_err", "sup_err_int")):
+        for ax, key in zip(axs, ("front_err", "sup_err")):
             ax.loglog(e, [r[key] for r in g], color=SERIES[k], marker=MARKERS[k],
                       ms=6, mfc="white", mew=1.5, label=f"$N={N}$")
-    for ax in axs:
-        slope_ref(ax, [1e-3, 5e-2], 1.0e-3)
+    slope_ref(axs[0], [1e-3, 5e-2], 1.0e-3, label=r"$\varepsilon$")
+    slope_ref(axs[1], [1e-3, 5e-2], 2.5e-4, label=r"$\varepsilon/4$")
     axs[0].set_title(r"$\max_t\,|r_\varepsilon(t) - R\sqrt{T-t}|$", fontsize=9,
                      color=INK, loc="left")
     axs[1].set_title(r"$\max_x\,|(u^\varepsilon)^+ - V|$ en $t=0.75$", fontsize=9,
                      color=INK, loc="left")
-    axs[2].set_title(r"idem, sólo $r<R(t)-20\varepsilon$", fontsize=9,
-                     color=INK, loc="left")
+
     for ax in axs:
         ax.set_xlabel(r"$\varepsilon$")
         ax.legend(loc="lower right")
