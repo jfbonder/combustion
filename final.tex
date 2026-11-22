@@ -613,8 +613,8 @@ Let $\wt u$ be a classical supersolution to ($P$) in $Q_T$  with $\wt u\in C^1(\
 Assume, in addition, that there exist $\delta _{0},s_0>0$ such that
 \begin{align*}
 & |\nabla \wt{u}^{+}|\le \sqrt {2M(x,t)-\delta _{0}}\quad \text{ on }
-Q\cap \partial \{\wt{u}>0\},\\
-& |\nabla \wt{u}|>\delta_0 \quad \text{ in } Q\cap \{0< \wt{u}<s_0 \}.
+Q_T\cap \partial \{\wt{u}>0\},\\
+& |\nabla \wt{u}|>\delta_0 \quad \text{ in } Q_T\cap \{0< \wt{u}<s_0 \}.
 \end{align*}
 
 Let $w^\ep$ be a solution of the heat equation in $\R^N\times(0,T)$ such that $\frac{\wep(x,t)}\ep\to w_0(x,t)$ uniformly
@@ -716,7 +716,7 @@ To this effect, we will show that there exists $\ep _{0}>0$ such that
 \end{equation}
 
 Assume that (\ref{punto}) does not hold. Then, for every $j\in \mathbb{N}$, there
-exist $\ep _{j}>0$ and $(x_{\epj },t_{\epj })\in Q$, with
+exist $\ep _{j}>0$ and $(x_{\epj },t_{\epj })\in Q_T$, with
 \begin{equation*}\ep _{j}\to 0\quad \text{and} \quad (x_{\epj },t_{\epj })\to (x_{0},t_{0})\in
  \partial \{\wt{u}>0\},\end{equation*}
 such that
@@ -879,7 +879,7 @@ $$\uep \equiv \wt{u} \qquad \text{in } \{ \wt{u}>(1-\theta)\ep \}.$$
 Let $\wt u$ be a classical subsolution to ($P$) in $Q_T$ with $\wt u\in C^1(\overline{\{\wt u>0\}})$  such that $ \{\wt u>0\}$ is bounded.
 Assume, in addition, that there exist $\delta _{0}>0$ such that
 \begin{equation*} |\nabla \wt{u}^{+}|\ge \sqrt {2M(x,t)+\delta _{0}}\quad \text{ on }
-Q\cap \partial \{\wt{u}>0\}.\end{equation*}
+Q_T\cap \partial \{\wt{u}>0\}.\end{equation*}
 
 Let $w^\ep$ be a solution of the heat equation in $\R^N\times(0,T)$ such that $\frac{\wep(x,t)}\ep\to w_0(x,t)$ uniformly
 in $\R^N\times[0,T]$. And assume, moreover that $w_0\in C(\R^N\times[0,T])$ and $w_0(x,t)\ge -1+\delta_1$ for a certain positive constant $\delta_1$.
@@ -910,6 +910,9 @@ time.
 \end{proposition}
 
 \begin{proof}
+% NOTE (2026 review): as written, omega_0 depends on (x,t) and eps. What is needed is
+% a constant -1 < omega_0 < -1+delta_1 (so omega_0 < w_0 everywhere, and the gap
+% M - M_{omega_0} is bounded below uniformly).
 Let $-1<\omega_0 < \wep(x,t)/\ep$. Then it is easy to check that
 \begin{equation}
 \label{MM}
@@ -936,7 +939,7 @@ $$V(x,0;T) \ge u_0 + 1 \quad \mbox{in } \{ u_0 > 0 \},$$
 and so $V(x,t;T)$ is a strict classical supersolution of ($P$) with bounded support and positive
 gradient near its free boundary.
 
-Now, let $\uepj$ be solutions to ($P_{\epj}$) -- with initial data $u_{0}^{\epj} $ converging unifomly to $u_0$ such that
+Now, let $\uepj$ be solutions to ($P_{\epj}$) -- with initial data $u_{0}^{\epj} $ converging uniformly to $u_0$ such that
 support $u_{0}^{\epj} \to $ support $u_0$ -- such that $u = \lim \uepj$.
 
 By Theorem \ref{approx}, there exists a family $\vepj$ of supersolutions of ($P_{\epj}$) such that
@@ -1016,7 +1019,7 @@ Then, $u\le\tilde u$.
 \end{theorem}
 
 \begin{proof}
-Since  $\tilde u$ is a classical supersolution of ($P$), $\tilde u\in C^1(\{\tilde u>0\})$ and, by Propositon \ref{acotada}, its  support is bounded,  the function
+Since  $\tilde u$ is a classical supersolution of ($P$), $\tilde u\in C^1(\{\tilde u>0\})$ and, by Proposition \ref{acotada}, its  support is bounded,  the function
  $\tilde u_\lambda$  as defined in (\ref{rescalada}) satisfies the hypotheses of Proposition \ref{keyprop} in $Q_{T/\lambda^2}\supset Q_T$.  So by
  letting $\lambda\to 1-$ we arrive at
 \begin{equation}
@@ -1054,11 +1057,17 @@ Then, $u=v$.
 
 
 \begin{proof}Since $u$ is a classical supersolution to ($P$) and $v$ is a classical subsolution, Lemma
-2.1 applies and we get that $v\le u$.
+\ref{compar} applies and we get that $v\le u$.
 
 On the other hand, if we define $v_{\lambda}$ as in (\ref{rescalada}), with $0<\lambda<\lambda'<1$,
-we have that $v_{\lambda}$ is a strict classical supersolution. Since $v_\lambda$ has compact
-support (see Proposition 4.1) it
+we have that $v_{\lambda}$ is a strict classical supersolution.
+% NOTE (2026 review): Proposition \ref{acotada} is stated for limit solutions, not
+% for an arbitrary classical solution v. Proving that v has bounded support by comparing
+% it with the self-similar supersolution V via Lemma \ref{compar} would be circular,
+% since that lemma assumes the subsolution already has bounded support. Either add
+% bounded support of v as a hypothesis or justify it separately.
+Since $v_\lambda$ has compact
+support (see Proposition \ref{acotada}) it
 satisfies the hypotheses of Proposition \ref{keyprop}. Thus,
 $$u=\lim \uepj \le  v_\lambda.$$
 
@@ -1081,6 +1090,7 @@ we want to any classical supersolution. This kind of condition was also used wit
 cylinder, Neumann boundary conditions were given on the boundary of the cylinder and monotonicity in the direction of the cylinder axis was assumed. In \cite{LVW1} it was proved that, if a
 classical solution exists and $\wep=0$, then it is equal to any limit of solutions to ($\pep$).
 
+% NOTE (2026 review): the cylinder case below is claimed but not proved in this paper.
 In our case, this is with $\wep\neq0$  satisfying (\ref{def_w_0}) and nondecreasing in the direction
 of the cylinder axis, the uniqueness result in the presence of a classical solution still holds.
 
