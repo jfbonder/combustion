@@ -14,5 +14,10 @@ Papers de la tesis doctoral de Julián Fernández Bonder, en colaboración con N
 - `ifbj.tex` está escrito en LaTeX 2.09 (`\documentstyle{amsart}`) y compila en modo de
   compatibilidad. Los dos avisos sobre `\negmedspace`/`\negthickspace` son inocuos.
 
+Los PDFs del repositorio se generaron en noviembre de 2026 a partir de estos fuentes. `ifbj.pdf` se compiló con `amsart`. `final.pdf` se compiló con una clase **sustituta** de
+`siamltex.cls`, porque la original no estaba disponible. Por eso el formato de página se
+parece al de SIAM pero no es idéntico. Para obtener el formato exacto hay que recompilar
+`final.tex` con la clase real.
+
 Los comentarios `% NOTE (2026 review)` en los fuentes marcan puntos que conviene revisar.
 No modifican el texto compilado.
