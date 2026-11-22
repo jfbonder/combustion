@@ -70,8 +70,8 @@ def tw_figures():
     for k, r in enumerate(B):
         t, xf = np.array(r["t"]), np.array(r["front"])
         ax.plot(t, xf, color=SERIES[k], label=f"$w_0={r['w0']:+g}$")
-        tt = np.array([t[-1] * 0.5, t[-1]])
-        ax.plot(tt, xf[-1] + r["c0"] * (tt - t[-1]), ls=":", lw=1.2, color=INK)
+        lim = _limit_front_B(r["w0"], t[-1])
+        ax.plot(lim.t, lim.s, ls="--", lw=1, color=INK)
         ax.annotate(f"$w_0={r['w0']:+g}$", (t[-1], xf[-1]), xytext=(4, 0),
                     textcoords="offset points", color=INK, va="center")
         x, u, Y = map(np.array, (r["x"], r["u"], r["Y"]))
@@ -80,8 +80,8 @@ def tw_figures():
         ax2.plot(x[m] - xf[-1], u[m], color=SERIES[k], lw=1, ls="--")
     ax.set_xlabel("$t$")
     ax.set_ylabel("posición del frente")
-    ax.set_title("Mismo $u_0$, $Y_0=u_0+\\varepsilon w_0$ ($\\varepsilon=0.005$);\n"
-                 "punteado: pendiente límite $\\sqrt{2M(w_0)}/A$", fontsize=9,
+    ax.set_title("Mismo $u_0$, $Y_0=u_0+\\varepsilon w_0$: $(P_\\varepsilon)$ con $\\varepsilon=0.005$\n"
+                 "(color) y problema límite $(P)$ calculado (rayado)", fontsize=9,
                  color=INK, loc="left")
     ax.legend(loc="upper left")
     ax2.set_xlabel("$x - x_f$")
@@ -142,9 +142,65 @@ def radial_figures():
     plt.close(fig)
 
 
+def _limit_front_B(w0, t_end):
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from combustion1d.exact import tw_profile_limit, tw_speed_limit
+    from combustion1d.limit import solve_planar
+    from experiments.traveling_wave import A, W0S, X0
+    c_ref = tw_speed_limit(A, 0.0)
+    L = X0 + tw_speed_limit(A, max(W0S)) * t_end + 15.0
+    return solve_planar(lambda x: tw_profile_limit(x, 0.0, A, c_ref, x0=X0), w0, L, X0,
+                        t_end, n=800, t_eval=np.linspace(0, t_end, 400))
+
+
+def limit_figures():
+    rs = json.loads((RES / "limit_comparison.json").read_text())
+    geoms = [("planar", "plano"), ("radial2", "radial $N=2$"), ("radial3", "radial $N=3$")]
+
+    # fronts vs time
+    fig, axs = plt.subplots(1, 2, figsize=(8.4, 3.4))
+    for ax, g in zip(axs, ("planar", "radial2")):
+        sel = sorted((r for r in rs if r["geom"] == g and r["eps"] in (0.05, 0.01, 0.002)),
+                     key=lambda r: -r["eps"])
+        for k, r in enumerate(sel):
+            ax.plot(r["t"], r["front"], color=BLUES[k + 1], label=f"$\\varepsilon={r['eps']:g}$")
+        ax.plot(sel[0]["lim_t"], sel[0]["lim_s"], ls="--", lw=1.2, color=INK, label="límite $(P)$")
+        ax.set_xlabel("$t$")
+        ax.legend(loc="best")
+    axs[0].set_ylabel("posición del frente")
+    axs[0].set_title("Plano, $u_0=A\\tanh(\\sqrt{2M}(x-x_0)/A)^+$", fontsize=9, color=INK, loc="left")
+    axs[1].set_title("Radial $N=2$, $u_0=a(1-r^2/R_0^2)^+$", fontsize=9, color=INK, loc="left")
+    fig.tight_layout()
+    fig.savefig(FIG / "limit_fronts.png")
+    plt.close(fig)
+
+    # errors vs eps
+    fig, axs = plt.subplots(1, 3, figsize=(11, 3.4), sharey=True)
+    keys = [("front_err", r"$\\max_t|x_\\varepsilon(t)-s(t)|$"),
+            ("front_err_shifted", r"idem, restando $\\varepsilon/\\sqrt{2M}$"),
+            ("sup_err", r"$\\max_x|(u^\\varepsilon)^+-u|$ al final")]
+    for k, (g, name) in enumerate(geoms):
+        sel = sorted((r for r in rs if r["geom"] == g), key=lambda r: r["eps"])
+        e = np.array([r["eps"] for r in sel])
+        for ax, (key, _) in zip(axs, keys):
+            ax.loglog(e, [r[key] for r in sel], color=SERIES[k], marker=MARKERS[k], ms=6,
+                      mfc="white", mew=1.5, label=name)
+    for ax, (_, title) in zip(axs, keys):
+        slope_ref(ax, [1e-3, 5e-2], 1.0e-3, label=r"$\\varepsilon$")
+        ax.set_title(title, fontsize=9, color=INK, loc="left")
+        ax.set_xlabel(r"$\\varepsilon$")
+        ax.legend(loc="lower right", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(FIG / "limit_convergence.png")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     FIG.mkdir(exist_ok=True)
     if (RES / "traveling_wave.json").exists():
         tw_figures()
     if (RES / "radial.json").exists():
         radial_figures()
+    if (RES / "limit_comparison.json").exists():
+        limit_figures()

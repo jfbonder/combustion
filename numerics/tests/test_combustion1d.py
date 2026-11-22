@@ -66,3 +66,29 @@ def test_pde_speed_matches_travelling_wave():
     T = 6.0 / c0
     r = simulate(u0, w0, eps, 2 + 6 + 12 / c0, T, speed_guess=c0)
     assert front_speed(r, 0.5 * T) == pytest.approx(tw_speed_eps(A, w0, eps), abs=2e-3)
+
+
+# --- limit problem solver ---------------------------------------------------
+
+from combustion1d.limit import solve_planar, solve_radial
+
+
+@pytest.mark.parametrize("N", [2, 3])
+def test_limit_radial_matches_self_similar_second_order(N):
+    V = SelfSimilar(N, w0=0.5, T=1.0)
+    errs = []
+    for n in (100, 200):
+        r = solve_radial(lambda x: V(x, 0.0), 0.5, N, V.R, 0.5, n=n,
+                         t_eval=np.linspace(0, 0.5, 11))
+        errs.append(np.max(np.abs(r.s - V.radius(r.t))))
+    assert errs[1] < 1e-4
+    assert errs[0] / errs[1] == pytest.approx(4.0, rel=0.3)
+
+
+@pytest.mark.parametrize("w0", [-0.5, 0.0, 1.0])
+def test_limit_planar_matches_travelling_wave(w0):
+    c0 = tw_speed_limit(1.0, w0)
+    L = 2 + 8 + 12 / c0 + 2
+    r = solve_planar(lambda x: tw_profile_limit(x, 0, 1.0, c0, x0=2.0), w0, L, 2.0,
+                     8 / c0, n=400, t_eval=np.linspace(0, 8 / c0, 20))
+    assert np.max(np.abs(r.s - (2.0 + c0 * r.t))) < 5e-5
