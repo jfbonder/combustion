@@ -29,7 +29,7 @@ plt.rcParams.update({
 })
 
 
-def slope_ref(ax, x, y0, label="pendiente 1"):
+def slope_ref(ax, x, y0, label="slope 1"):
     x = np.array([min(x), max(x)])
     ax.plot(x, y0 * x / x[0], ls="--", lw=1, color=MUTED)
     ax.annotate(label, (x[1], y0 * x[1] / x[0]), xytext=(4, 0),
@@ -53,11 +53,11 @@ def tw_figures():
                   mec=SERIES[k], mew=1.5)
         ax.annotate(f"$w_0={w0:+g}$", (e[-1], ce[-1]), xytext=(6, 0),
                     textcoords="offset points", color=INK, va="center")
-    slope_ref(ax, [1e-3, 1e-1], 4e-4)
+    slope_ref(ax, [1e-3, 1e-1], 5e-5)
     ax.set_xlabel(r"$\varepsilon$")
     ax.set_ylabel(r"$|c - c_0|$")
-    ax.set_title("Velocidad de la llama: línea = onda viajera exacta de $(P_\\varepsilon)$,\n"
-                 "marcadores = EDP con malla móvil", fontsize=9, color=INK, loc="left")
+    ax.set_title("Flame speed: lines = exact travelling wave of $(P_\\varepsilon)$,\n"
+                 "markers = moving-mesh PDE solver", fontsize=9, color=INK, loc="left")
     ax.legend(loc="lower right")
     fig.tight_layout()
     fig.savefig(FIG / "tw_speed_convergence.png")
@@ -79,13 +79,13 @@ def tw_figures():
         ax2.plot(x[m] - xf[-1], Y[m], color=SERIES[k], label=f"$Y$, $w_0={r['w0']:+g}$")
         ax2.plot(x[m] - xf[-1], u[m], color=SERIES[k], lw=1, ls="--")
     ax.set_xlabel("$t$")
-    ax.set_ylabel("posición del frente")
-    ax.set_title("Mismo $u_0$, $Y_0=u_0+\\varepsilon w_0$: $(P_\\varepsilon)$ con $\\varepsilon=0.005$\n"
-                 "(color) y problema límite $(P)$ calculado (rayado)", fontsize=9,
+    ax.set_ylabel("front position")
+    ax.set_title("Same $u_0$, $Y_0=u_0+\\varepsilon w_0$: $(P_\\varepsilon)$, $\\varepsilon=0.005$\n"
+                 "(colour) and computed limit problem $(P)$ (dashed)", fontsize=9,
                  color=INK, loc="left")
     ax.legend(loc="upper left")
     ax2.set_xlabel("$x - x_f$")
-    ax2.set_title("Zona de reacción al final: $Y$ (llena), $u$ (rayada)",
+    ax2.set_title("Reaction zone at the final time: $Y$ (solid), $u$ (dashed)",
                   fontsize=9, color=INK, loc="left")
     ax2.legend(loc="upper left", fontsize=8)
     fig.tight_layout()
@@ -112,7 +112,7 @@ def radial_figures():
     slope_ref(axs[1], [1e-3, 5e-2], 2.5e-4, label=r"$\varepsilon/4$")
     axs[0].set_title(r"$\max_t\,|r_\varepsilon(t) - R\sqrt{T-t}|$", fontsize=9,
                      color=INK, loc="left")
-    axs[1].set_title(r"$\max_x\,|(u^\varepsilon)^+ - V|$ en $t=0.75$", fontsize=9,
+    axs[1].set_title(r"$\max_x\,|(u^\varepsilon)^+ - V|$ at $t=0.75$", fontsize=9,
                      color=INK, loc="left")
 
     for ax in axs:
@@ -134,7 +134,7 @@ def radial_figures():
     ax.set_xlim(0, 1.2 * V.R)
     ax.set_xlabel("$r$")
     ax.set_ylabel("$u$")
-    ax.set_title("$N=2$, $\\varepsilon=0.01$: $u^\\varepsilon$ (color) y solución exacta $V$ (rayada)",
+    ax.set_title("$N=2$, $\\varepsilon=0.01$: $u^\\varepsilon$ (colour) and exact solution $V$ (dashed)",
                  fontsize=9, color=INK, loc="left")
     ax.legend(loc="upper right")
     fig.tight_layout()
@@ -156,7 +156,7 @@ def _limit_front_B(w0, t_end):
 
 def limit_figures():
     rs = json.loads((RES / "limit_comparison.json").read_text())
-    geoms = [("planar", "plano"), ("radial2", "radial $N=2$"), ("radial3", "radial $N=3$")]
+    geoms = [("planar", "planar"), ("radial2", "radial $N=2$"), ("radial3", "radial $N=3$")]
 
     # fronts vs time
     fig, axs = plt.subplots(1, 2, figsize=(8.4, 3.4))
@@ -165,11 +165,11 @@ def limit_figures():
                      key=lambda r: -r["eps"])
         for k, r in enumerate(sel):
             ax.plot(r["t"], r["front"], color=BLUES[k + 1], label=f"$\\varepsilon={r['eps']:g}$")
-        ax.plot(sel[0]["lim_t"], sel[0]["lim_s"], ls="--", lw=1.2, color=INK, label="límite $(P)$")
+        ax.plot(sel[0]["lim_t"], sel[0]["lim_s"], ls="--", lw=1.2, color=INK, label="limit $(P)$")
         ax.set_xlabel("$t$")
         ax.legend(loc="best")
-    axs[0].set_ylabel("posición del frente")
-    axs[0].set_title("Plano, $u_0=A\\tanh(\\sqrt{2M}(x-x_0)/A)^+$", fontsize=9, color=INK, loc="left")
+    axs[0].set_ylabel("front position")
+    axs[0].set_title("Planar, $u_0=A\\tanh(\\sqrt{2M}(x-x_0)/A)^+$", fontsize=9, color=INK, loc="left")
     axs[1].set_title("Radial $N=2$, $u_0=a(1-r^2/R_0^2)^+$", fontsize=9, color=INK, loc="left")
     fig.tight_layout()
     fig.savefig(FIG / "limit_fronts.png")
@@ -177,9 +177,9 @@ def limit_figures():
 
     # errors vs eps
     fig, axs = plt.subplots(1, 3, figsize=(11, 3.4), sharey=True)
-    keys = [("front_err", r"$\\max_t|x_\\varepsilon(t)-s(t)|$"),
-            ("front_err_shifted", r"idem, restando $\\varepsilon/\\sqrt{2M}$"),
-            ("sup_err", r"$\\max_x|(u^\\varepsilon)^+-u|$ al final")]
+    keys = [("front_err", r"$\max_t|x_\varepsilon(t)-s(t)|$"),
+            ("front_err_shifted", r"same, minus $\varepsilon/\sqrt{2M}$"),
+            ("sup_err", r"$\max_x|(u^\varepsilon)^+-u|$ at the final time")]
     for k, (g, name) in enumerate(geoms):
         sel = sorted((r for r in rs if r["geom"] == g), key=lambda r: r["eps"])
         e = np.array([r["eps"] for r in sel])
@@ -187,9 +187,9 @@ def limit_figures():
             ax.loglog(e, [r[key] for r in sel], color=SERIES[k], marker=MARKERS[k], ms=6,
                       mfc="white", mew=1.5, label=name)
     for ax, (_, title) in zip(axs, keys):
-        slope_ref(ax, [1e-3, 5e-2], 1.0e-3, label=r"$\\varepsilon$")
+        slope_ref(ax, [1e-3, 5e-2], 1.0e-3, label=r"$\varepsilon$")
         ax.set_title(title, fontsize=9, color=INK, loc="left")
-        ax.set_xlabel(r"$\\varepsilon$")
+        ax.set_xlabel(r"$\varepsilon$")
         ax.legend(loc="lower right", fontsize=8)
     fig.tight_layout()
     fig.savefig(FIG / "limit_convergence.png")

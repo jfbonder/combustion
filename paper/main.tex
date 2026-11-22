@@ -33,10 +33,13 @@ activation energy. When $(Y-u)/\ve\to w_0$, limit functions solve the free
 boundary problem $u_t=\Delta u$ in $\{u>0\}$, $|\nabla u|=\sqrt{2M(w_0)}$ on
 $\partial\{u>0\}$, so the limit depends on order-$\ve$ perturbations of the
 data. We propose a finite volume method on a mesh that follows the flame
-front (refining ahead of it and coarsening behind it), validate it against
-exact travelling waves and the self-similar solution of Caffarelli and
-V\'azquez, and observe first-order convergence in $\ve$ of the flame position
-and speed in one space dimension and in radial symmetry ($N=2,3$). For
+front (refining ahead of it and coarsening behind it), together with a
+linearly implicit version that satisfies a discrete comparison principle for
+every time step. We validate the method against exact travelling waves and
+the self-similar solution of Caffarelli and V\'azquez, and against a
+second-order front-fixing solver for the limit free boundary problem, and
+observe first-order convergence in $\ve$ of the flame position and speed in
+one space dimension and in radial symmetry ($N=2,3$). For
 travelling waves we derive the first-order correction of the flame speed,
 $c_\ve=c_0\big[1+\tfrac{\ve}{A}\big(1-\tfrac{3\sqrt3-2}{5}(1+w_0)\big)\big]+o(\ve)$
 for $f(s)=(1-s)^+$, which changes sign at $w_0\approx0.564$, and confirm it
@@ -109,9 +112,15 @@ self-similar solution of \eqref{eq:P}, which we write in terms of Kummer's
 function (Section~\ref{sec:exact});
 \item derive the first-order correction of the travelling wave speed
 (Proposition~\ref{prop:speed});
-\item observe first-order convergence in $\ve$ of front positions and
-speeds, and display the instability of the limit with respect to $w_0$
-(Section~\ref{sec:experiments}).
+\item isolate a linearly implicit version of the scheme that satisfies a
+discrete comparison principle for every time step and every sequence of
+meshes, with $L^\infty$ bounds uniform in $\ve$, and reduce $\ve$-uniform
+error estimates to the construction of discrete barriers
+(Section~\ref{sec:theory});
+\item solve the limit problem \eqref{eq:P} directly by front fixing, and
+observe first-order convergence in $\ve$ of front positions and speeds of
+\eqref{eq:Peps} towards it, as well as the instability of the limit with
+respect to $w_0$ (Section~\ref{sec:experiments}).
 \end{enumerate}
 
 Throughout, $f(s)=(1-s)^+$, for which
@@ -421,10 +430,135 @@ $O(\Delta t/\ve)$ term of Table~\ref{tab:simple}.
 \section{Numerical experiments}\label{sec:experiments}
 
 \subsection{Flame speed}
-RESULTS_TW_TABLE
+For $A=1$ and $w_0\in\{-0.5,0,1\}$ we start from the limit travelling wave
+$u_0=A(1-e^{-c_0(x-2)})^+$ (with $u_0^\ve,Y_0^\ve$ as in Section~\ref{sec:method}),
+let the front travel a distance $8$, and measure its speed by a least squares
+fit over the second half of the run. Table~\ref{tab:tw} compares it with the
+exact speed $c_\ve$ of Section~\ref{sec:exact} and with the limit speed
+$c_0$; Figure~\ref{fig:tw} shows $|c-c_0|$.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{r ccc ccc}
+\toprule
+& \multicolumn{3}{c}{$(c_\ve-c_0)/\ve$} & \multicolumn{3}{c}{$(c_{\rm PDE}-c_\ve)\cdot10^{5}$}\\
+$\ve$ & $w_0=-0.5$ & $0$ & $1$ & $w_0=-0.5$ & $0$ & $1$\\
+\midrule
+0.1   & $+0.1495$ & $+0.2214$ & $-0.3925$ & $+225.7$ & $+67.9$ & $-32.9$\\
+0.05  & $+0.1440$ & $+0.2146$ & $-0.4229$ & $+108.6$ & $+34.2$ & $-8.3$\\
+0.02  & $+0.1409$ & $+0.2108$ & $-0.4418$ & $+44.0$ & $+14.1$ & $-4.3$\\
+0.01  & $+0.1399$ & $+0.2095$ & $-0.4482$ & $+22.6$ & $+7.4$ & $-5.2$\\
+0.005 & $+0.1394$ & $+0.2089$ & $-0.4515$ & $+11.2$ & $+2.9$ & $-0.6$\\
+0.002 & $+0.1391$ & $+0.2085$ & $-0.4534$ & $+4.5$ & $+1.2$ & $-4.4$\\
+0.001 & $+0.1390$ & $+0.2084$ & $-0.4541$ & $+2.3$ & $+1.0$ & $-0.6$\\
+\midrule
+Prop.~\ref{prop:speed} & $+0.1389$ & $+0.2083$ & $-0.4547$ &&&\\
+\bottomrule
+\end{tabular}
+\caption{Flame speed. Left: first-order coefficient of $c_\ve-c_0$, which
+converges to the value of Proposition~\ref{prop:speed}. Right: difference
+between the speed of the PDE solution and the exact speed of \eqref{eq:Peps}.}\label{tab:tw}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.62\textwidth]{../numerics/figures/tw_speed_convergence.png}
+\caption{$|c-c_0|$ as a function of $\ve$: exact travelling wave of
+\eqref{eq:Peps} (lines) and PDE solver (markers).}\label{fig:tw}
+\end{figure}
+
+The difference $c_{\rm PDE}-c_\ve$ is at most $5\cdot10^{-5}$ for
+$\ve\le0.005$, two orders of magnitude below $c_\ve-c_0$, so the solver
+resolves the $O(\ve)$ correction of the speed. For $w_0=-0.5$ it decreases
+linearly in $\ve$: the wave is slow ($c_0\approx0.20$, decay length $\approx5$),
+and the remaining transient of the profile ahead of the front over a run of
+length $8$ is of order $\ve$. The first-order coefficients converge to the values
+of Proposition~\ref{prop:speed}, including the change of sign for $w_0>w_0^*$.
 
 \subsection{Instability with respect to $w_0$}
-RESULTS_TW_INSTABILITY
+To display the instability proved in \cite{FernandezBonderWolanski2000} we
+take the \emph{same} initial temperature $u_0$ (the limit travelling wave for
+$w_0=0$) and three values of $w_0$, i.e. $Y_0^\ve=u_0^\ve+\ve w_0$ with
+$u_0^\ve\to u_0$. The limit problems differ through $M(w_0)$, and so do the
+flames (Figure~\ref{fig:instability}): after $t=20$ the fronts are at
+$x\approx3.7$, $13.6$ and $35.7$. The dashed lines are the free boundaries of the
+limit problem \eqref{eq:P} with each $M(w_0)$, computed with the solver of
+Section~\ref{sec:limit}; the solutions of \eqref{eq:Peps} follow them. For
+$w_0=-0.5$ the initial gradient $\sqrt{2M(0)}$ exceeds $\sqrt{2M(-0.5)}$ and
+the front first recedes before propagating; its speed approaches $c_0$ only
+slowly ($0.166$ at $t=20$ versus $c_0=0.204$), as does that of the limit
+problem.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/tw_instability.png}
+\caption{Same $u_0$, three values of $w_0$, $\ve=0.005$. Left: front
+positions for \eqref{eq:Peps} (colour) and for the computed limit problem
+\eqref{eq:P} (dashed). Right: $Y$ (solid) and $u$ (dashed) near the front at
+$t=20$.}\label{fig:instability}
+\end{figure}
+
+\subsection{Comparison with the computed limit problem}\label{sec:limit}
+The exact solutions of Section~\ref{sec:exact} are special. To compare
+\eqref{eq:Peps} with \eqref{eq:P} for general data we solve \eqref{eq:P}
+directly. In radial symmetry with $\{u>0\}=\{r<s(t)\}$ we set $r=s\xi$, so
+that $v(\xi,t)=u(s\xi,t)$ solves
+\[
+v_t=\frac{1}{s^2}\Big(v_{\xi\xi}+\frac{N-1}{\xi}v_\xi\Big)+\xi\frac{\dot s}{s}v_\xi,\quad 0<\xi<1,
+\qquad v_\xi(0)=0,\quad v(1)=0,\quad v_\xi(1)=-s\sqrt{2M}.
+\]
+Both free boundary conditions are imposed, the second one through a ghost
+node, and differentiating $v(1,t)=0$ gives $\dot s=\Delta u|_{r=s}/\sqrt{2M}$.
+In the planar case we use $x=s+(L-s)g(\xi)$ with $g$ exponentially clustered
+at the front. Second-order differences in $\xi$ and BDF in time give a
+second-order method: against the travelling wave and the self-similar
+solution the errors in the free boundary are at most $6\cdot10^{-6}$ with $800$ points.
+
+We take $w_0=0.5$ and data which are not exact solutions but satisfy the free
+boundary condition: $u_0=A\tanh\big(\sqrt{2M}(x-2)/A\big)^+$ (planar, $A=1$,
+up to $t=6$) and $u_0=a(1-r^2/R_0^2)^+$ with $a=\sqrt{2M}R_0/2$, $R_0=2$
+(radial, $N=2,3$, until the radius halves). Figure~\ref{fig:limit} and
+Table~\ref{tab:limit} show the results.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/limit_fronts.png}\\[4pt]
+\includegraphics[width=\textwidth]{../numerics/figures/limit_convergence.png}
+\caption{\eqref{eq:Peps} versus the computed limit problem \eqref{eq:P},
+$w_0=0.5$. Top: front positions. Bottom: front error, front error after
+removing the shift $\ve/\sqrt{2M}$, and sup error at the final
+time.}\label{fig:limit}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{r cc cc cc}
+\toprule
+& \multicolumn{2}{c}{planar} & \multicolumn{2}{c}{radial $N=2$} & \multicolumn{2}{c}{radial $N=3$}\\
+$\ve$ & front$^*/\ve$ & sup$/\ve$ & front$^*/\ve$ & sup$/\ve$ & front$^*/\ve$ & sup$/\ve$\\
+\midrule
+0.05  & 0.391 & 0.369 & 0.187 & 0.134 & 0.186 & 0.125\\
+0.02  & 0.325 & 0.327 & 0.118 & 0.102 & 0.115 & 0.096\\
+0.01  & 0.302 & 0.311 & 0.096 & 0.090 & 0.089 & 0.089\\
+0.005 & 0.300 & 0.312 & 0.083 & 0.092 & 0.075 & 0.089\\
+0.002 & 0.302 & 0.315 & 0.065 & 0.100 & 0.065 & 0.095\\
+0.001 & 0.285 & 0.292 & 0.067 & 0.093 & 0.053 & 0.101\\
+\bottomrule
+\end{tabular}
+\caption{\eqref{eq:Peps} versus \eqref{eq:P}: front error after removing the
+shift $\ve/\sqrt{2M}$ (front$^*$) and sup error at the final time, divided by
+$\ve$.}\label{tab:limit}
+\end{table}
+
+All errors are $O(\ve)$. Most of the raw front error is the shift
+$\ve/\sqrt{2M}$ between the tracked level set $\{u^\ve=\ve\}$ and the free
+boundary. What remains is about $0.07\ve$--$0.1\ve$ in radial symmetry and
+$0.3\ve$ in the planar case. The planar value is explained by
+Proposition~\ref{prop:speed}: the front moves essentially as a travelling wave
+with $A=1$, whose speed is $c_0+0.044\,\ve+o(\ve)$ for $w_0=0.5$, and over
+$0\le t\le6$ this accumulates to $\approx0.26\,\ve$.
 
 \subsection{Radial extinction}
 We take $w_0=0.5$, $T=1$, the exact solution $V$ of Section~\ref{sec:exact}
@@ -453,12 +587,12 @@ $\max_x|(u^\ve)^+-V|$ at $t=0.75$, for $N=2,3$.}\label{fig:radial}
 & \multicolumn{2}{c}{front error$/\ve$} & \multicolumn{2}{c}{$\|(u^\ve)^+-V\|_\infty/\ve$}\\
 $\ve$ & $N=2$ & $N=3$ & $N=2$ & $N=3$\\
 \midrule
-0.05  & 1.123 & 1.119 & 0.138 & 0.135\\
-0.02  & 1.063 & 1.061 & 0.108 & 0.106\\
-0.01  & 1.043 & 1.049 & 0.096 & 0.103\\
-0.005 & 1.042 & 1.056 & 0.101 & 0.111\\
-0.002 & 0.968 & 1.002 & 0.111 & 0.100\\
-0.001 & 0.916 & 0.918 & 0.213 & 0.206\\
+0.05  & 1.128 & 1.120 & 0.142 & 0.136\\
+0.02  & 1.064 & 1.060 & 0.108 & 0.105\\
+0.01  & 1.048 & 1.045 & 0.102 & 0.099\\
+0.005 & 1.037 & 1.037 & 0.095 & 0.095\\
+0.002 & 1.026 & 1.023 & 0.086 & 0.089\\
+0.001 & 1.028 & 1.014 & 0.086 & 0.086\\
 \bottomrule
 \end{tabular}
 \caption{Radial extinction: errors divided by $\ve$.}\label{tab:radial}
@@ -467,16 +601,11 @@ $\ve$ & $N=2$ & $N=3$ & $N=2$ & $N=3$\\
 The front error is $O(\ve)$, and most of it is the distance between the level
 set $\{u^\ve=\ve\}$ that we track and the free boundary: since
 $|\nabla V|=\sqrt{2M}$ there, this distance is $\ve/\sqrt{2M}+o(\ve)$, that is
-$0.943\,\ve$ for $w_0=0.5$, consistent with the first two columns (between $0.92$ and $1.12$); the remainder is of higher order.
-The sup error is attained inside the reaction layer, where
-$(u^\ve)^+$ has the shape $\ve\psi(d/\ve)$ of the inner profile while $V$ is
-linear in the distance $d$ to the free boundary; it is therefore of order
-$\ve$, and stays below $0.25\,\ve$ in all runs. Away from the layer
-($r<R(t)-20\ve$) the error is between $4\cdot10^{-5}$ and
-$2\cdot10^{-3}$ and shows no clean rate. The increase of the ratio at
-$\ve=10^{-3}$ is small in absolute terms ($2\cdot10^{-4}$) and is at the level
-of the position of the inner layer relative to the mesh; we did not
-investigate it further.
+$0.943\,\ve$ for $w_0=0.5$; the remaining $\approx0.08\,\ve$ is consistent with the
+radial results of Section~\ref{sec:limit}. The sup error is attained inside
+the reaction layer, where $(u^\ve)^+$ has the shape $\ve\psi(d/\ve)$ of the
+inner profile while $V$ is linear in the distance $d$ to the free boundary; it
+is $O(\ve)$, with $\|(u^\ve)^+-V\|_\infty/\ve$ decreasing from $0.14$ to $0.086$.
 
 % ---------------------------------------------------------------------------
 \section{Conclusions and outlook}
@@ -485,9 +614,14 @@ position and speed for \eqref{eq:Peps}, in planar and radial geometry,
 including in the presence of the $O(\ve)$ perturbation $w_0$ that changes the
 limit problem, and they make visible the instability proved in
 \cite{FernandezBonderWolanski2000}. Proposition~\ref{prop:speed} gives the
-first-order correction of the speed of planar waves; whether an $O(\ve)$ rate
-holds for general (non travelling-wave) limits, as the radial experiments
-suggest, is open.
+first-order correction of the speed of planar waves, and it explains the
+residual front error observed against the computed limit problem. For the
+monotone version (S) of the scheme, the discrete comparison principle reduces
+$\ve$-uniform estimates to barriers; the construction of barriers around the
+travelling wave, and the sharp rate $\Delta t/\ve$ suggested by the
+solvability condition and by the experiments, are the subject of ongoing work.
+Whether an $O(\ve)$ rate holds for general limits of \eqref{eq:Peps} with a
+classical limit solution, as the experiments suggest, is open.
 
 Natural next steps are: (i) the elliptic problem in two dimensions, where the
 annulus provides explicit solutions with zero, one or two free boundaries, and
