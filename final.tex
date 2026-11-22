@@ -48,6 +48,17 @@
 
 \documentclass[final]{siamltex}
 
+% siamltex.cls does not load the AMS packages; without them \text, cases,
+% align*, \tag, \eqref and \mathbb fail and the output is garbled.
+\usepackage{amsmath,amssymb}
+% \bysame and \MR come from amsart; define them for the bibliography.
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}[1]{MR #1}
+% Unnumbered remark (not provided by siamltex.cls).
+\makeatletter
+\@ifundefined{rem}{\newenvironment{rem}{\par\noindent{\em Remark.}\ }{\par}}{}
+\makeatother
+
 \newcommand{\g}{\gamma}
 \newcommand{\ep}{\varepsilon}
 \newcommand{\ve}{\varepsilon}
