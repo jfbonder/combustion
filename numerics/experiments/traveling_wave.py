@@ -22,7 +22,7 @@ from pathlib import Path
 import numpy as np
 
 from combustion1d.exact import tw_profile_limit, tw_speed_eps, tw_speed_limit
-from combustion1d.solver import front_speed, simulate
+from combustion1d.solver import MeshParams, front_speed, simulate
 
 A = 1.0
 X0 = 2.0
@@ -40,7 +40,9 @@ def run_A(args):
     T = DIST / c0
     L = X0 + DIST + 12.0 / c0 + 2.0
     t = time.time()
-    r = simulate(u0, w0, eps, L, T, N=1, speed_guess=c0)
+    # the error ahead of the front is O((c0 h_coarse)^2): scale h_coarse with 1/c0
+    mesh = MeshParams(h_coarse=float(np.clip(0.01 / c0, 0.01, 0.05)))
+    r = simulate(u0, w0, eps, L, T, N=1, speed_guess=c0, mesh=mesh)
     return dict(w0=w0, eps=eps, c0=c0, c_eps=tw_speed_eps(A, w0, eps),
                 c_pde=front_speed(r, 0.5 * T), steps=r.n_steps,
                 nodes=float(np.mean(r.n_nodes)), seconds=time.time() - t)
@@ -52,7 +54,7 @@ def run_B(w0):
     T = 20.0
     L = X0 + tw_speed_limit(A, max(W0S)) * T + 15.0
     r = simulate(u0, w0, EPS_B, L, T, N=1, speed_guess=tw_speed_limit(A, w0),
-                 snapshot_times=(T,))
+                 snapshot_times=(T,), mesh=MeshParams(h_coarse=0.02))
     x, u, w = r.snapshots[T]
     return dict(w0=w0, t=r.t.tolist(), front=r.front.tolist(),
                 c0=tw_speed_limit(A, w0), x=x.tolist(), u=u.tolist(), Y=(u + w).tolist())
