@@ -34,10 +34,11 @@ Universidad de Buenos Aires, Ciudad Universitaria, (1428) Buenos Aires, Argentin
 We study the high activation energy limit of an equidiffusional model of
 premixed flames, whose limit is a free boundary problem. We prove a rate of
 convergence for this singular limit, of order $\ve$ up to a logarithm. We
-also propose a numerical method whose mesh follows the flame front and, with
-the same barriers, prove that it converges to the solution of the free boundary
-problem, with error bounds in which the time step is not divided by $\ve$.
-Numerical experiments illustrate the method and the estimates.
+also propose a numerical method whose mesh follows the flame front, and show
+that the same barriers, evaluated on the mesh, give the convergence of the
+fully discrete scheme to the free boundary problem, with explicit error
+bounds, on meshes that move with a prescribed velocity. Numerical experiments
+illustrate the method and the estimates.
 \end{abstract}
 
 \maketitle
@@ -142,20 +143,21 @@ an implicitly determined velocity, so the mesh is refined ahead of the flame and
 coarsened behind it.
 
 The two parts meet in Section~\ref{sec:analysis}: the barriers of the rate theorem,
-evaluated on the mesh, are discrete super- and subsolutions of the scheme. For data in
-planar or radial symmetry, and band meshes that move with prescribed velocities, we
+evaluated on the mesh, are discrete super- and subsolutions of the scheme. For radial
+data (in dimension $1$, $2$ or $3$) and band meshes that move with prescribed velocities, we
 prove that the fully discrete solution $U$ converges to the classical solution $v$ of
 \eqref{eq:P}, with
 \[
 |U-v|\le C\Big(\ve\log\frac1\ve+\frac{h_f}\ve+h_c+\Delta t+\mu\,\min\Big\{1,\frac{\Delta t}\ve\Big\}\Big),
 \]
 where $\mu$ is the largest difference between the velocity of the band and that of the
-free boundary (Theorem~\ref{cv:thm:main}). Thus the layer has to be resolved,
-$h_f\ll\ve$, but nothing finer is needed. On a mesh that follows the front the time step
-enters as $\Delta t$; on a mesh that does not move it enters as $\Delta t/\ve$, and indeed the
-computed front lags, by about $0.23\,(\Delta t/\ve)T$ for a travelling wave. For travelling
-waves on a mesh that moves with the wave the time step does not appear in the error at
-all (Theorem~\ref{an:thm:ale}). These results have limitations, which we state clearly
+free boundary (Theorem~\ref{cv:thm:main}); the time step is restricted by
+$\Delta t\lesssim\ve$ divided by the bound. Thus, for time steps of order $\ve$, the layer has to be
+resolved, $h_f\ll\ve$, but nothing finer is needed. On a mesh that follows the front the
+time step enters as $\Delta t$; on a mesh that does not move it enters as $\Delta t/\ve$, and
+indeed the computed front lags, by about $0.23\,(\Delta t/\ve)T$ for a travelling wave. For
+travelling waves on a mesh that moves with the wave the time step does not appear in the
+error at all (Theorem~\ref{an:thm:ale}). These results have limitations, which we state clearly
 (Section~\ref{an:sec:impl}): in the method the velocity of the mesh is computed, not
 prescribed, so that $\mu$ is an output and the estimate is a posteriori; the band must be
 wider than the bound itself, and remeshing is not covered; and the terms $h_f/\ve$ and
@@ -1264,8 +1266,8 @@ evaluated on the mesh. In this section we show that, with a dilation that depend
 time and a damping of the inner profile that is proportional to the truncation errors
 in the layer, they are discrete super- and subsolutions of the scheme (S). By the
 discrete comparison principle this gives the convergence of the fully discrete solution
-to the solution of the free boundary problem \eqref{eq:P}, for general data in planar or
-radial symmetry, with an explicit error bound (Theorem~\ref{cv:thm:main}). For
+to the solution of the free boundary problem \eqref{eq:P}, for general radial data, with
+an explicit error bound (Theorem~\ref{cv:thm:main}). For
 travelling waves on meshes that move with the wave we also prove an estimate in which
 the time step does not appear at all (Theorem~\ref{an:thm:ale}).
 
@@ -1278,11 +1280,13 @@ the sense of Section~\ref{sec:rate}, with $u_0=v(\cdot,0)$, such that
 \item[(V1)] $\{v(\cdot,t)>0\}=\{r<R(t)\}$ with $0<R_{\min}\le R(t)\le L-\varrho_L$,
 $\varrho_L>0$, and $v$ is nonincreasing in $r$;
 \item[(V2)] $D_x^3v$, $\partial_t\nabla v$ and $\partial_t^2v$ are bounded in $\{v>0\}$, and the
-extension $Ev$ of (R1) has bounded $\partial_t\nabla Ev$ and $\partial_t^2Ev$.
+extension $Ev$ of (R1) is $C^{1,1}$ jointly in $(x,t)$: $\partial_t\nabla Ev$ and $\partial_t^2Ev$
+are bounded too.
 \end{itemize}
-Then $R\in C^{1,1}$ and (H) holds. The radial self-similar solutions of
+For $N=1$ this is a slab $\{|x|<R(t)\}$ of fresh gas, computed on $[0,L]$. By (V1), (V2),
+$R\in C^{1,1}$ and (H) holds. The radial self-similar solutions of
 Section~\ref{sec:selfsimilar} satisfy (V1)--(V2) on $[0,T^*]$ for every $T^*$ smaller than
-their extinction time. We may and do assume that $r\le\varrho_L/2$ in (R1), (R2).
+their extinction time. We may and do assume that $r\le\varrho_L/4$ in (R1), (R2).
 
 The scheme (S) is run on $[0,L]$ with $U^0_j=u_0^\ve(x^0_j)$ and $Y^0=U^0+\ve w_0$, where
 $u_0^\ve$ is given by \eqref{eq:initdata}; thus $W_h^n\equiv\ve w_0$. We make the following
@@ -1300,12 +1304,14 @@ Nothing else is assumed outside the band. Let
 \mu=\max_n|v_n-\dot R(t_n)|,\qquad
 \mathcal E=\ve\log\frac1\ve+\frac{h_f}\ve+h_c+\Delta t+\mu\,\min\Big\{1,\frac{\Delta t}\ve\Big\}.
 \]
-A uniform mesh that does not move satisfies (M2) with $h_c=h_f$, $v_n=0$ and
-$\ell_b=\min\{R_{\min},\varrho_L\}/2$, and then $\mu=\max|\dot R|$.
+In (M2), $\ell_b<\min\{R_{\min},\varrho_L\}$. A uniform mesh that does not move satisfies
+(M1), (M2) with $h_c=h_f$, $v_n=0$ and $\ell_b=\min\{R_{\min},\varrho_L\}/2$, and then
+$\mu=\max|\dot R|$.
 
 \begin{theorem}[Convergence of the scheme]\label{cv:thm:main}
 Assume (F$_2$), (V1), (V2), (M1), (M2), and let $T<T^*$. There are positive constants
-$c_0,C_b,C$, depending only on $f,w_0,N,v,T,L$ and $v_{\max}$, such that, if
+$\ve_0,c_0,C_b,C$, depending only on $f,w_0,N,v,T,L$ and $v_{\max}$, such that, if
+$0<\ve\le\ve_0$ and
 \begin{equation}\label{cv:eq:hyp}
 \mathcal E\le c_0,\qquad \Delta t\,(\mu+\mathcal E)\le c_0\,\ve,\qquad \ell_b\ge C_b\,\mathcal E,
 \end{equation}
@@ -1319,20 +1325,24 @@ then the solution of (S) satisfies
 \begin{enumerate}
 \item \emph{Meshes that do not move.} Here $\mu$ is of order one and the bound is
 $C(\ve\log\frac1\ve+\frac{h_f+\Delta t}{\ve}+h_c)$: the time step is divided by $\ve$. This is
-the lag of the reaction rate $f_\ve(U^n)$ on a front that crosses the cells, and the order
-$\Delta t/\ve$ is attained (Section~\ref{sec:exp:tw}).
+the lag of the reaction rate $f_\ve(U^n)$ on a front that crosses the cells, and it is
+observed (Sections~\ref{sec:exp:tw} and \ref{sec:exp:thm}).
 \item \emph{Meshes that follow the front.} If $\mu\lesssim\mathcal E$ the bound is
-$C(\ve\log\frac1\ve+\frac{h_f}{\ve}+h_c+\Delta t+\mu)$, and the second condition in
-\eqref{cv:eq:hyp} is $\Delta t\lesssim\ve/\mathcal E$: the time step enters the error as $\Delta t$, not
-as $\Delta t/\ve$. The second condition says that in one step the mesh and the fronts of the
-barriers move with respect to each other by a small fraction of the width $\ve$ of the
-layer. The term $\mu\min\{1,\Delta t/\ve\}$ is also observed (Section~\ref{sec:exp:tw}).
+$C(\ve\log\frac1\ve+\frac{h_f}{\ve}+h_c+\Delta t+\mu)$: the time step enters as $\Delta t$, not as
+$\Delta t/\ve$.
+\item \emph{The time step.} The second condition in \eqref{cv:eq:hyp} says that in one
+step the mesh and the fronts of the barriers, whose velocities differ from $\dot R$ by a
+multiple of $\mathcal E$, move with respect to each other by a small fraction of the width
+$\ve$ of the layer. Since $\mathcal E\ge h_f/\ve+h_c+\Delta t$, it implies
+$\Delta t\le c_0\min\{\ve^2/h_f,\ve/h_c\}$ and $\Delta t^2\le c_0\ve$: for a fixed ratio $h_f/\ve$ the theorem
+covers time steps up to a multiple of $\ve$, and larger ones only on finer meshes.
 \item \emph{Mesh sizes.} Negative powers of $\ve$ multiply only the mesh size of the band,
-through the ratio $h_f/\ve$: the layer has to be resolved, but $h_f\ll\ve^2$ is not
-needed. For a fixed ratio $h_f/\ve$ the bound is uniform in $\ve$. On the other hand, the
-band has to contain the fronts of the two barriers, so its width must exceed a multiple
-of the bound itself; and we use the pointwise truncation error of $\Delta_h$, which is of
-first order on arbitrary meshes.
+through the ratio $h_f/\ve$: for $\Delta t\lesssim\ve$ the layer has to be resolved, but
+$h_f\ll\ve^2$ is not needed, and for a fixed ratio $h_f/\ve$ the bound is uniform in $\ve$. On
+the other hand, the band has to contain the fronts of the two barriers, so its width
+must exceed a multiple of the bound itself (for a uniform mesh, this is a further
+smallness condition on $\mathcal E$); and we use the pointwise truncation error of $\Delta_h$,
+which is of first order on arbitrary meshes.
 \item \emph{The mesh velocity.} In the theorem the velocities $v_n$ are given. In the
 method of Section~\ref{sec:ale} they are computed, and $\mu$ is an output: for the
 method itself the estimate is a posteriori. See Section~\ref{an:sec:impl}.
@@ -1357,7 +1367,8 @@ $\lambda(t)=1-a\,\mathcal E\,e^{\beta t}$ or $\lambda(t)=1+a\,\mathcal E\,e^{\be
 \tilde u(x,t)=\frac1{\lambda'(t)}\,v\big(\lambda(t)x,\tau(t)\big),\qquad
 \lambda'=\frac{1+\lambda}2,\quad\tau(t)=\int_0^t\lambda^2 ,
 \]
-which is defined on $[0,T]$ if $c_0$ is small. With $y=\lambda x$,
+which is defined on $[0,T]$, with $\tilde R\le L-\varrho_L/2$ below, if $c_0$ is small (depending
+on $a$ and $\beta$). With $y=\lambda x$,
 \[
 \tilde u_t-\Delta\tilde u=\frac{\dot\lambda}{\lambda'}\Big[\frac{y\cdot\nabla v}{\lambda}-\frac v{2\lambda'}\Big](y,\tau).
 \]
@@ -1367,8 +1378,11 @@ one $\tilde u_t-\Delta\tilde u\le-\frac{c_v}2|\dot\lambda|$, where $|\dot\lambda
 of $\tilde u$ is $r=\tilde R(t)=R(\tau(t))/\lambda(t)$, and there $|\nabla\tilde u|=\frac\lambda{\lambda'}\sqrt{2M}$. So
 $\tilde u$ is a regular strict supersolution (resp.\ subsolution) with margins
 $(\delta,\delta_0,r,K_0)$, $\delta=c\,a\mathcal E$, uniformly in $t$ (for the subsolution, with
-$C_1=Ce^{\beta T}$), and by (V2) the functions $\tilde v^\pm$ of Lemma~\ref{q:lem:ext} have, in
-addition, $|\partial_t\nabla\tilde v^\pm|+|\partial_t^2\tilde v^\pm|\le K_1$. Moreover
+$C_1=Ce^{\beta T}$). By (V2), $E\tilde u(x,t)=Ev(\lambda x,\tau)/\lambda'$ is $C^{1,1}$ in $(x,t)$, and so are
+$\hat E=\psi(E\tilde u)$ and $\tilde v^\pm=\hat E\pm\Lambda'(\hat E^-)^2$ in the proof of
+Lemma~\ref{q:lem:ext}: in addition to the bounds of that lemma,
+$|\partial_t\nabla\tilde v^\pm|+|\partial_t^2\tilde v^\pm|\le K_1$. (The derivatives of $\lambda$ are bounded by
+$C_\beta a\mathcal E\le1$ for $c_0$ small, so these constants do not depend on $a$.) Moreover
 $|\tilde u-v|\le C_\beta\,a\mathcal E$, where $C_\beta$ depends also on $\beta$, and
 \[
 \dot{\tilde R}=\lambda\dot R(\tau)-\frac{\dot\lambda}{\lambda^2}R(\tau),\qquad
@@ -1390,8 +1404,9 @@ V=-\ve w_0+\ve\,\Theta^+(s)+\ve^2\tilde q,\qquad
 as in Propositions~\ref{q:prop:super} and \ref{q:prop:sub}, with $\gamma=c_1\delta$,
 $\bar q=\ve\tilde q$ and $\kappa=K\ve$; here $\Theta^-$ is continued to $s<s_*$ by the solution of
 the same equation down to $\Theta^-=-1$, and by $-1$ further on. On the continuation the
-bounds $c\sqrt\gamma\le\Theta^-_s\le C$ and $|\Theta^-_{ss}|\le C\Theta^-_s$ of
-Lemma~\ref{q:lem:inner}(b) still hold, and its length in $s$ is at least $c_e>0$. The new
+bounds $c\sqrt\gamma\le\Theta^-_s\le C$ and $|\Theta^-_{ss}|\le C\Theta^-_s$ still hold, by the proof of
+Lemma~\ref{q:lem:inner}(b) (the bound $|\Theta^-_{ss}|\le C(\bar q+\kappa\Theta^-_s)$ does not, and it
+is not used there), and its length in $s$ is at least $c_e>0$. The new
 point is the size of the damping: we take
 \begin{equation}\label{cv:eq:K}
 K=C_K\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big),\qquad
@@ -1399,9 +1414,11 @@ K=C_K\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big
 \end{equation}
 so that $K\ve\le3C_K\mathcal E$. Lemma~\ref{q:lem:inner} requires $\kappa\le c\gamma$, that is,
 $3C_K\mathcal E\le c\,c_1\delta$, which holds if $a$ is large; this is where the truncation errors of
-the layer enter the error bound. The constants are chosen in the order $\beta$,
-$\Lambda$, $C_K$, $a$, $c_0$, $C_b$. Recall that $\Theta^+$ is convex, so $\Theta^+\ge s+w_0$, with equality
-for $s\ge s_m$, and that $\Theta^-\ge s+w_0$ for $s\ge1$, with equality for $s\ge2$.
+the layer enter the error bound. The constants are chosen in the order $\beta$; $\Lambda$,
+$c_1$, $\delta_*$, $c_*$ (as in Section~\ref{sec:rate}, with $C_1$ fixed by $\beta$); $C_S$, $C_K$; $a$;
+$c_0$, $\ve_0$, $C_b$. Recall that $\Theta^+$ is convex, so $\Theta^+\ge s+w_0$, with equality for
+$s\ge s_m$; and $\Theta^-$ is convex on $[s_c,2]$ with $s_c<1$, so $\Theta^-\ge s+w_0$ for $s\ge1$, with
+equality for $s\ge2$.
 
 \emph{Step 3. Elementary facts.} (i) If $g\in C^{1,1}([t_n,t_{n+1}])$ then
 $g'(t_{n+1})-\frac{\Delta t}2\sup(g'')^+\le\Delta t^{-1}(g(t_{n+1})-g(t_n))\le
@@ -1411,7 +1428,7 @@ $V$ is $C^{1,1}$,
 \delta^2V(x)=\int_{-h}^h\frac{h-|y|}{h^2}V_{xx}(x+y)\,dy,\qquad|DV(x)-V_x(x)|\le\frac h2\sup|V_{xx}| .
 \]
 On an arbitrary mesh $|\Delta_hV_j|\le C(\sup|V_{xx}|+\sup|V_x|)$ and $|DV_j|\le\sup|V_x|$ if
-$x_j\ge R_{\min}/2$, the suprema being taken on the stencil; and for $N\ge2$, on a uniform
+$x_j\ge R_{\min}/2$ and $j<J$, the suprema being taken on the stencil; and for $N\ge2$, on a uniform
 stencil with $x_j\ge R_{\min}/2$,
 $\Delta_h=(1+\epsilon_j)\delta^2+(\frac{N-1}{x_j}+\epsilon_j')D$ with $|\epsilon_j|+|\epsilon_j'|\le Ch^2$. (iii) If all the
 evaluation points of a node lie in $\overline{\{\tilde u>0\}}$, then by (V2)
@@ -1448,8 +1465,9 @@ reaction rate, as we shall see. Let
 (the supremum over $d\le C\ve\log(1/\ve)$), which bounds the variation of $s$ on the
 evaluation points of a band node at distance $d\le C\ve\log(1/\ve)$ from the front. By
 \eqref{cv:eq:hyp}, which implies $\Delta t\log(1/\ve)\le c_0$, $\zeta$ is as small as we wish if
-$c_0$ is small (depending on $a$), and then, by (iv), $\Theta_s$ varies by a factor at most
-$2$ on these evaluation points; moreover $\Delta t\,\mu'^2\le\ve$ there. For $N\ge2$ the terms with $\epsilon_j,\epsilon_j'$ and $\frac{N-1}{x_j}D$ in (ii) are bounded by
+$c_0$ is small (depending on $a$); in particular $\zeta\le\min\{\frac14,c_e\}$, and then, by
+(iv), $\Theta_s$ varies by a factor at most $2$ on these evaluation points; moreover
+$\Delta t\,\mu'^2\le\ve$ there. For $N\ge2$ the terms with $\epsilon_j,\epsilon_j'$ and $\frac{N-1}{x_j}D$ in (ii) are bounded by
 $C\sup\Theta_s$, and they only change the constants below; we write the proof for $N=1$.
 
 \emph{Step 5. The supersolution.} Here $\Theta=\Theta^+$, $\tilde v=\tilde v^+$. Let
@@ -1524,15 +1542,16 @@ $\Lop[V]^n_j\ge\Lop_0[\tilde u]^n_j-C+\gamma/(8\ve)\ge0$.
 
 \smallskip
 (d) \emph{The tail.} The remaining nodes are the band nodes with $s'<-2S_1$ and the
-nodes with $x'>R(t_{n+1})+\ell_b$. All their evaluation points have $s\le-S_1$: for the
-former because, by \eqref{cv:eq:rel} and $d\le C\ve|s|$, $s$ changes by at most
-$\zeta+C\Delta t|s'|\le\zeta+|s'|/2$ on them; for the latter by Lemma~\ref{q:lem:ext}(i), if $C_b$ is
-large. There $\Theta$, $\Theta_s$ and $\Theta_{ss}$ are at most $Ce^{-\lambda_0S_1}$, so by the mean value
-theorem, (ii) and $|\dot x_j|\le v_{\max}$ the terms of $\Lop_0[V]^n_j$ are bounded by
+nodes with $x'>R(t_{n+1})+\ell_b$. All their evaluation points have $s\le-S_1$. For the
+former: where $d\le r_1$, by \eqref{cv:eq:rel} and $d\le C\ve|s|$, $s$ changes by at most
+$\zeta+C\Delta t|s'|\le\zeta+|s'|/2$ on the evaluation points, and where $d>r_1$ we have
+$s\le-\delta_0r_1/(2\ve)$. For the latter by Lemma~\ref{q:lem:ext}(i), if $C_b$ is large. There
+$\Theta$, $\Theta_s$ and $\Theta_{ss}$ are at most $Ce^{-\lambda_0S_1}$, so by the mean value theorem, (ii) and
+$|\dot x_j|\le v_{\max}$ the terms of $\Lop_0[V]^n_j$ are bounded by
 $C\ve^{-1}e^{-\lambda_0S_1}\le a_0$ if $C_S$ is large, while
-$f_\ve(V_j)(V'+\ve w_0)\ge\ve^{-2}f(\Theta_j+\ve\tilde q-w_0)\,\ve^2\tilde q\ge2a_0$. Near $x=L$ the function
-$\tilde v$ is constant (Lemma~\ref{q:lem:ext} and $r\le\varrho_L/2$), so the zero-flux row is
-included.
+$f_\ve(V_j)(V'+\ve w_0)\ge\ve^{-2}f(\Theta_j+\ve\tilde q-w_0)\,\ve^2\tilde q\ge2a_0$. Within a distance
+$\varrho_L/4$ of $x=L$ the function $\tilde v$ is constant, by the proof of Lemma~\ref{q:lem:ext}
+and $r\le\varrho_L/4$, so $\Lop_0[V]^n_J=0$ in the zero-flux row.
 
 \smallskip
 Since $V+\ve w_0>0$, $V$ is a discrete supersolution.
@@ -1655,9 +1674,10 @@ $KC_A\rho_ht_n$ and \eqref{an:eq:dtale} is $\Delta t\le\nu\ve/(C_A\rho_h)$; when
 this is $\Delta t\le\nu'$, independent of $\ve$. The barriers are translates of $\Phi_\ve$, whose
 slack $\sigma_n\Phi'$ is spread over the whole profile; this is why the mesh size enters
 through $\rho_h$, with one more power of $\ve^{-1}$ than in Theorem~\ref{cv:thm:main}, where
-the slack is concentrated in the layer. For $v_n\equiv0$ the theorem gives nothing: then
-the supersolution moves towards the fresh side with respect to the nodes, the lag has
-the unfavourable sign, and one is in the situation of Remark~\ref{cv:rem:main}(1).
+the slack is concentrated in the layer. For $v_n\equiv0$ the theorem gives nothing,
+because $M_n=c_\ve t_n$: a barrier that keeps the favourable direction with respect to
+fixed nodes cannot follow the wave, and one is in the situation of
+Remark~\ref{cv:rem:main}(1).
 
 \subsection{The scheme as implemented, and what is not sharp}\label{an:sec:impl}
 
@@ -1700,8 +1720,9 @@ evaluated it on the exact wave ($f(s)=(1-s)^+$, $A=1$, $w_0=0$):
 \begin{equation}\label{an:eq:solv}
 \lambda=-0.235\,\frac{\Delta t}\ve\,(1+o(1))\qquad(\ve=0.02,\ 0.01,\ 0.005:\ -0.2351,\ -0.2345,\ -0.2342),
 \end{equation}
-which is what the experiments show (Section~\ref{sec:exp:tw}): the term $\Delta t/\ve$ of
-Theorem~\ref{cv:thm:main} is sharp. The terms $h_f/\ve$ and $h_c$ are not: the second
+which is what the experiments show for travelling waves (Section~\ref{sec:exp:tw}); in
+the setting of Theorem~\ref{cv:thm:main} the error on a fixed mesh is also proportional
+to $\Delta t/\ve$ (Section~\ref{sec:exp:thm}). The terms $h_f/\ve$ and $h_c$ are not sharp: the second
 differences of a smooth profile are of second order, their average over the position
 of the front in its cell is smaller still, and the experiments show errors of order
 $(h_f/\ve)^2$ and $h_c^2$.
@@ -1717,17 +1738,15 @@ of Section~\ref{sec:method}, and say which one in each case: \emph{ALE} (the sch
 \emph{Eulerian (S)}, and the reference solver \emph{BDF}. The exact speed $c_\ve$ of the
 travelling wave of \eqref{eq:Peps} is computed by shooting (Section~\ref{sec:tw}). With
 $h_f=\ve/16$ the layer is resolved, as Theorem~\ref{cv:thm:main} requires; the experiments
-differ from its setting in the width of the band, the remeshing and the computed mesh
-velocity (Section~\ref{an:sec:impl}).
+differ from its setting in the width of the band, the remeshing, the computed mesh
+velocity (Section~\ref{an:sec:impl}), and in that many of them use $\Delta t\gg\ve$.
 
 \subsection{The meshes: refinement ahead of the flame, coarsening behind it}
 
 Figure~\ref{fig:A5} shows the solution and the mesh at four times, for a planar
 travelling wave and for the extinction of a ball in radial symmetry. The fine band
 stays on the reaction layer; the cells are refined where the flame arrives and
-coarsened where it has passed, and the number of nodes changes by at most one. (Near
-the fixed end $x=0$ the cut-off of the mesh velocity stretches a few cells until the next
-remeshing.) The inset
+coarsened where it has passed, and the number of nodes changes by at most one. The inset
 shows the reaction layer, of width a few $\ve$, resolved by the band.
 
 \begin{figure}[ht]
@@ -1739,20 +1758,10 @@ Left: planar travelling wave. Right: radial extinction of the self-similar solut
 $N=2$. Insets: the reaction layer, in units of $\ve$.}\label{fig:A5}
 \end{figure}
 
-Figure~\ref{fig:A1} shows the trajectories of the nodes. In the ALE version the band,
-the transitions and the coarse nodes near the front translate with the flame; the mesh
-is rebuilt once in the whole run, and the band nodes stay on their lattice. On meshes
-that do not move, the mesh is rebuilt $31$ times; at each rebuild the band jumps ahead of
-the front.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.7\textwidth]{../numerics/figures/paper/A1_spacetime_nodes_tw.png}
-\caption{Node trajectories $x_i(t)$, coloured by the local mesh size, for the planar
-travelling wave ($w_0=0$, $\ve=0.01$, $h_c=0.04$). Left: ALE ($\Delta t=0.01$, one
-remeshing). Right: fixed nodes, rebuilt meshes (BDF). The orange line is the front;
-ticks on the right mark remeshings. Bottom: zoom on the fresh edge of the band.}\label{fig:A1}
-\end{figure}
+In the ALE version the band, the transitions and the coarse nodes near the front
+translate with the flame, and the band nodes stay on their lattice at remeshing: for the
+planar wave with $\ve=0.01$ and $0\le t\le4$ the mesh is rebuilt once. On meshes that do not
+move it is rebuilt $31$ times, and at each rebuild the band jumps ahead of the front.
 
 \emph{Cost.} For a fixed ratio $h_f/\ve$ the number of nodes is constant in time and
 grows only logarithmically in $1/\ve$: for the planar travelling wave ($w_0=0$, $L=27$,
@@ -1778,9 +1787,7 @@ linearly in time when the speed is wrong, while $E_s$ does not.
 \emph{Inside the hypotheses of Theorem~\ref{an:thm:ale}.} On a uniform mesh with
 $h=\ve^2/8$ and $\ve^2/16$, $\ve\in\{0.1,0.05\}$, translating rigidly with $v_n\equiv c_\ve$, we find
 $E\le8\cdot10^{-6}$ at $T=3$ for $\Delta t=0.1$ and $\Delta t=0.01$: the error does not depend on the
-time step, and the bound $KC_A\rho_hT$, with $\rho_hT=0.19$--$0.38$, is far from sharp. With
-$v_n\equiv c_\ve+0.01$ we find $E=1.0$--$9.8\cdot10^{-3}$, below $K\mu T\approx1.7\cdot10^{-2}$, and
-increasing with $\Delta t/\ve$.
+time step, and the bound, with $\rho_hT=0.19$--$0.38$, is far from sharp.
 
 \emph{ALE with implicit velocity.} From now on $h_f=\ve/16$ and the mesh velocity is
 computed. Figure~\ref{fig:D1} shows $E$ and $E_s$ for $\Delta t$ from $0.0025$ to $0.1$ and
@@ -1798,7 +1805,7 @@ in the speed, growing slowly as $\ve$ decreases), the effect of the non-rigid fa
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../numerics/figures/paper/D1_ale_error_vs_dt.png}
+\includegraphics[width=0.9\textwidth]{../numerics/figures/paper/D1_ale_error_vs_dt.png}
 \caption{ALE from $U^0=\Phi_\ve$: $E$, $E_s$, and $\max_{t_n\ge1}|v_n-c_\ve|$ against $\Delta t$,
 for $\ve=0.01,0.003,0.001$. Top: $w_0=0$. Bottom: $w_0=1$ (solid: default $\ell_0$; dashed:
 $\ell_0=4$; dotted: a shorter rigid zone).}\label{fig:D1}
@@ -1848,9 +1855,8 @@ velocity $c_\ve+\delta v$, $\delta v=10^{-3}$, the speed of the front is
 $c_\ve+\alpha\,\delta v$, where $\alpha$ is essentially a function of $\Delta t/\ve$: $\alpha=0.04$, $0.33$,
 $0.84$ and $0.98$ for $\Delta t/\ve=0.03$, $1$, $10$ and $100$ ($w_0=0$). This is the factor
 $\min\{1,\Delta t/\ve\}$ that multiplies $\mu$ in Theorem~\ref{cv:thm:main}, and the term $M_n$ of
-Theorem~\ref{an:thm:ale} is attained when $\Delta t\gg\ve$. It also follows that a rigid mesh
-moving with the exact speed gives errors below $3\cdot10^{-5}$ for every $\Delta t$ and every
-$h_f$, but this only shows that the front locks to the mesh.
+Theorem~\ref{an:thm:ale} is attained when $\Delta t\gg\ve$: for large time steps the front
+locks to the mesh.
 
 \emph{Fixed meshes: the lag.} With Eulerian (S) the front is slower than the exact one,
 and the speed error is proportional to $\Delta t/\ve$, the order of
@@ -1874,7 +1880,7 @@ divided by $\Delta t/\ve$; dotted: the value \eqref{an:eq:solv}. Right: ALE from
 the front in its cell.}\label{fig:D6}
 \end{figure}
 
-\subsection{An accelerating front: the setting of Theorem~\ref{cv:thm:main}}
+\subsection{An accelerating front: the setting of Theorem~\ref{cv:thm:main}}\label{sec:exp:thm}
 
 For the extinction of the self-similar ball (Section~\ref{sec:selfsimilar}, $w_0=0.5$,
 $T=1$) the front accelerates without bound and the solution is not steady in any
@@ -1888,15 +1894,16 @@ digits. On a band mesh whose band moves with the prescribed velocity $v_n=\dot R
 so that $\mu=0$ (the cells outside the rigid zone are stretched, up to $0.044$),
 $E_v=\ve w_0$ for every $\Delta t\le\ve$, which is the value of $v-u^\ve$ in the burnt region, and
 $E_v\le0.67\,\ve$ for $\Delta t=4\ve$. This is the term $\mu\min\{1,\Delta t/\ve\}$ of the theorem,
-against $\Delta t$.
+against $\Delta t$ (the constants $c_0$, $C_b$ are not explicit, so we cannot say that
+\eqref{cv:eq:hyp} holds in these runs).
 
 With the method itself (computed velocity, remeshing) the error in the position of the
 front (Figure~\ref{fig:B4}), after
 removing the shift $\ve/\sqrt{2M}$ of Remark~\ref{q:rem:rate}, is of first order in $\Delta t$:
 between $1.4\,\Delta t$ and $1.9\,\Delta t$ for $\ve\in\{0.01,0.002,0.001\}$ and $N=2,3$, with no
 systematic dependence on $\ve$. For general data the time step does enter, but as
-$\Delta t$ and not as $\Delta t/\ve$: this is the term $\Delta t$ of Theorem~\ref{cv:thm:main}, whose
-assumptions (V1), (V2) the self-similar solution satisfies.
+$\Delta t$ and not as $\Delta t/\ve$, as in Theorem~\ref{cv:thm:main}; here $\Delta t/\ve$ ranges from $0.25$
+to $40$, mostly beyond the time steps that the theorem covers.
 
 \begin{figure}[ht]
 \centering
@@ -1981,7 +1988,7 @@ $7.8\cdot10^{-4}$ for $\Delta t=2\cdot10^{-3}$ and $5\cdot10^{-4}$).
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../numerics/figures/paper/C1_ale_vs_limit.png}
+\includegraphics[width=0.9\textwidth]{../numerics/figures/paper/C1_ale_vs_limit.png}
 \caption{\eqref{eq:Peps} against the computed limit problem for the radial data
 $u_0=a(1-r^2/R_0^2)^+$ ($w_0=0.5$). Left: fronts ($N=2$). Middle: front$^*$. Right: sup
 error at the final time. Colour: ALE with $\Delta t=0.002$, $0.0005$, $0.000125$; grey:
@@ -2030,13 +2037,15 @@ to the truncation errors of the layer, are discrete barriers. For data in planar
 radial symmetry and band meshes with prescribed velocities, the fully discrete solution
 converges to the solution of the free boundary problem with the bound
 $C(\ve\log\frac1\ve+\frac{h_f}\ve+h_c+\Delta t+\mu\min\{1,\frac{\Delta t}\ve\})$
-(Theorem~\ref{cv:thm:main}): the layer must be resolved, and nothing more; on meshes
-that do not move the time step is divided by $\ve$, and on meshes that follow the front
-it is not. In the experiments the terms in $\Delta t$ and $\mu$ are attained, while the mesh
-sizes enter as $(h_f/\ve)^2$ and $h_c^2$.
+(Theorem~\ref{cv:thm:main}), for time steps $\Delta t\lesssim\ve$ divided by the bound: the layer
+must be resolved, and nothing more; on meshes that do not move the time step is divided
+by $\ve$, and on meshes that follow the front it is not. In the experiments the terms in
+$\Delta t$ and $\mu$ are observed, also for $\Delta t\gg\ve$, while the mesh sizes enter as
+$(h_f/\ve)^2$ and $h_c^2$.
 
 Several questions remain open: (i) an a priori bound for the implicit mesh velocity,
-the remeshing, and the sharp dependence on the mesh sizes (Section~\ref{an:sec:impl});
+the remeshing, time steps $\Delta t\gg\ve$ for general data, and the sharp dependence on the
+mesh sizes (Section~\ref{an:sec:impl});
 (ii) discrete barriers without symmetry, for which the barriers of
 Section~\ref{sec:rate} are available in any dimension, and for travelling waves and
 other configurations with unbounded fresh region; (iii)

@@ -244,7 +244,7 @@ paper, and the history of the changes made after the referee report are in
 | Table `tab:speedcoef` (Prop. 2.1) | `experiments.paper.speed_coefficient` | shooting | 10 s |
 | Section 5.5, averaged truncation error (`an:eq:solv`) | `experiments.truncation_check` | — | 15 s |
 | Fig. `fig:A5` (solution and mesh at successive times) | `experiments.paper.mesh_snapshots` | ALE | 10 s |
-| Fig. `fig:A1` and the cost figures of Section 6.1 (node trajectories, nodes per zone, steps) | `experiments.paper.meshes` | ALE, BDF | 4 min |
+| Remeshing counts and cost figures of Section 6.1 (nodes per zone, steps); `A1_spacetime_nodes_tw.png` (node trajectories, not in the paper) | `experiments.paper.meshes` | ALE, BDF | 4 min |
 | Figs. `fig:D1`, `fig:D2`, `fig:D3`; drag ratios (error from $\Phi_\varepsilon$, lattice pinning) | `experiments.paper.tw_error` | ALE, Eulerian (S) | 6 min |
 | Section 6.2, uniform mesh inside the hypotheses of the travelling wave theorem | `experiments.paper.in_hypotheses` | ALE (rigid mesh) | 1 min |
 | Section 6.3, setting of the convergence theorem (fixed uniform mesh; band with prescribed velocity, no remeshing) | `experiments.paper.convergence_thm` | (S) on a fixed mesh, ALE with `fixed_velocity`, `remesh=False` | 1 min |
