@@ -1460,6 +1460,177 @@ discrete barriers as above.
 % ---------------------------------------------------------------------------
 \section{Numerical experiments}\label{sec:experiments}
 
+Throughout, $f(s)=(1-s)^+$, so that $M(w_0)=(1+w_0)^3/6$, and $c_0=\sqrt{2M}/A$ is the
+speed of the planar travelling wave of \eqref{eq:P}. Unless stated otherwise the
+mesh has a band of width $55\ve$ (the reaction layer plus margins) with
+$h_f=\ve/16$, a geometric transition with ratio $1.1$, and $h_c=0.01$ elsewhere.
+``ALE'' denotes the scheme (S) on the moving mesh of Section~\ref{sec:method}
+with implicit mesh velocity and a fixed time step; ``Eulerian'' denotes either
+the same scheme on meshes rebuilt around the front (fixed $\Delta t$), or the
+adaptive BDF solver of Section~\ref{sec:method}, as indicated. Speeds of the
+ALE solutions are averaged over whole remeshing cycles: the front position
+oscillates by about $\pm3\cdot10^{-4}$ within a cycle, because the mesh outside
+the rigid zone is distorted and then reset, and least-squares fits over windows
+that are not aligned with the cycles are biased by about $10^{-4}$. The scripts
+that reproduce every figure and table are available with the code.
+
+\subsection{The meshes: refinement and coarsening}
+
+Figure~\ref{fig:A1} shows the trajectories of the nodes for a planar
+travelling wave. In the ALE version the fine band, the geometric transition
+and the coarse nodes near the front translate with the flame; the mesh is
+rebuilt once in the whole run, when it has travelled a distance $\ell_0/4$, and
+the band nodes stay on their lattice. In the Eulerian version the nodes are
+fixed and the mesh is rebuilt 31 times; at each rebuild the band jumps ahead of
+the front, refining in front of the flame and coarsening behind it.
+Figure~\ref{fig:A2} shows the local mesh size: the plateau $h=h_f$ and the
+geometric ramps move with the front, cells behind the flame are stretched (up
+to $6h_c$) and cells ahead are slightly compressed until the next remeshing.
+Figure~\ref{fig:A4} shows the same in radial symmetry, for the extinction of a
+ball and for an expanding flame; the saw-tooth pattern is the reset of the
+nodes outside the rigid zone at each remeshing.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/A1_spacetime_nodes_tw.png}
+\caption{Node trajectories $x_i(t)$, coloured by the local mesh size, for the planar
+travelling wave ($w_0=0$, $\ve=0.01$, $h_c=0.04$ to make coarse nodes visible).
+Left: ALE ($\Delta t=0.01$, one remeshing). Right: Eulerian (BDF, 31 rebuilds). The
+orange line is the front $\{u=\ve\}$; ticks on the right mark remeshings. Bottom:
+zoom on the fresh edge of the band and the transition.}\label{fig:A1}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/A2_mesh_size.png}
+\caption{Local mesh size (log scale) of the ALE meshes at four times. Left: planar
+travelling wave. Right: radial extinction ($N=2$). Triangles mark the front.}\label{fig:A2}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/A4_radial_meshes.png}
+\caption{Node trajectories $r_i(t)$ of the ALE meshes in radial symmetry ($N=2$,
+$w_0=0.5$, $\ve=0.01$, $h_c=0.04$). Left: extinction of the self-similar ball
+(16 remeshings). Right: expanding flame from a burnt kernel of radius $1.5$
+(6 remeshings).}\label{fig:A4}
+\end{figure}
+
+\emph{Cost.} The number of nodes is constant in time (to within one node) and
+grows only logarithmically in $1/\ve$ (Table~\ref{tab:A3}, Figure~\ref{fig:A3}): the
+band has $55\cdot16+1=881$ nodes for every $\ve$, the transition
+$2\lceil\log(h_c/h_f)/\log1.1\rceil$ nodes, and the coarse part does not depend on $\ve$;
+from $\ve=0.01$ to $\ve=0.001$ the mesh gains 98 nodes, all in the transition. The
+ALE scheme needs the same number of time steps for every $\ve$, while the
+number of steps of the adaptive Eulerian solver grows like $\ve^{-1.4}$.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{rrrrrcc}
+\toprule
+$\ve$ & total & band & transition & coarse & ALE: steps / s & Eulerian BDF: steps / rebuilds / s\\
+\midrule
+0.01  & 3573 & 882 & 58  & 2633 & 400 / 1.6 & 932 / 31 / 6.1\\
+0.005 & 3615 & 882 & 72  & 2661 & 400 / 1.3 & 2018 / 62 / 12.8\\
+0.002 & 3650 & 882 & 90  & 2678 & 400 / 1.6 & 6533 / 155 / 44.0\\
+0.001 & 3671 & 882 & 106 & 2683 & 400 / 1.0 & 22687 / 309 / 129.8\\
+\bottomrule
+\end{tabular}
+\caption{Planar travelling wave, $0\le t\le4$: number of nodes per zone and cost.}\label{tab:A3}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/A3_node_count.png}
+\caption{(a) Number of nodes vs time; (b) nodes per zone vs $\ve$, with the
+formula (dotted); (c) time steps needed to reach $t=4$.}\label{fig:A3}
+\end{figure}
+
+\subsection{Verification of the error estimates}
+
+\emph{Time step: Eulerian vs ALE.} Figure~\ref{fig:B1} and Table~\ref{tab:B1} compare,
+for the planar travelling wave, the speed error of the Eulerian monotone
+scheme with that of the ALE scheme on the same band meshes. The Eulerian error
+is a function of $\Delta t/\ve$ alone (the points of different $(\Delta t,\ve)$ with
+the same ratio coincide, e.g.\ $-0.144$ for $w_0=0$ and $\Delta t=\ve$), linear for small
+$\Delta t/\ve$ and saturating as the front stalls. The ALE error does not depend
+on $\Delta t$ nor on $\ve$, as predicted by Theorem~\ref{an:thm:ale}; for the fast wave
+($w_0=1$, $c=1.63$) this requires a rigid zone covering several decay lengths
+($\ell_0=4$), see Section~\ref{sec:limitations}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/B1_tw_speed_eulerian_vs_ale.png}
+\caption{Speed error $|c_h-c_\ve|$ for the planar travelling wave, $w_0=0$ (left)
+and $w_0=1$ (middle), $\Delta t\in\{0.02,0.01,0.005\}$: Eulerian monotone scheme
+(squares) and ALE (circles). Right: relative error vs $\Delta t/\ve$.}\label{fig:B1}
+\end{figure}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{lcc cccc}
+\toprule
+scheme & $w_0$ & $\Delta t$ & $\ve=0.01$ & $0.005$ & $0.002$ & $0.001$\\
+\midrule
+Eulerian & 0 & 0.01  & $-1.44\cdot10^{-1}$ & $-2.11\cdot10^{-1}$ & $-3.18\cdot10^{-1}$ & $-3.88\cdot10^{-1}$\\
+Eulerian & 0 & 0.005 & $-9.12\cdot10^{-2}$ & $-1.44\cdot10^{-1}$ & $-2.40\cdot10^{-1}$ & $-3.18\cdot10^{-1}$\\
+ALE      & 0 & 0.02  & $+1.66\cdot10^{-4}$ & $+1.78\cdot10^{-4}$ & $+1.82\cdot10^{-4}$ & $+1.83\cdot10^{-4}$\\
+ALE      & 0 & 0.005 & $+1.42\cdot10^{-4}$ & $+1.52\cdot10^{-4}$ & $+1.51\cdot10^{-4}$ & $+1.55\cdot10^{-4}$\\
+ALE      & 1 & 0.02  & $+1.16\cdot10^{-4}$ & $-2.31\cdot10^{-4}$ & $+2.77\cdot10^{-5}$ & $+2.67\cdot10^{-5}$\\
+ALE      & 1 & 0.005 & $-1.90\cdot10^{-5}$ & $-5.08\cdot10^{-5}$ & $-1.45\cdot10^{-4}$ & $+4.98\cdot10^{-5}$\\
+\bottomrule
+\end{tabular}
+\caption{Signed speed error $c_h-c_\ve$, planar travelling wave.}\label{tab:B1}
+\end{table}
+
+\emph{Mesh sizes.} Figure~\ref{fig:B2} separates the two mesh sizes. As a function
+of $h_f/\ve$ the curves for different $\ve$ coincide: $\ve$ enters only through
+the ratio $h_f/\ve$ in the band, as in Theorem~\ref{an:thm:band}. The decay is
+roughly first order ($8.7\cdot10^{-4}$, $4.2\cdot10^{-4}$, $1.7\cdot10^{-4}$ for
+$h_f/\ve=1/4,1/8,1/16$, then the noise level of the measurement, $2\cdot10^{-5}$),
+which is the expected order for a reaction term that is only Lipschitz. The
+coarse mesh contributes $O(h_c^2)$ ($5\cdot10^{-5}$ at $h_c=0.04$, $10^{-5}$ at
+$h_c=0.02$), with no $\ve$ in front of it. In particular, the floor
+$\approx1.6\cdot10^{-4}$ of the ALE errors in Table~\ref{tab:B1} is the band term for
+$h_f=\ve/16$.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{../numerics/figures/paper/B2_ale_mesh_sizes.png}
+\caption{ALE speed error for the travelling wave ($w_0=0$, $\Delta t=0.01$). Left: vs
+$h_f/\ve$ for four values of $\ve$ ($h_c=0.0025$). Right: vs $h_c$ ($h_f=\ve/32$).}\label{fig:B2}
+\end{figure}
+
+\emph{Rigid mesh at the exact speed.} When the whole mesh translates rigidly
+with $v=c_\ve$ ($\mu=0$), Theorem~\ref{an:thm:ale} contains no time step at all.
+Figure~\ref{fig:B3} confirms it: the speed error is below $3\cdot10^{-5}$ and shows
+no trend for $\Delta t$ from $0.1$ to $0.005$, although $\Delta t=0.1$ is $10^5\ve^2$ for
+$\ve=10^{-3}$.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{../numerics/figures/paper/B3_rigid_mesh_dt.png}
+\caption{Rigid mesh translating with the exact speed: speed error vs $\Delta t$,
+$w_0\in\{0,1\}$, $\ve\in\{0.005,0.001\}$.}\label{fig:B3}
+\end{figure}
+
+\emph{An accelerating front.} For the extinction of the self-similar ball the
+front accelerates without bound and the solution is not steady in any moving
+frame. The error (Figure~\ref{fig:B4}) is first order in $\Delta t$ with a constant
+independent of $\ve$: after removing the level-set shift $\ve/\sqrt{2M}$, it is
+$\approx1.35\,\Delta t$ for $N=2$ and $\approx1.55\,\Delta t$ for $N=3$ at $\ve=0.001$, and the
+same for $\ve=0.002$. This is the behaviour expected for general data: an
+$O(\Delta t)$ term with an $\ve$-independent constant.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.75\textwidth]{../numerics/figures/paper/B4_radial_extinction_dt.png}
+\caption{Radial extinction (self-similar data, $w_0=0.5$, $t\le0.75$), ALE: front
+error after removing the shift $\ve/\sqrt{2M}$, vs $\Delta t$, for $N=2,3$ and
+$\ve\in\{0.01,0.002,0.001\}$.}\label{fig:B4}
+\end{figure}
+
+
 \subsection{Flame speed}
 For $A=1$ and $w_0\in\{-0.5,0,1\}$ we start from the limit travelling wave
 $u_0=A(1-e^{-c_0(x-2)})^+$ (with $u_0^\ve,Y_0^\ve$ as in Section~\ref{sec:method}),
@@ -1591,80 +1762,124 @@ Proposition~\ref{prop:speed}: the front moves essentially as a travelling wave
 with $A=1$, whose speed is $c_0+0.044\,\ve+o(\ve)$ for $w_0=0.5$, and over
 $0\le t\le6$ this accumulates to $\approx0.26\,\ve$.
 
-\subsection{Radial extinction}
-We take $w_0=0.5$, $T=1$, the exact solution $V$ of Section~\ref{sec:exact}
-as initial datum ($u_0=V(\cdot,0)$, so $u_0^\ve$ and $Y_0^\ve$ are as in
-Section~\ref{sec:method}), and integrate \eqref{eq:Peps} up to $t=0.75$, when the
-radius of the ball $\{V>0\}$ has halved. The initial datum is radially
-decreasing, hence starshaped, and $w_0$ is constant, so the uniqueness result
-of \cite{FernandezBonderWolanski2004} applies: $u^\ve\to V$.
-Figure~\ref{fig:radial} shows $u^\ve$ and $V$ for $\ve=0.01$, $N=2$, and the
-errors as $\ve\to0$; Table~\ref{tab:radial} lists them.
+\emph{The ALE solver.} The same comparison with the ALE solver (radial data,
+Figure~\ref{fig:C1}) shows an error of the form $a\ve+b\Delta t$ with $b\approx2.3$--$2.6$:
+for $\ve\ge0.01$ the $\ve$ term dominates and the ALE and BDF results agree; for
+smaller $\ve$ the time-step term dominates (with $\Delta t=1.25\cdot10^{-4}$ the shifted
+front error is $1.26\cdot10^{-3}$ at $\ve=0.01$ and $3.8\cdot10^{-4}$ at $\ve=0.001$).
+In all cases the unshifted front error is $\approx\ve/\sqrt{2M}$. This is consistent
+with Theorem~\ref{q:thm:rate} ($u^\ve-v=O(\ve)$) combined with an $\ve$-independent
+$O(\Delta t)$ discretization error.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
-\includegraphics[width=0.48\textwidth]{../numerics/figures/radial_snapshots.png}\hfill
-\includegraphics[width=0.5\textwidth]{../numerics/figures/radial_convergence.png}
-\caption{Radial extinction, $w_0=0.5$. Left: $u^\ve$ (solid) and the exact
-solution $V$ (dashed) for $N=2$, $\ve=0.01$. Right: front error
-$\max_{t\in[0.05,0.75]}|r_\ve(t)-R\sqrt{T-t}|$ and
-$\max_x|(u^\ve)^+-V|$ at $t=0.75$, for $N=2,3$.}\label{fig:radial}
+\includegraphics[width=\textwidth]{../numerics/figures/paper/C1_ale_vs_limit.png}
+\caption{ALE solution of \eqref{eq:Peps} vs the computed limit problem for the radial
+data $u_0=a(1-r^2/R_0^2)^+$ ($w_0=0.5$). Left: fronts ($N=2$). Middle: front error
+after removing $\ve/\sqrt{2M}$. Right: $\max_r|u_h^+-u|$ at the final time. Colour:
+ALE with $\Delta t=0.002$, $0.0005$, $0.000125$; grey: Eulerian BDF.}\label{fig:C1}
 \end{figure}
 
-\begin{table}[h]
+\subsection{Examples from the literature}
+
+\emph{Approach to the self-similar extinction profile.} Galaktionov, Hulshof
+and V\'azquez \cite{GalaktionovHulshofVazquez1997} proved that the extinction of
+radial flames is asymptotically self-similar. For the non-self-similar data
+of Figure~\ref{fig:C1}, followed until extinction, Figure~\ref{fig:C2} shows
+$s(t)/\sqrt{T-t}$, which tends to the constant $R$ of Section~\ref{sec:exact}
+($2.513927$ for $N=2$, $3.003951$ for $N=3$), and the rescaled profiles, which
+tend to $\kappa\phi(\eta)$. For the limit problem the ratio is $2.4474$, $2.4922$,
+$2.5102$, $2.5130$ when the radius is $1.5$, $1$, $0.5$, $0.25$ ($N=2$), and reaches
+$3.0020$ for $N=3$. The extinction times agree to four digits
+(Table~\ref{tab:C2}).
+
+\begin{figure}[ht]
 \centering
-\begin{tabular}{rcccc}
+\includegraphics[width=\textwidth]{../numerics/figures/paper/C2_self_similar_convergence.png}
+\caption{Top: $s(t)/\sqrt{T-t}$ vs $T-t$ for the limit problem (black) and for
+\eqref{eq:Peps} (ALE, $\ve=0.01,0.002$; BDF, $\ve=0.002$), $N=2,3$. Bottom: rescaled
+profiles $u/\sqrt{T-t}$ vs $\eta=r/\sqrt{T-t}$ when the radius is $1.5$, $1$, $0.5$,
+$0.25$, converging to $\kappa\phi$ (grey).}\label{fig:C2}
+\end{figure}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{lcccc}
 \toprule
-& \multicolumn{2}{c}{front error$/\ve$} & \multicolumn{2}{c}{$\|(u^\ve)^+-V\|_\infty/\ve$}\\
-$\ve$ & $N=2$ & $N=3$ & $N=2$ & $N=3$\\
+& limit & BDF, $\ve=0.002$ & ALE, $\ve=0.01$ & ALE, $\ve=0.002$\\
 \midrule
-0.05  & 1.128 & 1.120 & 0.142 & 0.136\\
-0.02  & 1.064 & 1.060 & 0.108 & 0.105\\
-0.01  & 1.048 & 1.045 & 0.102 & 0.099\\
-0.005 & 1.037 & 1.037 & 0.095 & 0.095\\
-0.002 & 1.026 & 1.023 & 0.086 & 0.089\\
-0.001 & 1.028 & 1.014 & 0.086 & 0.086\\
+$N=2$ & 0.725090 & 0.725024 & 0.72459 & 0.72525\\
+$N=3$ & 0.505756 & 0.505712 & 0.50540 & 0.50589\\
 \bottomrule
 \end{tabular}
-\caption{Radial extinction: errors divided by $\ve$.}\label{tab:radial}
+\caption{Extinction times for the data $u_0=a(1-r^2/R_0^2)^+$.}\label{tab:C2}
 \end{table}
 
-The front error is $O(\ve)$, and most of it is the distance between the level
-set $\{u^\ve=\ve\}$ that we track and the free boundary: since
-$|\nabla V|=\sqrt{2M}$ there, this distance is $\ve/\sqrt{2M}+o(\ve)$, that is
-$0.943\,\ve$ for $w_0=0.5$; the remaining $\approx0.08\,\ve$ is consistent with the
-radial results of Section~\ref{sec:limit}. The sup error is attained inside
-the reaction layer, where $(u^\ve)^+$ has the shape $\ve\psi(d/\ve)$ of the
-inner profile while $V$ is linear in the distance $d$ to the free boundary; it
-is $O(\ve)$, with $\|(u^\ve)^+-V\|_\infty/\ve$ decreasing from $0.14$ to $0.086$.
+\emph{Quenching of small kernels.} A small burnt kernel surrounded by fresh
+mixture may be extinguished by curvature: heuristically the front moves with
+speed $\approx c_0-1/r$, which suggests a critical radius $1/c_0$. For the data
+$u_0=\tanh(\sqrt{2M}(r-r_0))^+$ ($N=2$, $w_0=0.5$, $c_0=1.0607$) we find the critical
+radius by bisection (Figure~\ref{fig:C3}): $r_*=0.715\pm0.001$ for every $\ve$ from
+$0.01$ to $0.00125$, with both the ALE and the Eulerian BDF solvers. The heuristic
+$1/c_0=0.943$ overestimates it by $30\%$: kernels that barely ignite first shrink
+to $r\approx0.52$ and then expand, so the threshold is set by the transient and
+presumably depends on the whole initial profile.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/C3_quenching.png}
+\caption{Expanding flames from a burnt kernel of radius $r_0$ ($N=2$, $w_0=0.5$).
+Left: front radius for several $r_0$ ($\ve=0.01$); kernels below the critical
+radius collapse. Right: critical radius vs $\ve$.}\label{fig:C3}
+\end{figure}
+
+\subsection{Limitations}\label{sec:limitations}
+\begin{enumerate}
+\item The rigid zone of the ALE mesh must contain several decay lengths $1/c$ of
+the profile ahead of the front, otherwise an $O(\Delta t\,e^{-cR_1})$ term appears
+(Section~\ref{sec:analysis}); for $c=1.63$ we use $\ell_0=4$.
+\item Close to $r=0$ the mesh velocity is tapered to keep the nodes in
+$[0,L]$; when a collapsing front enters this zone the scheme becomes partly
+Eulerian and an $O(\Delta t\,v/\ve)$ lag reappears. Near extinction ($v\sim1/r$) this
+requires small time steps; a better treatment (scaling the nodes towards the
+origin while the band keeps moving rigidly) is left for future work.
+\item The code assumes a single front (one or two interfaces in radial
+geometry are not treated), and only planar and radial symmetry; the extension
+to two and three dimensions with adaptive refinement and coarsening of finite
+element meshes is the natural next step.
+\end{enumerate}
 
 % ---------------------------------------------------------------------------
 \section{Conclusions and outlook}\label{sec:conclusions}
-The experiments support first-order convergence in $\ve$ of the flame
-position and speed for \eqref{eq:Peps}, in planar and radial geometry,
-including in the presence of the $O(\ve)$ perturbation $w_0$ that changes the
-limit problem, and they make visible the instability proved in
-\cite{FernandezBonderWolanski2000}. Proposition~\ref{prop:speed} gives the
-first-order correction of the speed of planar waves, and it explains the
-residual front error observed against the computed limit problem. For the
-monotone version (S) of the scheme, the discrete comparison principle reduces
-$\ve$-uniform estimates to barriers; the construction of barriers around the
-travelling wave, and the sharp rate $\Delta t/\ve$ suggested by the
-solvability condition and by the experiments, are the subject of ongoing work.
-Whether an $O(\ve)$ rate holds for general limits of \eqref{eq:Peps} with a
-classical limit solution, as the experiments suggest, is open.
+We have shown that, when the limit problem \eqref{eq:P} has a classical
+solution that is $C^{2,1}$ up to the free boundary and the data are strictly
+starshaped, the solutions of \eqref{eq:Peps} converge with rate $O(\ve)$
+(Theorem~\ref{q:thm:rate}), a quantitative version of the convergence theorems
+of \cite{FernandezBonderWolanski2004}. For planar waves the first order term is
+explicit (Proposition~\ref{prop:speed}), and its sign changes at $w_0\approx0.564$.
 
-Natural next steps are: (i) the elliptic problem in two dimensions, where the
-annulus provides explicit solutions with zero, one or two free boundaries, and
-the Bernoulli literature \cite{FlucherRumpf1997,ShenDaiHuang2024} provides
-comparisons; (ii) the parabolic problem in two and three dimensions with
-adaptive refinement and coarsening of a finite element mesh, which follows
-the strategy of Section~\ref{sec:method} with a cell indicator instead of an
-interval; (iii) a moving mesh (MMPDE) version in which time steps do not
-degrade as $\ve\to0$ \cite{HuangRussell2011,BuddHuangRussell2009}; and
-(iv) experiments without the geometric assumptions of
-\cite{FernandezBonderWolanski2004}, in search of the non-uniqueness and
-degenerate behaviours of \cite{PetrosyanYip2008,WeissZhang2009}.
+On the numerical side, the monotone scheme (S) on band meshes satisfies a
+discrete comparison principle, which reduces the analysis to barriers. On a
+fixed mesh this gives the bound $C(\ve+\Delta t/\ve^2+h/\ve^2)$, and the $\Delta t/\ve$ lag
+is real (Section~\ref{sec:experiments}). In the ALE version, where the band
+moves with the flame, the error is $C(\ve+\mu+\rho_f+h_c)$: no time step for
+travelling waves, and $\ve$ only multiplies the mesh size inside the band of
+width $O(\ve)$. The experiments confirm each term: the error is independent of
+$\Delta t$ and $\ve$ for travelling waves, it depends on $\ve$ only through $h_f/\ve$,
+and the cost grows only logarithmically in $1/\ve$. For an accelerating front
+(radial extinction) the error is $O(\Delta t)$ with an $\ve$-independent constant.
+
+Open problems: (i) the sharp rate $(h_f/\ve)^2+\Delta t/\ve$ suggested by the
+solvability condition requires a corrector in the barrier; (ii) the rate
+for limits that are not classical, or without starshapedness, in particular
+near the non-uniqueness and degenerate behaviours of
+\cite{PetrosyanYip2008,WeissZhang2009}; (iii) a treatment of the mesh near the
+origin that keeps the ALE scheme Lagrangian up to extinction; (iv) the
+elliptic problem in two dimensions, where the Bernoulli literature
+\cite{FlucherRumpf1997,ShenDaiHuang2024} provides comparisons; and (v) the
+parabolic problem in two and three dimensions with adaptive refinement and
+coarsening of a finite element mesh following the flame, or a moving mesh
+(MMPDE) version \cite{HuangRussell2011,BuddHuangRussell2009}.
 
 \bibliographystyle{amsplain}
 \bibliography{references}
