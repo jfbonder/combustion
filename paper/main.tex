@@ -28,7 +28,7 @@ Universidad de Buenos Aires, Ciudad Universitaria, (1428) Buenos Aires, Argentin
 
 \date{DRAFT, \today}
 
-\newcommand{\EONEA}{48,60}\newcommand{\EONEB}{-0.23}
+\newcommand{\EONEA}{48,60}\newcommand{\EONEB}{\textbf{[pending]}}
 \begin{document}
 
 \begin{abstract}
@@ -149,7 +149,7 @@ not appear in the error; it is only restricted by the condition that, in one ste
 the mesh and the front move with respect to each other by less than the width of the
 layer. And negative powers of $\ve$ multiply only $h_f$. On meshes that do not move,
 instead, the front lags by as much as $C(\Delta t/\ve^2)T$ in the estimate, and
-$0.23\,(\Delta t/\ve)T$ in practice. The barriers are translates of the travelling wave, and
+about $0.23\,(\Delta t/\ve)T$ in practice. The barriers are translates of the travelling wave, and
 the estimates are not sharp: they require $h_f\ll\ve^2$ and a band wider than the
 bound, whereas in the experiments, with $h_f=\ve/16$, the errors are of order
 $(h_f/\ve)^2$, as a formal averaging argument suggests (Section~\ref{an:sec:sharp}).
@@ -1611,7 +1611,7 @@ the front.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.9\textwidth]{../numerics/figures/paper/A1_spacetime_nodes_tw.png}
+\includegraphics[width=0.7\textwidth]{../numerics/figures/paper/A1_spacetime_nodes_tw.png}
 \caption{Node trajectories $x_i(t)$, coloured by the local mesh size, for the planar
 travelling wave ($w_0=0$, $\ve=0.01$, $h_c=0.04$). Left: ALE ($\Delta t=0.01$, one
 remeshing). Right: fixed nodes, rebuilt meshes (BDF). The orange line is the front;
@@ -1694,7 +1694,7 @@ this.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../numerics/figures/paper/D3_phase_pinning.png}
+\includegraphics[width=0.85\textwidth]{../numerics/figures/paper/D3_phase_pinning.png}
 \caption{ALE: speed error against the position $\vartheta$ of the front in its cell,
 for $h_f/\ve=1/8,1/16,1/32$; lines: $\ve=0.01$, crosses: $\ve=0.001$.}\label{fig:D3}
 \end{figure}
@@ -1751,7 +1751,7 @@ example, with a constant that does not grow as $\ve\to0$.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.75\textwidth]{../numerics/figures/paper/B4_radial_extinction_dt.png}
+\includegraphics[width=0.6\textwidth]{../numerics/figures/paper/B4_radial_extinction_dt.png}
 \caption{ALE, radial extinction (self-similar data, $w_0=0.5$, $t\le0.75$): error in the
 position of the front, after removing the shift $\ve/\sqrt{2M}$, against $\Delta t$, for
 $N=2,3$ and $\ve\in\{0.01,0.002,0.001\}$.}\label{fig:B4}
@@ -1770,7 +1770,7 @@ $\sqrt{2M(-0.5)}$ and the front first recedes before propagating.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../numerics/figures/tw_instability.png}
+\includegraphics[width=0.85\textwidth]{../numerics/figures/tw_instability.png}
 \caption{Same $u_0$, three values of $w_0$, $\ve=0.005$ (BDF). Left: fronts of
 \eqref{eq:Peps} (colour) and of the computed limit problem \eqref{eq:P} (dashed).
 Right: $Y$ (solid) and $u$ (dashed) near the front at $t=20$.}\label{fig:instability}
@@ -1857,7 +1857,7 @@ near extinction; this is the cut-off of the mesh velocity near $r=0$
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../numerics/figures/paper/C2_self_similar_convergence.png}
+\includegraphics[width=0.85\textwidth]{../numerics/figures/paper/C2_self_similar_convergence.png}
 \caption{Top: $s(t)/\sqrt{T-t}$ against $T-t$ for the limit problem (black) and for
 \eqref{eq:Peps} (ALE, $\ve=0.01,0.002$; BDF, $\ve=0.002$), $N=2,3$. Bottom: rescaled
 profiles $u/\sqrt{T-t}$ against $r/\sqrt{T-t}$ when the radius is $1.5$, $1$, $0.5$,
@@ -1876,7 +1876,7 @@ and presumably depends on the whole initial profile.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../numerics/figures/paper/C3_quenching.png}
+\includegraphics[width=0.85\textwidth]{../numerics/figures/paper/C3_quenching.png}
 \caption{Expanding flames from a burnt kernel of radius $r_0$ ($N=2$, $w_0=0.5$).
 Left: front radius for several $r_0$ ($\ve=0.01$, ALE); kernels below the critical
 radius collapse. Right: critical radius against $\ve$.}\label{fig:C3}
