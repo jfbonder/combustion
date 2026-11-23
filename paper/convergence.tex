@@ -402,11 +402,112 @@ needs the barrier to outrun the mismatch between mesh and front. In practice
 $v$ is the front speed measured in the previous steps, so $\mu=O(\Delta t)$.
 For $v=0$ (Eulerian scheme) \eqref{eq:sigmamu} fails and one falls back on
 Theorem~\ref{thm:main}.
-\item On the band/coarse meshes of the code, the same argument with $q$ localized
-ahead of the front by a cut-off $\chi(z)$ that varies on an $O(1)$ scale (no
-reaction there, and $\Phi'\ge c>0$ absorbs $q\chi''$, $q\chi'$) gives
-$C_T(\ve+\rho_{h_f}+\mu+h_c)$, with $\rho_{h_f}$ involving only the mesh size
-$h_f$ in the reaction layer. (To be written.)
+\item On band meshes the negative powers of $\ve$ only affect the mesh size in
+the reaction layer: see Theorem~\ref{thm:band}.
+\end{enumerate}
+\end{remark}
+
+
+% ---------------------------------------------------------------------------
+\section{Band meshes: mesh conditions only at the flame front}\label{sec:band}
+
+\subsection*{Mesh} In the frame of the nodes the mesh is fixed (it translates
+rigidly with velocity $v_n$) and consists of
+\begin{itemize}
+\item a \emph{band} $\{y:\ -K_b\ve\log(1/\ve)\le y-y_*\le K_f\ve\}$ around the
+front, with uniform spacing $h_f\le\ve$; here $y_*$ is the front position at
+$t=0$, and $K_b,K_f$ are large constants;
+\item outside the band, spacings $h_i\le h_c$ with $h_{i+1}/h_i\in[1/g,g]$,
+$g\le2$ (geometric transition).
+\end{itemize}
+$\Delta_h$ is the finite volume Laplacian and $D$ the three-point centred
+derivative on this mesh. If $|v_n|h_c\le2$, the matrix of the scheme is an
+M-matrix and the comparison principle holds.
+
+\subsection*{Truncation} For $\varphi\in C^4$, on the band
+$|\Delta_h\varphi-\varphi''|\le\frac{h_f^2}{12}\|\varphi''''\|$ and
+$|D\varphi-\varphi'|\le\frac{h_f^2}6\|\varphi'''\|$; outside the band (non-uniform
+nodes) $|\Delta_h\varphi-\varphi''|+|D\varphi-\varphi'|\le C h_i(\|\varphi'''\|+\|\varphi''\|)$
+on the stencil. By Lemma~\ref{lem:profile}, $\Phi$ and its derivatives are
+$O(1)$ ahead of the front, and behind it they are bounded by
+$K\ve^{1-k}e^{\kappa_0\zeta/2}$. On the burnt side of the band
+$\zeta\le-K_b\log(1/\ve)$, so for $K_b\ge12/\kappa_0$ the truncation error there is
+$\le Ch_c\ve^{-2}\ve^{6}\le Ch_c$. Hence the truncation error of the leading terms
+is $O(\rho_f)$ in the band, with
+\[
+\rho_f=\frac{h_f}{\ve^2}\ \text{under (F)},\qquad \rho_f=\frac{h_f^2}{\ve^3}\ \text{under (F$'$)},
+\]
+and $O(h_c)$ outside it.
+
+\subsection*{Localized barrier} Let $\chi\in C^2(\R)$ be nondecreasing,
+$\chi=0$ on $(-\infty,K_f\ve/2]$, $\chi=1$ on $[K_f\ve/2+1,\infty)$, with
+$|\chi'|+|\chi''|\le C_\chi$. For the supersolution take
+\[
+V^n_j=\Phi(z^n_j)+q_b+Q_n\,\chi(z^n_j),\qquad z^n_j=y_j+X_n-ct_n+\sigma t_n ,
+\]
+with constants $q_b,\sigma$ and $Q_n=C_2(h_c+\sigma^2\Delta t)\,t_n$.
+
+\begin{theorem}[ALE, band mesh]\label{thm:band}
+Under the assumptions of Theorem~\ref{thm:ale}, on a band mesh as above,
+\[
+\max_{t_n\le T}\sup_j\big|U^n_j-u(x^n_j,t_n)\big|\le C_T\big(\ve+\mu+\rho_f+h_c\big),
+\]
+provided $\rho_f+\mu+h_c\le\gamma$, $\Delta t(\rho_f+\mu+h_c)\le\gamma\ve$ and
+$|v_n|h_c\le2$. The negative powers of $\ve$ multiply only the mesh size $h_f$
+in the band; outside the band the error is $O(h_c)$, without $\ve$.
+\end{theorem}
+
+\begin{proof}
+We indicate the changes with respect to Theorem~\ref{thm:ale}. Split the line
+into (II$'$) the reaction layer and its burnt tail, $\zeta\le K_f/2$, where
+$\chi=0$, and (I$'$) the fresh region $\zeta>K_f/2$, where $\Phi\ge\ve$ and
+there is no reaction.
+
+\emph{(II$'$).} Here $V=\Phi(z)+q_b$ and the argument of Theorem~\ref{thm:ale}
+applies with $\rho_h$ replaced by $\rho_f$ and $q$ by $q_b$: the term
+$B\le L_f\ve^{-3}(\Phi+\ve w_0)q_b$ and the stability of the burnt state give the
+conditions $q_b\ge C\ve^2\rho_f$ and $\sigma\ge\mu+C(\rho_f+q_b/\ve^2)$. Since
+$Q\chi=0$ here, the growth of $Q$ (which is $O(h_c)$) does not enter: this is the
+point of the localization.
+
+\emph{(I$'$).} Here $f_\ve(V^n)=0$ and
+\[
+\Lop_v[V]\ge\sigma\Phi'(z')+\dot Q_n\chi(z')
+-Q_{n+1}\big(|\chi''|+(|c|+2\sigma)|\chi'|\big)(z')-C(\sigma^2\Delta t+h_c)-CQ_n\sigma\Delta t ,
+\]
+where the $Q$-terms come from $D_t(Q\chi)$, $-\Delta_h(Q\chi)$ and $-vD(Q\chi)$
+(with $O(h_c)$ truncation absorbed in the constant). On the support of $\chi'$,
+$\zeta\in[K_f/2,K_f/2+1/\ve]$, i.e. $z\in[K_f\ve/2,K_f\ve/2+1]$, we have
+$\Phi'(z)=(A-\ve)ce^{-cz}\ge\theta_1:=\frac A2c_0e^{-2c_0(1+K_f\ve)}>0$,
+independent of $\ve$. Hence if
+\[
+\sigma\theta_1\ \ge\ C\big(1+C_\chi\big)\,\sup_{t_n\le T}Q_n=C'T(h_c+\sigma^2\Delta t),
+\]
+the $Q$-terms are absorbed there; where $\chi=1$, $\chi'=\chi''=0$ and
+$\dot Q_n=C_2(h_c+\sigma^2\Delta t)$ absorbs the remaining residual.
+
+\emph{Choice.} $q_b=C_3\ve^2\rho_f$ and
+$\sigma=\mu+C_4(\rho_f+Th_c)$. Then $\sigma^2\Delta t\le\gamma\ve\sigma$ is a
+small multiple of $\sigma$ and is absorbed as in Theorem~\ref{thm:ale}. The
+comparison principle gives
+$|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma T+q_b+\sup Q\le C_T(\mu+\rho_f+h_c)$, and
+Lemma~\ref{lem:profile} adds $O(\ve)$.
+\end{proof}
+
+\begin{remark}
+\begin{enumerate}
+\item The layer term $\rho_f=h_f^2/\ve^3$ (smooth $f$) comes from pointwise
+barriers; the solvability (corrector) argument of Section~\ref{sec:sharp}
+should improve it to $(h_f/\ve)^2$. Either way it only concerns the band,
+which has $O(\log(1/\ve)/(h_f/\ve))$ nodes.
+\item $h_c$ appears to first order because the truncation error of the
+three-point formulas is first order on the geometric transition; on a mesh that
+is uniform outside the band (or with supraconvergence arguments) it should be
+$h_c^2$.
+\item In the code the rigid zone is not the whole line (nodes far away do not
+move) and the mesh is occasionally rebuilt; both introduce only $O(h_c)$ or
+$O(h_c^2)$ perturbations away from the front, at the price of the positive
+(linear) interpolation at remeshing, which preserves the comparison principle.
 \end{enumerate}
 \end{remark}
 
