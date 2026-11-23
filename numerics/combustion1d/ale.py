@@ -64,7 +64,7 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
     # the rigidly moving zone must contain several decay lengths 1/c of the
     # profile ahead of the front; otherwise the end of the zone, where u is not
     # steady in the node frame, adds an O(dt) error that grows as eps -> 0
-    ell0 = ell0 or max(2.0, 3.0 / max(speed_guess, 1e-6))
+    ell0 = ell0 or max(2.0, 3.0 / max(abs(speed_guess), 1e-6))
     remesh_distance = remesh_distance or 0.25 * ell0
     x0 = np.linspace(0.0, L, 20001)
     u, w = initial_data(x0, u0, w0, eps)
@@ -112,7 +112,10 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
             # implicit mesh velocity: choose v so that, at the end of the step,
             # the front sits at the band reference point xc + dt v (secant method)
             def gap(vv):
-                out = advance(vv)
+                try:
+                    out = advance(vv)
+                except RuntimeError:          # trial velocity violates the Peclet bound
+                    return np.inf, None
                 return (np.inf if out[3] is None else out[3] - (xc + dt * vv)), out
             v0, (g0, out0) = v, gap(v)
             v1 = v0 + 0.05 * abs(v0) + 0.01
@@ -121,6 +124,7 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
                 if not np.isfinite(g0) or not np.isfinite(g1) or g1 == g0:
                     break
                 v2 = v1 - g1 * (v1 - v0) / (g1 - g0)
+                v2 = float(np.clip(v2, v1 - 2 * (abs(v1) + 1), v1 + 2 * (abs(v1) + 1)))
                 v0, g0, out0 = v1, g1, out1
                 v1 = v2
                 g1, out1 = gap(v1)
@@ -128,10 +132,17 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
                     break
             if np.isfinite(g1):
                 v, (x, u, y, xf) = v1, out1
-            else:
+            elif out0 is not None:
                 v, (x, u, y, xf) = v0, out0
+            else:                             # fall back to the previous velocity
+                x, u, y, xf = advance(v)
         else:
             x, u, y, xf = advance(v)
+        if xf is None:                    # the flame has gone out
+            ts.append((n + 1) * dt)
+            fronts.append(np.nan)
+            res.extinct = True
+            break
         xc += dt * v
         moved += dt * abs(v)
         t = (n + 1) * dt

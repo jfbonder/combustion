@@ -163,7 +163,7 @@ def fig_B1(d):
                           label=f"{'Eulerian' if kind == 'simple' else 'ALE'}, $\\Delta t={dt:g}$")
         ax.set_xlabel("$\\varepsilon$")
         title(ax, f"$w_0={w0:g}$: $|c_h-c_\\varepsilon|$")
-        ax.set_ylim(3e-6, 2)
+        ax.set_ylim(1e-6, 2)
     axs[0].set_ylabel("speed error")
     axs[1].legend(loc="center right", fontsize=7, ncol=2, bbox_to_anchor=(1.0, 0.55))
     # collapse of the Eulerian error as a function of dt/eps

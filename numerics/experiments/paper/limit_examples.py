@@ -93,7 +93,11 @@ def run_C2(job):
     out = dict(N=N, R=V.R, kappa=V.kappa, T=T, lim_t=lim.t, lim_s=lim.s, profiles=profiles,
                eta=np.linspace(0, V.R, 200), phi=V.kappa * V.phi(np.linspace(0, V.R, 200)),
                eps_runs=[])
-    L = 1.5 * R0 + 1.0
+    # short domain: the burnt region r > R0 is irrelevant (u = -eps w0 there), and
+    # the ALE mesh velocity is tapered to 0 on r < min(0.5, 0.1 L) (code
+    # constant), which adds an O(dt v/eps) lag of the front close to extinction;
+    # L = 2.5 makes that zone 0.25 instead of 0.4 (see README)
+    L = R0 + 0.5
     for eps, dt in eps_dt:
         # stop when the limit radius is ~ max(0.15, 30 eps)
         s_end = max(0.15, 30 * eps)
@@ -118,6 +122,24 @@ def run_C2(job):
         out["eps_runs"].append(dict(eps=eps, dt=dt, T_eps=T_eps, t=r.t[::4], s=s_eps[::4],
                                     profiles=eprof, steps=r.n_steps, seconds=tm.seconds,
                                     error=err))
+    # reference for the smallest eps: Eulerian BDF solver (adaptive in time)
+    eps = eps_dt[-1][0]
+    s_end = max(0.15, 30 * eps)
+    t_end = float(lim.t[np.argmax(lim.s < s_end)])
+    with Timer() as tm:
+        r = simulate(u0, W0, eps, L, t_end, N=N, speed_guess=N / R0, max_dt_remesh=0.002,
+                     snapshot_times=tuple(prof_t))
+    s_eps = r.front + eps / LAM
+    m = (s_eps < 2 * s_end) & (s_eps > 0)
+    T_eps = extinction_time(r.t[m], s_eps[m], k=int(m.sum()))
+    eprof = []
+    for tq in prof_t:
+        x, u, _ = r.snapshots[tq]
+        tau = T_eps - tq
+        mm = x < 1.2 * np.interp(tq, r.t, s_eps)
+        eprof.append(dict(t=tq, eta=x[mm] / np.sqrt(tau), v=np.maximum(u[mm], 0) / np.sqrt(tau)))
+    out["bdf_run"] = dict(eps=eps, T_eps=T_eps, t=r.t, s=s_eps, profiles=eprof,
+                          steps=r.n_steps, seconds=tm.seconds)
     return out
 
 
@@ -213,7 +235,7 @@ def run_all(what=("C1", "C2", "C3")):
             eps_dt = ((0.01, 1e-4), (0.002, 2.5e-5))
             res = list(ex.map(run_C2, [(2, eps_dt), (3, eps_dt)]))
         for r in res:
-            print("C2 N={N} T={T:.6f} R={R:.6f}".format(**r),
+            print("C2 N={N} T={T:.6f} R={R:.6f}".format(**r), "BDF T_eps", r["bdf_run"]["T_eps"],
                   [(e["eps"], round(e["T_eps"], 5), e["steps"], round(e["seconds"], 1), e["error"])
                    for e in r["eps_runs"]], flush=True)
         save_json("C2_self_similar.json", res)
@@ -245,7 +267,7 @@ def run_all(what=("C1", "C2", "C3")):
 def fig_C1():
     d = load_json("C1_limit_comparison.json")
     old = json.loads((ROOT / "results" / "limit_comparison.json").read_text())
-    fig, axs = plt.subplots(1, 3, figsize=(11.2, 3.5))
+    fig, axs = plt.subplots(1, 3, figsize=(11.2, 4.1))
     ax = axs[0]
     sel = sorted((r for r in d if r["geom"] == "radial2" and r["dt"] == min(DT_C1)
                   and r["eps"] in (0.05, 0.01, 0.002)), key=lambda r: -r["eps"])
@@ -273,8 +295,9 @@ def fig_C1():
         slope_ref(ax, [1e-3, 5e-2], 4e-4, label="$\\varepsilon$")
         ax.set_xlabel("$\\varepsilon$")
         title(ax, lab)
-    axs[1].legend(loc="upper left", fontsize=6.5)
-    fig.tight_layout()
+    h, l = axs[1].get_legend_handles_labels()
+    fig.legend(h, l, loc="lower center", ncol=4, fontsize=7.5, bbox_to_anchor=(0.5, 0.0))
+    fig.tight_layout(rect=(0, 0.14, 1, 1))
     savefig(fig, "C1_ale_vs_limit.png")
 
 
@@ -292,13 +315,19 @@ def fig_C2():
             ax.semilogx(e["T_eps"] - te[m], se[m] / np.sqrt(e["T_eps"] - te[m]),
                         color=SERIES[k], lw=1.2, ls="--",
                         label=f"$(P_\\varepsilon)$, $\\varepsilon={e['eps']:g}$")
+        if "bdf_run" in r:
+            b = r["bdf_run"]
+            te, se = np.array(b["t"]), np.array(b["s"])
+            m = (b["T_eps"] - te > 0) & (te > 0.01)
+            ax.semilogx(b["T_eps"] - te[m], se[m] / np.sqrt(b["T_eps"] - te[m]), color=SERIES[2],
+                        lw=1.2, ls=":", label=f"$(P_\\varepsilon)$, $\\varepsilon={b['eps']:g}$, BDF")
         ax.axhline(r["R"], color=MUTED, lw=0.8, ls=":")
         ax.annotate(f"$R={r['R']:.4f}$", (1.0, r["R"]), xycoords=("axes fraction", "data"),
                     xytext=(-2, 4), textcoords="offset points", ha="right", color=MUTED,
                     fontsize=8)
         ax.invert_xaxis()
         ax.set_xlabel("$T-t$")
-        ax.set_ylim(r["R"] - 0.6, r["R"] + 0.15)
+        ax.set_ylim(r["R"] - 0.2, r["R"] + 0.06)
         title(ax, f"$N={r['N']}$: $s(t)/\\sqrt{{T-t}}$")
         ax.legend(loc="lower right", fontsize=8)
         ax = axs[1, j]
@@ -324,23 +353,26 @@ def fig_C3():
     fig, axs = plt.subplots(1, 2, figsize=(8.4, 3.6), gridspec_kw=dict(width_ratios=[1.4, 1]))
     ax = axs[0]
     runs = sorted((r for r in d["runs"] if r["eps"] == 0.01), key=lambda r: r["r0"])
-    cmap = plt.get_cmap("coolwarm")
+    y_prev = -1.0
     for k, r in enumerate(runs):
         col = SERIES[0] if r["outcome"] == "quenching" else SERIES[1]
         t, f = np.array(r["t"]), np.array(r["front"])
         ax.plot(t, f, color=col, lw=1.4)
-        ax.annotate(f"$r_0={r['r0']:.3f}$", (t[0], f[0]), xytext=(-3, 0),
-                    textcoords="offset points", ha="right", va="center", fontsize=7, color=INK)
+        y_lab = max(f[0], y_prev + 0.18)
+        y_prev = y_lab
+        ax.annotate(f"$r_0={r['r0']:.3f}$", (t[0], f[0]), xytext=(-0.08, y_lab),
+                    textcoords="data", ha="right", va="center", fontsize=7, color=INK,
+                    arrowprops=dict(arrowstyle="-", color=MUTED, lw=0.5))
     ax.plot([], [], color=SERIES[1], label="ignition")
     ax.plot([], [], color=SERIES[0], label="quenching")
     ax.axhline(d["inv_c0"], color=MUTED, ls=":", lw=0.8)
     ax.annotate("$1/c_0$", (4.0, d["inv_c0"]), xytext=(0, 3), textcoords="offset points",
                 ha="right", color=MUTED, fontsize=8)
-    ax.set_xlim(-0.55, 4.0)
+    ax.set_xlim(-0.75, 4.0)
     ax.set_ylim(0, 3.5)
     ax.set_xlabel("$t$")
     ax.set_ylabel("front radius $r_f(t)$")
-    ax.legend(loc="upper right", fontsize=8)
+    ax.legend(loc="lower right", fontsize=8)
     title(ax, f"$\\varepsilon=0.01$, ALE $\\Delta t={DT_C3:g}$")
     ax = axs[1]
     crit = sorted((c for c in d["critical"] if c["method"] == "ale" and c["dt"] == DT_C3),
@@ -366,6 +398,7 @@ def fig_C3():
             label=f"linear fit, $r_*(0)\\approx{p[1]:.3f}$")
     ax.axhline(d["inv_c0"], color=INK, ls=":", lw=1, label=f"$1/c_0={d['inv_c0']:.3f}$")
     ax.set_xlim(0, 0.0105)
+    ax.set_ylim(0.68, 0.97)
     ax.set_xlabel("$\\varepsilon$")
     ax.set_ylabel("critical radius $r_*$")
     ax.legend(loc="best", fontsize=7.5)

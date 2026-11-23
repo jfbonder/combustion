@@ -142,6 +142,7 @@ class Result:
     n_steps: int = 0
     n_nodes: list = field(default_factory=list)
     mesh_history: list = field(default_factory=list)   # [(t, nodes)] if requested
+    extinct: bool = False
 
 
 def initial_data(x, u0, w0, eps):
