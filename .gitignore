@@ -3,7 +3,16 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.log
-paper/pdfs/*
-!paper/pdfs/README.md
+paper/pdfs/
 numerics/figures/*.gif
 numerics/results/paper/*.npz
+# internal working files (not part of the paper)
+paper/referee_report*.md
+paper/convergence.tex
+paper/convergence_notes.pdf
+paper/quantitative41.tex
+paper/quantitative41_notes.pdf
+paper/main_v1_backup.tex
+paper/papers_to_get.md
+paper/literature_review.md
+paper/examples_inventory.md
