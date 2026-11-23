@@ -32,7 +32,7 @@ LAM = float(fb_slope(W0))
 C0 = LAM                    # planar speed sqrt(2M)/A, A = 1
 R0 = 2.0
 EPS_C1 = (0.05, 0.02, 0.01, 0.005, 0.002, 0.001)
-DT_C1 = (0.002, 0.0005)
+DT_C1 = (0.002, 0.0005, 0.000125)
 
 
 # ---------------------------------------------------------------------------
@@ -246,12 +246,12 @@ def fig_C1():
     ax.set_xlabel("$t$")
     ax.set_ylabel("front radius")
     ax.legend(loc="lower left", fontsize=8)
-    title(ax, "$N=2$: fronts, ALE $\\Delta t=0.0005$")
+    title(ax, f"$N=2$: fronts, ALE $\\Delta t={min(DT_C1):g}$")
     for ax, key, lab in ((axs[1], "front_err_shifted",
                           "$\\max_t|r_h+\\varepsilon/\\sqrt{2M}-s|$"),
                          (axs[2], "sup_err", "$\\max_r|u_h^+-u|$ at the final time")):
         for k, g in enumerate(("radial2", "radial3")):
-            for dt, ls, mfc in ((DT_C1[0], ":", SERIES[k]), (DT_C1[1], "-", "white")):
+            for dt, ls, mfc in zip(DT_C1, (":", "--", "-"), (SERIES[k], SERIES[k], "white")):
                 rs = sorted((r for r in d if r["geom"] == g and r["dt"] == dt),
                             key=lambda r: r["eps"])
                 ax.loglog([r["eps"] for r in rs], [r[key] for r in rs], color=SERIES[k], ls=ls,

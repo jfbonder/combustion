@@ -9,6 +9,8 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
@@ -17,7 +19,7 @@
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Lop}{\mathcal{L}}
 
-\title[Numerics for the high activation energy limit]{Computing the high activation energy limit\\ of an equidiffusional flame model}
+\title[The high activation energy limit: rate and numerics]{The high activation energy limit of an equidiffusional\\ flame model: rate of convergence and\\ $\ve$-uniform numerical approximation}
 
 \author{Juli\'an Fern\'andez Bonder}
 \address{Instituto de C\'alculo (UBA--CONICET) and Departamento de Matem\'atica, FCEyN,
@@ -29,24 +31,35 @@ Universidad de Buenos Aires, Ciudad Universitaria, (1428) Buenos Aires, Argentin
 \begin{document}
 
 \begin{abstract}
-We study numerically the singular limit $\ve\to0$ of the system
+We study the singular limit $\ve\to0$ of the system
 $\Delta u-u_t=Yf_\ve(u)$, $\Delta Y-Y_t=Yf_\ve(u)$, $f_\ve(s)=\ve^{-2}f(s/\ve)$,
-which models premixed flames with unit Lewis number in the limit of high
-activation energy. When $(Y-u)/\ve\to w_0$, limit functions solve the free
-boundary problem $u_t=\Delta u$ in $\{u>0\}$, $|\nabla u|=\sqrt{2M(w_0)}$ on
-$\partial\{u>0\}$, so the limit depends on order-$\ve$ perturbations of the
-data. We propose a finite volume method on a mesh that follows the flame
-front (refining ahead of it and coarsening behind it), together with a
-linearly implicit version that satisfies a discrete comparison principle for
-every time step. We validate the method against exact travelling waves and
-the self-similar solution of Caffarelli and V\'azquez, and against a
-second-order front-fixing solver for the limit free boundary problem, and
-observe first-order convergence in $\ve$ of the flame position and speed in
-one space dimension and in radial symmetry ($N=2,3$). For
-travelling waves we derive the first-order correction of the flame speed,
-$c_\ve=c_0\big[1+\tfrac{\ve}{A}\big(1-\tfrac{3\sqrt3-2}{5}(1+w_0)\big)\big]+o(\ve)$
-for $f(s)=(1-s)^+$, which changes sign at $w_0\approx0.564$, and confirm it
-numerically.
+which models premixed flames with unit Lewis number at high activation energy.
+When $(Y-u)/\ve\to w_0$, limits solve the free boundary problem
+$u_t=\Delta u$ in $\{u>0\}$, $|\nabla u|=\sqrt{2M(w_0)}$ on $\partial\{u>0\}$, so the limit
+depends on order-$\ve$ perturbations of the data. We prove two kinds of results.
+
+\emph{Rate of convergence.} If the free boundary problem has a classical
+solution $v$ that is $C^{2,1}$ up to its free boundary, then, in the strictly
+starshaped geometry where uniqueness is known, $\|u^\ve-v\|_\infty\le C\ve$. The
+proof makes the approximation theorems of Fern\'andez Bonder and Wolanski
+quantitative, replacing a blow-up argument by explicit barriers built from the
+inner profile.
+
+\emph{Numerical analysis.} We propose a finite volume method on a mesh that
+follows the flame: a fine band of width $O(\ve\log(1/\ve))$ travels with the
+front (arbitrary Lagrangian--Eulerian formulation with implicit mesh velocity)
+and the mesh is refined ahead of the front and coarsened behind it. A linearly
+implicit time discretization satisfies a discrete comparison principle for
+every time step. For travelling waves we prove error estimates uniform in
+$\ve$ in which the time step does not appear and negative powers of $\ve$
+multiply only the mesh size inside the band.
+
+Numerical experiments in one dimension and in radial symmetry illustrate the
+meshes, confirm the estimates, compare the singular limit with a second-order
+solver for the free boundary problem and with examples from the literature,
+and display the instability of the limit with respect to $w_0$. For
+travelling waves we also obtain the first-order correction of the flame
+speed in closed form.
 \end{abstract}
 
 \maketitle
@@ -104,26 +117,49 @@ the free boundary problem. On the side of the limit problem, the elliptic
 including a moving mesh method \cite{ShenDaiHuang2024}. The difficulty in the
 parabolic singular perturbation problem is the reaction layer of width
 $O(\ve)$, which moves with the flame and must be resolved: a uniform mesh needs
-$O(\ve^{-N})$ cells. In this paper we
+$O(\ve^{-N})$ cells.
+
+On the theoretical side, the convergence results available for this limit
+\cite{CaffarelliVazquez1995,CaffarelliLedermanWolanski1997a,FernandezBonderWolanski2000,BerestyckiNicolaenkoScheurer1985}
+are obtained by compactness, and uniqueness of the limit
+\cite{LedermanVazquezWolanski2001,Petrosyan2002,FernandezBonderWolanski2004} by comparison
+with strict super- and subsolutions; none of them gives a rate. A rate is
+also what a numerical analysis needs: an $\ve$-uniform estimate for the
+discretization of \eqref{eq:Peps} only yields an estimate with respect to the
+free boundary problem when combined with a bound for $u^\ve-v$.
+
+In this paper we
 \begin{enumerate}
-\item propose a finite volume method on a mesh that follows the flame,
-with $O(\ve^{-1})$ cells in the layer and a geometric transition to a coarse
-mesh elsewhere (Section~\ref{sec:method});
-\item build exact reference solutions: travelling waves of \eqref{eq:Peps}
-computed by a shooting method with a monotone energy, and the radial
-self-similar solution of \eqref{eq:P}, which we write in terms of Kummer's
-function (Section~\ref{sec:exact});
-\item derive the first-order correction of the travelling wave speed
-(Proposition~\ref{prop:speed});
-\item isolate a linearly implicit version of the scheme that satisfies a
-discrete comparison principle for every time step and every sequence of
-meshes, with $L^\infty$ bounds uniform in $\ve$, and reduce $\ve$-uniform
-error estimates to the construction of discrete barriers
-(Section~\ref{sec:theory});
-\item solve the limit problem \eqref{eq:P} directly by front fixing, and
-observe first-order convergence in $\ve$ of front positions and speeds of
-\eqref{eq:Peps} towards it, as well as the instability of the limit with
-respect to $w_0$ (Section~\ref{sec:experiments}).
+\item \emph{Rate of convergence of the singular limit} (Section~\ref{sec:rate}). We
+make the approximation theorems of \cite{FernandezBonderWolanski2004} quantitative
+and prove that, if \eqref{eq:P} has a classical solution $v$ that is $C^{2,1}$ up
+to its free boundary, then $\|u^\ve-v\|_\infty\le C(\ve+\|w^\ve/\ve-w_0\|_\infty)$
+(Theorem~\ref{q:thm:rate}). The key point is an explicit barrier, the inner
+profile composed with the super/subsolution, whose error does not depend on
+the strictness of the super/subsolution. To our knowledge this is the first
+rate for this singular limit; it is sharp.
+\item \emph{A front-following method with $\ve$-uniform error estimates}
+(Sections~\ref{sec:method}--\ref{sec:analysis}). A fine band of width
+$O(\ve\log(1/\ve))$ travels with the flame in an ALE formulation with implicit
+mesh velocity; the mesh is refined ahead of the front and coarsened behind it,
+and the number of nodes grows only logarithmically in $1/\ve$. A linearly
+implicit time discretization satisfies a discrete comparison principle for
+every $\Delta t$. For travelling waves we prove
+$\|U-u\|_\infty\le C_T(\ve+\mu+\rho_f+h_c)$, where $\mu$ is the error of the mesh
+velocity, $\rho_f$ involves only the mesh size $h_f$ in the band and $h_c$ is the
+mesh size elsewhere: the time step does not appear, and negative powers of
+$\ve$ multiply only $h_f$. For the Eulerian version (fixed mesh between
+remeshings) the time step enters as $\Delta t/\ve^2$, and as $\Delta t/\ve$ in practice.
+\item \emph{Exact reference solutions} (Section~\ref{sec:exact}): travelling waves
+of \eqref{eq:Peps} with uniform profile estimates, the first-order correction
+of the flame speed in closed form (Proposition~\ref{prop:speed}), and the radial
+self-similar solution of \eqref{eq:P} in terms of Kummer's function.
+\item \emph{Numerical experiments} (Section~\ref{sec:experiments}): the meshes and
+how they are refined and coarsened, verification of the estimates,
+comparison with a second-order front-fixing solver for \eqref{eq:P} for general
+data, examples from the literature (extinction, convergence to self-similar
+profiles, quenching of small kernels), and the instability of the limit with
+respect to $w_0$.
 \end{enumerate}
 
 Throughout, $f(s)=(1-s)^+$, for which
@@ -224,6 +260,337 @@ Since $-1<-\frac12<0$, ${}_1F_1(-\frac12;\frac N2;\cdot)$ has exactly one
 positive zero $z_N$; then $R=2\sqrt{z_N}$ and $\kappa_N$ is fixed by
 $h'(R)=-\sqrt{2M}$. Numerically $R=1.8483$, $2.5139$, $3.0040$ for $N=1,2,3$.
 The free boundary is the sphere of radius $R\sqrt{T-t}$.
+
+% ---------------------------------------------------------------------------
+\section{Rate of convergence of the singular limit}\label{sec:rate}
+
+In this section we make the approximation theorems of \cite[Theorems~4.1--4.2]{FernandezBonderWolanski2004}
+quantitative. There, a strict classical supersolution of \eqref{eq:P} is shown to be
+the uniform limit of supersolutions of \eqref{eq:Peps}, by solving \eqref{eq:Peps} in
+the layer $\{\tilde u<(1-\theta)\ve\}$ and checking the jump of the gradients by a
+blow-up argument by contradiction. We replace both steps by an explicit
+barrier: the inner profile composed with the supersolution itself. The
+approximation error is $O(\ve)$ with a constant that does not depend on the
+strictness, which yields the rate $O(\ve)$ for the convergence of $u^\ve$ to a
+classical solution (Theorem~\ref{q:thm:rate}). Some standard ingredients (smooth
+dependence of the inner profiles on parameters, comparison for \eqref{eq:Peps},
+the extension $\tilde v$) are only sketched.
+
+\subsection{Setting}
+Let $Q_T=\R^N\times(0,T)$ and consider \eqref{eq:Peps} with $w^\ve$ caloric, and the limit problem \eqref{eq:P}. We write
+\[
+B(\tau;W)=\int_{-W}^{\tau}(s+W)f(s)\,ds,\qquad M(W)=B(1;W).
+\]
+\textbf{Assumptions.}
+\begin{itemize}
+\item[(F)] $f$ is Lipschitz (constant $L_f$), nonincreasing, $f>0$ on $(-\infty,1)$,
+$f=0$ on $[1,\infty)$.
+\item[(W)] $w_0$ is caloric, $w_0\ge-1+\delta_1$, and $W^\ve:=w^\ve/\ve$ satisfies
+$\|W^\ve-w_0\|_\infty\le\eta_\ve$ and $\|W^\ve\|_{C^{2,1}(\overline{Q_T})}\le C_W$.
+\end{itemize}
+We write $p=(G,W)$ for the parameters of the inner profiles, and $W(x,t)=W^\ve(x,t)$.
+
+\textbf{Comparison.} For fixed $\ve$ the nonlinearity $(u+w^\ve)f_\ve(u)$ is
+Lipschitz in $u$, so bounded weak super/subsolutions of \eqref{eq:Peps} (in
+particular functions in $C^1_x$ with locally bounded $D^2_x$, $\partial_t$) are
+ordered if they are ordered at $t=0$; the minimum of two supersolutions is a
+supersolution and the maximum of two subsolutions is a subsolution.
+
+\subsection{Inner profiles with parameters}
+
+Fix $\gamma>0$ and a compact set $\mathcal P_\gamma$ of parameters $p=(G,W)$ with
+\[
+0<g_1\le G\le g_2,\qquad -1+\delta_1/2\le W\le \bar W,\qquad G^2\le 2M(W)-2\gamma
+\]
+(the \emph{supersolution regime}); and $\mathcal P^\gamma$ with the last
+condition replaced by $G^2\ge2M(W)+2\gamma$ (the \emph{subsolution regime}).
+
+\begin{lemma}[Inner profiles]\label{q:lem:inner}
+\textbf{(a) Supersolution regime.} There are $\kappa_0,C,\lambda_0>0$ depending on
+$f,\gamma,g_{1,2},\delta_1,\bar W$ such that for $p\in\mathcal P_\gamma$ and
+$0\le\kappa\le\kappa_0$ there are $\theta=\theta(p,\kappa)\in(0,1+W)$ and
+$\Psi(\cdot;p,\kappa)\in C^{1,1}(\R)$ with
+\begin{enumerate}
+\item[(i)] $\Psi(s)=s$ for $s\ge1-\theta$; on $(-\infty,1-\theta)$,
+$G^2\Psi''+\kappa\Psi'=(\Psi+W)f(\Psi)$, and $\Psi(s)\to-W$ as $s\to-\infty$;
+\item[(ii)] $0<\Psi'\le1$, $-W<\Psi\le s^++1$, and $|\Psi(s)-s^+|\le C$;
+\item[(iii)] $|\Psi''|\le C\Psi'$ on $(-\infty,1-\theta)$; for every $S>0$,
+$\Psi'\ge c(S)>0$ on $[-S,1-\theta]$; and $0<\Psi+W\le Ce^{\lambda_0s}$,
+$\Psi'\le Ce^{\lambda_0 s}$ for $s\le0$;
+\item[(iv)] $\Psi$ is $C^2$ in $p$ for $s<1-\theta$, $\Psi_p$ is continuous across
+$s=1-\theta$ (and vanishes for $s\ge1-\theta$), and for $s\le0$
+\[
+|\Psi_G|+|\Psi_W+1|+|\Psi_{sp}|+|\Psi_{pp}|\le C(1+|s|)^2e^{\lambda_0 s},
+\]
+while all these quantities are bounded by $C$ on $[0,1-\theta]$.
+\end{enumerate}
+\textbf{(b) Subsolution regime.} For $p\in\mathcal P^\gamma$, $0\le\kappa\le\kappa_0$ and
+$\bar q\in(0,1]$ there are $s_*=s_*(p,\kappa,\bar q)>-C$ and
+$\Psi\in C^{1,1}((s_*,\infty))$ with $\Psi(s)=s$ for $s\ge1$,
+$G^2\Psi''-\kappa\Psi'=(\Psi+W)f(\Psi)$ on $(s_*,1)$, $\Psi(s_*)=-W-\bar q$,
+$\Psi'\ge c>0$ on $(s_*,\infty)$, $|\Psi''|\le C$, $|\Psi(s)-s^+|\le C$, and the
+analogue of (iv) with bounds $C$.
+\end{lemma}
+
+\begin{proof}
+(a) Phase plane. Write $P=\Psi'$ as a function of $\Psi$ along the orbit; then
+$\frac{d}{d\Psi}\big(\tfrac{G^2}{2}P^2\big)=(\Psi+W)f(\Psi)-\kappa P$. The orbit leaving
+the saddle $(-W,0)$ (eigenvalues $\frac{-\kappa\pm\sqrt{\kappa^2+4G^2f(-W)}}{2G^2}$; note
+$f(-W)\ge f(1-\delta_1/2)>0$) satisfies
+\begin{equation}\label{q:eq:en}
+\tfrac{G^2}{2}P(\Psi)^2=B(\Psi;W)-\kappa\int_{-W}^{\Psi}P\,d\Psi .
+\end{equation}
+As in the travelling wave lemma, $P>0$ as long as $\Psi<1$ and
+$P\le\sqrt{2B(\Psi;W)}/G$, so $0\le\kappa\int P\le\kappa C$. We look for
+$\Psi_m=1-\theta$ with $P(\Psi_m)=1$, i.e.
+$B(\Psi_m;W)=\frac{G^2}2+\kappa\int_{-W}^{\Psi_m}P$. The right-hand side lies in
+$[\frac{G^2}2,\frac{G^2}2+C\kappa]\subset[\frac{G^2}{2},M(W)-\frac\gamma2]$ if $\kappa\le\gamma/(2C)$;
+since $B(\cdot;W)$ is continuous, strictly increasing on $[-W,1]$ from $0$ to
+$M(W)$, and the right-hand side depends continuously on $\Psi_m$, a solution
+$\Psi_m\in(-W,1)$ exists, with $1-\Psi_m\ge c(\gamma)>0$ (because
+$B(\Psi_m)\le M-\gamma/2$ and $B'(\cdot)\le C$). Translate the orbit so that
+$\Psi(1-\theta)=1-\theta$ and set $\Psi(s)=s$ for $s\ge1-\theta$: since
+$P(\Psi_m)=1$, $\Psi\in C^1$, and $\Psi''$ is bounded with a jump at $1-\theta$.
+(ii): $0<P\le1$ on the orbit up to $\Psi_m$ because $P$ is increasing in
+$\Psi$ there: $\frac{d}{d\Psi}(\frac{G^2}2P^2)=(\Psi+W)f(\Psi)-\kappa P>0$, since near the
+saddle $(\Psi+W)f\simeq f(-W)(\Psi+W)$ and $\kappa P\simeq\kappa\lambda_+(\Psi+W)$ with
+$\kappa\lambda_+<f(-W)$ for $\kappa$ small, while away from it
+$(\Psi+W)f(\Psi)\ge c(\gamma)>0$ for $\Psi\le\Psi_m\le1-c(\gamma)$; the bound on $|\Psi-s^+|$
+follows from the exponential tail and $P\ge c$ on $[\Psi(-S),\Psi_m]$.
+(iii): near the saddle, $\Psi''=\frac1{G^2}\big((\Psi+W)f(\Psi)-\kappa P\big)$ and
+$P\simeq\lambda_+(\Psi+W)$, so $|\Psi''|\le C(\Psi+W)\le CP$; away from it $P\ge c$
+and $\Psi''$ is bounded. The tail estimates are the same as in the travelling
+wave lemma (uniform decay rate $\lambda_0=\frac12\sqrt{f(1-\delta_1/2)}/g_2$).
+(iv): $C^2$ dependence on $(G,W,\kappa)$ of the unstable manifold and of the
+transversal intersection defining $\Psi_m$ (implicit function theorem,
+$\partial_{\Psi_m}[B-\frac{G^2}{2}-\kappa\int P]=(\Psi_m+W)f(\Psi_m)-\kappa\ge c>0$).
+In the tail, $\Psi+W=a(p)e^{\lambda(p)s}(1+o(1))$, whose $p$-derivatives carry
+the factors $s$ and $s^2$. Continuity of $\Psi_p$ at $1-\theta$:
+$\Psi_p(1-\theta^-)=(1-\Psi'(1-\theta))\,\partial_p\theta=0$.
+
+(b) Now $\frac{G^2}{2}P^2=B(\Psi;W)+\big(\frac{G^2}2-M(W)\big)+\kappa\int_\Psi^1P$ for
+$\Psi\le1$ (integrating backwards from $P(1)=1$), and the second term is
+$\ge\gamma$. Hence $P\ge\sqrt{2\gamma}/g_2$ on the whole backward orbit, which
+crosses $\Psi=-W-\bar q$ at a finite $s_*$, with $|s_*|\le C$.
+\end{proof}
+
+\subsection{Quantitative approximation of strict supersolutions}
+
+\begin{definition}
+A function $\tilde u\ge0$ on $\overline{Q_T}$ is a \emph{regular strict
+supersolution with margins $(\delta,\delta_0,r,K_0)$} if, with
+$\Omega=\{\tilde u>0\}$ and $\Gamma=\partial\Omega\cap Q_T$:
+\begin{enumerate}
+\item $\Delta\tilde u-\tilde u_t\le0$ in $\Omega$;
+\item $|\nabla\tilde u|\le\sqrt{2M(w_0)}-\delta$ on $\Gamma$;
+\item there is a function $\tilde v$ on $\overline{Q_T}$ with $\tilde v=\tilde u$ on
+$\overline\Omega$, $\tilde v<0$ outside $\overline\Omega$, $\tilde v\le-\delta_0r$ at
+parabolic distance $\ge r$ from $\Gamma$ in the complement of $\Omega$,
+$\tilde u\ge\delta_0 r$ at distance $\ge r$ from $\Gamma$ in $\Omega$, and, in the
+$r$-neighbourhood $N_r$ of $\Gamma$: $\tilde v\in C^{2,1}$, $|\nabla\tilde v|\ge\delta_0$,
+$\|\tilde v\|_{C^{2,1}(N_r)}\le K_0$; elsewhere $\|\tilde v\|_{C^{2,1}}\le K_0$.
+\end{enumerate}
+(The extension $\tilde v$ exists, e.g., by reflection across $\Gamma$ in normal
+coordinates, as soon as $\tilde u$ is $C^{2,1}$ up to $\Gamma$ with
+$|\nabla\tilde u|\ge2\delta_0$ there.)
+\end{definition}
+
+\begin{proposition}[Quantitative Theorem 4.1]\label{q:prop:super}
+Assume (F), (W). There are $c_*,C$ depending only on $f,\delta_1,C_W,\delta_0,r,K_0$
+(\emph{not} on $\delta$) such that if $\tilde u$ is a regular strict
+supersolution with margins $(\delta,\delta_0,r,K_0)$ and
+\[
+\ve+\eta_\ve\le c_*\delta,
+\]
+then
+\[
+V^\ve(x,t)=\ve\,\Psi\Big(\frac{\tilde v(x,t)}\ve;\,p(x,t),K\ve\Big)+\ve^2\tilde q,\qquad
+p=(G,W),\quad G=\min\{|\nabla\tilde v|,G_\gamma(W)\},
+\]
+with $G_\gamma(W)^2=2M(W)-2\gamma$, $\gamma=c\delta$, and suitable constants
+$K,\tilde q$, is a supersolution of \eqref{eq:Peps} in $Q_T$ with
+\[
+\|V^\ve-\tilde u\|_{L^\infty(Q_T)}\le C\ve .
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{Parameters are admissible.} On $\Gamma$, $|\nabla\tilde v|^2\le2M(w_0)-2\delta\sqrt{2M}+\delta^2$.
+In the region where the profile is not the identity, $\tilde v<\ve(1-\theta)\le\ve$,
+and either we are within distance $C\ve/\delta_0$ of $\Gamma$, where
+$|\nabla\tilde v|$ changes by $O(K_0\ve/\delta_0)$ and $|W-w_0|\le\eta_\ve+C\ve$, so
+$G^2\le2M(W)-2\gamma$ with $\gamma=c\delta$ if $\ve+\eta_\ve\le c_*\delta$; or we are in
+the burnt region at distance $\ge C\ve/\delta_0$, where $G$ is the clipped value.
+In all cases $p\in\mathcal P_\gamma$.
+
+\emph{Derivatives.} Write $s=\tilde v/\ve$ and $\Psi=\Psi(s;p,\kappa)$, $\kappa=K\ve$.
+Then
+\[
+\nabla V=\Psi_s\nabla\tilde v+\ve\Psi_p\nabla p,\qquad
+\Delta V=\Psi_s\Delta\tilde v+\frac{1}{\ve}\Psi_{ss}|\nabla\tilde v|^2+2\Psi_{sp}\nabla\tilde v\cdot\nabla p
++\ve\Psi_p\Delta p+\ve\Psi_{pp}\nabla p\cdot\nabla p,
+\]
+\[
+V_t=\Psi_s\tilde v_t+\ve\Psi_p p_t .
+\]
+$V$ is $C^1$ in $x$ (by Lemma~\ref{q:lem:inner}(iv) $\Psi_s$ and $\Psi_p$ are continuous)
+and its second derivatives are bounded, so it suffices to check the
+inequality $\mathcal R:=\Delta V-V_t-(V+w^\ve)f_\ve(V)\le0$ a.e.
+
+\emph{Reaction.} With $V=\ve(\Psi+\ve\tilde q)$,
+$(V+w^\ve)f_\ve(V)=\ve^{-1}(\Psi+\ve\tilde q+W)f(\Psi+\ve\tilde q)$, and since $f$ is
+nonincreasing and Lipschitz,
+\begin{equation}\label{q:eq:react}
+(\Psi+\ve\tilde q+W)f(\Psi+\ve\tilde q)\ \ge\ (\Psi+W)f(\Psi)-L_f\ve\tilde q(\Psi+W)+\ve\tilde qf(\Psi+\ve\tilde q).
+\end{equation}
+
+\emph{Region $s\ge1-\theta$.} Here $V=\tilde u+\ve^2\tilde q$ and $\Psi_p=0$. If
+$s\ge1$, $f_\ve(V)=0$ and $\mathcal R=\Delta\tilde u-\tilde u_t\le0$. If
+$1-\theta\le s<1$, $V+w^\ve=\ve(s+\ve\tilde q+W)>0$, so the reaction term is
+nonnegative and again $\mathcal R\le\Delta\tilde u-\tilde u_t\le0$.
+
+\emph{Region $s<1-\theta$.} Collecting terms, using
+$G^2\Psi_{ss}+\kappa\Psi_s=(\Psi+W)f(\Psi)$ (where $G=|\nabla\tilde v|$; where $G$ is
+clipped, see below), \eqref{q:eq:react} and $\Delta W-W_t=0$ (so that the term
+$\ve\Psi_W(\Delta W-W_t)$ vanishes):
+\[
+\mathcal R\le\Psi_s(\Delta\tilde v-\tilde v_t)-K\Psi_s+T_p+L_f\tilde q(\Psi+W)-\tilde qf(\Psi+\ve\tilde q),
+\]
+\[
+T_p=2\Psi_{sp}\nabla\tilde v\cdot\nabla p+\ve\big(\Psi_G(\Delta G-G_t)+\Psi_{pp}\nabla p\cdot\nabla p\big).
+\]
+In $\Omega$, $\Delta\tilde v-\tilde v_t\le0$; outside, $|\Delta\tilde v-\tilde v_t|\le K_0$.
+By (W) and the bounds on $\tilde v$, $|\nabla p|+|\Delta G-G_t|\le C$ in $N_r$.
+
+\emph{Layer part} $-S\le s<1-\theta$ ($S$ fixed below). By
+Lemma~\ref{q:lem:inner}(iii),(iv), $|T_p|\le C\le C\Psi_s/c(S)$ and
+$L_f\tilde q(\Psi+W)\le C\tilde q\le C\tilde q\Psi_s/c(S)$; hence $\mathcal R\le0$ if
+$K\ge K_0+C(1+\tilde q)/c(S)$.
+
+\emph{Tail} $s<-S$. Here $\Psi+W\le Ce^{\lambda_0 s}$, so $\Psi+\ve\tilde q\le-W+Ce^{-\lambda_0S}+\ve\tilde q$
+and $f(\Psi+\ve\tilde q)\ge a:=\frac12f(1-\delta_1/2)$ if $S$ is large and $\ve$ small.
+Also $|T_p|\le C(1+|s|)^2e^{\lambda_0s}\le C(1+S)^2e^{-\lambda_0S}$ and
+$L_f\tilde q(\Psi+W)\le C\tilde qe^{-\lambda_0S}$. Fix $S$ so that
+$C(1+S)^2e^{-\lambda_0S}\le a/4$ and $Ce^{-\lambda_0S}L_f\le a/4$; then with $\tilde q=1$,
+$\mathcal R\le K_0\Psi_s-K\Psi_s+a/4+a/4-a\le0$.
+
+\emph{Clipped parameters.} If $G\ne|\nabla\tilde v|$, then $s\le-c\delta_0 r/\ve$ (far
+burnt region, or the part of $N_r$ at distance $\ge C\ve/\delta_0$ from $\Gamma$), and the
+extra term $\frac1\ve(|\nabla\tilde v|^2-G^2)\Psi_{ss}$ is bounded by
+$\frac C\ve e^{-c/\ve}\le a/4$ for $\ve$ small; it is absorbed in the tail estimate.
+
+\emph{Error.} $|V-\tilde u|\le\ve\sup|\Psi(s)-s^+|+\ve^2\tilde q\le C\ve$, using
+$\tilde u=\ve s^+$ where $\tilde v=\ve s$.
+\end{proof}
+
+\begin{proposition}[Quantitative Theorem 4.2]\label{q:prop:sub}
+Assume (F), (W), and let $\tilde u$ be a regular strict \emph{subsolution} with
+margins $(\delta,\delta_0,r,K_0)$ (inequalities (1), (2) reversed:
+$\Delta\tilde u-\tilde u_t\ge0$ in $\Omega$, $|\nabla\tilde u|\ge\sqrt{2M}+\delta$ on
+$\Gamma$). If $\ve+\eta_\ve\le c_*\delta$, then
+\[
+\underline V^\ve=\max\Big\{\ve\Psi\Big(\frac{\tilde v}\ve;p,K\ve\Big),\ -w^\ve-\ve^2\tilde q\Big\}
+\]
+(with the profiles of Lemma~\ref{q:lem:inner}(b), $\bar q=\ve\tilde q$, and the first
+function extended by $-\infty$ for $s<s_*$) is a subsolution of \eqref{eq:Peps} with
+$\|\underline V^\ve-\tilde u\|_\infty\le C\ve$.
+\end{proposition}
+
+\begin{proof}
+$-w^\ve-\ve^2\tilde q$ is a subsolution: it is caloric and
+$(V+w^\ve)f_\ve(V)=-\ve^2\tilde qf_\ve(V)\le0$. The first function, $V_1=\ve\Psi(\tilde v/\ve)$, is a subsolution for
+$s\ge s_*$. For $s\ge1$, $V_1=\tilde u\ge\ve$, there is no reaction and
+$\mathcal R=\Delta\tilde u-\tilde u_t\ge0$. For $s_*\le s<1$ the reaction is
+$\ve^{-1}(\Psi+W)f(\Psi)$ exactly, and the computation of
+Proposition~\ref{q:prop:super} with reversed signs gives
+$\mathcal R\ge\Psi_s(\Delta\tilde v-\tilde v_t)+K\Psi_s-|T_p|$, where
+$\Delta\tilde v-\tilde v_t\ge0$ in $\Omega$ and $\ge-K_0$ outside. Now
+$\Psi_s\ge c>0$ on the whole range $s\ge s_*$, which is bounded below (there is
+no tail), and $|T_p|\le C$; choose $K\ge K_0+C/c$. Since $\Psi(s_*)=-W-\ve\tilde q$,
+$V_1=-w^\ve-\ve^2\tilde q$ exactly at $s=s_*$ and $V_1>-w^\ve-\ve^2\tilde q$ for
+$s>s_*$; thus $\underline V^\ve=V_1$ for $s\ge s_*$, $=-w^\ve-\ve^2\tilde q$ otherwise,
+it is continuous, and it is a subsolution (maximum of two subsolutions, each
+used where it is the larger). Finally $|\underline V^\ve-\tilde u|\le C\ve$ by
+Lemma~\ref{q:lem:inner}(b).
+\end{proof}
+
+\subsection{Rate of convergence to a classical solution}
+
+\begin{theorem}\label{q:thm:rate}
+Assume (F), (W), and the setting of \cite{FernandezBonderWolanski2004}: $u_0$ Lipschitz with
+compact support, $w_0$ satisfies the monotonicity condition (2.2) of \cite{FernandezBonderWolanski2004}, and in addition
+\begin{itemize}
+\item[(S$'$)] $\Omega_0=\{u_0>0\}$ is strictly starshaped with respect to $0$
+($x\cdot\nu\ge c_0>0$ on $\partial\Omega_0$), $u_0(\lambda x)\ge u_0(x)$ for
+$0<\lambda<1$, and $u_0$ decreases radially at a definite rate near the
+boundary: $x\cdot\nabla u_0\le-c_0$ in $\Omega_0\cap\{\operatorname{dist}(x,\partial\Omega_0)<\rho_0\}$
+(in particular $u_0\ge c\operatorname{dist}(x,\partial\Omega_0)$ there).
+\end{itemize}
+Let $v$ be a classical solution of \eqref{eq:P} on $[0,T^*]$ with data $u_0$,
+which is $C^{2,1}$ up to its free boundary $\Gamma_v$ (one sided) with
+$|\nabla v|\ge2\delta_0>0$ near $\Gamma_v$. Let $u^\ve$ solve \eqref{eq:Peps} with
+initial data satisfying $|u_0^\ve-u_0|\le C_0\ve$ on $\Omega_0$ and
+$u_0^\ve=-w^\ve(\cdot,0)$ outside $\Omega_0$ (up to $C_0\ve^2$). Then for every
+$T<T^*$ there is $C$ such that
+\[
+\sup_{0\le t\le T}\|u^\ve(\cdot,t)-v(\cdot,t)\|_{L^\infty(\R^N)}\le C(\ve+\eta_\ve).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $\ve'=\ve+\eta_\ve$ and, for a constant $a$ to be chosen, $\lambda=1-a\ve'$,
+$\lambda'=1-a\ve'/2$. As in \cite[Section~2]{FernandezBonderWolanski2004},
+$v_\lambda(x,t)=\frac1{\lambda'}v(\lambda x,\lambda^2t)$ is a classical supersolution on
+$[0,T^*/\lambda^2]\supset[0,T]$ with
+$|\nabla v_\lambda|\le\sqrt{2M(w_0)}-\delta$ on its free boundary,
+$\delta=(1-\lambda/\lambda')\sqrt{2M_0}\ge c\,a\ve'$ (this uses (2.2), i.e.
+$M(\lambda x,\lambda^2t)\le M(x,t)$). It inherits the regularity of $v$: it is a
+regular strict supersolution with margins $(\delta,\delta_0,r,K_0)$, with
+$\delta_0,r,K_0$ independent of $\ve$. Choose $a\ge1/(cc_*)$, so that
+$\ve+\eta_\ve\le c_*\delta$, and apply Proposition~\ref{q:prop:super}: $V^\ve$ is a
+supersolution with $|V^\ve-v_\lambda|\le C\ve$.
+
+\emph{Initial ordering.} We claim $v_\lambda(x,0)-u_0(x)\ge c\,a\ve'$ on
+$\overline\Omega_0$. Near $\partial\Omega_0$ (distance $<\rho_0$), by (S$'$),
+$u_0(\lambda x)-u_0(x)=-\int_\lambda^1x\cdot\nabla u_0(\tau x)\,d\tau\ge c_0(1-\lambda)$ (the
+segment $\{\tau x\}$ stays in the region where $x\cdot\nabla u_0\le-c_0$, or enters the
+interior where $u_0$ is larger); away from $\partial\Omega_0$, $u_0\ge c$ and
+$v_\lambda(x,0)-u_0(x)\ge(\frac1{\lambda'}-1)u_0(\lambda x)\ge c\,a\ve'$. Hence, on $\Omega_0$,
+$V^\ve(x,0)\ge v_\lambda(x,0)-C\ve\ge u_0(x)+(ca-C)\ve'\ge u_0^\ve(x)$ if $a$ is large. Outside
+$\Omega_0$, $V^\ve\ge-w^\ve+\ve^2\tilde q\ge u_0^\ve$ (by Lemma~\ref{q:lem:inner}(ii),
+$\Psi>-W$). By comparison, $u^\ve\le V^\ve\le v_\lambda+C\ve$, and
+$v_\lambda-v\le C(1-\lambda)\le Ca\ve'$ on $[0,T]$ ($v$ is Lipschitz in $x$ and
+$1/2$-H\"older in $t$, and bounded). Thus $u^\ve-v\le C\ve'$.
+
+\emph{Lower bound.} Same argument with $\lambda=1+a\ve'$, $\lambda'=1+a\ve'/2$:
+$v_\lambda$ is a regular strict subsolution with margin $\delta\ge ca\ve'$
+(now $M(\lambda x,\lambda^2t)\ge M(x,t)$) and, by the same computation,
+$u_0-v_\lambda(\cdot,0)\ge c\,a\ve'$ on $\overline{\lambda^{-1}\Omega_0}$, while on
+$\Omega_0\setminus\lambda^{-1}\Omega_0$ (a strip of width $\ge c(1-1/\lambda)$ along
+$\partial\Omega_0$) $v_\lambda(\cdot,0)=0$ and $u_0\ge0$. Proposition~\ref{q:prop:sub} gives a subsolution
+$\underline V^\ve\le u^\ve$ (initial ordering as above, using
+$\underline V^\ve=-w^\ve-\ve^2\tilde q\le u_0^\ve$ in the burnt region), and
+$u^\ve\ge\underline V^\ve\ge v_\lambda-C\ve\ge v-C\ve'$.
+\end{proof}
+
+\begin{remark}
+\begin{enumerate}
+\item The only place where $\delta$ enters is the admissibility of the
+parameters, $\ve+\eta_\ve\le c_*\delta$; the constant of Proposition~\ref{q:prop:super}
+does not depend on $\delta$. This is what allows $1-\lambda\sim\ve$ in the
+rescaling argument, and gives the rate $\ve$ rather than $\sqrt\ve$.
+\item The theorem gives a rate for the convergence proved (by compactness) in
+\cite{FernandezBonderWolanski2000} and for the uniqueness of \cite[Theorem~5.3]{FernandezBonderWolanski2004},
+under the additional regularity of $v$. The rate $O(\ve)$ is sharp: the
+level set $\{u^\ve=\ve\}$ is at distance $\ve/\sqrt{2M}+o(\ve)$ from $\Gamma_v$
+(travelling waves, and the experiments).
+\item Combined with the discrete estimates of Section~\ref{sec:analysis}, this is
+the missing link for general data: the discrete solution approximates $u^\ve$
+(away from extinction and with a front that the mesh follows), and $u^\ve$
+approximates $v$ at rate $\ve$.
+\end{enumerate}
+\end{remark}
+
 
 % ---------------------------------------------------------------------------
 \section{Numerical method}\label{sec:method}

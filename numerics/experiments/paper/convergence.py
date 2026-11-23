@@ -22,7 +22,7 @@ from combustion1d.simple import simulate_simple
 from combustion1d.solver import MeshParams, front_speed
 
 from .common import (INK, MARKERS, MUTED, SERIES, BLUES, Timer, cycle_speed, extinction_setup,
-                     load_json, plt, save_json, savefig, simulate_ale_safe, slope_ref, title,
+                     load_json, plain_ticks, plt, save_json, savefig, simulate_ale_safe, slope_ref, title,
                      tw_setup)
 from combustion1d.exact import tw_profile_limit
 
@@ -164,7 +164,6 @@ def fig_B1(d):
         ax.set_xlabel("$\\varepsilon$")
         title(ax, f"$w_0={w0:g}$: $|c_h-c_\\varepsilon|$")
         ax.set_ylim(3e-6, 2)
-    slope_ref(axs[0], [0.002, 0.01], 0.012, label="$\\varepsilon^{-1}$", p=-1)
     axs[0].set_ylabel("speed error")
     axs[1].legend(loc="center right", fontsize=7, ncol=2, bbox_to_anchor=(1.0, 0.55))
     # collapse of the Eulerian error as a function of dt/eps
@@ -180,10 +179,10 @@ def fig_B1(d):
         y = np.array([abs(r["err"]) / r["c_eps"] for r in rs])
         ax.loglog(x, y, ls="none", marker=MARKERS[k], color=SERIES[k], ms=5,
                   label=f"ALE, $w_0={w0:g}$")
-    slope_ref(ax, [0.1, 2], 0.03, label="slope 1")
+    slope_ref(ax, [0.1, 1], 0.01, label="slope 1")
     ax.set_xlabel("$\\Delta t/\\varepsilon$")
     title(ax, "relative error $|c_h-c_\\varepsilon|/c_\\varepsilon$")
-    ax.legend(loc="lower right", fontsize=7)
+    ax.legend(loc="center", fontsize=7, bbox_to_anchor=(0.5, 0.6), ncol=2)
     fig.tight_layout()
     savefig(fig, "B1_tw_speed_eulerian_vs_ale.png")
 
@@ -196,7 +195,14 @@ def fig_B2(d):
         x = np.array([1.0 / r["mesh"]["pts_per_eps"] for r in rs])
         ax.loglog(x, [abs(r["err"]) for r in rs], color=BLUES[k], marker="o", ms=5, mfc="white",
                   mew=1.3, label=f"$\\varepsilon={e:g}$")
-    slope_ref(ax, [1 / 32, 1 / 4], 3e-5, label="slope 2", p=2)
+    slope_ref(ax, [1 / 16, 1 / 4], 2.2e-4, label="slope 1")
+    ax.axhspan(1e-7, 3e-5, color=MUTED, alpha=0.12, lw=0)
+    ax.text(0.97, 0.03, "noise level of the speed measurement", fontsize=7, color=MUTED,
+            va="bottom", ha="right", transform=ax.transAxes)
+    ax.set_xticks([1 / 64, 1 / 32, 1 / 16, 1 / 8, 1 / 4])
+    ax.set_xticklabels(["1/64", "1/32", "1/16", "1/8", "1/4"])
+    ax.minorticks_off()
+    ax.set_ylim(5e-7, 3e-3)
     ax.set_xlabel("$h_f/\\varepsilon$")
     ax.set_ylabel("$|c_h-c_\\varepsilon|$")
     title(ax, "band mesh size ($h_c=0.0025$)")
@@ -207,7 +213,11 @@ def fig_B2(d):
         x = np.array([r["mesh"]["h_coarse"] for r in rs])
         ax.loglog(x, [abs(r["err"]) for r in rs], color=SERIES[k], marker=MARKERS[k], ms=5,
                   mfc="white", mew=1.3, label=f"$\\varepsilon={e:g}$")
-    slope_ref(ax, [0.0025, 0.04], 2e-5, label="slope 1")
+    slope_ref(ax, [0.01, 0.04], 3.2e-6, label="slope 2", p=2)
+    ax.set_ylim(5e-8, 3e-4)
+    ax.set_xticks([0.0025, 0.005, 0.01, 0.02, 0.04])
+    ax.set_xticklabels(["0.0025", "0.005", "0.01", "0.02", "0.04"])
+    ax.minorticks_off()
     ax.set_xlabel("$h_c$")
     title(ax, "coarse mesh size ($h_f=\\varepsilon/32$)")
     ax.legend(loc="upper left", fontsize=8)
@@ -242,6 +252,7 @@ def fig_B4(d):
                       color=SERIES[k], marker=MARKERS[k], ms=5, mfc="white", mew=1.3,
                       label=f"$\\varepsilon={e:g}$")
         slope_ref(ax, [0.0025, 0.04], 0.0025, label="slope 1")
+        plain_ticks(ax, [0.0025, 0.005, 0.01, 0.02, 0.04])
         ax.set_xlabel("$\\Delta t$")
         title(ax, f"$N={N}$: $\\max_t|r_h(t)+\\varepsilon/\\sqrt{{2M}}-R\\sqrt{{T-t}}|$")
         ax.legend(loc="lower right", fontsize=8)

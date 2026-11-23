@@ -203,6 +203,13 @@ def slope_ref(ax, x, y0, label="slope 1", p=1.0, **kw):
                 color=MUTED, va="center", **kw)
 
 
+def plain_ticks(ax, ticks, axis="x", fmt="{:g}"):
+    """Explicit ticks with plain labels on a log axis (no minor tick labels)."""
+    getattr(ax, f"set_{axis}ticks")(ticks)
+    getattr(ax, f"set_{axis}ticklabels")([fmt.format(t) for t in ticks])
+    getattr(ax, f"{axis}axis").set_minor_locator(plt.NullLocator())
+
+
 def title(ax, s):
     ax.set_title(s, fontsize=9, color=INK, loc="left")
 
