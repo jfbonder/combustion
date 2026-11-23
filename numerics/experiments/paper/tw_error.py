@@ -345,7 +345,7 @@ def fig_D3(d):
         ax.plot([r["theta"] for r in rs], [r["v_mean2"] for r in rs], ls="none", color=SERIES[1],
                 marker="x", ms=6, label="$h_f=\\varepsilon/16$, $\\varepsilon=0.001$")
         ax.axhline(0, color=MUTED, lw=0.8)
-        ax.set_xlabel("phase $\\theta$ of the front in the band lattice ($x_f=x_k+\\theta h_f$)")
+        ax.set_xlabel("phase $\\vartheta$ of the front in the band lattice ($x_f=x_k+\\vartheta h_f$)")
         title(ax, f"$w_0={w0:g}$: mean $v_n-c_\\varepsilon$, $t\\in[T/2,T]$")
         ax.set_xlim(0, 1)
     axs[0].legend(fontsize=7)
