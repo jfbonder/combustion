@@ -122,11 +122,12 @@ extension of the super/subsolution, whose error does not depend on the
 strictness of the super/subsolution. Barriers of this type are classical for
 Allen--Cahn type limits; to our knowledge this is the first rate for the
 present singular limit. The order $\ve$ cannot be improved.
-\item \emph{A front-following method with $\ve$-uniform error estimates}
+\item \emph{A front-following method with error estimates for travelling waves}
 (Sections~\ref{sec:method}--\ref{sec:analysis}). A fine band of width
 $O(\ve\log(1/\ve))$ travels with the flame in an arbitrary Lagrangian--Eulerian (ALE) formulation with implicit
 mesh velocity; the mesh is refined ahead of the front and coarsened behind it,
-and the number of nodes grows only logarithmically in $1/\ve$. A linearly
+and, for a fixed ratio $h_f/\ve$, the number of nodes grows only logarithmically
+in $1/\ve$. A linearly
 implicit time discretization satisfies a discrete comparison principle for
 every $\Delta t$. For travelling waves we prove
 $\|U-u\|_\infty\le C_T(\ve+\mu+\rho_f+h_c)$, where $\mu$ is the error of the mesh
@@ -134,6 +135,10 @@ velocity, $\rho_f$ involves only the mesh size $h_f$ in the band and $h_c$ is th
 mesh size elsewhere: the time step does not appear, and negative powers of
 $\ve$ multiply only $h_f$. For the Eulerian version (fixed mesh between
 remeshings) the time step enters as $\Delta t/\ve^2$, and as $\Delta t/\ve$ in practice.
+These estimates come from pointwise barriers and are not sharp: they require
+$\rho_f=h_f/\ve^2$ to be small, i.e.\ $h_f\lesssim\ve^2$, whereas the experiments,
+run with $h_f=\ve/16$, behave as the sharper estimate suggested by a
+solvability argument (Section~\ref{an:sec:sharp}).
 \item \emph{Exact reference solutions} (Section~\ref{sec:exact}): travelling waves
 of \eqref{eq:Peps} with uniform profile estimates, the first-order correction
 of the flame speed in closed form (Proposition~\ref{prop:speed}), and the radial
@@ -1337,29 +1342,31 @@ $\Delta t\le\gamma$, independent of $\ve$.
 
 \begin{proof}
 Same regions, constants $\mu_0=f(-w_0)/4$, $\delta$, $Z$, $\theta$ and $a$ as in
-the proof of Theorem~\ref{an:thm:main}. Take
+the proof of Theorem~\ref{an:thm:main}. Take $q_n\equiv q_*$ constant and
 \[
-\sigma=\mu+C_4\rho_h,\qquad q_n=q_*+C_2(h^a+\sigma^2\Delta t)\,t_n,\qquad q_*=C_3\ve^2\rho_h .
+\sigma=\mu+C_4\rho_h,\qquad q_*=C_3\ve^2(\rho_h+\gamma\mu),
 \]
-Then \eqref{an:eq:sigmamu} holds, $\sigma\Delta t\le(1+C_4)\gamma\ve\le\ve$, and
-$q_n\le C_5\ve^2(\rho_h+\sigma^2\Delta t/\ve^2)\le C_5'\ve^2\rho_h+C_5'\ve\sigma\gamma$,
-which is $\le\ve\delta$ for $\gamma$ small. By Lemma~\ref{an:lem:profile}:
+with $C_3$, then $C_4$, then $\gamma$ chosen below. Then \eqref{an:eq:sigmamu} holds,
+$\sigma\Delta t\le(1+C_4)\gamma\ve$, and $q_*\le\ve\delta$ if $\gamma$ is small. Recall
+$r_1=2\sigma^2\Delta t\sup_I|\Phi''|$ and that $\dot q_n=0$.
 \begin{itemize}
-\item[(I)] $r_1\le C\sigma^2\Delta t$, $r_2+r_3\le Ch^a$, $B=0$: $\Lop_v[V]\ge\dot q_n-C(\sigma^2\Delta t+h^a)\ge0$.
-\item[(III)] $r_1\le C\sigma^2\Delta t/\ve$, $r_2+r_3\le C\rho_h$,
-$B\le\frac{\mu_0}{4}\ve^{-2}q_n$, and $f_\ve(V^n)q_{n+1}\ge2\mu_0\ve^{-2}q_n$:
-$\Lop_v[V]\ge\frac{7\mu_0}4\ve^{-2}q_*-C\rho_h-C\sigma^2\Delta t/\ve\ge0$, using
-$\sigma^2\Delta t/\ve\le\gamma\sigma\le\rho_h\cdot\gamma(1+C_4)+\gamma\mu$ --- here
-we also take $q_*\ge C\ve^2\mu\gamma$, i.e. $q_*=C_3\ve^2(\rho_h+\gamma\mu)$.
-\item[(II)] $r_1\le 2K\sigma^2\Delta t/\ve\le\frac{\theta}{4}\sigma$ by
-$\sigma\Delta t\le\gamma'\ve$; $r_2+r_3\le C\rho_h$; $B\le C\ve^{-2}q_n\le C(\rho_h+\gamma\sigma)$:
-$\Lop_v[V]\ge\sigma\theta-\frac\theta4\sigma-C\gamma\sigma-C\rho_h\ge\frac\theta2\sigma-C\rho_h\ge0$
-if $C_4\ge2C/\theta$ and $\gamma$ is small.
+\item[(I)] $\zeta\ge2$. Here $I\subset[\ve,\infty)$, where
+$\Phi^{(k)}=(-c)^{k-1}\Phi'$ and $\sup_I\Phi'\le e^{2c\ve}\Phi'(z')$, so
+$r_1+r_2+r_3\le C(\sigma^2\Delta t+h^a)\Phi'(z')$ and $B=0$:
+$\Lop_v[V]\ge\big(\sigma-C\sigma^2\Delta t-Ch^a\big)\Phi'(z')\ge0$, because
+$\sigma\Delta t\le(1+C_4)\gamma\ve$ is small and $C_4\rho_h\ge C_4h^a\ge2Ch^a$.
+\item[(III)] $\zeta\le-Z$. Here $r_1\le C\sigma^2\Delta t/\ve\le C\gamma(1+C_4)\sigma$,
+$r_2+r_3\le C\rho_h$, $B\le\frac{\mu_0}{4}\ve^{-2}q_*$ and $f_\ve(V^n)q_*\ge2\mu_0\ve^{-2}q_*$, so
+$\Lop_v[V]\ge\frac{7\mu_0}{4}C_3(\rho_h+\gamma\mu)-C\rho_h-C\gamma(1+C_4)(\mu+C_4\rho_h)\ge0$
+if $C_3\ge4C/\mu_0$ and $\gamma(1+C_4)C_4\le1$.
+\item[(II)] $-Z\le\zeta\le2$. Here $\Phi'\ge\theta$, $r_1\le C\gamma(1+C_4)\sigma$,
+$r_2+r_3\le C\rho_h$ and $B\le C\ve^{-2}q_*=CC_3(\rho_h+\gamma\mu)$, so
+$\Lop_v[V]\ge\theta(\mu+C_4\rho_h)-C\gamma(1+C_4)\sigma-C(1+C_3)\rho_h-CC_3\gamma\mu\ge0$
+if $C_4\theta\ge4C(1+C_3)$ and then $\gamma$ is small.
 \end{itemize}
 The subsolution is handled symmetrically (in region (III) the term
-$-f_\ve(V^n)q_{n+1}\le-2\mu_0\ve^{-2}q_n$ has the right sign). By the
-comparison principle,
-$|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma t_n+q_n\le C(\rho_h+\mu)$ for $t_n\le T$,
+$-f_\ve(V^n)q_*\le-2\mu_0\ve^{-2}q_*$ has the right sign). By the comparison principle,
+$|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma t_n+q_*\le C(\rho_h+\mu)$ for $t_n\le T$,
 and the second estimate follows from Lemma~\ref{an:lem:profile}(1),(5).
 \end{proof}
 
@@ -1389,9 +1396,9 @@ the reaction layer: see Theorem~\ref{an:thm:band}.
 \subsubsection*{Mesh} In the frame of the nodes the mesh is fixed (it translates
 rigidly with velocity $v_n$) and consists of
 \begin{itemize}
-\item a \emph{band} $\{y:\ -K_b\ve\log(1/\ve)\le y-y_*\le K_f\ve\}$ around the
+\item a \emph{band} $\{y:\ -K_b\ve\log(1/\ve)-\ell\le y-y_*\le K_f\ve+\ell\}$ around the
 front, with uniform spacing $h_f\le\ve$; here $y_*$ is the front position at
-$t=0$, and $K_b,K_f$ are large constants;
+$t=0$, $K_b,K_f$ are large constants, and $\ell\ge0$ is a margin fixed below;
 \item outside the band, spacings $h_i\le h_c$ with $h_{i+1}/h_i\in[1/g,g]$,
 $g\le2$ (geometric transition).
 \end{itemize}
@@ -1424,16 +1431,24 @@ with constants $q_b,\sigma$ and $Q_n=C_2(h_c+\sigma^2\Delta t)\,t_n$.
 
 \begin{theorem}[ALE, band mesh]\label{an:thm:band}
 Under the assumptions of Theorem~\ref{an:thm:ale}, on a band mesh as above,
+there are $C_T,\gamma>0$ such that, if $\rho_f+\mu+h_c\le\gamma$,
+$\Delta t(\rho_f+\mu+h_c)\le\gamma\ve$, $|v_n|h_c\le2$ and the band margin satisfies
+$\ell\ge C_T(\mu+\rho_f+h_c)$, then
 \[
-\max_{t_n\le T}\sup_j\big|U^n_j-u(x^n_j,t_n)\big|\le C_T\big(\ve+\mu+\rho_f+h_c\big),
+\max_{t_n\le T}\sup_j\big|U^n_j-u(x^n_j,t_n)\big|\le C_T\big(\ve+\mu+\rho_f+h_c\big).
 \]
-provided $\rho_f+\mu+h_c\le\gamma$, $\Delta t(\rho_f+\mu+h_c)\le\gamma\ve$ and
-$|v_n|h_c\le2$. The negative powers of $\ve$ multiply only the mesh size $h_f$
-in the band; outside the band the error is $O(h_c)$, without $\ve$.
+The negative powers of $\ve$ multiply only the mesh size $h_f$ in the band;
+outside the band the mesh size enters as $h_c$, without $\ve$. The band must
+contain, besides the reaction layer, the region where the front can be
+according to the estimate itself: the barriers move with respect to the nodes
+by at most $2\sigma T$.
 \end{theorem}
 
 \begin{proof}
-\emph{Regions.} With $\zeta=z'/\ve$ we use
+\emph{Regions.} Since $|X_n-ct_n|\le\mu t_n$, the barrier coordinate and the node
+coordinate satisfy $|z^n_j-(y_j-y_*)|\le2\sigma T\le\ell$ (this fixes $C_T$ in the
+condition on $\ell$), so the regions below, defined in terms of $z$, lie in the
+parts of the mesh indicated. With $\zeta=z'/\ve$ we use
 (III) $\zeta\le-Z$ (burnt tail), (II) $-Z\le\zeta\le2$ (layer),
 (II$_+$) $2\le\zeta\le K_f/2$ (fresh side of the band, where $\chi=0$),
 and (I) $\zeta\ge K_f/2$ (fresh region, support of $\chi$). In (III), (II),
@@ -1501,53 +1516,40 @@ $h_c^2$, which is what the experiments show (Figure~\ref{fig:B2}).
 \end{remark}
 
 
-\subsection{Remeshing and implicit mesh velocity}\label{an:sec:impl}
+\subsection{The scheme as implemented}\label{an:sec:impl}
 
-The code differs from the setting of Theorem~\ref{an:thm:band} in two respects.
+The code differs from the setting of Theorem~\ref{an:thm:band} in three respects.
+We do not prove that the estimate survives these differences; we explain what
+is needed and what the experiments show.
 
 \emph{Mesh velocity.} The velocity $v_n$ is chosen implicitly, so that the
 computed front ends the step at the band reference point. The comparison
 principle and the barrier argument only use the \emph{realised} sequence
-$(v_n)$, which is the same for the solution and for the barriers (the
-barriers are built a posteriori on the realised moving mesh). Therefore
+$(v_n)$, which is the same for the solution and for the barriers, so
 Theorem~\ref{an:thm:band} holds with $\mu=\max_n|v_n-c_\ve|$ for the realised
-velocities. For the travelling wave the implicit choice gives
-$v_n=c_\ve+O(\rho_f+h_c)$ (the computed front speed), so $\mu$ is of the order
-of the other terms; experimentally $\mu\lesssim10^{-4}$.
+velocities. This is an a posteriori statement: we do not prove a bound for
+$\mu$. In the experiments $\mu$ is large during an initial transient, when the
+initial data are not the $\ve$-travelling wave, and small afterwards
+(Section~\ref{sec:experiments}).
 
 \emph{Remeshing.} When the mesh is rebuilt, $U$ is transferred by the
-piecewise linear interpolation $\Pi$, which is order preserving. For a
-supersolution $V$ (a function of $z$ evaluated at the nodes), the transferred
-barrier $\Pi V^{\rm old}$ differs from $V$ evaluated on the new nodes by the
-interpolation error $\frac18h_i^2|V''|$. Because the band is rebuilt on the same
-lattice and the front is still inside it (the mesh travels with the front),
-the nodes of the band coincide and the error vanishes there; on the fresh
-side of the band and in the transition $|V''|\le C$, and behind the band it
-is exponentially small. Thus each remeshing costs at most $Ch_c^2$, which is
-absorbed by adding $Ch_c^2$ to $Q$ at each remeshing time. The number of
-remeshings in $[0,T]$ is $O(T)$ (the remeshing distance is $O(1)$, and with
-the implicit velocity the front does not drift from the band), so the total
-contribution is $O(Th_c^2)$, already contained in the $O(h_c)$ term.
+piecewise linear interpolation $\Pi$, which is order preserving, so
+Lemma~\ref{lem:comparison} still applies. The band is rebuilt on the lattice of
+the old band, so $\Pi$ is the identity on the band nodes. Outside the band the
+transferred barrier differs from the barrier on the new nodes by the
+interpolation error $\frac18h_i^2|V''|$, which is $O(h_c^2)$ in the transition and
+exponentially small behind the band; absorbing it with the localized term
+$Q\chi$ would require $\chi$ to be bounded below near the fresh edge of the
+band, which is not the case for the barrier of Theorem~\ref{an:thm:band}.
 
-\emph{Non-rigid far field.} In the code only a neighbourhood of radius
-$R_1$ of the front moves rigidly; farther nodes slow down and stop
-($\dot x_i=v_n\chi(x_i)$). The algebra of Lemma~\ref{an:lem:ale} is unchanged with
-$v_n$ replaced by the local node velocity $\dot x_i$ (the convection term of the
-scheme uses $\dot x_i$), except that the time-difference error becomes
-$\frac12(\dot x_i-c+\sigma)^2\Delta t|\Phi''|\le C\Delta t\,|\Phi''|$. Outside the rigid
-zone $|\Phi''|\le Ce^{-cR_1}$ (ahead) or is exponentially small (behind), so
-this adds $O(T\Delta t\,e^{-cR_1})$ to the error. This explains the observation
-that the rigid zone must contain several decay lengths $1/c$ of the profile
-ahead of the front (in the code the rigid zone extends a distance
-$\ell_0\ge\max(2,3/c)$ beyond the band): otherwise an
-$O(\Delta t)$ error appears.
-
-\begin{corollary}
-The estimate of Theorem~\ref{an:thm:band} holds for the scheme as implemented
-(implicit mesh velocity, remeshing with linear interpolation on the band
-lattice, rigid zone of radius $R_1$), with $\mu$ the realised mesh-velocity
-error and an additional term $O(\Delta t\,e^{-cR_1})$.
-\end{corollary}
+\emph{Non-rigid far field.} Only a neighbourhood of the band moves rigidly;
+farther nodes slow down and stop ($\dot x_i=v_n\chi(x_i)$). The algebra of
+Lemma~\ref{an:lem:ale} is unchanged with $v_n$ replaced by the local node velocity,
+except that the time-difference error becomes
+$\frac12(\dot x_i-c+\sigma)^2\Delta t|\Phi''|\le C\Delta t\,|\Phi''|$. Outside the rigid zone of
+radius $R_1$ (measured from the front) $|\Phi''|\le Ce^{-cR_1}$, which adds a term
+$O(T\Delta t\,e^{-cR_1})$. Hence the rigid zone must contain several decay lengths
+$1/c$ of the profile ahead of the front; otherwise an $O(\Delta t)$ error appears.
 
 \subsection{Towards the sharp estimate}\label{an:sec:sharp}
 
@@ -2001,12 +2003,13 @@ On the numerical side, the monotone scheme (S) on band meshes satisfies a
 discrete comparison principle, which reduces the analysis to barriers. On a
 fixed mesh this gives the bound $C(\ve+\Delta t/\ve^2+h/\ve^2)$, and the $\Delta t/\ve$ lag
 is real (Section~\ref{sec:experiments}). In the ALE version, where the band
-moves with the flame, the error is $C(\ve+\mu+\rho_f+h_c)$: no time step for
-travelling waves, and $\ve$ only multiplies the mesh size inside the band of
-width $O(\ve)$. The experiments confirm each term: the error is independent of
-$\Delta t$ and $\ve$ for travelling waves, it depends on $\ve$ only through $h_f/\ve$,
-and the cost grows only logarithmically in $1/\ve$. For an accelerating front
-(radial extinction) the error is $O(\Delta t)$ with an $\ve$-independent constant.
+moves with the flame, the error for travelling waves is $C(\ve+\mu+\rho_f+h_c)$:
+the time step does not appear, and $\ve$ only multiplies the mesh size inside
+the band. These estimates are not sharp ($\rho_f$ must be small, i.e.\
+$h_f\lesssim\ve^2$), and the experiments, which use $h_f=\ve/16$, lie outside their
+hypotheses; they behave as the sharper estimate of Section~\ref{an:sec:sharp}.
+For an accelerating front (radial extinction) the error is $O(\Delta t)$ with an
+$\ve$-independent constant, so the time step does enter for general data.
 
 Open problems: (i) the sharp rate $(h_f/\ve)^2+\Delta t/\ve$ suggested by the
 solvability condition requires a corrector in the barrier; (ii) the rate
