@@ -22,10 +22,10 @@
 
 \noindent\textbf{Status.} Working notes. Sections~\ref{sec:setting}--\ref{sec:main}
 contain a complete argument for the non-sharp estimate of
-Theorem~\ref{thm:main} (Eulerian scheme), and Section~\ref{sec:ale} for the
-ALE scheme (Theorem~\ref{thm:ale}, no $\Delta t$ in the error), modulo the
-profile estimates of Lemma~\ref{lem:profile}, for which we give the proof in
-outline. Section~\ref{sec:sharp} describes how to
+Theorem~\ref{thm:main} (Eulerian scheme), Section~\ref{sec:ale} for the ALE
+scheme (Theorem~\ref{thm:ale}, no $\Delta t$ in the error) and
+Section~\ref{sec:band} for band meshes (Theorem~\ref{thm:band}). The profile
+estimates (Lemma~\ref{lem:profile}) are now proved in full. Section~\ref{sec:sharp} describes how to
 reach the sharp rates suggested by the experiments.
 
 % ---------------------------------------------------------------------------
@@ -81,35 +81,97 @@ $\varphi''+\sigma\varphi'=(\varphi+w_0)f(\varphi)$, $\sigma=\ve c$ (see the
 paper). Let $c_0=\sqrt{2M}/A$ and $\kappa_0=\sqrt{f(-w_0)}$.
 
 \begin{lemma}[Profile estimates]\label{lem:profile}
-Assume (F). There are $\ve_0>0$ and constants $K,\theta_0,\mu>0$ depending only
-on $f,w_0,A$ such that for $0<\ve\le\ve_0$:
+Assume (F) and let $a=f(-w_0)>0$, $\kappa_0=\sqrt a$. There are $\ve_0>0$ and
+$K>0$ depending only on $f,w_0,A$, and for every $Z\ge1$ a constant
+$\theta(Z)>0$ depending only on $f,w_0,A,Z$, such that for $0<\ve\le\ve_0$:
 \begin{enumerate}
-\item $|c_\ve-c_0|\le K\ve$ and $c_\ve\le 2c_0$;
+\item $|c_\ve-c_0|\le K\ve$; in particular $c_0/2\le c_\ve\le 2c_0$;
 \item $\Phi'>0$ on $\R$, $\|\Phi'\|_\infty\le K$, $\|\Phi''\|_\infty\le K/\ve$,
-$\|\Phi'''\|_\infty\le K/\ve^2$; under (F$'$) also $\|\Phi''''\|_\infty\le K/\ve^3$;
-on $[\ve,\infty)$ all derivatives up to order four are bounded by $K$;
-\item for every $Z\ge1$ there is $\theta(Z)\ge\theta_0e^{-\kappa_0 Z}$ with
-$\Phi'\ge\theta(Z)$ on $[-Z\ve,2\ve]$;
-\item for $z\le0$: $0\le\Phi(z)+\ve w_0\le K\ve e^{\kappa_0 z/(2\ve)}$, and
-$|\Phi^{(k)}(z)|\le K\ve^{1-k}e^{\kappa_0 z/(2\ve)}$, $k=1,2,3$;
+$\|\Phi'''\|_\infty\le K/\ve^2$ ($\Phi'''$ in the a.e.\ sense); under (F$'$)
+also $\|\Phi''''\|_\infty\le K/\ve^3$; on $[0,\infty)$ all derivatives up to
+order four are bounded by $K$;
+\item $\Phi'\ge\theta(Z)$ on $[-Z\ve,2\ve]$;
+\item for $z\le0$: $0\le\Phi(z)+\ve w_0\le K\ve e^{\kappa_0 z/(2\ve)}$ and
+$|\Phi^{(k)}(z)|\le K\ve^{1-k}e^{\kappa_0 z/(2\ve)}$ for $k=1,2,3$;
 \item $\sup_z|\Phi_\ve(z)-u_0(z)|\le K\ve$, where $u_0(z)=A(1-e^{-c_0z})^+$.
 \end{enumerate}
 \end{lemma}
 
-\begin{proof}[Outline]
-In the inner variables, $\varphi_\sigma$ is the orbit of the planar system
-$\varphi'=p$, $p'=-\sigma p+(\varphi+w_0)f(\varphi)$ leaving the saddle
-$(-w_0,0)$ (eigenvalues $\frac12(-\sigma\pm\sqrt{\sigma^2+4f(-w_0)})$) along its
-unstable manifold and reaching $\varphi=1$ with $p=\sigma(A/\ve-1)$. As
-$\sigma\to0$ it converges, with its derivatives, to the heteroclinic of the
-conservative system $p^2/2=G(\varphi)$, uniformly on half lines $(-\infty,0]$;
-this gives (2)--(4) on $z\le0$ (the decay rate is at least
-$\kappa_0/2$ for $\sigma$ small). Item (1) is Proposition~2.1 of the paper
-together with $\sigma=\ve c_\ve$. On $z\ge0$, $\Phi$ is explicit. For (5),
-compare both explicit expressions on $z\ge0$ and use $-\ve w_0\le\Phi\le\ve$ on
-$z\le0$. Monotonicity: $\Phi'>0$ on $z\le0$ because $p>0$ along the unstable
-manifold until $\varphi=1$; on $z\ge0$ it is explicit. Item (3) follows from
-the exponential behaviour near the saddle and positivity on compacts.
+\begin{proof}
+\emph{Existence.} With $\tilde u(\tilde x)=(A-\Phi(-\tilde x))/(A+\ve w_0)$,
+\eqref{eq:tw} becomes $-\tilde u''+c\tilde u'=\tilde g(\tilde u)$ with
+$\tilde u(-\infty)=0$, $\tilde u(+\infty)=1$ and a Lipschitz
+$\tilde g\ge0$ vanishing on $[0,(A-\ve)/(A+\ve w_0)]$ and at $1$, positive in
+between; this is the scalar problem of \cite[Thm.~3.1]{BNS} (ignition-type $\tilde g$), which has a
+unique solution $(\tilde u,c)$ with $\tilde u'>0$ (up to translation). We
+normalize $\Phi(0)=\ve$.
+
+\emph{Inner variables and energy.} For $z\le0$ write $\Phi(z)=\ve\varphi(z/\ve)$,
+$\zeta=z/\ve$, $p=\varphi'$, $\sigma=\ve c$; then
+$\varphi''+\sigma p=(\varphi+w_0)f(\varphi)$ on $\zeta<0$,
+$\varphi(-\infty)=-w_0$, $\varphi(0)=1$, $p(0)=c(A-\ve)$ (matching with the
+explicit solution $\Phi=A-(A-\ve)e^{-cz}$ on $z\ge0$, since $\Phi\in C^1$). Let
+$G(\varphi)=\int_{-w_0}^\varphi(s+w_0)f(s)\,ds$ (so $G(1)=M$) and
+$E=\frac12p^2-G(\varphi)$. Then $\frac{dE}{d\zeta}=-\sigma p^2\le0$ and
+$E(-\infty)=0$, so
+\begin{equation}\label{eq:energy}
+E(\zeta)=-\sigma\int_{-\infty}^{\zeta}p^2\,d\zeta'\le0 .
+\end{equation}
+
+\emph{Monotonicity.} $p>0$ for $\zeta<0$: $p>0$ near $-\infty$ (unstable
+manifold of the saddle $(-w_0,0)$, along which $\varphi$ increases); if
+$\zeta_1<0$ were the first zero of $p$, then $-w_0<\varphi(\zeta_1)<1$ and
+$\varphi''(\zeta_1)=(\varphi+w_0)f(\varphi)>0$, so $\varphi$ would have a local
+minimum at $\zeta_1$, contradicting $p>0$ on $(-\infty,\zeta_1)$. On $z\ge0$,
+$\Phi'=(A-\ve)ce^{-cz}>0$.
+
+\emph{Item (1).} Since $p>0$, $\varphi$ is a valid variable and
+$\int_{-\infty}^0p^2\,d\zeta=\int_{-w_0}^1p\,d\varphi$. By \eqref{eq:energy},
+$p\le\sqrt{2G(\varphi)}$, hence $0\le\int_{-w_0}^1p\,d\varphi\le
+I:=\int_{-w_0}^1\sqrt{2G}\,d\varphi$, and evaluating \eqref{eq:energy} at $0$,
+\[
+2M-2\sigma I\le c^2(A-\ve)^2\le 2M .
+\]
+With $\sigma=\ve c$ and $c_0=\sqrt{2M}/A$ this gives
+$c\le c_0A/(A-\ve)$ and $c(A-\ve)\ge\sqrt{2M}-2\ve cI/\sqrt{2M}$, so
+$|c-c_0|\le K\ve$ for $\ve\le\ve_0$.
+
+\emph{Item (4) (uniform exponential tail).} Since $f$ is nonincreasing,
+$f(s)\le a$ for $s\ge-w_0$, so $G(\varphi)\le\frac a2(\varphi+w_0)^2$ and
+$p\le\sqrt a(\varphi+w_0)$. Hence
+$\int_{-\infty}^\zeta p^2=\int_{-w_0}^{\varphi}p\,d\varphi\le\frac{\sqrt a}{2}(\varphi+w_0)^2$.
+Also $G(\varphi)\ge\frac{f(\varphi)}2(\varphi+w_0)^2$. Fix $\varphi_*\in(-w_0,1)$
+with $f(\varphi_*)\ge a/2$. For $\varphi\le\varphi_*$, \eqref{eq:energy} gives
+\[
+p^2\ \ge\ 2G(\varphi)-2\sigma\tfrac{\sqrt a}{2}(\varphi+w_0)^2\ \ge\
+\big(\tfrac a2-\sigma\sqrt a\big)(\varphi+w_0)^2\ \ge\ \tfrac a4(\varphi+w_0)^2
+\]
+if $\sigma\le\sqrt a/4$. Thus $\frac{d}{d\zeta}\log(\varphi+w_0)\ge\frac{\sqrt a}2$
+while $\varphi\le\varphi_*$. Let $\zeta_*<0$ with $\varphi(\zeta_*)=\varphi_*$. On
+$[\varphi_*,1]$, \eqref{eq:energy} gives
+$p^2\ge2G(\varphi_*)-\sqrt a\,\sigma(1+w_0)^2\ge G(\varphi_*)$ for $\sigma$
+small, so $|\zeta_*|\le(1-\varphi_*)/\sqrt{G(\varphi_*)}=:Z_*$, independent of
+$\sigma$. Therefore $\varphi+w_0\le(1+w_0)e^{\frac{\sqrt a}{2}(\zeta+Z_*)}$ for
+$\zeta\le0$. For the derivatives: $0<p\le\sqrt a(\varphi+w_0)$;
+$|\varphi''|\le(\varphi+w_0)f(\varphi)+\sigma p\le C(\varphi+w_0)$; and, $g(s)=(s+w_0)f(s)$
+being Lipschitz with $g(-w_0)=0$,
+$|\varphi'''|=|g'(\varphi)p-\sigma\varphi''|\le C(\varphi+w_0)$ a.e. Scaling back,
+$\Phi^{(k)}(z)=\ve^{1-k}\varphi^{(k)}(z/\ve)$, which is (4).
+
+\emph{Item (2).} On $\zeta\le0$: $0<p\le\sqrt{2M}$, $|\varphi''|\le C$,
+$|\varphi'''|\le C$, and under (F$'$) $|\varphi''''|=|(g'(\varphi)p)'-\sigma\varphi'''|\le C$;
+scale back. On $z\ge0$ the explicit formula and (1) give bounds by $K$.
+
+\emph{Item (3).} On $[0,2\ve]$, $\Phi'\ge(A-\ve)ce^{-2c\ve}\ge Ac_0/4$. On
+$[-Z\ve,0]$, by item (4)'s argument $\varphi\ge\varphi_*$ on $[\zeta_*,0]$
+where $p^2\ge G(\varphi_*)$; and on $[-Z,\zeta_*]$ (if nonempty),
+$p\ge\frac{\sqrt a}2(\varphi+w_0)\ge\frac{\sqrt a}2(\varphi_*+w_0)e^{-\sqrt a\,(Z-|\zeta_*|)}$,
+using $\frac{d}{d\zeta}\log(\varphi+w_0)=p/(\varphi+w_0)\le\sqrt a$. Both bounds depend
+only on $f,w_0,A,Z$; call their minimum $\theta(Z)$.
+
+\emph{Item (5).} For $z\ge0$,
+$|\Phi(z)-u_0(z)|\le A|e^{-c_0z}-e^{-cz}|+\ve e^{-cz}\le A\,|c-c_0|\,\sup_{z\ge0}ze^{-\min(c,c_0)z}+\ve
+\le\frac{2A}{ec_0}K\ve+\ve$. For $z\le0$, $u_0=0$ and $-\ve w_0\le\Phi\le\ve$.
 \end{proof}
 
 % ---------------------------------------------------------------------------
@@ -562,5 +624,10 @@ estimate should read $C_T(\ve+\Delta t/\ve+\text{(small spatial term)})$.
 (4) General data in 1D/radial with a classical solution: quantitative
 version of Theorem~4.1 of the 2004 SIAM paper for the continuous problem, then the
 discrete barriers as above.
+
+\begin{thebibliography}{9}
+\bibitem{BNS} H. Berestycki, B. Nicolaenko, B. Scheurer, Traveling wave solutions to
+combustion models and their singular limits, SIAM J. Math. Anal. 16 (1985), 1207--1242.
+\end{thebibliography}
 
 \end{document}
