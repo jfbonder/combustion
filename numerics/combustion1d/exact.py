@@ -127,3 +127,88 @@ class SelfSimilar:
         eta = np.asarray(r, dtype=float) / np.sqrt(tau)
         v = self.kappa * np.sqrt(tau) * self.phi(np.minimum(eta, self.R))
         return np.where(eta < self.R, v, 0.0)
+
+
+# ---------------------------------------------------------------------------
+# Travelling wave profile of (P_eps)
+# ---------------------------------------------------------------------------
+
+_PROFILE_CACHE = {}
+
+
+def _tw_inner(A, w0, eps):
+    """Inner profile phi on [-s_end, 0] (inner variable z = xi/eps) plus the
+    exponential tail beyond. Returns (c_eps, evaluator of phi(z) for z <= 0)."""
+    key = (float(A), float(w0), float(eps))
+    if key in _PROFILE_CACHE:
+        return _PROFILE_CACHE[key]
+    c = tw_speed_eps(A, w0, eps)
+    sigma = c * eps
+    gamma = A / eps - 1.0
+    a = 1.0 + w0                      # f(-w0) = 1 + w0 (needs -w0 < 1)
+    # decaying rate of psi = phi + w0 as z -> -inf: psi'' + sigma psi' = a psi
+    lam = 0.5 * (-sigma + np.sqrt(sigma**2 + 4.0 * a))
+    # integrate backwards (s = -z) until psi is small; beyond that point the
+    # shooting error (an exponentially growing mode) would take over, so we
+    # continue with the exact linear tail psi(z) = psi* exp(lam (z - z*)).
+    tol_psi = 1e-9
+
+    def rhs(s, y):
+        phi, p = y
+        return [-p, -((phi + w0) * f(phi) - sigma * p)]
+
+    def small(s, y):
+        return y[0] + w0 - tol_psi
+    small.terminal = True
+    small.direction = -1
+
+    def turn(s, y):
+        return y[1]
+    turn.terminal = True
+    turn.direction = -1
+
+    sol = solve_ivp(rhs, (0.0, 200.0 / np.sqrt(a) + 200.0), [1.0, sigma * gamma],
+                    events=(small, turn), rtol=1e-12, atol=1e-15, method="DOP853",
+                    dense_output=True)
+    s_end = sol.t[-1]
+    psi_end = sol.y[0, -1] + w0
+    # tabulate on a fine grid for fast evaluation (cubic Hermite)
+    from scipy.interpolate import CubicHermiteSpline
+    s = np.linspace(0.0, s_end, int(np.ceil(s_end / 2e-3)) + 1)
+    Y = sol.sol(s)
+    # phi as a function of z = -s, increasing order in z
+    z = -s[::-1]
+    spl = CubicHermiteSpline(z, Y[0][::-1], Y[1][::-1])
+    z_end = -s_end
+
+    def phi(zz):
+        zz = np.asarray(zz, dtype=float)
+        out = np.empty_like(zz)
+        tail = zz < z_end
+        out[tail] = -w0 + psi_end * np.exp(lam * (zz[tail] - z_end))
+        out[~tail] = spl(np.minimum(zz[~tail], 0.0))
+        return out
+
+    _PROFILE_CACHE[key] = (c, phi)
+    return c, phi
+
+
+def tw_profile_eps(z, A, w0, eps):
+    """Travelling wave Phi_eps of (P_eps) with w = eps*w0 constant,
+    normalised by Phi_eps(0) = eps (the front {u = eps} at z = 0):
+
+        Phi_eps(z) = A - (A - eps) exp(-c_eps z)          for z >= 0,
+        Phi_eps(z) = eps phi(z/eps)                        for z < 0,
+
+    where phi'' + sigma phi' = (phi + w0) f(phi), sigma = eps c_eps,
+    phi(0) = 1, phi'(0) = sigma (A/eps - 1), phi -> -w0 as z -> -inf.
+    The function U(x, t) = Phi_eps(x - c_eps t) solves
+    u_t = u_xx - (u + eps w0) f_eps(u).  Returns an array like z.
+    """
+    c, phi = _tw_inner(A, w0, eps)
+    z = np.asarray(z, dtype=float)
+    out = np.empty_like(z)
+    pos = z >= 0
+    out[pos] = A - (A - eps) * np.exp(-c * z[pos])
+    out[~pos] = eps * phi(z[~pos] / eps)
+    return out

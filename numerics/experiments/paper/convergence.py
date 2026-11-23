@@ -70,9 +70,14 @@ def run_tw(job):
                 raise RuntimeError(fail)
             c_num, cycles = cycle_speed(r, 0.5 * T)
     c_ls = front_speed(r, 0.5 * T)
+    i2 = np.searchsorted(r.t, 0.5 * T - 1e-9)
+    c_end = (r.front[-1] - r.front[i2]) / (r.t[-1] - r.t[i2])
     return dict(job, T=T, c0=c0, c_eps=c_eps, c_num=c_num, err=c_num - c_eps,
-                err_lsq=c_ls - c_eps, cycles=cycles, steps=r.n_steps,
-                n_remesh=r.n_remesh, nodes=float(np.mean(r.n_nodes)), seconds=tm.seconds)
+                err_lsq=c_ls - c_eps, err_end=c_end - c_eps, cycles=cycles, steps=r.n_steps,
+                n_remesh=r.n_remesh, nodes=float(np.mean(r.n_nodes)), seconds=tm.seconds,
+                trials_per_step=r.n_trials / max(r.n_steps, 1),
+                solves_per_step=r.n_solves / max(r.n_steps, 1),
+                dts=r.dts or None)
 
 
 def run_radial(job):

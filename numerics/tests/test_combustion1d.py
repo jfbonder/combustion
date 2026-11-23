@@ -92,3 +92,29 @@ def test_limit_planar_matches_travelling_wave(w0):
     r = solve_planar(lambda x: tw_profile_limit(x, 0, 1.0, c0, x0=2.0), w0, L, 2.0,
                      8 / c0, n=400, t_eval=np.linspace(0, 8 / c0, 20))
     assert np.max(np.abs(r.s - (2.0 + c0 * r.t))) < 5e-5
+
+
+@pytest.mark.parametrize("w0", [0.0, 1.0])
+def test_tw_profile_eps_solves_the_ode(w0):
+    from combustion1d.exact import tw_profile_eps
+    from combustion1d.model import f_eps
+    A, eps = 1.0, 0.01
+    c = tw_speed_eps(A, w0, eps)
+    P = lambda z: tw_profile_eps(z, A, w0, eps)
+    assert P(np.array([0.0]))[0] == pytest.approx(eps, rel=1e-12)
+    assert P(np.array([-60 * eps]))[0] == pytest.approx(-eps * w0, abs=1e-8 * eps)
+    assert np.all(np.diff(P(np.linspace(-0.5, 2, 2001))) >= 0)
+    # residual of U'' + c U' = (U + eps w0) f_eps(U), by centred differences
+    h = 1e-4 * eps
+    for z in np.linspace(-30 * eps, 3 * eps, 23):
+        if abs(z) < 2 * h:
+            continue
+        p = P(np.array([z - h, z, z + h]))
+        res = (p[2] - 2 * p[1] + p[0]) / h**2 + c * (p[2] - p[0]) / (2 * h) \
+            - (p[1] + eps * w0) * f_eps(p[1], eps)
+        assert abs(res) < 1e-3 / eps   # terms are O(1/eps)
+    # C^1 matching at z = 0
+    d = 1e-7
+    gl = (P(np.array([0.0]))[0] - P(np.array([-d]))[0]) / d
+    gr = (P(np.array([d]))[0] - P(np.array([0.0]))[0]) / d
+    assert gl == pytest.approx(gr, rel=1e-4)

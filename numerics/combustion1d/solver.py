@@ -143,6 +143,12 @@ class Result:
     n_nodes: list = field(default_factory=list)
     mesh_history: list = field(default_factory=list)   # [(t, nodes)] if requested
     extinct: bool = False
+    n_solves: int = 0          # tridiagonal solves (scheme (S): ALE and simple.py)
+    n_trials: int = 0          # ALE: trial velocities (each = 2 tridiagonal solves)
+    n_lu: int = 0              # BDF solver: LU factorisations (2n x 2n sparse)
+    n_fev: int = 0             # BDF solver: right-hand side evaluations
+    v: list = field(default_factory=list)              # ALE: mesh velocity of each step
+    dts: list = field(default_factory=list)            # simple.py: distinct step sizes used
 
 
 def initial_data(x, u0, w0, eps):
@@ -205,6 +211,8 @@ def simulate(u0, w0, eps, L, t_end, N=1, mesh=None, speed_guess=1.0,
         if sol.t.size > 2:
             h_last = sol.t[-2] - sol.t[-3]   # last full step
         res.n_steps += sol.t.size - 1
+        res.n_lu += sol.nlu
+        res.n_fev += sol.nfev
         u, w = sol.y[:n, -1], sol.y[n:, -1]
 
         xf_new, _ = find_front(x, u, eps)

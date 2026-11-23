@@ -33,39 +33,68 @@ def _banded(Lap, diag_extra, dt):
 
 
 def simulate_simple(u0, w0, eps, L, t_end, N=1, dt=None, dt_factor=1.0, mesh=None,
-                    speed_guess=1.0, snapshot_times=(), max_dt_remesh=None):
-    """dt defaults to dt_factor * eps^2."""
+                    speed_guess=1.0, snapshot_times=(), max_dt_remesh=None,
+                    exact_initial=False, monitor=None):
+    """dt defaults to dt_factor * eps^2.
+
+    Every step has exactly the nominal size dt, except possibly the last one
+    (to land on t_end) and the steps that land on a snapshot time; the step
+    sizes used are recorded in res.dts. The mesh is rebuilt every
+    nsteps = floor(interval/dt) steps, interval = min(0.5 K_margin eps/v_est,
+    max_dt_remesh) (at least one step).
+    (Before 2026-11 the interval itself was split into equal steps, so the
+    actual step was <= dt and varied with v_est.)
+
+    exact_initial: if True, u(x, 0) = u0(x) and w = eps*w0 (no modification).
+    monitor: optional callable monitor(t, x, u, v=None), called at t = 0 and
+        after every step (before remeshing).
+    """
     mp = mesh or MeshParams()
     dt = dt or dt_factor * eps**2
     max_dt_remesh = max_dt_remesh or 0.05 * t_end
+
+    def init(xx):
+        if exact_initial:
+            return u0(xx), np.full_like(xx, eps * w0)
+        return initial_data(xx, u0, w0, eps)
     x0 = np.linspace(0.0, L, 20001)
-    u, w = initial_data(x0, u0, w0, eps)
+    u, w = init(x0)
     x, xf = build_mesh(x0, u, eps, L, mp)
-    u, w = initial_data(x, u0, w0, eps)
+    u, w = init(x)
     y = u + w
 
     res = Result(t=None, front=None)
     t, ts, fronts = 0.0, [0.0], [xf]
     pending = sorted(snapshot_times)
     v_est = speed_guess
-    while t < t_end - 1e-14:
+    dts = set()
+    if monitor is not None:
+        monitor(0.0, x, u, None)
+    while t < t_end - 1e-12:
         Lap = laplacian(x, N)
-        heat = _banded(Lap, np.zeros(x.size), dt)
-        interval = min(0.5 * mp.K_margin * eps / max(v_est, 1e-12), max_dt_remesh, t_end - t)
-        if pending and t + interval >= pending[0]:
-            interval = pending[0] - t
-        nsteps = max(1, int(np.ceil(interval / dt - 1e-9)))
-        h = interval / nsteps
-        heat = _banded(Lap, np.zeros(x.size), h)
-        for _ in range(nsteps):
+        interval = min(0.5 * mp.K_margin * eps / max(v_est, 1e-12), max_dt_remesh)
+        nsteps = max(1, int(np.floor(interval / dt + 1e-9)))
+        t_stop = min(t + nsteps * dt, t_end)
+        if pending and t_stop >= pending[0] - 1e-12:
+            t_stop = pending[0]
+        t_start = t
+        heat, h_heat = None, None
+        while t < t_stop - 1e-12:
+            h = min(dt, t_stop - t)
+            if h != h_heat:
+                heat, h_heat = _banded(Lap, np.zeros(x.size), h), h
             fe = f_eps(u, eps)
             y = solve_banded((1, 1), _banded(Lap, fe, h), y / h)
             u = solve_banded((1, 1), heat, u / h - fe * y)
             res.n_steps += 1
-        t += interval
+            res.n_solves += 2
+            dts.add(float('%.10g' % h))
+            t = t + h if t_stop - (t + h) > 1e-12 else t_stop
+            if monitor is not None:
+                monitor(t, x, u, None)
         xf_new, _ = find_front(x, u, eps)
         if xf_new is not None and xf is not None:
-            v_est = max(abs(xf_new - xf) / interval, 1e-3)
+            v_est = max(abs(xf_new - xf) / (t - t_start), 1e-3)
         xf = xf_new
         ts.append(t)
         fronts.append(xf if xf is not None else np.nan)
@@ -76,5 +105,6 @@ def simulate_simple(u0, w0, eps, L, t_end, N=1, dt=None, dt_factor=1.0, mesh=Non
         x = x_new
         res.n_remesh += 1
         res.n_nodes.append(x.size)
+    res.dts = sorted(dts)
     res.t, res.front = np.array(ts), np.array(fronts, dtype=float)
     return res

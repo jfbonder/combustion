@@ -71,7 +71,8 @@ def run_tw(args):
                seconds=tm.seconds, t=r.t, front=r.front,
                node_t=node_t, n_nodes=np.array(r.n_nodes),
                parts=mesh_parts(x_init, eps, mp),
-               parts_pred=mesh_parts_predicted(eps, mp, L))
+               parts_pred=mesh_parts_predicted(eps, mp, L),
+               trials=r.n_trials, solves=r.n_solves, lu=r.n_lu, fev=r.n_fev)
     if record:
         save_mesh_history(f"A_mesh_tw_{method}_{mpn}.npz", hist)
     return out
@@ -113,7 +114,7 @@ def run_all():
         tw = []
         for r in ex.map(run_tw, jobs):
             print("{method:<5} eps={eps:<6} c_num-c_eps={d:+.2e} steps={steps} remesh={n_remesh} "
-                  "nodes={n:.0f} {seconds:.1f}s".format(d=r["c_num"] - r["c_eps"],
+                  "solves={solves} nodes={n:.0f} {seconds:.1f}s".format(d=r["c_num"] - r["c_eps"],
                                                          n=np.mean(r["n_nodes"]), **r), flush=True)
             tw.append(r)
         rad, exp_ = fr.result(), fe.result()
