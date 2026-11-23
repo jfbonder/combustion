@@ -149,7 +149,13 @@ def node_segments(hist, xlim, tlim, euler=False):
     return np.concatenate(segs), np.concatenate(hs)
 
 
-def draw_nodes(ax, hist, xlim, tlim, norm, euler=False, lw=0.35, cmap="viridis"):
+import matplotlib as _mpl
+# viridis without its light-yellow end, so that thin coarse-node lines stay visible
+NODE_CMAP = _mpl.colors.LinearSegmentedColormap.from_list(
+    "viridis_dark", _mpl.colormaps["viridis"](np.linspace(0.0, 0.78, 256)))
+
+
+def draw_nodes(ax, hist, xlim, tlim, norm, euler=False, lw=0.35, cmap=NODE_CMAP):
     segs, hs = node_segments(hist, xlim, tlim, euler)
     lc = LineCollection(segs, cmap=cmap, norm=norm, linewidths=lw, rasterized=True)
     lc.set_array(hs)
@@ -160,17 +166,18 @@ def draw_nodes(ax, hist, xlim, tlim, norm, euler=False, lw=0.35, cmap="viridis")
     return lc
 
 
-def ale_remesh_times(hist):
+def ale_remesh_times(hist, t_front, front):
+    """Records where the ALE mesh was rebuilt: node count changed, or some
+    node moved much more than the front did in that step (in a normal ALE
+    step every node moves by dt*v*chi, |chi| <= 1)."""
     out = []
     for (t0, x0), (t1, x1) in zip(hist[:-1], hist[1:]):
-        if x0.size != x1.size or np.max(np.abs(x1 - x0)) > 0.1:
+        if x0.size != x1.size:
             out.append(t1)
-        else:
-            # band kept on its lattice: detect a rebuilt transition by the
-            # change of the node spacing pattern
-            if np.max(np.abs(np.diff(x1) - np.diff(x0))) > 1e-3 * np.min(np.diff(x0)) + 1e-9 \
-                    and np.max(np.abs(np.diff(x1) - np.diff(x0))) > 0.2 * np.min(np.diff(x0)):
-                out.append(t1)
+            continue
+        df = abs(np.interp(t1, t_front, front) - np.interp(t0, t_front, front))
+        if np.max(np.abs(x1 - x0)) > 2.0 * df + 1e-3 * np.min(np.diff(x0)):
+            out.append(t1)
     return np.array(out)
 
 
@@ -211,7 +218,7 @@ def fig_A1(d):
         hist = H[m]
         r = tw[m]
         t, f = np.array(r["t"]), np.array(r["front"])
-        rt = ale_remesh_times(hist) if m == "ale" else np.array([h[0] for h in hist[1:]])
+        rt = ale_remesh_times(hist, t, f) if m == "ale" else np.array([h[0] for h in hist[1:]])
         for i, (xl, tl) in enumerate(((xlim1, tlim1), (xlim2, tlim2))):
             ax = axs[i, j]
             lc = draw_nodes(ax, hist, xl, tl, norm, euler=(m == "euler"),
@@ -340,7 +347,7 @@ def fig_A4(d):
         t, f = np.array(res["t"]), np.array(res["front"])
         lc = draw_nodes(ax, hist, xl, (0.0, t[-1]), norm, lw=0.3)
         ax.plot(f, t, color=SERIES[1], lw=1.3, label="front $u=\\varepsilon$")
-        rt = ale_remesh_times(hist)
+        rt = ale_remesh_times(hist, t, f)
         mark_remesh(ax, rt)
         title(ax, lab)
         ax.set_xlabel("$r$")
