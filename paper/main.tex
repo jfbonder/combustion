@@ -807,18 +807,19 @@ trajectories, so that the motion of the nodes appears as a convection term
 follows the flame front.
 \begin{itemize}
 \item \emph{Moving nodes.} Node $i$ moves with velocity $\dot x_i=v_n\chi(x_i)$,
-where $\chi=1$ on a neighbourhood of radius $R_1$ of the band and decays
-linearly to $0$ (nodes far away, and the ends of $[0,L]$, do not move). The band
-therefore travels rigidly with the front; $R_1$ must contain several decay
-lengths $1/c$ of the profile ahead of the front (we take $R_1\ge\max(2,3/c)$; see
-Section~\ref{sec:analysis}).
+where $\chi=1$ on the band and on a distance $\ell_0=\max(2,3/c)$ on each side of
+it, and then decays linearly to $0$ over a distance $\ell_0$ (nodes far away, and
+the ends of $[0,L]$, do not move). The band therefore travels rigidly with the
+front; the rigid zone must contain several decay lengths $1/c$ of the profile
+ahead of the front (Section~\ref{an:sec:impl}).
 \item \emph{Equation along the node trajectories.} With
 $D_tu=u_t+\dot x\,u_x$ the equation becomes
 $D_tu=\Delta u+\dot x\,u_x-(u+w)f_\ve(u)$, and $u_x$ is discretized by the
 three-point centred formula, which is second order and keeps the M-matrix
 structure as long as the cell P\'eclet number satisfies $|\dot x_i|h_i\le2$.
 \item \emph{Implicit mesh velocity.} At each step $v_n$ is chosen, by a
-secant iteration (two to four linear solves), so that the computed front ends the
+secant iteration (three trial velocities in all our runs, each costing the two
+tridiagonal solves of (S)), so that the computed front ends the
 step at the reference point of the band; this is the idea of the freezing
 method for travelling waves \cite{BeynThummler2004}. For accelerating fronts (for instance
 near extinction) an explicit estimate of $v_n$ from the previous steps lags by
@@ -939,7 +940,8 @@ in $u$.
 Lemma~\ref{lem:comparison} reduces error estimates to the construction of
 discrete barriers; this is carried out in Section~\ref{sec:analysis}. For the
 Eulerian version the time step enters through the lag of the reaction rate,
-and the speed error is $\approx-0.23\,\Delta t/\ve$ (Table~\ref{tab:simple});
+and the speed error is $\approx-0.23\,\Delta t/\ve$ (Table~\ref{tab:simple}: all entries
+equal $-(0.39$--$0.42)\,c_\ve\Delta t/\ve$, a function of $\Delta t/\ve$ and not of $\Delta t/\ve^2$);
 in the ALE version this term disappears.
 
 \begin{table}[h]
@@ -948,8 +950,8 @@ in the ALE version this term disappears.
 \toprule
 $\ve$ & $\Delta t=4\ve^2$ & $\Delta t=\ve^2$ & $\Delta t=\ve^2/4$\\
 \midrule
-0.02 & $-1.85\cdot10^{-2}$ & $-4.60\cdot10^{-3}$ & $-9.30\cdot10^{-4}$\\
-0.01 & $-9.41\cdot10^{-3}$ & $-2.21\cdot10^{-3}$ & $-3.69\cdot10^{-4}$\\
+0.02 & $-1.86\cdot10^{-2}$ & $-4.85\cdot10^{-3}$ & $-1.23\cdot10^{-3}$\\
+0.01 & $-9.49\cdot10^{-3}$ & $-2.39\cdot10^{-3}$ & $-5.67\cdot10^{-4}$\\
 \bottomrule
 \end{tabular}
 \caption{Scheme (S), planar travelling wave, $w_0=0$: speed error
@@ -1259,8 +1261,8 @@ $\sigma\Phi'$, so that the front is allowed to drift at speed $O(\rho)$.
 The actual drift is the \emph{average} of the truncation error against the
 adjoint eigenfunction of the linearized operator, which is a factor $\ve$
 smaller: the experiments give speed errors $\approx-0.23\,\Delta t/\ve$ for the
-time step, and $O(h/\ve)$ for the mesh size with $f=(1-s)^+$
-(Section~\ref{sec:experiments}); see Section~\ref{an:sec:sharp}.
+time step, and errors of order $(h_f/\ve)^2$ for the mesh size, even for
+$f=(1-s)^+$ (Section~\ref{sec:exp:tw}); see Section~\ref{an:sec:sharp}.
 \end{remark}
 
 
@@ -1381,8 +1383,8 @@ $|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma t_n+q_*\le C(\rho_h+\mu)$ for $t_n\le T$,
 and the second estimate follows from Lemma~\ref{an:lem:profile}(1),(5).
 \end{proof}
 
-For a mesh translating rigidly with $v=c_\ve$ ($\mu=0$) the theorem contains no
-time step at all; this is confirmed in Figure~\ref{fig:B3}, where $\Delta t$ goes up to
+Figure~\ref{fig:D1} confirms that, for the travelling wave, the error of the
+ALE scheme with implicit mesh velocity does not depend on $\Delta t$, for $\Delta t$ up to
 $10^5\ve^2$.
 
 \begin{remark}
@@ -1522,7 +1524,7 @@ which has $O(\log(1/\ve)/(h_f/\ve))$ nodes.
 \item $h_c$ appears to first order because the truncation error of the
 three-point formulas is first order on the geometric transition; on a mesh that
 is uniform outside the band (or with supraconvergence arguments) it should be
-$h_c^2$, which is what the experiments show (Figure~\ref{fig:B2}).
+$h_c^2$, which is roughly what the experiments show (Figure~\ref{fig:D2}).
 \end{enumerate}
 \end{remark}
 
@@ -1579,8 +1581,10 @@ $\xi'=\Delta t\lambda_1+h^2\lambda_2+$(higher order) has a residual one
 order smaller, and the front drift is $\Delta t\lambda_1+h^2\lambda_2$. Scaling
 gives $\lambda_1=O(1/\ve)$ and, under (F$'$), $\lambda_2=O(1/\ve^2)$, i.e.\ drifts
 $\Delta t/\ve$ and $(h/\ve)^2$. For $f=(1-s)^+$ the kink of $f$ at $1$ produces a
-truncation error of size $h/\ve^2$ concentrated on one cell, whose projection
-is $O(h/\ve)$; this is the first-order behaviour of Figure~\ref{fig:B2}. The technical points are: bounds on
+truncation error of size $h/\ve^2$ concentrated on one cell; its projection
+depends on the position of the front relative to the grid and averages out,
+which is consistent with the lattice-pinning effect and the second-order
+behaviour observed in Section~\ref{sec:exp:tw}. The technical points are: bounds on
 $\Psi_i$ and its derivatives uniform in $\ve$ (in the inner variables this is a
 regular problem), the behaviour of $\psi^*$ ahead of the front ($e^{cz}$
 growth against the $e^{-cz}$ decay of $\Phi'$: $\psi^*$ is bounded), and the
@@ -1604,50 +1608,54 @@ $\approx-0.23\,\Delta t/\ve$ measured in the simulations of (S). The
 spatial part of $\delta c$ is below $4\cdot10^{-5}$ for $h\le\ve/8$.
 \end{itemize}
 This supports the corrector approach: for the Eulerian scheme the sharp
-estimate should read $C_T(\ve+\Delta t/\ve+h_f/\ve)$ for Lipschitz $f$ and
-$C_T(\ve+\Delta t/\ve+(h_f/\ve)^2)$ under (F$'$). We do not pursue this here.
+estimate should read $C_T(\ve+\Delta t/\ve+(h_f/\ve)^2)$, which is what the experiments
+of Section~\ref{sec:exp:tw} show. We do not pursue this here.
 
 
 % ---------------------------------------------------------------------------
 \section{Numerical experiments}\label{sec:experiments}
 
 Throughout, $f(s)=(1-s)^+$, so that $M(w_0)=(1+w_0)^3/6$, and $c_0=\sqrt{2M}/A$ is the
-speed of the planar travelling wave of \eqref{eq:P}. Unless stated otherwise the
-mesh has a band of width $55\ve$ (the reaction layer plus margins) with
-$h_f=\ve/16$, a geometric transition with ratio $1.1$, and $h_c=0.01$ elsewhere.
-``ALE'' denotes the scheme (S) on the moving mesh of Section~\ref{sec:method}
-with implicit mesh velocity and a fixed time step; ``Eulerian'' denotes either
-the same scheme on meshes rebuilt around the front (fixed $\Delta t$), or the
-adaptive BDF solver of Section~\ref{sec:method}, as indicated. Speeds of the
-ALE solutions are averaged over whole remeshing cycles: the front position
-oscillates by about $\pm3\cdot10^{-4}$ within a cycle, because the mesh outside
-the rigid zone is distorted and then reset, and least-squares fits over windows
-that are not aligned with the cycles are biased by about $10^{-4}$. The scripts
-that reproduce every figure and table are in the repository of the code
-(see the end of the introduction).
+speed of the planar travelling wave of \eqref{eq:P}; $c_\ve$ is the exact speed of
+the travelling wave of \eqref{eq:Peps}, computed by shooting (Section~\ref{sec:exact}).
+Unless stated otherwise the mesh has a band of width $55\ve$ (the reaction
+layer plus margins) with $h_f=\ve/16$, a geometric transition with ratio $1.1$,
+and $h_c=0.01$ elsewhere. Three solvers are used, and each figure says which:
+\begin{itemize}
+\item \emph{ALE}: the monotone scheme (S) on the moving mesh of
+Section~\ref{sec:method}, with implicit mesh velocity and a fixed time step. The
+rigid zone extends a distance $\ell_0=\max(2,3/c)$ beyond the band, and the mesh
+velocity then decays linearly to zero over a distance $\ell_0$;
+\item \emph{Eulerian (S)}: the same scheme on band meshes that are rebuilt
+around the front, with a fixed time step;
+\item \emph{BDF}: the adaptive BDF solver of Section~\ref{sec:method} (not covered by
+the analysis), used as a reference.
+\end{itemize}
+The code and the scripts that produce every figure and table are in the
+repository cited at the end of the introduction.
 
 \subsection{The meshes: refinement and coarsening}
 
 Figure~\ref{fig:A1} shows the trajectories of the nodes for a planar
 travelling wave. In the ALE version the fine band, the geometric transition
 and the coarse nodes near the front translate with the flame; the mesh is
-rebuilt once in the whole run, when it has travelled a distance $\ell_0/4$, and
-the band nodes stay on their lattice. In the Eulerian version the nodes are
-fixed and the mesh is rebuilt 31 times; at each rebuild the band jumps ahead of
-the front, refining in front of the flame and coarsening behind it.
-Figure~\ref{fig:A2} shows the local mesh size: the plateau $h=h_f$ and the
-geometric ramps move with the front, cells behind the flame are stretched (up
-to $6h_c$) and cells ahead are slightly compressed until the next remeshing.
-Figure~\ref{fig:A4} shows the same in radial symmetry, for the extinction of a
-ball and for an expanding flame; the saw-tooth pattern is the reset of the
-nodes outside the rigid zone at each remeshing.
+rebuilt once in the whole run, and the band nodes stay on their lattice. In
+the Eulerian version the nodes are fixed and the mesh is rebuilt 31 times;
+at each rebuild the band jumps ahead of the front, refining in front of the
+flame and coarsening behind it. Figure~\ref{fig:A2} shows the local mesh size:
+the plateau $h=h_f$ and the geometric ramps move with the front, cells behind the
+flame are stretched where the mesh velocity decays, and cells ahead are
+slightly compressed until the next remeshing. Figure~\ref{fig:A4} shows the same
+in radial symmetry, for the extinction of a ball and for an expanding flame;
+the saw-tooth pattern is the reset of the nodes outside the rigid zone at each
+remeshing.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{../numerics/figures/paper/A1_spacetime_nodes_tw.png}
 \caption{Node trajectories $x_i(t)$, coloured by the local mesh size, for the planar
 travelling wave ($w_0=0$, $\ve=0.01$, $h_c=0.04$ to make coarse nodes visible).
-Left: ALE ($\Delta t=0.01$, one remeshing). Right: Eulerian (BDF, 31 rebuilds). The
+Left: ALE ($\Delta t=0.01$, one remeshing). Right: BDF on rebuilt meshes (31 rebuilds). The
 orange line is the front $\{u=\ve\}$; ticks on the right mark remeshings. Bottom:
 zoom on the fresh edge of the band and the transition.}\label{fig:A1}
 \end{figure}
@@ -1668,27 +1676,33 @@ $w_0=0.5$, $\ve=0.01$, $h_c=0.04$). Left: extinction of the self-similar ball
 (6 remeshings).}\label{fig:A4}
 \end{figure}
 
-\emph{Cost.} The number of nodes is constant in time (to within one node) and
-grows only logarithmically in $1/\ve$ (Table~\ref{tab:A3}, Figure~\ref{fig:A3}): the
-band has $55\cdot16+1=881$ nodes for every $\ve$, the transition
-$2\lceil\log(h_c/h_f)/\log1.1\rceil$ nodes, and the coarse part does not depend on $\ve$;
-from $\ve=0.01$ to $\ve=0.001$ the mesh gains 98 nodes, all in the transition. The
-ALE scheme needs the same number of time steps for every $\ve$, while the
-number of steps of the adaptive Eulerian solver grows like $\ve^{-1.4}$.
+\emph{Cost.} For a fixed ratio $h_f/\ve$ the number of nodes is constant in time
+(to within one node) and grows only logarithmically in $1/\ve$
+(Table~\ref{tab:A3}, Figure~\ref{fig:A3}): the band has $55\cdot16+1=881$ nodes for
+every $\ve$, the transition $2\lceil\log(h_c/h_f)/\log1.1\rceil$ nodes, and the coarse
+part does not depend on $\ve$; from $\ve=0.01$ to $\ve=0.001$ the mesh gains 98
+nodes, all in the transition. Each ALE step costs six tridiagonal solves (the
+secant iteration for the mesh velocity uses three trial velocities in every
+run, each with the two solves of (S)), and the number of ALE steps does not
+depend on $\ve$; the number of steps of the adaptive BDF solver grows like
+$\ve^{-1.4}$.
 
 \begin{table}[ht]
 \centering\small
 \begin{tabular}{rrrrrcc}
 \toprule
-$\ve$ & total & band & transition & coarse & ALE: steps / s & Eulerian BDF: steps / rebuilds / s\\
+$\ve$ & total & band & transition & coarse & ALE: steps / solves / s & BDF: steps / LU / s\\
 \midrule
-0.01  & 3573 & 882 & 58  & 2633 & 400 / 1.6 & 932 / 31 / 6.1\\
-0.005 & 3615 & 882 & 72  & 2661 & 400 / 1.3 & 2018 / 62 / 12.8\\
-0.002 & 3650 & 882 & 90  & 2678 & 400 / 1.6 & 6533 / 155 / 44.0\\
-0.001 & 3671 & 882 & 106 & 2683 & 400 / 1.0 & 22687 / 309 / 129.8\\
+0.01  & 3573 & 882 & 58  & 2633 & 400 / 2404 / 1.1 & 932 / 1178 / 5.5\\
+0.005 & 3615 & 882 & 72  & 2661 & 400 / 2404 / 1.2 & 2018 / 2734 / 11.7\\
+0.002 & 3650 & 882 & 90  & 2678 & 400 / 2404 / 1.3 & 6533 / 8881 / 39.4\\
+0.001 & 3671 & 882 & 106 & 2683 & 400 / 2404 / 1.6 & 22687 / 30504 / 122.1\\
 \bottomrule
 \end{tabular}
-\caption{Planar travelling wave, $0\le t\le4$: number of nodes per zone and cost.}\label{tab:A3}
+\caption{Planar travelling wave, $0\le t\le4$: number of nodes per zone; cost of
+the ALE scheme (time steps, tridiagonal solves, seconds) and of the BDF
+solver (time steps, sparse LU factorizations of the $2n\times2n$ Jacobian,
+seconds).}\label{tab:A3}
 \end{table}
 
 \begin{figure}[ht]
@@ -1698,24 +1712,120 @@ $\ve$ & total & band & transition & coarse & ALE: steps / s & Eulerian BDF: step
 formula (dotted); (c) time steps needed to reach $t=4$.}\label{fig:A3}
 \end{figure}
 
-\subsection{Verification of the error estimates}
+\subsection{The error bounded by the theorems}\label{sec:exp:tw}
 
-\emph{Time step: Eulerian vs ALE.} Figure~\ref{fig:B1} and Table~\ref{tab:B1} compare,
-for the planar travelling wave, the speed error of the Eulerian monotone
-scheme with that of the ALE scheme on the same band meshes. The Eulerian error
-is a function of $\Delta t/\ve$ alone (the points of different $(\Delta t,\ve)$ with
-the same ratio coincide, e.g.\ $-0.144$ for $w_0=0$ and $\Delta t=\ve$), linear for small
-$\Delta t/\ve$ and saturating as the front stalls. The ALE error does not depend
-on $\Delta t$ nor on $\ve$, as predicted by Theorem~\ref{an:thm:ale}; for the fast wave
-($w_0=1$, $c=1.63$) this requires a rigid zone covering several decay lengths
-($\ell_0=4$), see Section~\ref{sec:limitations}.
+We start from the exact travelling wave of \eqref{eq:Peps}, $U^0_j=\Phi_\ve(x_j-x_0)$, as
+in Theorems~\ref{an:thm:main}--\ref{an:thm:band}, and record
+\[
+E=\max_{t_n\le T}\max_j\big|U^n_j-\Phi_\ve(x^n_j-x_0-c_\ve t_n)\big|,
+\]
+the front position error $s_n$ (from which we obtain the speed error), the error
+$E_s$ with the shift $s_n$ removed, and the realised mesh-velocity error
+$\mu=\max_n|v_n-c_\ve|$, also restricted to $t_n\ge1$ ($\mu_1$). Since $E\approx c_\ve\max|s_n|$
+grows linearly in time with the speed error, $E_s$ measures the profile and
+the speed error measures the front.
+
+\emph{ALE: time step and $\ve$.} Figure~\ref{fig:D1} shows $E$, $E_s$ and $\mu_1$ for
+$\Delta t$ from $0.0025$ to $0.1$ and $\ve\in\{0.01,0.003,0.001\}$, that is $\Delta t/\ve$ up to
+$100$ and $\Delta t/\ve^2$ up to $10^5$. For $w_0=0$ none of them depends on $\Delta t$ or on
+$\ve$: $E\approx4.5\cdot10^{-4}$, $E_s\approx4.4\cdot10^{-5}$, $\mu_1\approx1.1\cdot10^{-4}$. For $w_0=1$
+($c_\ve\approx1.63$) the same holds when the rigid zone is long enough ($\ell_0=4$:
+$E\approx2.5\cdot10^{-3}$, $E_s\approx9\cdot10^{-5}$); with the default $\ell_0=2$ a term
+$\approx0.01\,\Delta t$ remains in $\mu_1$, the $O(\Delta t\,e^{-cR_1})$ term of
+Section~\ref{an:sec:impl}. The mesh-velocity error over the whole run, including the
+first steps, is larger ($\mu\approx3\cdot10^{-4}$ to $1.6\cdot10^{-3}$ for $w_0=0$), because the
+discrete profile relaxes from $\Phi_\ve$ to the discrete travelling wave.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/D1_ale_error_vs_dt.png}
+\caption{ALE, travelling wave from $U^0=\Phi_\ve$: $E$, $E_s$ and $\mu_1$ vs $\Delta t$ for
+$\ve=0.01,0.003,0.001$. Top: $w_0=0$. Bottom: $w_0=1$ (solid: default $\ell_0$; dashed:
+$\ell_0=4$; dotted: shorter rigid zone).}\label{fig:D1}
+\end{figure}
+
+\emph{ALE: mesh sizes.} Figure~\ref{fig:D2} shows the dependence on $h_f/\ve$ and on $h_c$.
+The error is of \emph{second} order in $h_f/\ve$ (a factor $4.0$--$4.4$ per halving,
+from $h_f=\ve/2$ to $\ve/32$) and the values for different $\ve$ agree to one or two
+digits: $\ve$ enters only through $h_f/\ve$, as in Theorem~\ref{an:thm:band}, but with
+the rate $(h_f/\ve)^2$ suggested by the solvability argument of
+Section~\ref{an:sec:sharp} rather than the pointwise rate $h_f/\ve^2$. The coarse mesh
+contributes at most $4\cdot10^{-5}$ for $w_0=0$, and roughly $O(h_c^2)$ for $w_0=1$.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/D2_ale_error_vs_mesh.png}
+\caption{ALE, travelling wave from $\Phi_\ve$, $\Delta t=0.01$: $E_s$ and speed error vs
+$h_f/\ve$ (left, middle; $h_c=0.0025$) and vs $h_c$ (right; $h_f=\ve/32$).}\label{fig:D2}
+\end{figure}
+
+\emph{Lattice pinning.} With the implicit mesh velocity the front stays at a
+fixed position $\theta h_f$ inside a band cell, $\theta\in[0,1)$, since the reference
+point moves with the band and the band is transferred exactly at remeshing.
+The realised speed is then $c_\ve+g(\theta)$, where $g$ has zero mean over $\theta$ and
+amplitude proportional to $(h_f/\ve)^2$, independent of $\ve$, $\Delta t$, $h_c$ and of
+the remeshing (Figure~\ref{fig:D3}; at $h_f=\ve/16$, $-1.9\cdot10^{-4}\le g\le1.1\cdot10^{-4}$ for
+$w_0=0$ and $-8.9\cdot10^{-4}\le g\le5.3\cdot10^{-4}$ for $w_0=1$). This is the speed error of
+the ALE scheme for travelling waves. It is the discrete counterpart of the
+fact that a travelling wave of a spatially discrete equation propagates
+through a lattice with a speed that depends on its position relative to the
+nodes.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/D3_phase_pinning.png}
+\caption{ALE: speed error vs the lattice phase $\theta$ of the initial front, for
+$h_f/\ve=1/8,1/16,1/32$; lines $\ve=0.01$, crosses $\ve=0.001$.}\label{fig:D3}
+\end{figure}
+
+\emph{Drag by the mesh: the term $\mu$.} On a rigid mesh translating with a
+prescribed velocity $c_\ve+\delta v$, $\delta v=10^{-3}$, the front speed error is
+$\alpha\,\delta v$ with $\alpha$ a function of $\Delta t/\ve$ alone (Figure~\ref{fig:D4}): $\alpha=0.04$,
+$0.33$, $0.84$ and $0.98$ for $\Delta t/\ve=0.03$, $1$, $10$ and $100$ ($w_0=0$). Thus the
+term $\mu$ of Theorem~\ref{an:thm:ale} is sharp for $\Delta t\gg\ve$: the front is dragged
+by the mesh. The same experiment with $\delta v=0$ gives errors below $3\cdot10^{-5}$ for
+every $\Delta t$, but this only shows that the front locks to the mesh, not that it
+is accurate; the meaningful test is Figure~\ref{fig:D1}. A consequence for the
+implicit velocity is that the dependence of the computed front on $v$ is weak,
+$(1-\alpha)\Delta t$, when $\Delta t\gg\ve$, so that a phase error $g(\theta)$ is not corrected.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{../numerics/figures/paper/D4_drag.png}
+\caption{Rigid mesh translating with $c_\ve+\delta v$: ratio $(c_h-c_\ve)/\delta v$ vs $\Delta t/\ve$,
+$\ve=0.01,0.003,0.001$, $w_0\in\{0,1\}$.}\label{fig:D4}
+\end{figure}
+
+\emph{Eulerian (S).} On meshes that are fixed between rebuilds the error is a
+function of $\Delta t/\ve$ alone and linear in it (Figure~\ref{fig:D5}): the relative speed
+error is $\approx0.46\,\Delta t/\ve$ for $w_0=0$ and $1.5\,\Delta t/\ve$ for $w_0=1$, and
+$E_s\approx0.13\,\Delta t/\ve$ and $0.58\,\Delta t/\ve$. This is the rate $\Delta t/\ve$ of the
+solvability argument (Section~\ref{an:sec:sharp}), not the $\Delta t/\ve^2$ of
+Theorem~\ref{an:thm:main}. The spatial error cannot be separated at these
+time steps.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/D5_eulerian_error.png}
+\caption{Eulerian scheme (S) from $\Phi_\ve$: relative speed error and $E_s$ vs $\Delta t/\ve$
+(left, middle) and vs $h_f/\ve$ at $\Delta t=0.01\ve$ (right).}\label{fig:D5}
+\end{figure}
+
+\emph{Speed of travelling waves: Eulerian vs ALE.} Table~\ref{tab:B1} and
+Figure~\ref{fig:B1} compare both versions on the same band meshes, starting from
+the fresh part of the wave, $A(1-e^{-c_\ve(x-2)})^+$, and measuring the speed by
+least squares on the second half of the run (end points and averages over
+remeshing cycles agree to two or three digits). The Eulerian errors coincide
+along the diagonals of constant $\Delta t/\ve$ ($-0.149$ for $\Delta t=\ve$, $w_0=0$). The ALE
+errors do not depend on $\Delta t$; their size and their variation with $\ve$ are those
+of the lattice phase in which the initial front happens to fall.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{../numerics/figures/paper/B1_tw_speed_eulerian_vs_ale.png}
 \caption{Speed error $|c_h-c_\ve|$ for the planar travelling wave, $w_0=0$ (left)
-and $w_0=1$ (middle), $\Delta t\in\{0.02,0.01,0.005\}$: Eulerian monotone scheme
-(squares) and ALE (circles). Right: relative error vs $\Delta t/\ve$.}\label{fig:B1}
+and $w_0=1$ (middle), $\Delta t\in\{0.02,0.01,0.005\}$: Eulerian (S) (squares) and ALE
+(circles). Right: relative error vs $\Delta t/\ve$.}\label{fig:B1}
 \end{figure}
 
 \begin{table}[ht]
@@ -1724,55 +1834,28 @@ and $w_0=1$ (middle), $\Delta t\in\{0.02,0.01,0.005\}$: Eulerian monotone scheme
 \toprule
 scheme & $w_0$ & $\Delta t$ & $\ve=0.01$ & $0.005$ & $0.002$ & $0.001$\\
 \midrule
-Eulerian & 0 & 0.01  & $-1.44\cdot10^{-1}$ & $-2.11\cdot10^{-1}$ & $-3.18\cdot10^{-1}$ & $-3.88\cdot10^{-1}$\\
-Eulerian & 0 & 0.005 & $-9.12\cdot10^{-2}$ & $-1.44\cdot10^{-1}$ & $-2.40\cdot10^{-1}$ & $-3.18\cdot10^{-1}$\\
-ALE      & 0 & 0.02  & $+1.66\cdot10^{-4}$ & $+1.78\cdot10^{-4}$ & $+1.82\cdot10^{-4}$ & $+1.83\cdot10^{-4}$\\
-ALE      & 0 & 0.005 & $+1.42\cdot10^{-4}$ & $+1.52\cdot10^{-4}$ & $+1.51\cdot10^{-4}$ & $+1.55\cdot10^{-4}$\\
-ALE      & 1 & 0.02  & $+1.16\cdot10^{-4}$ & $-2.31\cdot10^{-4}$ & $+2.77\cdot10^{-5}$ & $+2.67\cdot10^{-5}$\\
-ALE      & 1 & 0.005 & $-1.90\cdot10^{-5}$ & $-5.08\cdot10^{-5}$ & $-1.45\cdot10^{-4}$ & $+4.98\cdot10^{-5}$\\
+Eulerian (S) & 0 & 0.01  & $-1.49\cdot10^{-1}$ & $-2.21\cdot10^{-1}$ & $-3.25\cdot10^{-1}$ & $-4.00\cdot10^{-1}$\\
+Eulerian (S) & 0 & 0.005 & $-9.17\cdot10^{-2}$ & $-1.49\cdot10^{-1}$ & $-2.46\cdot10^{-1}$ & $-3.25\cdot10^{-1}$\\
+Eulerian (S) & 1 & 0.01  & $-7.68\cdot10^{-1}$ & $-9.60\cdot10^{-1}$ & $-1.18$ & $-1.32$\\
+ALE      & 0 & 0.02  & $+1.66\cdot10^{-5}$ & $+2.85\cdot10^{-5}$ & $+3.52\cdot10^{-5}$ & $+3.74\cdot10^{-5}$\\
+ALE      & 0 & 0.005 & $+1.77\cdot10^{-5}$ & $+2.89\cdot10^{-5}$ & $+3.50\cdot10^{-5}$ & $+3.73\cdot10^{-5}$\\
+ALE ($\ell_0=4$) & 1 & 0.02  & $-7.30\cdot10^{-4}$ & $-6.31\cdot10^{-4}$ & $-5.71\cdot10^{-4}$ & $-5.51\cdot10^{-4}$\\
+ALE ($\ell_0=4$) & 1 & 0.005 & $-7.28\cdot10^{-4}$ & $-6.28\cdot10^{-4}$ & $-5.69\cdot10^{-4}$ & $-5.50\cdot10^{-4}$\\
+ALE ($\ell_0=2$) & 1 & 0.02  & $-5.83\cdot10^{-4}$ & $-4.33\cdot10^{-4}$ & $-3.37\cdot10^{-4}$ & $-3.03\cdot10^{-4}$\\
+ALE ($\ell_0=2$) & 1 & 0.005 & $-6.88\cdot10^{-4}$ & $-5.76\cdot10^{-4}$ & $-5.08\cdot10^{-4}$ & $-4.86\cdot10^{-4}$\\
 \bottomrule
 \end{tabular}
-\caption{Signed speed error $c_h-c_\ve$, planar travelling wave.}\label{tab:B1}
+\caption{Signed speed error $c_h-c_\ve$, planar travelling wave. With the default
+$\ell_0=2$ and $w_0=1$ a term $\approx0.007\,\Delta t$ remains (last two rows).}\label{tab:B1}
 \end{table}
-
-\emph{Mesh sizes.} Figure~\ref{fig:B2} separates the two mesh sizes. As a function
-of $h_f/\ve$ the curves for different $\ve$ coincide: $\ve$ enters only through
-the ratio $h_f/\ve$ in the band, as in Theorem~\ref{an:thm:band}. The decay is
-roughly first order ($8.7\cdot10^{-4}$, $4.2\cdot10^{-4}$, $1.7\cdot10^{-4}$ for
-$h_f/\ve=1/4,1/8,1/16$, then the noise level of the measurement, $2\cdot10^{-5}$),
-which is the expected order for a reaction term that is only Lipschitz. The
-coarse mesh contributes $O(h_c^2)$ ($5\cdot10^{-5}$ at $h_c=0.04$, $10^{-5}$ at
-$h_c=0.02$), with no $\ve$ in front of it. In particular, the floor
-$\approx1.6\cdot10^{-4}$ of the ALE errors in Table~\ref{tab:B1} is the band term for
-$h_f=\ve/16$.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.9\textwidth]{../numerics/figures/paper/B2_ale_mesh_sizes.png}
-\caption{ALE speed error for the travelling wave ($w_0=0$, $\Delta t=0.01$). Left: vs
-$h_f/\ve$ for four values of $\ve$ ($h_c=0.0025$). Right: vs $h_c$ ($h_f=\ve/32$).}\label{fig:B2}
-\end{figure}
-
-\emph{Rigid mesh at the exact speed.} When the whole mesh translates rigidly
-with $v=c_\ve$ ($\mu=0$), Theorem~\ref{an:thm:ale} contains no time step at all.
-Figure~\ref{fig:B3} confirms it: the speed error is below $3\cdot10^{-5}$ and shows
-no trend for $\Delta t$ from $0.1$ to $0.005$, although $\Delta t=0.1$ is $10^5\ve^2$ for
-$\ve=10^{-3}$.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.6\textwidth]{../numerics/figures/paper/B3_rigid_mesh_dt.png}
-\caption{Rigid mesh translating with the exact speed: speed error vs $\Delta t$,
-$w_0\in\{0,1\}$, $\ve\in\{0.005,0.001\}$.}\label{fig:B3}
-\end{figure}
 
 \emph{An accelerating front.} For the extinction of the self-similar ball the
 front accelerates without bound and the solution is not steady in any moving
-frame. The error (Figure~\ref{fig:B4}) is first order in $\Delta t$ with a constant
-independent of $\ve$: after removing the level-set shift $\ve/\sqrt{2M}$, it is
-$\approx1.35\,\Delta t$ for $N=2$ and $\approx1.55\,\Delta t$ for $N=3$ at $\ve=0.001$, and the
-same for $\ve=0.002$. This is the behaviour expected for general data: an
-$O(\Delta t)$ term with an $\ve$-independent constant.
+frame. The ALE error (Figure~\ref{fig:B4}) is first order in $\Delta t$: after removing
+the level-set shift $\ve/\sqrt{2M}$, it is between $1.4\,\Delta t$ and $1.9\,\Delta t$ for
+$\ve\in\{0.01,0.002,0.001\}$ and $N=2,3$, with no systematic dependence on $\ve$. For
+general data the time step does enter, but with a constant that does not grow
+as $\ve\to0$.
 
 \begin{figure}[ht]
 \centering
@@ -1782,9 +1865,8 @@ error after removing the shift $\ve/\sqrt{2M}$, vs $\Delta t$, for $N=2,3$ and
 $\ve\in\{0.01,0.002,0.001\}$.}\label{fig:B4}
 \end{figure}
 
-
 \subsection{Flame speed}
-For $A=1$ and $w_0\in\{-0.5,0,1\}$ we start from the limit travelling wave
+With the BDF solver, for $A=1$ and $w_0\in\{-0.5,0,1\}$, we start from the limit travelling wave
 $u_0=A(1-e^{-c_0(x-2)})^+$ (with $u_0^\ve,Y_0^\ve$ as in Section~\ref{sec:method}),
 let the front travel a distance $8$, and measure its speed by a least squares
 fit over the second half of the run. Table~\ref{tab:tw} compares it with the
@@ -1915,13 +1997,16 @@ with $A=1$, whose speed is $c_0+0.044\,\ve+o(\ve)$ for $w_0=0.5$, and over
 $0\le t\le6$ this accumulates to $\approx0.26\,\ve$.
 
 \emph{The ALE solver.} The same comparison with the ALE solver (radial data,
-Figure~\ref{fig:C1}) shows an error of the form $a\ve+b\Delta t$ with $b\approx2.3$--$2.6$:
-for $\ve\ge0.01$ the $\ve$ term dominates and the ALE and BDF results agree; for
-smaller $\ve$ the time-step term dominates (with $\Delta t=1.25\cdot10^{-4}$ the shifted
-front error is $1.26\cdot10^{-3}$ at $\ve=0.01$ and $3.8\cdot10^{-4}$ at $\ve=0.001$).
-In all cases the unshifted front error is $\approx\ve/\sqrt{2M}$. This is consistent
-with Theorem~\ref{q:thm:rate} ($u^\ve-v=O(\ve)$ up to a logarithm) combined with an $\ve$-independent
-$O(\Delta t)$ discretization error.
+Figure~\ref{fig:C1}) gives, with $\Delta t=1.25\cdot10^{-4}$, shifted front errors
+$1.1\cdot10^{-3}$, $4.8\cdot10^{-4}$, $1.4\cdot10^{-4}$ and $7.7\cdot10^{-5}$ for $\ve=0.01$, $0.005$,
+$0.002$ and $0.001$ ($N=2$), comparable to the BDF solver ($9.6\cdot10^{-4}$ and $6.7\cdot10^{-5}$
+for $\ve=0.01$ and $0.001$). For larger time steps the time discretization
+dominates at small $\ve$ ($3.8\cdot10^{-3}$ and $7.8\cdot10^{-4}$ for $\Delta t=2\cdot10^{-3}$ and
+$5\cdot10^{-4}$ at $\ve=0.001$). In all cases the unshifted front error is
+$\approx\ve/\sqrt{2M}$, the distance between the tracked level set and the free
+boundary. This is consistent with Theorem~\ref{q:thm:rate} combined with a
+discretization error that does not grow as $\ve\to0$; note that the data have
+$Y_0^\ve=0$ in the burnt region and no logarithmic loss is visible.
 
 \begin{figure}[ht]
 \centering
@@ -1942,8 +2027,10 @@ $s(t)/\sqrt{T-t}$, which tends to the constant $R$ of Section~\ref{sec:exact}
 ($2.513927$ for $N=2$, $3.003951$ for $N=3$), and the rescaled profiles, which
 tend to $\kappa\phi(\eta)$. For the limit problem the ratio is $2.4474$, $2.4922$,
 $2.5102$, $2.5130$ when the radius is $1.5$, $1$, $0.5$, $0.25$ ($N=2$), and reaches
-$3.0020$ for $N=3$. The extinction times agree to four digits
-(Table~\ref{tab:C2}).
+$3.0020$ for $N=3$. The extinction times agree to three or four digits
+(Table~\ref{tab:C2}). For $\ve=0.002$ the ALE curve dips by about $1.5\%$ below $R$
+at $T-t\approx10^{-2}$; this is the taper of the mesh velocity near $r=0$
+(Section~\ref{sec:limitations}). The BDF curve lies on the limit curve.
 
 \begin{figure}[ht]
 \centering
@@ -1960,8 +2047,8 @@ $0.25$, converging to $\kappa\phi$ (grey).}\label{fig:C2}
 \toprule
 & limit & BDF, $\ve=0.002$ & ALE, $\ve=0.01$ & ALE, $\ve=0.002$\\
 \midrule
-$N=2$ & 0.725090 & 0.725024 & 0.72459 & 0.72525\\
-$N=3$ & 0.505756 & 0.505712 & 0.50540 & 0.50589\\
+$N=2$ & 0.725090 & 0.725024 & 0.72464 & 0.72533\\
+$N=3$ & 0.505756 & 0.505712 & 0.50543 & 0.50594\\
 \bottomrule
 \end{tabular}
 \caption{Extinction times for the data $u_0=a(1-r^2/R_0^2)^+$.}\label{tab:C2}
@@ -1972,10 +2059,10 @@ mixture may be extinguished by curvature: heuristically the front moves with
 speed $\approx c_0-1/r$, which suggests a critical radius $1/c_0$. For the data
 $u_0=\tanh(\sqrt{2M}(r-r_0))^+$ ($N=2$, $w_0=0.5$, $c_0=1.0607$) we find the critical
 radius by bisection (Figure~\ref{fig:C3}): $r_*=0.715\pm0.001$ for every $\ve$ from
-$0.01$ to $0.00125$, with both the ALE and the Eulerian BDF solvers. The heuristic
-$1/c_0=0.943$ overestimates it by $30\%$: kernels that barely ignite first shrink
-to $r\approx0.52$ and then expand, so the threshold is set by the transient and
-presumably depends on the whole initial profile.
+$0.01$ to $0.00125$ (ALE with $\Delta t=0.001$ and $0.00025$, and the BDF solver). The
+heuristic $1/c_0=0.943$ overestimates it by $30\%$: for this profile, kernels that
+barely ignite first shrink to $r\approx0.53$ and then expand, so the threshold is
+set by the transient and presumably depends on the whole initial profile.
 
 \begin{figure}[ht]
 \centering
@@ -1989,7 +2076,13 @@ radius collapse. Right: critical radius vs $\ve$.}\label{fig:C3}
 \begin{enumerate}
 \item The rigid zone of the ALE mesh must contain several decay lengths $1/c$ of
 the profile ahead of the front, otherwise an $O(\Delta t\,e^{-cR_1})$ term appears
-(Section~\ref{sec:analysis}); for $c=1.63$ we use $\ell_0=4$.
+(Section~\ref{an:sec:impl}); with the default $\ell_0=2$ it is $\approx0.01\,\Delta t$ for
+$c=1.63$, and $\ell_0=4$ removes it.
+\item The speed of the ALE front depends on its position relative to the band
+lattice (lattice pinning, Figure~\ref{fig:D3}); the effect is $O((h_f/\ve)^2)$ and
+averages to zero over the phase. For $\Delta t\gg\ve$ the computed front depends only
+weakly on the mesh velocity (Figure~\ref{fig:D4}), so the implicit velocity does
+not correct such phase errors.
 \item Close to $r=0$ the mesh velocity is tapered to keep the nodes in
 $[0,L]$; when a collapsing front enters this zone the scheme becomes partly
 Eulerian and an $O(\Delta t\,v/\ve)$ lag reappears. Near extinction ($v\sim1/r$) this
