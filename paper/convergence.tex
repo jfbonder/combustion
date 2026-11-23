@@ -520,40 +520,58 @@ in the band; outside the band the error is $O(h_c)$, without $\ve$.
 \end{theorem}
 
 \begin{proof}
-We indicate the changes with respect to Theorem~\ref{thm:ale}. Split the line
-into (II$'$) the reaction layer and its burnt tail, $\zeta\le K_f/2$, where
-$\chi=0$, and (I$'$) the fresh region $\zeta>K_f/2$, where $\Phi\ge\ve$ and
-there is no reaction.
+\emph{Regions.} With $\zeta=z'/\ve$ we use
+(III) $\zeta\le-Z$ (burnt tail), (II) $-Z\le\zeta\le2$ (layer),
+(II$_+$) $2\le\zeta\le K_f/2$ (fresh side of the band, where $\chi=0$),
+and (I) $\zeta\ge K_f/2$ (fresh region, support of $\chi$). In (III), (II),
+(II$_+$) we have $Q\chi=0$ and $V=\Phi(z)+q_b$; in (I) there is no reaction.
 
-\emph{(II$'$).} Here $V=\Phi(z)+q_b$ and the argument of Theorem~\ref{thm:ale}
-applies with $\rho_h$ replaced by $\rho_f$ and $q$ by $q_b$: the term
-$B\le L_f\ve^{-3}(\Phi+\ve w_0)q_b$ and the stability of the burnt state give the
-conditions $q_b\ge C\ve^2\rho_f$ and $\sigma\ge\mu+C(\rho_f+q_b/\ve^2)$. Since
-$Q\chi=0$ here, the growth of $Q$ (which is $O(h_c)$) does not enter: this is the
-point of the localization.
-
-\emph{(I$'$).} Here $f_\ve(V^n)=0$ and
+\emph{Residual of the $Q\chi$ part.} With $z'-z=d_n\Delta t$, $d_n\in[0,2\sigma]$,
 \[
-\Lop_v[V]\ge\sigma\Phi'(z')+\dot Q_n\chi(z')
--Q_{n+1}\big(|\chi''|+(|c|+2\sigma)|\chi'|\big)(z')-C(\sigma^2\Delta t+h_c)-CQ_n\sigma\Delta t ,
+\frac{Q_{n+1}\chi(z')-Q_n\chi(z)}{\Delta t}=\dot Q_n\chi(z')+Q_n\frac{\chi(z')-\chi(z)}{\Delta t}\ \ge\ \dot Q_n\chi(z')
 \]
-where the $Q$-terms come from $D_t(Q\chi)$, $-\Delta_h(Q\chi)$ and $-vD(Q\chi)$
-(with $O(h_c)$ truncation absorbed in the constant). On the support of $\chi'$,
-$\zeta\in[K_f/2,K_f/2+1/\ve]$, i.e. $z\in[K_f\ve/2,K_f\ve/2+1]$, we have
-$\Phi'(z)=(A-\ve)ce^{-cz}\ge\theta_1:=\frac A2c_0e^{-2c_0(1+K_f\ve)}>0$,
-independent of $\ve$. Hence if
-\[
-\sigma\theta_1\ \ge\ C\big(1+C_\chi\big)\,\sup_{t_n\le T}Q_n=C'T(h_c+\sigma^2\Delta t),
-\]
-the $Q$-terms are absorbed there; where $\chi=1$, $\chi'=\chi''=0$ and
-$\dot Q_n=C_2(h_c+\sigma^2\Delta t)$ absorbs the remaining residual.
+because $\chi$ is nondecreasing: the transport of $\chi$ relative to the nodes
+has the favourable sign. The diffusion and advection of $Q\chi$ contribute
+$-Q_{n+1}(\Delta_h\chi+v_nD\chi)(z')\ge-Q_{n+1}C_\chi(1+|v_n|)-CQ_{n+1}h_c$.
 
-\emph{Choice.} $q_b=C_3\ve^2\rho_f$ and
-$\sigma=\mu+C_4(\rho_f+Th_c)$. Then $\sigma^2\Delta t\le\gamma\ve\sigma$ is a
-small multiple of $\sigma$ and is absorbed as in Theorem~\ref{thm:ale}. The
-comparison principle gives
-$|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma T+q_b+\sup Q\le C_T(\mu+\rho_f+h_c)$, and
-Lemma~\ref{lem:profile} adds $O(\ve)$.
+\emph{Residual of the $\Phi$ part.} By Lemma~\ref{lem:ale} with the truncation
+bounds above: $\sigma\Phi'(z')-r-B+f_\ve(V^n)q_{b}$, where
+$r\le C(\sigma^2\Delta t/\ve+\rho_f)$ in (II), (III);
+$r\le C(\sigma^2\Delta t+h_f^a)$ in (II$_+$); $r\le C(\sigma^2\Delta t+h_c)$ in (I);
+and $B\le L_f\ve^{-3}(\Phi+\ve w_0)q_b$, $B=0$ in (II$_+$) and (I).
+
+\emph{Lower bounds for $\Phi'$.} $\Phi'\ge\theta(Z)$ in (II) by
+Lemma~\ref{lem:profile}(3). In (II$_+$) and on $\operatorname{supp}\chi'$, i.e.\
+for $z\le K_f\ve/2+1$, $\Phi'=(A-\ve)ce^{-cz}\ge\theta_1:=\frac{Ac_0}{4}e^{-2c_0(1+K_f\ve)}$,
+independent of $\ve$.
+
+\emph{Choice of constants.} $q_b=C_3\ve^2\rho_f$,
+$Q_n=C_2(h_c+\sigma^2\Delta t)\,t_n$, $\sigma=\mu+C_4(\rho_f+Th_c)$. Then
+\begin{itemize}
+\item[(III)] as in Theorem~\ref{thm:ale}: the stability term
+$f_\ve(V^n)q_b\ge2\mu_0\ve^{-2}q_b$ dominates $B$ and $r$ if $C_3$ is large.
+\item[(II)] $\sigma\theta\ge C(\rho_f+\sigma^2\Delta t/\ve+q_b/\ve^2)$ if $C_4$ is
+large and $\gamma$ small (recall $\sigma\Delta t\le\gamma'\ve$).
+\item[(II$_+$)] $\sigma\theta_1\ge C(h_f^a+\sigma^2\Delta t)$, implied by the choice of $\sigma$.
+\item[(I)] where $\chi'\ne0$ or $\chi''\ne0$:
+$\sigma\theta_1\ge C(1+C_\chi)(1+\sup|v|)\sup_{t_n\le T}Q_n+C(h_c+\sigma^2\Delta t)$,
+which holds since $\sup Q\le C_2T(h_c+\sigma^2\Delta t)$ and $\sigma\ge C_4Th_c$
+(and $\sigma^2\Delta t\le\gamma'\ve\sigma$); where $\chi=1$,
+$\dot Q_n=C_2(h_c+\sigma^2\Delta t)$ absorbs $r$.
+\end{itemize}
+Hence $V$ is a supersolution with $V^0\ge U^0$.
+
+\emph{Subsolution.} $W^n_j=\Phi(z^n_j-2\sigma t_n)-q_b-Q_n\chi(z^n_j-2\sigma t_n)$ (the
+shift in $z$ is now $-\sigma t$). All signs are reversed as in
+Theorem~\ref{thm:ale}; the only new point is that the reaction must vanish in
+(I), i.e.\ $W^n\ge\ve$ there. For $z\ge K_f\ve/2$,
+$\Phi(z)-\ve\ge\frac{Ac_0}{4}\min(z,1)$ while
+$q_b+Q\chi(z)\le q_b+QC_\chi(z-K_f\ve/2)^+$; since $q_b\le C\ve^2\rho_f\le\frac{Ac_0}{16}K_f\ve$
+and $Q\le C_2T(h_c+\sigma^2\Delta t)\le\frac{Ac_0}{8C_\chi}$ for $\gamma$ small, we get $W^n\ge\ve$.
+
+\emph{Conclusion.} By the comparison principle,
+$|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma T+q_b+\sup Q\le C_T(\mu+\rho_f+h_c)$; Lemma~\ref{lem:profile}(1),(5)
+adds $O(\ve)$.
 \end{proof}
 
 \begin{remark}
@@ -572,6 +590,55 @@ $O(h_c^2)$ perturbations away from the front, at the price of the positive
 (linear) interpolation at remeshing, which preserves the comparison principle.
 \end{enumerate}
 \end{remark}
+
+
+% ---------------------------------------------------------------------------
+\section{Remeshing and implicit mesh velocity}\label{sec:impl}
+
+The code differs from the setting of Theorem~\ref{thm:band} in two respects.
+
+\emph{Mesh velocity.} The velocity $v_n$ is chosen implicitly, so that the
+computed front ends the step at the band reference point. The comparison
+principle and the barrier argument only use the \emph{realised} sequence
+$(v_n)$, which is the same for the solution and for the barriers (the
+barriers are built a posteriori on the realised moving mesh). Therefore
+Theorem~\ref{thm:band} holds with $\mu=\max_n|v_n-c_\ve|$ for the realised
+velocities. For the travelling wave the implicit choice gives
+$v_n=c_\ve+O(\rho_f+h_c)$ (the computed front speed), so $\mu$ is of the order
+of the other terms; experimentally $\mu\lesssim10^{-4}$.
+
+\emph{Remeshing.} When the mesh is rebuilt, $U$ is transferred by the
+piecewise linear interpolation $\Pi$, which is order preserving. For a
+supersolution $V$ (a function of $z$ evaluated at the nodes), the transferred
+barrier $\Pi V^{\rm old}$ differs from $V$ evaluated on the new nodes by the
+interpolation error $\frac18h_i^2|V''|$. Because the band is rebuilt on the same
+lattice and the front is still inside it (the mesh travels with the front),
+the nodes of the band coincide and the error vanishes there; on the fresh
+side of the band and in the transition $|V''|\le C$, and behind the band it
+is exponentially small. Thus each remeshing costs at most $Ch_c^2$, which is
+absorbed by adding $Ch_c^2$ to $Q$ at each remeshing time. The number of
+remeshings in $[0,T]$ is $O(T)$ (the remeshing distance is $O(1)$, and with
+the implicit velocity the front does not drift from the band), so the total
+contribution is $O(Th_c^2)$, already contained in the $O(h_c)$ term.
+
+\emph{Non-rigid far field.} In the code only a neighbourhood of radius
+$R_1$ of the front moves rigidly; farther nodes slow down and stop
+($\dot x_i=v_n\chi(x_i)$). The algebra of Lemma~\ref{lem:ale} is unchanged with
+$v_n$ replaced by the local node velocity $\dot x_i$ (the convection term of the
+scheme uses $\dot x_i$), except that the time-difference error becomes
+$\frac12(\dot x_i-c+\sigma)^2\Delta t|\Phi''|\le C\Delta t\,|\Phi''|$. Outside the rigid
+zone $|\Phi''|\le Ce^{-cR_1}$ (ahead) or is exponentially small (behind), so
+this adds $O(T\Delta t\,e^{-cR_1})$ to the error. This explains the observation
+that the rigid zone must contain several decay lengths $1/c$ of the profile
+ahead of the front (in the code $R_1\ge\max(2,3/c)$): otherwise an
+$O(\Delta t)$ error appears.
+
+\begin{corollary}
+The estimate of Theorem~\ref{thm:band} holds for the scheme as implemented
+(implicit mesh velocity, remeshing with linear interpolation on the band
+lattice, rigid zone of radius $R_1$), with $\mu$ the realised mesh-velocity
+error and an additional term $O(\Delta t\,e^{-cR_1})$.
+\end{corollary}
 
 % ---------------------------------------------------------------------------
 \section{Towards the sharp estimate}\label{sec:sharp}
