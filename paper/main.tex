@@ -98,7 +98,13 @@ the free boundary problem. On the side of the limit problem, the elliptic
 including a moving mesh method \cite{ShenDaiHuang2024}. The difficulty in the
 parabolic singular perturbation problem is the reaction layer of width
 $O(\ve)$, which moves with the flame and must be resolved: a uniform mesh needs
-$O(\ve^{-N})$ cells.
+at least $O(\ve^{-N})$ cells. Layer-adapted meshes and parameter-uniform
+methods for singularly perturbed problems are well developed for fixed layers
+\cite{MillerORiordanShishkin2012,RoosStynesTobiska2008,KoptevaORiordan2010}; here
+the layer moves and its position is part of the solution. The closest
+numerical analysis of a singular limit with coupled $\ve$, $h$ and $\Delta t$ is that of
+the Allen--Cahn approximation of mean curvature flow
+\cite{NochettoPaoliniVerdi1994,BellettiniPaolini1995,FengProhl2003}.
 
 On the theoretical side, the convergence results available for this limit
 \cite{CaffarelliVazquez1995,CaffarelliLedermanWolanski1997a,FernandezBonderWolanski2000,BerestyckiNicolaenkoScheurer1985}
@@ -120,8 +126,9 @@ $u^\ve-v\ge-C(\ve\log(1/\ve)+\eta_\ve)$, where $\eta_\ve=\|w^\ve/\ve-w_0\|_\inft
 The key point is an explicit barrier, an inner profile composed with an
 extension of the super/subsolution, whose error does not depend on the
 strictness of the super/subsolution. Barriers of this type are classical for
-Allen--Cahn type limits; to our knowledge this is the first rate for the
-present singular limit. The order $\ve$ cannot be improved.
+Allen--Cahn type limits
+\cite{Chen1992,DeMottoniSchatzman1995,AlfaroHilhorstMatano2008}; to our knowledge this
+is the first rate for the present singular limit. The order $\ve$ cannot be improved.
 \item \emph{A front-following method with error estimates for travelling waves}
 (Sections~\ref{sec:method}--\ref{sec:analysis}). A fine band of width
 $O(\ve\log(1/\ve))$ travels with the flame in an arbitrary Lagrangian--Eulerian (ALE) formulation with implicit
@@ -256,7 +263,10 @@ profiles converge, by compactness and without a rate
 \cite[Thm.~5.2]{BerestyckiNicolaenkoScheurer1985} (for $w_0=0$);
 Proposition~\ref{prop:speed} gives the first-order coefficient with an
 $O(\ve^2\log(1/\ve))$ remainder,
-also in the presence of the $O(\ve)$ perturbation $w_0$.
+also in the presence of the $O(\ve)$ perturbation $w_0$. Two-term expansions of
+the flame speed in the inverse activation energy are classical in combustion
+theory \cite{BushFendell1970,BuckmasterLudford1982}; what is new here is the
+rigorous remainder and the explicit dependence on $w_0$.
 In particular the first-order correction is positive for
 $w_0<w_0^*=\frac5{3\sqrt3-2}-1\approx0.564$ and negative for $w_0>w_0^*$.
 Table~\ref{tab:speedcoef} compares the prediction with the shooting method.
@@ -809,7 +819,8 @@ three-point centred formula, which is second order and keeps the M-matrix
 structure as long as the cell P\'eclet number satisfies $|\dot x_i|h_i\le2$.
 \item \emph{Implicit mesh velocity.} At each step $v_n$ is chosen, by a
 secant iteration (two to four linear solves), so that the computed front ends the
-step at the reference point of the band. For accelerating fronts (for instance
+step at the reference point of the band; this is the idea of the freezing
+method for travelling waves \cite{BeynThummler2004}. For accelerating fronts (for instance
 near extinction) an explicit estimate of $v_n$ from the previous steps lags by
 (acceleration)$\times\Delta t$, which violates the condition
 $\Delta t\,\mu\lesssim\ve$ of Theorem~\ref{an:thm:ale} for small $\ve$; the implicit
