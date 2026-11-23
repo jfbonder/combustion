@@ -57,7 +57,10 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
                  control_steps=10, recenter_time=None, remesh_distance=None,
                  snapshot_times=()):
     mp = mesh or MeshParams()
-    ell0 = ell0 or 1.0
+    # the rigidly moving zone must contain several decay lengths 1/c of the
+    # profile ahead of the front; otherwise the end of the zone, where u is not
+    # steady in the node frame, adds an O(dt) error that grows as eps -> 0
+    ell0 = ell0 or max(2.0, 3.0 / max(speed_guess, 1e-6))
     remesh_distance = remesh_distance or 0.25 * ell0
     x0 = np.linspace(0.0, L, 20001)
     u, w = initial_data(x0, u0, w0, eps)
