@@ -50,7 +50,7 @@ T^\ve_t=\Delta T^\ve+Y^\ve f_\ve(T_f-T^\ve),\qquad
 Y^\ve_t=\Delta Y^\ve-Y^\ve f_\ve(T_f-T^\ve),\qquad f_\ve(s)=\frac1{\ve^2}f\Big(\frac s\ve\Big),
 \end{equation}
 arises in the theory of equidiffusional premixed flames (Lewis number one)
-\cite{BuckmasterLudford1982,ZeldovichFrankKamenetskii1938}: $T^\ve$ is the
+\cite{BuckmasterLudford1982}: $T^\ve$ is the
 temperature and $Y^\ve\ge0$ the mass fraction of the reactant, normalized so
 that $T_f$ is the adiabatic flame temperature, and $\ve$ is essentially the
 inverse of the activation energy; $f$ is Lipschitz, positive on $(-\infty,1)$
@@ -65,11 +65,11 @@ u_t=\Delta u-(u+w^\ve)f_\ve(u),\qquad w^\ve_t=\Delta w^\ve.
 The free boundary problem obtained in the limit was introduced by Caffarelli
 and V\'azquez \cite{CaffarelliVazquez1995} (see also \cite{Vazquez1996}): in
 the case $u^\ve=Y^\ve$ they proved uniform estimates for the singular
-perturbation problem (see also \cite{Caffarelli1995Lipschitz}), passed to the limit
+perturbation problem, passed to the limit
 $\ve\to0$, and constructed explicit solutions, among them the self-similar
 solutions that we use in Section~\ref{sec:exact}. The limit was further studied by
 Caffarelli, Lederman and Wolanski
-\cite{CaffarelliLedermanWolanski1997a,CaffarelliLedermanWolanski1997b} and, regarding
+\cite{CaffarelliLedermanWolanski1997a} and, regarding
 uniqueness, by Lederman, V\'azquez and Wolanski \cite{LedermanVazquezWolanski2001}
 and Petrosyan \cite{Petrosyan2002}. In \cite{FernandezBonderWolanski2000} Wolanski
 and the author showed that if $w^\ve/\ve\to w_0>-1$ then limits of $u^\ve$ solve
@@ -91,10 +91,10 @@ with strict super- and subsolutions; none of them gives a rate. The same is true
 the finer analysis of the limit \cite{Weiss2003,PetrosyanYip2008,WeissZhang2009} and of
 the recent regularity theory for singular perturbation problems of this type, in the
 parabolic \cite{RicarteTeymurazyanUrbano2019,AudritoSanzPerela2024} and in the elliptic
-case \cite{FernandezRealRosOton2019,AudritoSerra2022,Kamburov2023}: the estimates are
+case \cite{AudritoSerra2022}: the estimates are
 uniform in $\ve$, but they do not measure the distance to the limit. Quantitative
 information is available for travelling waves, where the limit of the speed was
-obtained in \cite{BerestyckiNicolaenkoScheurer1985} (see also \cite{Glangetas1992}), and
+obtained in \cite{BerestyckiNicolaenkoScheurer1985}, and
 a rigorous expansion up to order $\ve$ was recently proved for a related scalar
 equation in \cite{JelbartKristiansenSzmolyan2025}.
 
@@ -110,7 +110,7 @@ strictly starshaped, then
 an explicit barrier, an inner profile composed with an extension of a strict
 super- or subsolution, whose error does not depend on the strictness. Barriers of
 this type are classical for Allen--Cahn type limits
-\cite{Chen1992,DeMottoniSchatzman1995,AlfaroHilhorstMatano2008}; to our knowledge this is
+\cite{Chen1992,AlfaroHilhorstMatano2008}; to our knowledge this is
 the first rate for the present singular limit beyond travelling waves. For the rate we
 need $f$ nonincreasing and of class $C^2$ up to $1$, as for $f(s)=(1-s)^+$.
 
@@ -118,19 +118,19 @@ Our second contribution is a numerical method that follows the flame
 (Sections~\ref{sec:method} and \ref{sec:analysis}). We are not aware of numerical studies
 of the limit $\ve\to0$ in \eqref{eq:system}. Adaptive methods for thin combustion
 fronts at large activation energy have a long history
-\cite{Smooke1982,BaylissGottliebMatkowskyMinkoff1989,DenetHaldenwang1992}, but they work
+\cite{Smooke1982,BaylissGottliebMatkowskyMinkoff1989}, but they work
 at fixed activation energy, and the numerical literature on the limit problem
 concerns its elliptic (Bernoulli) analogue
 \cite{AltCaffarelli1981,BerestyckiCaffarelliNirenberg1990}; see
-\cite{FlucherRumpf1997,Tiihonen1997,KarkkainenTiihonen1999,BouchonClainTouzani2005,HarbrechtMitrou2014,ShenDaiHuang2024}.
+\cite{FlucherRumpf1997,HarbrechtMitrou2014,ShenDaiHuang2024}.
 The difficulty is the reaction layer of width $O(\ve)$, which moves with the flame and
 must be resolved. Layer-adapted meshes and parameter-uniform methods are well developed
 for layers at known positions
-\cite{MillerORiordanShishkin2012,RoosStynesTobiska2008,KoptevaORiordan2010}; here the
+\cite{RoosStynesTobiska2008}; here the
 position of the layer is part of the solution. The closest numerical analysis of a
 singular limit with coupled $\ve$, $h$ and $\Delta t$ is that of the Allen--Cahn
 approximation of mean curvature flow
-\cite{NochettoPaoliniVerdi1994,BellettiniPaolini1995,FengProhl2003}.
+\cite{NochettoPaoliniVerdi1994,FengProhl2003}.
 
 Our time discretization is linearly implicit and satisfies a discrete comparison
 principle for every time step and every mesh, which reduces the error analysis to
@@ -1014,8 +1014,7 @@ $\ve/\sqrt{2M}+O(\ve^2)$ ahead of the free boundary of the outer solution. The s
 is observed for general data in Section~\ref{sec:limit}.
 \item \emph{Existence of regular classical solutions.} Local existence of smooth
 solutions for smooth compatible data is proved in \cite{BaconneauLunardi2004} for
-constant $M$; see also \cite{BraunerHulshofLunardi2001} for the stability of planar
-travelling waves. The radial self-similar solutions of Section~\ref{sec:selfsimilar} are
+constant $M$. The radial self-similar solutions of Section~\ref{sec:selfsimilar} are
 explicit regular classical solutions that satisfy all the assumptions of the theorem
 on $[0,T^*]$ for every $T^*<T$.
 \end{enumerate}
@@ -1685,8 +1684,8 @@ $w_0=1$. Accordingly, over $16$ values of $\vartheta$ ($w_0=0$, $\ve=0.01$, $\De
 $T=8$), $E$ ranges from $1.3\cdot10^{-5}$ to $9.5\cdot10^{-4}$ and $E_s$ from $1.3\cdot10^{-5}$ to
 $9.6\cdot10^{-5}$. This is the error of the ALE scheme for travelling waves. That the speed
 of a discrete travelling wave depends on its position relative to the lattice is
-classical \cite{Keener1987,ElmerVanVleck1999}; for the freezing method the effect of
-the discretization is analysed in \cite{Thummler2008SINUM,Thummler2008JDDE}. Since $g$
+classical \cite{Keener1987}; for the freezing method the effect of
+the discretization is analysed in \cite{Thummler2008SINUM}. Since $g$
 vanishes for two values of $\vartheta$, a suitable choice of the reference point, or a
 change of $\vartheta$ at each remeshing, would reduce this error; we have not pursued
 this.
@@ -1918,7 +1917,7 @@ lattice pinning of the front, the cut-off of the mesh velocity near the origin, 
 makes the scheme partly Eulerian near extinction, and several fronts; and (v) the
 problem in two and three dimensions, with adaptive refinement and coarsening of a mesh
 that follows the flame, or with a moving mesh method
-\cite{HuangRussell2011,BuddHuangRussell2009}, for which the elliptic (Bernoulli) case
+\cite{HuangRussell2011}, for which the elliptic (Bernoulli) case
 \cite{FlucherRumpf1997,ShenDaiHuang2024} is a natural first step.
 
 \bibliographystyle{amsplain}
