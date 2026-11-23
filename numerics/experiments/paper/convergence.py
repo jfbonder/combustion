@@ -200,17 +200,16 @@ def fig_B2(d):
         x = np.array([1.0 / r["mesh"]["pts_per_eps"] for r in rs])
         ax.loglog(x, [abs(r["err"]) for r in rs], color=BLUES[k], marker="o", ms=5, mfc="white",
                   mew=1.3, label=f"$\\varepsilon={e:g}$")
-    slope_ref(ax, [1 / 16, 1 / 4], 2.2e-4, label="slope 1")
-    ax.axhspan(1e-7, 3e-5, color=MUTED, alpha=0.12, lw=0)
-    ax.text(0.97, 0.03, "noise level of the speed measurement", fontsize=7, color=MUTED,
-            va="bottom", ha="right", transform=ax.transAxes)
+    slope_ref(ax, [1 / 16, 1 / 4], 1.3e-4, label="slope 2", p=2)
+    ax.text(0.97, 0.03, "below ~1e-4: lattice-phase dependent (see D3)", fontsize=7,
+            color=MUTED, va="bottom", ha="right", transform=ax.transAxes)
     ax.set_xticks([1 / 64, 1 / 32, 1 / 16, 1 / 8, 1 / 4])
     ax.set_xticklabels(["1/64", "1/32", "1/16", "1/8", "1/4"])
     ax.minorticks_off()
     ax.set_ylim(5e-7, 3e-3)
     ax.set_xlabel("$h_f/\\varepsilon$")
     ax.set_ylabel("$|c_h-c_\\varepsilon|$")
-    title(ax, "band mesh size ($h_c=0.0025$)")
+    title(ax, "band mesh size ($h_c=0.0025$), cycle speed")
     ax.legend(loc="upper left", fontsize=8)
     ax = axs[1]
     for k, e in enumerate((0.01, 0.001)):
