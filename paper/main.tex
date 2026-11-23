@@ -32,12 +32,11 @@ Universidad de Buenos Aires, Ciudad Universitaria, (1428) Buenos Aires, Argentin
 
 \begin{abstract}
 We study the high activation energy limit of an equidiffusional model of
-premixed flames, whose limit is a free boundary problem. We prove the first
-rate of convergence for this singular limit, of order $\ve$. We also propose a
-numerical method whose mesh follows the flame front, and prove error
-estimates that are uniform in $\ve$: the time step plays no role, and the
-small parameter only constrains the mesh near the front. Numerical
-experiments illustrate the method and confirm the estimates.
+premixed flames, whose limit is a free boundary problem. We prove a rate of
+convergence for this singular limit, of order $\ve$ up to a logarithm. We
+also propose a numerical method whose mesh follows the flame front, and
+prove, for travelling waves, error estimates in which the time step does not
+appear. Numerical experiments illustrate the method and the estimates.
 \end{abstract}
 
 \maketitle
@@ -115,14 +114,17 @@ In this paper we
 \item \emph{Rate of convergence of the singular limit} (Section~\ref{sec:rate}). We
 make the approximation theorems of \cite{FernandezBonderWolanski2004} quantitative
 and prove that, if \eqref{eq:P} has a classical solution $v$ that is $C^{2,1}$ up
-to its free boundary, then $\|u^\ve-v\|_\infty\le C(\ve+\|w^\ve/\ve-w_0\|_\infty)$
-(Theorem~\ref{q:thm:rate}). The key point is an explicit barrier, the inner
-profile composed with the super/subsolution, whose error does not depend on
-the strictness of the super/subsolution. To our knowledge this is the first
-rate for this singular limit; it is sharp.
+to its free boundary, then $u^\ve-v\le C(\ve+\eta_\ve)$ and
+$u^\ve-v\ge-C(\ve\log(1/\ve)+\eta_\ve)$, where $\eta_\ve=\|w^\ve/\ve-w_0\|_\infty$
+(Theorem~\ref{q:thm:rate}); the logarithm disappears for well-prepared data.
+The key point is an explicit barrier, an inner profile composed with an
+extension of the super/subsolution, whose error does not depend on the
+strictness of the super/subsolution. Barriers of this type are classical for
+Allen--Cahn type limits; to our knowledge this is the first rate for the
+present singular limit. The order $\ve$ cannot be improved.
 \item \emph{A front-following method with $\ve$-uniform error estimates}
 (Sections~\ref{sec:method}--\ref{sec:analysis}). A fine band of width
-$O(\ve\log(1/\ve))$ travels with the flame in an ALE formulation with implicit
+$O(\ve\log(1/\ve))$ travels with the flame in an arbitrary Lagrangian--Eulerian (ALE) formulation with implicit
 mesh velocity; the mesh is refined ahead of the front and coarsened behind it,
 and the number of nodes grows only logarithmically in $1/\ve$. A linearly
 implicit time discretization satisfies a discrete comparison principle for
@@ -148,6 +150,10 @@ Throughout, $f(s)=(1-s)^+$, for which
 \begin{equation}\label{eq:M}
 M(w_0)=\frac{(1+w_0)^3}{6}.
 \end{equation}
+
+\paragraph{Code availability} The Python code (\texttt{numpy}/\texttt{scipy})
+for all the schemes of this paper, and the scripts that produce every figure
+and table, are available at \url{https://github.com/jfbonder/combustion}.
 
 % ---------------------------------------------------------------------------
 \section{Exact solutions}\label{sec:exact}
@@ -293,329 +299,439 @@ The free boundary is the sphere of radius $R\sqrt{T-t}$.
 % ---------------------------------------------------------------------------
 \section{Rate of convergence of the singular limit}\label{sec:rate}
 
-In this section we make the approximation theorems of \cite[Theorems~4.1--4.2]{FernandezBonderWolanski2004}
-quantitative. There, a strict classical supersolution of \eqref{eq:P} is shown to be
-the uniform limit of supersolutions of \eqref{eq:Peps}, by solving \eqref{eq:Peps} in
-the layer $\{\tilde u<(1-\theta)\ve\}$ and checking the jump of the gradients by a
-blow-up argument by contradiction. We replace both steps by an explicit
-barrier: the inner profile composed with the supersolution itself. The
-approximation error is $O(\ve)$ with a constant that does not depend on the
-strictness, which yields the rate $O(\ve)$ for the convergence of $u^\ve$ to a
-classical solution (Theorem~\ref{q:thm:rate}). The standard ingredients (smooth
-dependence of the inner profiles on parameters, comparison for \eqref{eq:Peps},
-the extension $\tilde v$) are proved in condensed form.
+In this section we make the approximation theorems of
+\cite[Theorems~4.1--4.2]{FernandezBonderWolanski2004} quantitative. There, a
+strict classical supersolution of \eqref{eq:P} is shown to be the uniform limit
+of supersolutions of \eqref{eq:Peps}, by solving \eqref{eq:Peps} in the layer
+$\{\tilde u<(1-\theta)\ve\}$ and checking the jump of the gradients by a blow-up
+argument by contradiction. We replace both steps by an explicit barrier: an
+inner profile, written in the variable $(u+w)/\ve$ (the rescaled distance to
+the burnt state), composed with an extension of the supersolution whose
+gradient is monotone in the normal direction. The approximation error is
+$O(\ve)$ with constants that do not depend on the strictness of the
+super/subsolution, and this yields a rate for the convergence of $u^\ve$ to a
+classical solution (Theorem~\ref{q:thm:rate}).
 
 \subsection{Setting}
-Let $Q_T=\R^N\times(0,T)$ and consider \eqref{eq:Peps} with $w^\ve$ caloric, and the limit problem \eqref{eq:P}. We write
+Let $Q_T=\R^N\times(0,T)$. For $W>-1$ and $t\in\R$ let
 \[
-B(\tau;W)=\int_{-W}^{\tau}(s+W)f(s)\,ds,\qquad M(W)=B(1;W).
+b(t;W)=t\,f(t-W),\qquad \tilde B(\Theta;W)=\int_0^\Theta b(t;W)\,dt,\qquad
+M(W)=\tilde B(1+W;W)=\int_{-W}^1(s+W)f(s)\,ds .
 \]
+If $u=-w+\ve\Theta$, the reaction term of \eqref{eq:Peps} is
+$(u+w)f_\ve(u)=\ve^{-1}b(\Theta;w/\ve)$; $\Theta=0$ is the burnt state and
+$b(\cdot;W)=0$ on $[1+W,\infty)$.
+
 \textbf{Assumptions.}
 \begin{itemize}
 \item[(F)] $f$ is Lipschitz (constant $L_f$), nonincreasing, $f>0$ on $(-\infty,1)$,
-$f=0$ on $[1,\infty)$.
-\item[(W)] $w_0$ is caloric, $w_0\ge-1+\delta_1$, and $W^\ve:=w^\ve/\ve$ satisfies
+$f=0$ on $[1,\infty)$; moreover $f\in C^2((-\infty,1])$ (one-sided derivatives at $1$).
+\item[(W)] $w_0$ is caloric, $-1+\delta_1\le w_0\le \bar W$, and $W^\ve:=w^\ve/\ve$ satisfies
 $\|W^\ve-w_0\|_\infty\le\eta_\ve$ and $\|W^\ve\|_{C^{2,1}(\overline{Q_T})}\le C_W$.
 \end{itemize}
-We write $p=(G,W)$ for the parameters of the inner profiles, and $W(x,t)=W^\ve(x,t)$.
+In Sections~\ref{sec:theory}--\ref{sec:analysis} only the first part of (F) is used.
+We write $W=W^\ve(x,t)$ and $\mathcal W=[-1+\delta_1/2,\bar W+1]$; we assume
+$\eta_\ve\le\delta_1/2$, so that $W\in\mathcal W$. Since $M'(W)=\int_{-W}^1f>0$,
+$M$ is increasing and Lipschitz on $\mathcal W$.
 
 \textbf{Comparison.} For fixed $\ve$ the nonlinearity $(u+w^\ve)f_\ve(u)$ is
-Lipschitz in $u$, so bounded weak super/subsolutions of \eqref{eq:Peps} (in
-particular functions in $C^1_x$ with locally bounded $D^2_x$, $\partial_t$) are
-ordered if they are ordered at $t=0$; the minimum of two supersolutions is a
-supersolution and the maximum of two subsolutions is a subsolution.
+Lipschitz in $u$, so bounded strong super/subsolutions of \eqref{eq:Peps}
+(functions that are $C^{1,1}$ in $x$ and Lipschitz in $t$, with the
+inequality a.e.) are ordered if they are ordered at $t=0$; the minimum of two
+supersolutions is a supersolution and the maximum of two subsolutions is a
+subsolution.
 
-\subsection{Inner profiles with parameters}
-
-Fix $\gamma>0$ and a compact set $\mathcal P_\gamma$ of parameters $p=(G,W)$ with
+\textbf{The basic identity.} Let $\tilde v$ be $C^{1,1}$ in $x$ and Lipschitz in
+$t$, and $\Theta=\Theta(s;W)$ be $C^{1,1}$ in $s$ and $C^2$ in $W$. For
 \[
-0<g_1\le G\le g_2,\qquad -1+\delta_1/2\le W\le \bar W,\qquad G^2\le 2M(W)-2\gamma
+V=-w^\ve+\ve\,\Theta\Big(\frac{\tilde v}\ve;W\Big),\qquad s=\frac{\tilde v}{\ve},
 \]
-(the \emph{supersolution regime}); and $\mathcal P^\gamma$ with the last
-condition replaced by $G^2\ge2M(W)+2\gamma$ (the \emph{subsolution regime}).
+using that $w^\ve$ and $W$ are caloric,
+\begin{equation}\label{q:eq:basic}
+\Delta V-V_t-(V+w^\ve)f_\ve(V)=\Theta_s(\Delta\tilde v-\tilde v_t)
++\frac1\ve\big(\Theta_{ss}|\nabla\tilde v|^2-b(\Theta;W)\big)+T,
+\qquad T=2\Theta_{sW}\nabla\tilde v\cdot\nabla W+\ve\Theta_{WW}|\nabla W|^2 .
+\end{equation}
+
+\subsection{Inner profiles}
+Fix $0<\gamma\le\gamma_0$ and let $G_\pm(W)=\sqrt{2M(W)\pm2\gamma}$. In what
+follows $c,C,\lambda_0$ denote positive constants that depend only on
+$f,\delta_1,\bar W$ (\emph{not} on $\gamma$ or $\kappa$), and $\gamma_0$ is small
+in terms of them.
 
 \begin{lemma}[Inner profiles]\label{q:lem:inner}
-\textbf{(a) Supersolution regime.} There are $\kappa_0,C,\lambda_0>0$ depending on
-$f,\gamma,g_{1,2},\delta_1,\bar W$ such that for $p\in\mathcal P_\gamma$ and
-$0\le\kappa\le\kappa_0$ there are $\theta=\theta(p,\kappa)\in(0,1+W)$ and
-$\Psi(\cdot;p,\kappa)\in C^{1,1}(\R)$ with
-\begin{enumerate}
-\item[(i)] $\Psi(s)=s$ for $s\ge1-\theta$; on $(-\infty,1-\theta)$,
-$G^2\Psi''+\kappa\Psi'=(\Psi+W)f(\Psi)$, and $\Psi(s)\to-W$ as $s\to-\infty$;
-\item[(ii)] $0<\Psi'\le1$, $-W<\Psi\le s^++1$, and $|\Psi(s)-s^+|\le C$;
-\item[(iii)] $|\Psi''|\le C\Psi'$ on $(-\infty,1-\theta)$; for every $S>0$,
-$\Psi'\ge c(S)>0$ on $[-S,1-\theta]$; and $0<\Psi+W\le Ce^{\lambda_0s}$,
-$\Psi'\le Ce^{\lambda_0 s}$ for $s\le0$;
-\item[(iv)] $\Psi$ is $C^2$ in $p$ for $s<1-\theta$, $\Psi_p$ is continuous across
-$s=1-\theta$ (and vanishes for $s\ge1-\theta$), and for $s\le0$
+\textbf{(a) Supersolution profile.} For $W\in\mathcal W$ and $0\le\kappa\le c\gamma$
+there are $s_m=s_m(W)\in[\frac12,1)$ with $1-s_m\le\delta_1/4$, and
+$\Theta=\Theta^+(\cdot;W)\in C^{1,1}(\R)$ such that $\Theta(s)=s+W$ for $s\ge s_m$,
 \[
-|\Psi_G|+|\Psi_W+1|+|\Psi_{sp}|+|\Psi_{pp}|\le C(1+|s|)^2e^{\lambda_0 s},
+G_-(W)^2\Theta''+\kappa\Theta'=b(\Theta;W)\quad\text{on }(-\infty,s_m),\qquad\Theta(-\infty)=0,
 \]
-while all these quantities are bounded by $C$ on $[0,1-\theta]$.
+and
+\begin{enumerate}
+\item[(i)] $0<\Theta'\le1$, $0\le\Theta''\le C\Theta'$; $0<\Theta\le Ce^{\lambda_0s}$ and
+$\Theta'\le C\Theta$ for $s\le0$; $\Theta'\ge c\,e^{-CS}$ on $[-S,s_m]$ for every $S\ge0$;
+\item[(ii)] $\Theta$ is $C^2$ in $W$, $\Theta_W$ and $\Theta_s$ are continuous across
+$s=s_m$, and
+\[
+|\Theta_W|\le C(1+|s|)\Theta_s,\qquad
+|\Theta_{sW}|\le C(1+|s|)\Theta_{ss}+C\Theta_s,\qquad
+|\Theta_{WW}|\le C\big((1+|s|)^2+\gamma^{-1}\big)\Theta_s .
+\]
 \end{enumerate}
-\textbf{(b) Subsolution regime.} For $p\in\mathcal P^\gamma$, $0\le\kappa\le\kappa_0$ and
-$\bar q\in(0,1]$ there are $s_*=s_*(p,\kappa,\bar q)>-C$ and
-$\Psi\in C^{1,1}((s_*,\infty))$ with $\Psi(s)=s$ for $s\ge1$,
-$G^2\Psi''-\kappa\Psi'=(\Psi+W)f(\Psi)$ on $(s_*,1)$, $\Psi(s_*)=-W-\bar q$,
-$\Psi'\ge c>0$ on $(s_*,\infty)$, $|\Psi''|\le C$, $|\Psi(s)-s^+|\le C$, and the
-analogue of (iv) with bounds $C$.
+\textbf{(b) Subsolution profile.} For $W\in\mathcal W$, $0\le\kappa\le c\gamma$ and
+$0<\bar q\le1$ there are $s_*<s_c<1$ and $\Theta=\Theta^-(\cdot;W)\in C^{1,1}([s_*,\infty))$ with
+$\Theta(s)=s+W$ for $s\ge1$,
+\[
+G_+(W)^2\Theta''-\kappa\Theta'=b(\Theta;W)\quad\text{on }(s_*,1),\qquad
+\Theta(s_*)=-\bar q,\quad\Theta(s_c)=0,
+\]
+and
+\begin{enumerate}
+\item[(i)] $c\sqrt{\gamma+\Theta^2}\le\Theta'\le C$; $|\Theta''|\le C\Theta'$; $\Theta''\ge0$
+where $\Theta\ge0$ and $\Theta''\ge-C\bar q$ where $\Theta<0$;
+$0\le\Theta\le(1+W)e^{c(s-1)}$ on $[s_c,1]$; and $s_*\ge-C\log(1/\gamma)$;
+\item[(ii)] $\Theta$ is $C^2$ in $W$, $\Theta_W,\Theta_s$ are continuous across $s=1$, and
+\[
+|\Theta_W|\le C(1+|s|)\Theta_s,\qquad
+|\Theta_{sW}|\le C(1+|s|)|\Theta_{ss}|+C\Theta_s,\qquad
+|\Theta_{WW}|\le C(1+|s|)^2\Theta_s .
+\]
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
-(a) Phase plane. Write $P=\Psi'$ as a function of $\Psi$ along the orbit; then
-$\frac{d}{d\Psi}\big(\tfrac{G^2}{2}P^2\big)=(\Psi+W)f(\Psi)-\kappa P$. The orbit leaving
-the saddle $(-W,0)$ (eigenvalues $\frac{-\kappa\pm\sqrt{\kappa^2+4G^2f(-W)}}{2G^2}$; note
-$f(-W)\ge f(1-\delta_1/2)>0$) satisfies
-\begin{equation}\label{q:eq:en}
-\tfrac{G^2}{2}P(\Psi)^2=B(\Psi;W)-\kappa\int_{-W}^{\Psi}P\,d\Psi .
-\end{equation}
-As in the proof of Lemma~\ref{an:lem:profile}, $P>0$ as long as $\Psi<1$ and
-$P\le\sqrt{2B(\Psi;W)}/G$, so $0\le\kappa\int P\le\kappa C$. We look for
-$\Psi_m=1-\theta$ with $P(\Psi_m)=1$, i.e.
-$B(\Psi_m;W)=\frac{G^2}2+\kappa\int_{-W}^{\Psi_m}P$. The right-hand side lies in
-$[\frac{G^2}2,\frac{G^2}2+C\kappa]\subset[\frac{G^2}{2},M(W)-\frac\gamma2]$ if $\kappa\le\gamma/(2C)$;
-since $B(\cdot;W)$ is continuous, strictly increasing on $[-W,1]$ from $0$ to
-$M(W)$, and the right-hand side depends continuously on $\Psi_m$, a solution
-$\Psi_m\in(-W,1)$ exists, with $1-\Psi_m\ge c(\gamma)>0$ (because
-$B(\Psi_m)\le M-\gamma/2$ and $B'(\cdot)\le C$). Translate the orbit so that
-$\Psi(1-\theta)=1-\theta$ and set $\Psi(s)=s$ for $s\ge1-\theta$: since
-$P(\Psi_m)=1$, $\Psi\in C^1$, and $\Psi''$ is bounded with a jump at $1-\theta$.
-(ii): $0<P\le1$ on the orbit up to $\Psi_m$ because $P$ is increasing in
-$\Psi$ there: $\frac{d}{d\Psi}(\frac{G^2}2P^2)=(\Psi+W)f(\Psi)-\kappa P>0$, since near the
-saddle $(\Psi+W)f\simeq f(-W)(\Psi+W)$ and $\kappa P\simeq\kappa\lambda_+(\Psi+W)$ with
-$\kappa\lambda_+<f(-W)$ for $\kappa$ small, while away from it
-$(\Psi+W)f(\Psi)\ge c(\gamma)>0$ for $\Psi\le\Psi_m\le1-c(\gamma)$; the bound on $|\Psi-s^+|$
-follows from the exponential tail and $P\ge c$ on $[\Psi(-S),\Psi_m]$.
-(iii): near the saddle, $\Psi''=\frac1{G^2}\big((\Psi+W)f(\Psi)-\kappa P\big)$ and
-$P\simeq\lambda_+(\Psi+W)$, so $|\Psi''|\le C(\Psi+W)\le CP$; away from it $P\ge c$
-and $\Psi''$ is bounded. The tail estimates are proved as in Lemma~\ref{an:lem:profile}(4) (uniform decay rate $\lambda_0=\frac12\sqrt{f(1-\delta_1/2)}/g_2$).
-(iv): $C^2$ dependence on $(G,W,\kappa)$ of the unstable manifold and of the
-transversal intersection defining $\Psi_m$ (implicit function theorem,
-$\partial_{\Psi_m}[B-\frac{G^2}{2}-\kappa\int P]=(\Psi_m+W)f(\Psi_m)-\kappa\ge c>0$).
-In the tail, $\Psi+W=a(p)e^{\lambda(p)s}(1+o(1))$, whose $p$-derivatives carry
-the factors $s$ and $s^2$. Continuity of $\Psi_p$ at $1-\theta$:
-$\Psi_p(1-\theta^-)=(1-\Psi'(1-\theta))\,\partial_p\theta=0$.
+Both profiles are monotone, so we parametrize them by $\Theta$: $P(\Theta)=\Theta_s$,
+and the equations $G^2\Theta''\pm\kappa\Theta'=b$ become
+$\frac{d}{d\Theta}\big(\frac{G^2}2P^2\big)=b(\Theta;W)\mp\kappa P$. We use repeatedly
+that $f\ge f(1-\delta_1/4)=:2a_0>0$ on $(-\infty,1-\delta_1/4]$, so that
+$c\Theta^2\le\tilde B(\Theta;W)\le C\Theta^2$ for $-1\le\Theta\le\frac{1+W}2$, and
+$|\partial_W\tilde B|+|\partial^2_{W}\tilde B|\le C\Theta^2$ there (because
+$\partial_W\tilde B=-\int_0^\Theta tf'(t-W)\,dt$ and $f\in C^2$).
 
-(b) Now $\frac{G^2}{2}P^2=B(\Psi;W)+\big(\frac{G^2}2-M(W)\big)+\kappa\int_\Psi^1P$ for
-$\Psi\le1$ (integrating backwards from $P(1)=1$), and the second term is
-$\ge\gamma$. Hence $P\ge\sqrt{2\gamma}/g_2$ on the whole backward orbit, which
-crosses $\Psi=-W-\bar q$ at a finite $s_*$, with $|s_*|\le C$.
+(a) Let $P$ be the unstable manifold of the saddle $(0,0)$ in the
+$(\Theta,P)$-plane:
+\begin{equation}\label{q:eq:Psup}
+\tfrac{G^2}2P^2=\tilde B(\Theta;W)-\kappa J(\Theta),\qquad J(\Theta)=\int_0^\Theta P,\qquad G=G_-(W).
+\end{equation}
+Since $P\le\sqrt{2\tilde B}/G\le C\Theta$ and $\kappa$ is small, $\kappa J\le C\kappa\Theta^2$ and
+$P\ge c\Theta$ for $\Theta\le\frac{1+W}2$; $P$ stays positive as long as $\tilde B-\kappa J>0$.
+Let $F(\Theta)=\tilde B(\Theta)-\kappa J(\Theta)-(M-\gamma)$. Then $F(0)<0$ and
+$F(1+W)=\gamma-\kappa J(1+W)\ge\gamma/2$ if $\kappa\le c\gamma$; let $\Theta_m$ be its first
+zero, so $P(\Theta_m)=1$ and $0<P<1$ before. From $M-\tilde B(\Theta_m)=\gamma-\kappa J\le\gamma$
+and $f>0$ on $(-\infty,1)$ we get $1+W-\Theta_m\to0$ as $\gamma\to0$, uniformly in $W$;
+set $s_m=\Theta_m-W$, so $1-s_m\le\delta_1/4$ for $\gamma_0$ small. Moreover, since $f$ is
+nonincreasing and $\Theta_m\ge\frac{1+W}2$,
+$\frac\gamma2\le\int_{\Theta_m}^{1+W}b\le(1+W-\Theta_m)(1+W)f(\Theta_m-W)\le4\,b(\Theta_m;W)$, so
+\begin{equation}\label{q:eq:top}
+b(\Theta;W)\ge c\gamma\quad\text{on }[\tfrac{1+W}2,\Theta_m],\qquad F'(\Theta_m)=b(\Theta_m)-\kappa\ge c\gamma .
+\end{equation}
+Define $s(\Theta)=s_m-\int_\Theta^{\Theta_m}d\theta/P(\theta)$ and $\Theta(\cdot)$ as its inverse,
+extended by $s+W$ for $s\ge s_m$. Then $\Theta\in C^1$ ($P(\Theta_m)=1$) and
+$\Theta''=(b-\kappa\Theta')/G^2$ is bounded. (i): $\Theta''\ge0$ because $b\ge c\Theta\ge c'P\ge\kappa P$
+for $\Theta\le\frac{1+W}2$ and $b\ge c\gamma\ge\kappa\ge\kappa P$ above, by \eqref{q:eq:top};
+$\Theta''\le b/G^2\le C\Theta\le C\Theta'$ near $0$ and $\le C\le C\Theta'$ above; the exponential
+bounds follow from $c\Theta\le\Theta'\le C\Theta$, and the lower bound on $[-S,s_m]$ from
+$\Theta(0)\ge c$ (since $s_m=\int_{\Theta(0)}^{\Theta_m}d\theta/P\le\frac1c\log\frac{\Theta_m}{\Theta(0)}$).
+
+(ii) The unstable manifold depends in a $C^2$ way on $W$ ($b$ is $C^2$ in
+$(\Theta,W)$ for $\Theta<1+W$). Differentiating \eqref{q:eq:Psup},
+$G^2PP_W=\partial_W\tilde B-GG_WP^2-\kappa J_W$; with $|\partial_W\tilde B|\le C\Theta^2\le CP^2$,
+$|G_W|\le C$ and a Gronwall argument in $\Theta$ for the term $\kappa J_W$ we get
+$|P_W|\le CP$, and in the same way $|P_{WW}|\le CP$. At fixed $\Theta$,
+$s_W=\frac{d}{dW}(\Theta_m-W)-\frac{\Theta_{m,W}}{P(\Theta_m)}+\int_\Theta^{\Theta_m}\frac{P_W}{P^2}d\theta
+=-1+\int_\Theta^{\Theta_m}\frac{P_W}{P^2}d\theta$, so $|s_W|\le1+C\int_\Theta^{\Theta_m}\frac{d\theta}P=1+C(s_m-s)$,
+and $\Theta_W=-s_WP$ gives the first bound. Next
+$\Theta_{sW}=\partial_W[P(\Theta(s;W);W)]=P_\Theta\Theta_W+P_W$ with
+$P_\Theta=\Theta''/\Theta'$, which gives the second bound. Differentiating once more,
+$s_{WW}$ contains $\int P_{WW}/P^2$, $\int P_W^2/P^3$ and the boundary term
+$\Theta_{m,W}P_W(\Theta_m)$, where $\Theta_{m,W}=-P_W/P_\Theta$ at $\Theta_m$ and
+$P_\Theta(\Theta_m)=(b(\Theta_m)-\kappa)/G^2\ge c\gamma$ by \eqref{q:eq:top}; this gives the third
+bound. At $s=s_m$: $\Theta_s=1$ on both sides, and $\Theta_W=-s_W P=1$ on the left
+(at $\Theta=\Theta_m$ the integral vanishes), as on the right.
+
+(b) Integrating backwards from $(\Theta,P)=(1+W,1)$,
+\begin{equation}\label{q:eq:Psub}
+\tfrac{G^2}2P^2=\gamma+\tilde B(\Theta;W)-\kappa\int_\Theta^{1+W}P,\qquad G=G_+(W),
+\end{equation}
+because $G^2/2-M=\gamma$. As long as $P\le C$ the last term is at most
+$C\kappa\le\gamma/2$, so $c(\gamma+\Theta^2)\le P^2\le C$ for $-1\le\Theta\le1+W$ (for $\Theta<0$,
+$\tilde B(\Theta)=\int_\Theta^0|t|f(t-W)\,dt\ge c\Theta^2$). Hence the orbit reaches
+$\Theta=-\bar q$, and with $s(\Theta)=1-\int_\Theta^{1+W}d\theta/P$,
+$s_*=s(-\bar q)\ge1-C\int_{-1}^{C}\frac{d\theta}{\sqrt{\gamma+\theta^2}}\ge-C\log\frac1\gamma$.
+Now $\Theta''=(b+\kappa\Theta')/G^2$, $b\ge0$ for $\Theta\ge0$ and $b\ge-C\bar q$ for
+$-\bar q\le\Theta<0$, $|b|\le C|\Theta|\le C\Theta'$, and $\Theta'\ge c\Theta$ gives the
+exponential bound. For (ii) note that $\gamma$ does not depend on $W$, so the same
+computation as in (a) gives $|P_W|+|P_{WW}|\le CP$, and now
+$s_W=-1+\int_\Theta^{1+W}P_W/P^2$ has no boundary term at the top.
 \end{proof}
 
-\subsection{Quantitative approximation of strict supersolutions}
+\subsection{Quantitative approximation of strict super- and subsolutions}
 
-\begin{definition}
-A function $\tilde u\ge0$ on $\overline{Q_T}$ is a \emph{regular strict
-supersolution with margins $(\delta,\delta_0,r,K_0)$} if, with
+\begin{definition}\label{q:def:strict}
+Let $\delta,\delta_0,r,K_0>0$. A function $\tilde u\ge0$ on $\overline{Q_T}$ is a
+\emph{regular strict supersolution with margins $(\delta,\delta_0,r,K_0)$} if, with
 $\Omega=\{\tilde u>0\}$ and $\Gamma=\partial\Omega\cap Q_T$:
-\begin{enumerate}
-\item $\Delta\tilde u-\tilde u_t\le0$ in $\Omega$;
-\item $|\nabla\tilde u|\le\sqrt{2M(w_0)}-\delta$ on $\Gamma$;
-\item there is a function $\tilde v$ on $\overline{Q_T}$ with $\tilde v=\tilde u$ on
-$\overline\Omega$, $\tilde v<0$ outside $\overline\Omega$, $\tilde v\le-\delta_0r$ at
-parabolic distance $\ge r$ from $\Gamma$ in the complement of $\Omega$,
-$\tilde u\ge\delta_0 r$ at distance $\ge r$ from $\Gamma$ in $\Omega$, and, in the
-$r$-neighbourhood $N_r$ of $\Gamma$: $\tilde v\in C^{2,1}$, $|\nabla\tilde v|\ge\delta_0$,
-$\|\tilde v\|_{C^{2,1}(N_r)}\le K_0$; elsewhere $\|\tilde v\|_{C^{2,1}}\le K_0$.
-\end{enumerate}
-(The extension $\tilde v$ exists, e.g., by reflection across $\Gamma$ in normal
-coordinates, as soon as $\tilde u$ is $C^{2,1}$ up to $\Gamma$ with
-$|\nabla\tilde u|\ge2\delta_0$ there.)
+$\tilde u\in C^{2,1}(\overline\Omega)$ with norm $\le K_0$, $|\nabla\tilde u|\ge2\delta_0$
+in $\Omega\cap N_r$ ($N_r$ the $r$-neighbourhood of $\Gamma$), $\tilde u\ge\delta_0r$ in
+$\Omega\setminus N_r$, $\Delta\tilde u-\tilde u_t\le0$ in $\Omega$, and
+\[
+\sqrt{2M(w_0)}-C_1\delta\le|\nabla\tilde u|\le\sqrt{2M(w_0)}-\delta\quad\text{on }\Gamma
+\]
+for a fixed constant $C_1$. A \emph{regular strict subsolution} is defined in the
+same way with $\Delta\tilde u-\tilde u_t\ge0$ and
+$\sqrt{2M(w_0)}+\delta\le|\nabla\tilde u|\le\sqrt{2M(w_0)}+C_1\delta$ on $\Gamma$.
 \end{definition}
 
+\begin{lemma}[Monotone extensions]\label{q:lem:ext}
+Let $\tilde u$ be as in Definition~\ref{q:def:strict} and $\Lambda\ge1$. There are
+$r_1>0$, $K_1$, depending only on $\delta_0,r,K_0,\Lambda$, and functions
+$\tilde v^\pm$, $C^{1,1}$ in $x$ and Lipschitz in $t$ with norms $\le K_1$, such that
+$\tilde v^\pm=\tilde u$ in $\overline\Omega$, $\tilde v^\pm\le-c\min\{d,r_1\}$ outside $\Omega$
+($d$ the distance to $\Gamma_t$), $|\Delta\tilde v^\pm-\tilde v^\pm_t|\le K_1$, and, for
+$x\notin\Omega$ with $d(x,t)\le r_1$ and $y$ the closest point of $\Gamma_t$,
+\[
+|\nabla\tilde v^+(x,t)|^2\le|\nabla\tilde u(y,t)|^2-\Lambda d,\qquad
+|\nabla\tilde v^-(x,t)|^2\ge|\nabla\tilde u(y,t)|^2+\Lambda d .
+\]
+\end{lemma}
+
+\begin{proof}
+Let $E\tilde u$ be a $C^{2,1}$ extension of $\tilde u|_{\overline\Omega}$ to $\overline{Q_T}$,
+negative outside $\overline\Omega$, with $-K d\le E\tilde u\le-c\delta_0d$ for $d\le r_1$ and
+$E\tilde u\le-c\delta_0r_1$ beyond (reflection in normal coordinates and a
+modification away from $\Gamma$). Let $\tau_0=1/(4\Lambda')$ and $\zeta\in C^{1,1}(\R)$,
+$\zeta(\tau)=0$ for $\tau\ge0$, $\zeta(\tau)=\tau^2$ on $[-\tau_0,0]$, $\zeta(\tau)=-2\tau_0\tau-\tau_0^2$
+for $\tau\le-\tau_0$. Set $\tilde v^\pm=E\tilde u\pm\Lambda'\zeta(E\tilde u)$. Then
+$\nabla\tilde v^\pm=(1\pm\Lambda'\zeta'(E\tilde u))\nabla E\tilde u$ with
+$\Lambda'\zeta'=-2\Lambda'|E\tilde u|\in[-\frac12,0]$ for $d$ small, so
+$|\nabla\tilde v^\pm|^2=(1\mp2\Lambda'|E\tilde u|)^2|\nabla E\tilde u|^2$ and
+$|\nabla E\tilde u(x)|^2=|\nabla\tilde u(y)|^2+O(d)$; choosing $\Lambda'$ large in terms of
+$\Lambda,\delta_0,K_0$ gives the inequalities. Finally $\tilde v^+\le\frac12E\tilde u<0$ and
+$\tilde v^-\le E\tilde u<0$ outside $\Omega$.
+\end{proof}
+
 \begin{proposition}[Quantitative Theorem 4.1]\label{q:prop:super}
-Assume (F), (W). There are $c_*,C$ depending only on $f,\delta_1,C_W,\delta_0,r,K_0$
-(\emph{not} on $\delta$) such that if $\tilde u$ is a regular strict
-supersolution with margins $(\delta,\delta_0,r,K_0)$ and
+Assume (F), (W). There are $c_*,\delta_*,C$ depending only on
+$f,\delta_1,\bar W,C_W,\delta_0,r,K_0,C_1$ (\emph{not} on $\delta$) such that if $\tilde u$ is a
+regular strict supersolution with margins $(\delta,\delta_0,r,K_0)$,
 \[
-\ve+\eta_\ve\le c_*\delta,
+\delta\le\delta_*\qquad\text{and}\qquad\ve+\eta_\ve\le c_*\delta,
 \]
-then
+then, with $\tilde v=\tilde v^+$ from Lemma~\ref{q:lem:ext} (with a $\Lambda$ fixed below),
+$\Theta=\Theta^+$ from Lemma~\ref{q:lem:inner}(a) with $\gamma=c_1\delta$ and $\kappa=K\ve$,
+and $\tilde q\ge1$,
 \[
-V^\ve(x,t)=\ve\,\Psi\Big(\frac{\tilde v(x,t)}\ve;\,p(x,t),K\ve\Big)+\ve^2\tilde q,\qquad
-p=(G,W),\quad G=\min\{|\nabla\tilde v|,G_\gamma(W)\},
+V^\ve=-w^\ve+\ve\,\Theta\Big(\frac{\tilde v}\ve;W^\ve\Big)+\ve^2\tilde q
 \]
-with $G_\gamma(W)^2=2M(W)-2\gamma$, $\gamma=c\delta$, and suitable constants
-$K,\tilde q$, is a supersolution of \eqref{eq:Peps} in $Q_T$ with
-\[
-\|V^\ve-\tilde u\|_{L^\infty(Q_T)}\le C\ve .
-\]
+is a supersolution of \eqref{eq:Peps} in $Q_T$ and $\|V^\ve-\tilde u\|_{L^\infty(Q_T)}\le C\tilde q\ve$.
 \end{proposition}
 
 \begin{proof}
-\emph{Parameters are admissible.} On $\Gamma$, $|\nabla\tilde v|^2\le2M(w_0)-2\delta\sqrt{2M}+\delta^2$.
-In the region where the profile is not the identity, $\tilde v<\ve(1-\theta)\le\ve$,
-and either we are within distance $C\ve/\delta_0$ of $\Gamma$, where
-$|\nabla\tilde v|$ changes by $O(K_0\ve/\delta_0)$ and $|W-w_0|\le\eta_\ve+C\ve$, so
-$G^2\le2M(W)-2\gamma$ with $\gamma=c\delta$ if $\ve+\eta_\ve\le c_*\delta$; or we are in
-the burnt region at distance $\ge C\ve/\delta_0$, where $G$ is the clipped value.
-In all cases $p\in\mathcal P_\gamma$.
-
-\emph{Derivatives.} Write $s=\tilde v/\ve$ and $\Psi=\Psi(s;p,\kappa)$, $\kappa=K\ve$.
-Then
-\[
-\nabla V=\Psi_s\nabla\tilde v+\ve\Psi_p\nabla p,\qquad
-\Delta V=\Psi_s\Delta\tilde v+\frac{1}{\ve}\Psi_{ss}|\nabla\tilde v|^2+2\Psi_{sp}\nabla\tilde v\cdot\nabla p
-+\ve\Psi_p\Delta p+\ve\Psi_{pp}\nabla p\cdot\nabla p,
-\]
-\[
-V_t=\Psi_s\tilde v_t+\ve\Psi_p p_t .
-\]
-$V$ is $C^1$ in $x$ (by Lemma~\ref{q:lem:inner}(iv) $\Psi_s$ and $\Psi_p$ are continuous)
-and its second derivatives are bounded, so it suffices to check the
-inequality $\mathcal R:=\Delta V-V_t-(V+w^\ve)f_\ve(V)\le0$ a.e.
-
-\emph{Reaction.} With $V=\ve(\Psi+\ve\tilde q)$,
-$(V+w^\ve)f_\ve(V)=\ve^{-1}(\Psi+\ve\tilde q+W)f(\Psi+\ve\tilde q)$, and since $f$ is
-nonincreasing and Lipschitz,
-\begin{equation}\label{q:eq:react}
-(\Psi+\ve\tilde q+W)f(\Psi+\ve\tilde q)\ \ge\ (\Psi+W)f(\Psi)-L_f\ve\tilde q(\Psi+W)+\ve\tilde qf(\Psi+\ve\tilde q).
+\emph{Margin.} We claim that, where $s=\tilde v/\ve\le s_m$ and $d\le r_1$,
+\begin{equation}\label{q:eq:marginsup}
+G_-(W)^2-|\nabla\tilde v|^2\ge c\delta+\Lambda_1\ve|s| ,
 \end{equation}
+with $\Lambda_1$ as large as we wish (by taking $\Lambda$ large). Let $y$ be the closest point of $\Gamma$.
+Since $|W-w_0(y)|\le\eta_\ve+C d$ and $M$ is Lipschitz,
+$G_-(W)^2\ge2M(w_0(y))-2\gamma-C(\eta_\ve+d)$, while
+$|\nabla\tilde u(y)|^2\le2M(w_0(y))-2\sqrt{2M}\,\delta+\delta^2$. In $\Omega$ (where
+$0\le s\le s_m$ and $d\le C\ve/\delta_0$), $|\nabla\tilde v|^2\le|\nabla\tilde u(y)|^2+C\ve$; outside,
+Lemma~\ref{q:lem:ext} gives $|\nabla\tilde v|^2\le|\nabla\tilde u(y)|^2-\Lambda d$ and
+$d\ge\ve|s|/K_1$. With $\gamma=c_1\delta$, $c_1$ small, $\ve+\eta_\ve\le c_*\delta$ and
+$\Lambda$ large this gives \eqref{q:eq:marginsup}.
 
-\emph{Region $s\ge1-\theta$.} Here $V=\tilde u+\ve^2\tilde q$ and $\Psi_p=0$. If
-$s\ge1$, $f_\ve(V)=0$ and $\mathcal R=\Delta\tilde u-\tilde u_t\le0$. If
-$1-\theta\le s<1$, $V+w^\ve=\ve(s+\ve\tilde q+W)>0$, so the reaction term is
-nonnegative and again $\mathcal R\le\Delta\tilde u-\tilde u_t\le0$.
-
-\emph{Region $s<1-\theta$.} Collecting terms, using
-$G^2\Psi_{ss}+\kappa\Psi_s=(\Psi+W)f(\Psi)$ (where $G=|\nabla\tilde v|$; where $G$ is
-clipped, see below), \eqref{q:eq:react} and $\Delta W-W_t=0$ (so that the term
-$\ve\Psi_W(\Delta W-W_t)$ vanishes):
+\emph{The equation.} Write $V=-w+\ve(\Theta+\ve\tilde q)$. Since $f$ is nonincreasing and Lipschitz,
+the reaction term satisfies
+$(V+w)f_\ve(V)=\frac1\ve(\Theta+\ve\tilde q)f(\Theta+\ve\tilde q-W)\ge\frac1\ve b(\Theta;W)-L_f\tilde q\Theta+\tilde qf(\Theta+\ve\tilde q-W)$.
+By \eqref{q:eq:basic} and the equation of $\Theta$, where $s<s_m$,
 \[
-\mathcal R\le\Psi_s(\Delta\tilde v-\tilde v_t)-K\Psi_s+T_p+L_f\tilde q(\Psi+W)-\tilde qf(\Psi+\ve\tilde q),
+\mathcal R:=\Delta V-V_t-(V+w)f_\ve(V)\le\Theta_s(\Delta\tilde v-\tilde v_t)-K\Theta_s
+-\frac1\ve\Theta_{ss}\big(G_-^2-|\nabla\tilde v|^2\big)+|T|+L_f\tilde q\Theta-\tilde qf(\Theta+\ve\tilde q-W).
 \]
+By Lemma~\ref{q:lem:inner}(a)(ii), $|\nabla\tilde v|\le K_1$ and $|\nabla W|\le C_W$,
 \[
-T_p=2\Psi_{sp}\nabla\tilde v\cdot\nabla p+\ve\big(\Psi_G(\Delta G-G_t)+\Psi_{pp}\nabla p\cdot\nabla p\big).
+|T|\le C(1+|s|)\Theta_{ss}+C\Theta_s+C\ve\big((1+|s|)^2+\gamma^{-1}\big)\Theta_s ,
 \]
-In $\Omega$, $\Delta\tilde v-\tilde v_t\le0$; outside, $|\Delta\tilde v-\tilde v_t|\le K_0$.
-By (W) and the bounds on $\tilde v$, $|\nabla p|+|\Delta G-G_t|\le C$ in $N_r$.
+and $\ve/\gamma=\ve/(c_1\delta)\le C$. We split into three regions.
 
-\emph{Layer part} $-S\le s<1-\theta$ ($S$ fixed below). By
-Lemma~\ref{q:lem:inner}(iii),(iv), $|T_p|\le C\le C\Psi_s/c(S)$ and
-$L_f\tilde q(\Psi+W)\le C\tilde q\le C\tilde q\Psi_s/c(S)$; hence $\mathcal R\le0$ if
-$K\ge K_0+C(1+\tilde q)/c(S)$.
+\emph{Region $|s|\le\ve^{-1/2}$, $\Theta\le\theta_*$}, with $\theta_*=\min\{\delta_1/8,a_0/L_f\}$.
+Here $d\le K_1\ve^{1/2}\le r_1$, so \eqref{q:eq:marginsup} holds and
+$\frac1\ve\Theta_{ss}(G_-^2-|\nabla\tilde v|^2)\ge\Theta_{ss}(c\delta/\ve+\Lambda_1|s|)\ge C(1+|s|)\Theta_{ss}$
+if $c_*$ is small and $\Lambda_1$ large. Also $\ve(1+|s|)^2\le4$. Since
+$\Theta+\ve\tilde q-W\le-W+2\theta_*\le1-\delta_1/4$, $f(\Theta+\ve\tilde q-W)\ge2a_0$ and
+$L_f\tilde q\Theta\le a_0\tilde q$. With $\Delta\tilde v-\tilde v_t\le K_1$:
+$\mathcal R\le(K_1+C-K)\Theta_s-a_0\tilde q\le0$ if $K\ge K_1+C$.
 
-\emph{Tail} $s<-S$. Here $\Psi+W\le Ce^{\lambda_0 s}$, so $\Psi+\ve\tilde q\le-W+Ce^{-\lambda_0S}+\ve\tilde q$
-and $f(\Psi+\ve\tilde q)\ge a:=\frac12f(1-\delta_1/2)$ if $S$ is large and $\ve$ small.
-Also $|T_p|\le C(1+|s|)^2e^{\lambda_0s}\le C(1+S)^2e^{-\lambda_0S}$ and
-$L_f\tilde q(\Psi+W)\le C\tilde qe^{-\lambda_0S}$. Fix $S$ so that
-$C(1+S)^2e^{-\lambda_0S}\le a/4$ and $Ce^{-\lambda_0S}L_f\le a/4$; then with $\tilde q=1$,
-$\mathcal R\le K_0\Psi_s-K\Psi_s+a/4+a/4-a\le0$.
+\emph{Region $\Theta>\theta_*$, $s<s_m$.} Here $s\ge-S_0$ with $S_0$ independent of $\gamma$
+(Lemma~\ref{q:lem:inner}(a)(i)), hence $\Theta_s\ge c_0>0$, $d\le C\ve$, and
+\eqref{q:eq:marginsup} applies; $L_f\tilde q\Theta\le C\tilde q\le(C\tilde q/c_0)\Theta_s$.
+So $\mathcal R\le(K_1+C+C\tilde q/c_0-K)\Theta_s\le0$ if $K$ is large.
 
-\emph{Clipped parameters.} If $G\ne|\nabla\tilde v|$, then $s\le-c\delta_0 r/\ve$ (far
-burnt region, or the part of $N_r$ at distance $\ge C\ve/\delta_0$ from $\Gamma$), and the
-extra term $\frac1\ve(|\nabla\tilde v|^2-G^2)\Psi_{ss}$ is bounded by
-$\frac C\ve e^{-c/\ve}\le a/4$ for $\ve$ small; it is absorbed in the tail estimate.
+\emph{Region $s<-\ve^{-1/2}$.} Here $\Theta,\Theta_s,\Theta_{ss}\le Ce^{-\lambda_0\ve^{-1/2}}$, so all terms
+except $-\tilde qf\le-2a_0\tilde q$ are bounded by $C\ve^{-2}e^{-\lambda_0\ve^{-1/2}}\le a_0$
+for $\ve$ small, and $\mathcal R\le0$.
 
-\emph{Error.} $|V-\tilde u|\le\ve\sup|\Psi(s)-s^+|+\ve^2\tilde q\le C\ve$, using
-$\tilde u=\ve s^+$ where $\tilde v=\ve s$.
+\emph{Region $s\ge s_m$.} Here $V=\tilde u+\ve^2\tilde q$, and either $s\ge1$ and
+$f_\ve(V)=0$, or $V+w=\ve(s+W+\ve\tilde q)\ge\ve(s_m-1+\delta_1/2)>0$; in both cases
+$\mathcal R\le\Delta\tilde u-\tilde u_t\le0$.
+
+\emph{Regularity and constants.} $V$ is $C^1$ in $x$ (Lemma~\ref{q:lem:inner}(a)(ii)) with
+bounded second derivatives and Lipschitz in $t$, so the a.e.\ inequality suffices. The
+constants are chosen in the order: $\Lambda$ (hence $K_1$), $K$, $c_1$, then $c_*$ so that
+$\kappa=K\ve\le c\gamma$ and the margin conditions hold, then $\delta_*$ and $\ve$ small.
+
+\emph{Error.} $V-\tilde u=\ve(\Theta-W-s^+)+\ve^2\tilde q$ (with $\tilde u=\ve s^+$), and
+$|\Theta-W-s^+|\le C$: it vanishes for $s\ge s_m$, and $\Theta\in(0,1+W]$ for $s<s_m$.
 \end{proof}
 
 \begin{proposition}[Quantitative Theorem 4.2]\label{q:prop:sub}
-Assume (F), (W), and let $\tilde u$ be a regular strict \emph{subsolution} with
-margins $(\delta,\delta_0,r,K_0)$ (inequalities (1), (2) reversed:
-$\Delta\tilde u-\tilde u_t\ge0$ in $\Omega$, $|\nabla\tilde u|\ge\sqrt{2M}+\delta$ on
-$\Gamma$). If $\ve+\eta_\ve\le c_*\delta$, then
+Assume (F), (W). There are $c_*,\delta_*,C$ as in Proposition~\ref{q:prop:super} such that
+if $\tilde u$ is a regular strict subsolution with margins $(\delta,\delta_0,r,K_0)$,
+$\delta\le\delta_*$ and $\ve+\eta_\ve\le c_*\delta$, then, with $\tilde v=\tilde v^-$,
+$\Theta=\Theta^-$ from Lemma~\ref{q:lem:inner}(b) with $\gamma=c_1\delta$, $\kappa=K\ve$,
+$\bar q=\ve\tilde q$,
 \[
-\underline V^\ve=\max\Big\{\ve\Psi\Big(\frac{\tilde v}\ve;p,K\ve\Big),\ -w^\ve-\ve^2\tilde q\Big\}
+\underline V^\ve=\max\Big\{-w^\ve+\ve\,\Theta\Big(\frac{\tilde v}\ve;W^\ve\Big),\ -w^\ve-\ve^2\tilde q\Big\}
 \]
-(with the profiles of Lemma~\ref{q:lem:inner}(b), $\bar q=\ve\tilde q$, and the first
-function extended by $-\infty$ for $s<s_*$) is a subsolution of \eqref{eq:Peps} with
-$\|\underline V^\ve-\tilde u\|_\infty\le C\ve$.
+(the first function being defined where $\tilde v/\ve\ge s_*$, and $-\infty$ elsewhere) is a
+subsolution of \eqref{eq:Peps} with $\|\underline V^\ve-\tilde u\|_{L^\infty(Q_T)}\le C\ve$.
 \end{proposition}
 
 \begin{proof}
-$-w^\ve-\ve^2\tilde q$ is a subsolution: it is caloric and
-$(V+w^\ve)f_\ve(V)=-\ve^2\tilde qf_\ve(V)\le0$. The first function, $V_1=\ve\Psi(\tilde v/\ve)$, is a subsolution for
-$s\ge s_*$. For $s\ge1$, $V_1=\tilde u\ge\ve$, there is no reaction and
-$\mathcal R=\Delta\tilde u-\tilde u_t\ge0$. For $s_*\le s<1$ the reaction is
-$\ve^{-1}(\Psi+W)f(\Psi)$ exactly, and the computation of
-Proposition~\ref{q:prop:super} with reversed signs gives
-$\mathcal R\ge\Psi_s(\Delta\tilde v-\tilde v_t)+K\Psi_s-|T_p|$, where
-$\Delta\tilde v-\tilde v_t\ge0$ in $\Omega$ and $\ge-K_0$ outside. Now
-$\Psi_s\ge c>0$ on the whole range $s\ge s_*$, which is bounded below (there is
-no tail), and $|T_p|\le C$; choose $K\ge K_0+C/c$. Since $\Psi(s_*)=-W-\ve\tilde q$,
-$V_1=-w^\ve-\ve^2\tilde q$ exactly at $s=s_*$ and $V_1>-w^\ve-\ve^2\tilde q$ for
-$s>s_*$; thus $\underline V^\ve=V_1$ for $s\ge s_*$, $=-w^\ve-\ve^2\tilde q$ otherwise,
-it is continuous, and it is a subsolution (maximum of two subsolutions, each
-used where it is the larger). Finally $|\underline V^\ve-\tilde u|\le C\ve$ by
-Lemma~\ref{q:lem:inner}(b).
+$-w^\ve-\ve^2\tilde q$ is a subsolution: it is caloric and the reaction term
+$-\ve^2\tilde qf_\ve\le0$. Let $V_1=-w+\ve\Theta(s;W)$. Since $\Theta_s>0$, $V_1>-w-\ve^2\tilde q$
+exactly where $s>s_*$, and $V_1=-w-\ve^2\tilde q$ at $s=s_*$, so $\underline V^\ve$ is
+continuous and it suffices that $V_1$ is a subsolution where $s\ge s_*$.
+
+\emph{Margin.} As in the previous proof, now with the lower bound of
+Lemma~\ref{q:lem:ext} and $|\nabla\tilde u(y)|\ge\sqrt{2M}+\delta$, where $s_*\le s\le1$
+(note $|s_*|\le C\log(1/\gamma)$, so $d\le C\ve\log(1/\ve)\le r_1$),
+\begin{equation}\label{q:eq:marginsub}
+c\delta+\Lambda_1\ve|s|\le|\nabla\tilde v|^2-G_+(W)^2\le C(\delta+\ve|s|).
+\end{equation}
+
+\emph{The equation} where $s_*<s<1$. By \eqref{q:eq:basic} and the equation of $\Theta$,
+\[
+\mathcal R=\Theta_s(\Delta\tilde v-\tilde v_t)+K\Theta_s+\frac1\ve\Theta_{ss}\big(|\nabla\tilde v|^2-G_+^2\big)+T,
+\qquad |T|\le C(1+|s|)|\Theta_{ss}|+C\Theta_s+C\ve(1+|s|)^2\Theta_s .
+\]
+Here $\Delta\tilde v-\tilde v_t\ge-K_1$ and $\ve(1+|s|)^2\le C\ve\log^2(1/\ve)\le1$. Where
+$\Theta\ge0$, $\Theta_{ss}\ge0$ and \eqref{q:eq:marginsub} gives
+$\frac1\ve\Theta_{ss}(|\nabla\tilde v|^2-G_+^2)\ge C(1+|s|)\Theta_{ss}$, so
+$\mathcal R\ge(K-K_1-C)\Theta_s\ge0$. Where $-\ve\tilde q\le\Theta<0$, we have
+$|\Theta_{ss}|\le C(\ve\tilde q+\kappa\Theta_s)$ and $\Theta_s\ge c\sqrt\gamma$, so, by the upper bound
+in \eqref{q:eq:marginsub},
+\[
+\mathcal R\ge(K-K_1-C)\Theta_s-C\tilde q(\delta+\ve\log(1/\ve))-C\log(1/\ve)\,\ve\tilde q
+\ge(K-K_1-C)c\sqrt{c_1\delta}-C\tilde q(\delta+\ve\log(1/\ve))\ge0
+\]
+if $K$ is large and $\delta_*$, $\ve$ are small.
+
+\emph{Region $s\ge1$.} $V_1=\tilde u\ge\ve$, there is no reaction, and
+$\mathcal R=\Delta\tilde u-\tilde u_t\ge0$. At $s=1$, $V_1$ is $C^1$ (Lemma~\ref{q:lem:inner}(b)(ii)).
+
+\emph{Error.} For $s\ge s_*$, $V_1-\tilde u=\ve(\Theta-W-s^+)$ with $-\ve\tilde q\le\Theta\le1+W$ for
+$s\le1$; for $s<s_*$, $\underline V^\ve-\tilde u=-w-\ve^2\tilde q$.
 \end{proof}
 
 \subsection{Rate of convergence to a classical solution}
 
+We recall the setting of \cite{FernandezBonderWolanski2004}: $u_0\ge0$ is Lipschitz with
+compact support, and $w_0$ satisfies the monotonicity condition
+\begin{equation}\label{q:eq:mono}
+\lambda\mapsto w_0(\lambda x,\lambda^2t)\ \text{ is nondecreasing for }\lambda>0
+\end{equation}
+(for instance, $w_0$ constant), so that, since $M$ is increasing,
+$M(w_0(\lambda x,\lambda^2t))\le M(w_0(x,t))$ for $\lambda\le1$, with the reverse inequality for $\lambda\ge1$.
+
 \begin{theorem}\label{q:thm:rate}
-Assume (F), (W), and the setting of \cite{FernandezBonderWolanski2004}: $u_0$ Lipschitz with
-compact support, $w_0$ satisfies the monotonicity condition (2.2) of \cite{FernandezBonderWolanski2004}, and in addition
+Assume (F), (W), \eqref{q:eq:mono}, and
 \begin{itemize}
 \item[(S$'$)] $\Omega_0=\{u_0>0\}$ is strictly starshaped with respect to $0$
 ($x\cdot\nu\ge c_0>0$ on $\partial\Omega_0$), $u_0(\lambda x)\ge u_0(x)$ for
-$0<\lambda<1$, and $u_0$ decreases radially at a definite rate near the
-boundary: $x\cdot\nabla u_0\le-c_0$ in $\Omega_0\cap\{\operatorname{dist}(x,\partial\Omega_0)<\rho_0\}$
-(in particular $u_0\ge c\operatorname{dist}(x,\partial\Omega_0)$ there).
+$0<\lambda<1$, and $x\cdot\nabla u_0\le-c_0$ in
+$\Omega_0\cap\{\operatorname{dist}(x,\partial\Omega_0)<\rho_0\}$ (so $u_0\ge c\operatorname{dist}(x,\partial\Omega_0)$ there).
 \end{itemize}
-Let $v$ be a classical solution of \eqref{eq:P} on $[0,T^*]$ with data $u_0$,
-which is $C^{2,1}$ up to its free boundary $\Gamma_v$ (one sided) with
-$|\nabla v|\ge2\delta_0>0$ near $\Gamma_v$. Let $u^\ve$ solve \eqref{eq:Peps} with
-initial data satisfying $|u_0^\ve-u_0|\le C_0\ve$ on $\Omega_0$ and
-$u_0^\ve=-w^\ve(\cdot,0)$ outside $\Omega_0$ (up to $C_0\ve^2$). Then for every
-$T<T^*$ there is $C$ such that
+Let $v$ be a classical solution of \eqref{eq:P} on $[0,T^*]$ with initial data $u_0$,
+which is $C^{2,1}$ up to its free boundary $\Gamma_v$, with $|\nabla v|\ge2\delta_0>0$
+near $\Gamma_v$. Let $u^\ve$ solve \eqref{eq:Peps} with initial data such that
+$Y_0^\ve=u_0^\ve+w^\ve(\cdot,0)\ge0$, $|u_0^\ve-u_0|\le C_0\ve$ on $\Omega_0$ and
+$u_0^\ve\le-w^\ve(\cdot,0)+C_0\ve^2$ outside $\Omega_0$. Then for every $T<T^*$ there is
+$C$ such that, for $\ve$ small,
 \[
-\sup_{0\le t\le T}\|u^\ve(\cdot,t)-v(\cdot,t)\|_{L^\infty(\R^N)}\le C(\ve+\eta_\ve).
+-C\Big(\ve\log\frac1\ve+\eta_\ve\Big)\le u^\ve-v\le C(\ve+\eta_\ve)\qquad\text{in }\R^N\times[0,T].
 \]
 \end{theorem}
 
 \begin{proof}
-Let $\ve'=\ve+\eta_\ve$ and, for a constant $a$ to be chosen, $\lambda=1-a\ve'$,
-$\lambda'=1-a\ve'/2$. As in \cite[Section~2]{FernandezBonderWolanski2004},
-$v_\lambda(x,t)=\frac1{\lambda'}v(\lambda x,\lambda^2t)$ is a classical supersolution on
-$[0,T^*/\lambda^2]\supset[0,T]$ with
-$|\nabla v_\lambda|\le\sqrt{2M(w_0)}-\delta$ on its free boundary,
-$\delta=(1-\lambda/\lambda')\sqrt{2M_0}\ge c\,a\ve'$ (this uses (2.2), i.e.
-$M(\lambda x,\lambda^2t)\le M(x,t)$). It inherits the regularity of $v$: it is a
-regular strict supersolution with margins $(\delta,\delta_0,r,K_0)$, with
-$\delta_0,r,K_0$ independent of $\ve$. Choose $a\ge1/(cc_*)$, so that
-$\ve+\eta_\ve\le c_*\delta$, and apply Proposition~\ref{q:prop:super}: $V^\ve$ is a
-supersolution with $|V^\ve-v_\lambda|\le C\ve$.
+Let $\ve'=\ve+\eta_\ve$. The constants $C,c$ below do not depend on $\ve$.
 
-\emph{Initial ordering.} We claim $v_\lambda(x,0)-u_0(x)\ge c\,a\ve'$ on
-$\overline\Omega_0$. Near $\partial\Omega_0$ (distance $<\rho_0$), by (S$'$),
-$u_0(\lambda x)-u_0(x)=-\int_\lambda^1x\cdot\nabla u_0(\tau x)\,d\tau\ge c_0(1-\lambda)$ (the
-segment $\{\tau x\}$ stays in the region where $x\cdot\nabla u_0\le-c_0$, or enters the
-interior where $u_0$ is larger); away from $\partial\Omega_0$, $u_0\ge c$ and
-$v_\lambda(x,0)-u_0(x)\ge(\frac1{\lambda'}-1)u_0(\lambda x)\ge c\,a\ve'$. Hence, on $\Omega_0$,
-$V^\ve(x,0)\ge v_\lambda(x,0)-C\ve\ge u_0(x)+(ca-C)\ve'\ge u_0^\ve(x)$ if $a$ is large. Outside
-$\Omega_0$, $V^\ve\ge-w^\ve+\ve^2\tilde q\ge u_0^\ve$ (by Lemma~\ref{q:lem:inner}(ii),
-$\Psi>-W$). By comparison, $u^\ve\le V^\ve\le v_\lambda+C\ve$, and
-$v_\lambda-v\le C(1-\lambda)\le Ca\ve'$ on $[0,T]$ ($v$ is Lipschitz in $x$ and
-$1/2$-H\"older in $t$, and bounded). Thus $u^\ve-v\le C\ve'$.
+\emph{Upper bound.} For $a>0$ let $\lambda=1-a\ve'$, $\lambda'=1-a\ve'/2$ and
+$v_\lambda(x,t)=\frac1{\lambda'}v(\lambda x,\lambda^2t)$. As in \cite[Section~2]{FernandezBonderWolanski2004},
+by \eqref{q:eq:mono} $v_\lambda$ is a classical supersolution on $[0,T]$ (for $\ve$ small) with
+$|\nabla v_\lambda|=\frac{\lambda}{\lambda'}|\nabla v|$ on its free boundary, so that it is a regular
+strict supersolution with margins $(\delta,\delta_0,r,K_0)$, $\delta_0,r,K_0$ independent of $\ve$,
+and $c\,a\ve'\le\delta\le C a\ve'$. Choose $a$ large so that $\ve'\le c_*\delta$, and apply
+Proposition~\ref{q:prop:super} with $\tilde q=\max\{1,C_0\}$: $V^\ve$ is a supersolution with
+$|V^\ve-v_\lambda|\le C\ve$.
 
-\emph{Lower bound.} Same argument with $\lambda=1+a\ve'$, $\lambda'=1+a\ve'/2$:
-$v_\lambda$ is a regular strict subsolution with margin $\delta\ge ca\ve'$
-(now $M(\lambda x,\lambda^2t)\ge M(x,t)$) and, by the same computation,
-$u_0-v_\lambda(\cdot,0)\ge c\,a\ve'$ on $\overline{\lambda^{-1}\Omega_0}$, while on
-$\Omega_0\setminus\lambda^{-1}\Omega_0$ (a strip of width $\ge c(1-1/\lambda)$ along
-$\partial\Omega_0$) $v_\lambda(\cdot,0)=0$ and $u_0\ge0$. Proposition~\ref{q:prop:sub} gives a subsolution
-$\underline V^\ve\le u^\ve$ (initial ordering as above, using
-$\underline V^\ve=-w^\ve-\ve^2\tilde q\le u_0^\ve$ in the burnt region), and
-$u^\ve\ge\underline V^\ve\ge v_\lambda-C\ve\ge v-C\ve'$.
+\emph{Initial ordering.} By (S$'$), $v_\lambda(x,0)-u_0(x)\ge c\,a\ve'$ on $\overline\Omega_0$: near
+$\partial\Omega_0$, $u_0(\lambda x)-u_0(x)=-\int_\lambda^1x\cdot\nabla u_0(\tau x)\,d\tau\ge c_0(1-\lambda)$, and away
+from it $v_\lambda(x,0)-u_0(x)\ge(\frac1{\lambda'}-1)u_0(\lambda x)\ge c\,a\ve'$. Hence, on $\Omega_0$,
+$V^\ve(\cdot,0)\ge v_\lambda(\cdot,0)-C\ve\ge u_0+(ca-C)\ve'\ge u_0^\ve$ if $a$ is large. Outside
+$\Omega_0$, $V^\ve\ge-w^\ve+\ve^2\tilde q\ge u_0^\ve$ (because $\Theta>0$). By comparison,
+$u^\ve\le V^\ve\le v_\lambda+C\ve$. Finally $v_\lambda-v\le C(1-\lambda)$ on $[0,T]$, because $v$ is bounded
+and Lipschitz in $x$ and in $t$ ($v_t$ is bounded up to $\Gamma_v$ and $v$ is continuous).
+Thus $u^\ve-v\le C\ve'$.
+
+\emph{Lower bound.} Now let $\lambda=1+a\ve'+A\ve\log(1/\ve)$, $\lambda'=1+(\lambda-1)/2$, and
+$v_\lambda$ as above: a regular strict subsolution with margin $\delta\ge c(\lambda-1)$, and
+$\delta\le C(\lambda-1)\le\delta_*$ for $\ve$ small. Proposition~\ref{q:prop:sub} gives the subsolution
+$\underline V^\ve$, with $\tilde q=1$, and we check that $\underline V^\ve(\cdot,0)\le u_0^\ve$. Where
+$\underline V^\ve=-w-\ve^2\tilde q$ this follows from $Y_0^\ve\ge0$. Otherwise
+$\underline V^\ve=V_1=-w+\ve\Theta(s;W)$, which is $\le-w\le u_0^\ve$ where $s\le s_c$. It remains to
+consider points with $s>s_c$ at $t=0$. Note that $V_1\le\max\{v_\lambda,\ve\}$, since
+$\Theta\le1+W$ for $s\le1$.
+\begin{itemize}
+\item If $x\in\lambda^{-1}\Omega_0=\{v_\lambda(\cdot,0)>0\}$: as above $u_0\ge v_\lambda(x,0)+c\,a\ve'$, so
+$u_0^\ve\ge v_\lambda+(ca-C_0)\ve'\ge V_1$ for $a$ large.
+\item Otherwise let $d$ be the distance from $x$ to $\partial\Omega_0$ (zero if $x\notin\Omega_0$) and
+$D$ the distance to $\lambda^{-1}\partial\Omega_0$. Strict starshapedness gives $d+D\ge c(\lambda-1)$.
+If $x\in\Omega_0$ and $d\ge c(\lambda-1)/2$, then $u_0\ge c\,d\ge c\,a\ve'\ge V_1+C_0\ve$. If not,
+$D\ge c(\lambda-1)/2\ge cA\ve\log(1/\ve)$, so $s=\tilde v(x,0)/\ve\le-cD/\ve\le-cA\log(1/\ve)\le s_c$
+if $A$ is large, by Lemma~\ref{q:lem:inner}(b)(i) ($s_c\ge s_*\ge-C\log(1/\gamma)$ and
+$\gamma\ge c\ve$); this contradicts $s>s_c$.
+\end{itemize}
+By comparison, $u^\ve\ge\underline V^\ve\ge v_\lambda-C\ve\ge v-C(\lambda-1)-C\ve$.
 \end{proof}
 
-\begin{remark}
+\begin{remark}\label{q:rem:rate}
 \begin{enumerate}
-\item The only place where $\delta$ enters is the admissibility of the
-parameters, $\ve+\eta_\ve\le c_*\delta$; the constant of Proposition~\ref{q:prop:super}
-does not depend on $\delta$. This is what allows $1-\lambda\sim\ve$ in the
-rescaling argument, and gives the rate $\ve$ rather than $\sqrt\ve$.
-\item The theorem gives a rate for the convergence proved (by compactness) in
-\cite{FernandezBonderWolanski2000} and for the uniqueness of \cite[Theorem~5.3]{FernandezBonderWolanski2004},
-under the additional regularity of $v$. The rate $O(\ve)$ is sharp: the
-level set $\{u^\ve=\ve\}$ is at distance $\ve/\sqrt{2M}+o(\ve)$ from $\Gamma_v$
-(travelling waves, and the experiments).
-\item Combined with the discrete estimates of Section~\ref{sec:analysis}, this is
-the missing link for general data: the discrete solution approximates $u^\ve$
-(away from extinction and with a front that the mesh follows), and $u^\ve$
-approximates $v$ at rate $\ve$.
+\item The strictness $\delta$ enters only through the admissibility conditions
+$\ve+\eta_\ve\le c_*\delta$; the constants of Propositions~\ref{q:prop:super} and \ref{q:prop:sub}
+do not depend on $\delta$. This is what allows $1-\lambda\sim\ve$ in the rescaling
+argument. It rests on two choices: the profiles are parametrized by $W$ only,
+with $G_\pm(W)^2-2M(W)=\pm2\gamma$ independent of $W$, and the extension
+$\tilde v$ has a gradient that is monotone in the normal direction in the burnt
+region; the resulting margin absorbs the terms coming from the variation of
+$W$ across the layer.
+\item The logarithm in the lower bound comes only from the initial ordering:
+when $Y_0^\ve=0$ in the burnt region, the subsolution must reach the burnt
+state $u=-w$ within the initial gap, and its profile takes a length
+$O(\log(1/\gamma))$ to do so. If the data have an exponential tail,
+$Y_0^\ve\ge c\,\ve e^{-\beta\operatorname{dist}(x,\Omega_0)/\ve}$ with $\beta$ small (for instance data
+given by the travelling wave profile), the bound
+$\Theta\le(1+W)e^{c(s-1)}$ of Lemma~\ref{q:lem:inner}(b) gives the ordering with $A=0$, and
+the rate is $O(\ve+\eta_\ve)$ on both sides. We do not know whether the
+logarithm is needed for data with $Y_0^\ve=0$ in the burnt region; the experiments
+of Section~\ref{sec:experiments} (with such data) do not show it.
+\item The rate $O(\ve)$ cannot be improved in general: for travelling waves the
+level set $\{u^\ve=\ve\}$ is at distance $\ve/\sqrt{2M}+O(\ve^2\log\frac1\ve)$ from the free
+boundary (Proposition~\ref{prop:speed} and Lemma~\ref{an:lem:profile}).
+\item Classical solutions that are $C^{2,1}$ up to the free boundary exist locally in time
+for smooth compatible data (see \cite{BaconneauLunardi2004} for the problem with constant
+$M$); the radial self-similar solutions of Section~\ref{sec:exact} are explicit examples that
+satisfy all the assumptions on $[0,T^*]$ for every $T^*<T$.
 \end{enumerate}
 \end{remark}
 
@@ -667,6 +783,13 @@ The cost of the Eulerian version is dominated by the number of time steps,
 which grows like $\ve^{-1}$ to $\ve^{-3/2}$: on a mesh that is fixed between
 remeshings, the front crosses $O(\ve^{-1})$ fine cells, and the time step must
 resolve each crossing. In the ALE version the nodes travel with the front.
+In an \emph{arbitrary Lagrangian--Eulerian} (ALE) formulation the
+computational nodes move with a velocity that is chosen freely: it is neither
+zero (Eulerian description, fixed nodes) nor the velocity of the material
+(Lagrangian description), and the equation is written along the node
+trajectories, so that the motion of the nodes appears as a convection term
+\cite{HuangRussell2011}. Here the node velocity is chosen so that the fine band
+follows the flame front.
 \begin{itemize}
 \item \emph{Moving nodes.} Node $i$ moves with velocity $\dot x_i=v_n\chi(x_i)$,
 where $\chi=1$ on a neighbourhood of radius $R_1$ of the band and decays
@@ -822,9 +945,10 @@ $c_{\rm(S)}-c_\ve$ with respect to the exact speed of \eqref{eq:Peps}.}\label{ta
 
 We prove error estimates, uniform in $\ve$, for the monotone schemes in the
 travelling wave case: one space dimension with $w^\ve\equiv\ve w_0$
-constant. Combined with Theorem~\ref{q:thm:rate} they give the convergence of the
-discrete solutions to the limit problem; the extension of the discrete
-barriers to general data is discussed in Section~\ref{sec:conclusions}.
+constant; the distance to the limit travelling wave then follows from
+Lemma~\ref{an:lem:profile}(5). The extension of the discrete barriers to general
+data, where Theorem~\ref{q:thm:rate} would provide the link with the limit
+problem, is discussed in Section~\ref{sec:conclusions}.
 
 \subsection{Setting}\label{an:sec:setting}
 
@@ -1486,7 +1610,8 @@ ALE solutions are averaged over whole remeshing cycles: the front position
 oscillates by about $\pm3\cdot10^{-4}$ within a cycle, because the mesh outside
 the rigid zone is distorted and then reset, and least-squares fits over windows
 that are not aligned with the cycles are biased by about $10^{-4}$. The scripts
-that reproduce every figure and table are available with the code.
+that reproduce every figure and table are in the repository of the code
+(see the end of the introduction).
 
 \subsection{The meshes: refinement and coarsening}
 
@@ -1782,7 +1907,7 @@ for $\ve\ge0.01$ the $\ve$ term dominates and the ALE and BDF results agree; for
 smaller $\ve$ the time-step term dominates (with $\Delta t=1.25\cdot10^{-4}$ the shifted
 front error is $1.26\cdot10^{-3}$ at $\ve=0.01$ and $3.8\cdot10^{-4}$ at $\ve=0.001$).
 In all cases the unshifted front error is $\approx\ve/\sqrt{2M}$. This is consistent
-with Theorem~\ref{q:thm:rate} ($u^\ve-v=O(\ve)$) combined with an $\ve$-independent
+with Theorem~\ref{q:thm:rate} ($u^\ve-v=O(\ve)$ up to a logarithm) combined with an $\ve$-independent
 $O(\Delta t)$ discretization error.
 
 \begin{figure}[ht]
@@ -1867,8 +1992,8 @@ element meshes is the natural next step.
 \section{Conclusions and outlook}\label{sec:conclusions}
 We have shown that, when the limit problem \eqref{eq:P} has a classical
 solution that is $C^{2,1}$ up to the free boundary and the data are strictly
-starshaped, the solutions of \eqref{eq:Peps} converge with rate $O(\ve)$
-(Theorem~\ref{q:thm:rate}), a quantitative version of the convergence theorems
+starshaped, the solutions of \eqref{eq:Peps} converge with rate $O(\ve)$ from
+above and $O(\ve\log(1/\ve))$ from below (Theorem~\ref{q:thm:rate}), a quantitative version of the convergence theorems
 of \cite{FernandezBonderWolanski2004}. For planar waves the first order term is
 explicit (Proposition~\ref{prop:speed}), and its sign changes at $w_0\approx0.564$.
 
