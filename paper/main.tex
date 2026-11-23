@@ -272,9 +272,9 @@ blow-up argument by contradiction. We replace both steps by an explicit
 barrier: the inner profile composed with the supersolution itself. The
 approximation error is $O(\ve)$ with a constant that does not depend on the
 strictness, which yields the rate $O(\ve)$ for the convergence of $u^\ve$ to a
-classical solution (Theorem~\ref{q:thm:rate}). Some standard ingredients (smooth
+classical solution (Theorem~\ref{q:thm:rate}). The standard ingredients (smooth
 dependence of the inner profiles on parameters, comparison for \eqref{eq:Peps},
-the extension $\tilde v$) are only sketched.
+the extension $\tilde v$) are proved in condensed form.
 
 \subsection{Setting}
 Let $Q_T=\R^N\times(0,T)$ and consider \eqref{eq:Peps} with $w^\ve$ caloric, and the limit problem \eqref{eq:P}. We write
@@ -340,7 +340,7 @@ $f(-W)\ge f(1-\delta_1/2)>0$) satisfies
 \begin{equation}\label{q:eq:en}
 \tfrac{G^2}{2}P(\Psi)^2=B(\Psi;W)-\kappa\int_{-W}^{\Psi}P\,d\Psi .
 \end{equation}
-As in the travelling wave lemma, $P>0$ as long as $\Psi<1$ and
+As in the proof of Lemma~\ref{an:lem:profile}, $P>0$ as long as $\Psi<1$ and
 $P\le\sqrt{2B(\Psi;W)}/G$, so $0\le\kappa\int P\le\kappa C$. We look for
 $\Psi_m=1-\theta$ with $P(\Psi_m)=1$, i.e.
 $B(\Psi_m;W)=\frac{G^2}2+\kappa\int_{-W}^{\Psi_m}P$. The right-hand side lies in
@@ -359,8 +359,7 @@ $(\Psi+W)f(\Psi)\ge c(\gamma)>0$ for $\Psi\le\Psi_m\le1-c(\gamma)$; the bound on
 follows from the exponential tail and $P\ge c$ on $[\Psi(-S),\Psi_m]$.
 (iii): near the saddle, $\Psi''=\frac1{G^2}\big((\Psi+W)f(\Psi)-\kappa P\big)$ and
 $P\simeq\lambda_+(\Psi+W)$, so $|\Psi''|\le C(\Psi+W)\le CP$; away from it $P\ge c$
-and $\Psi''$ is bounded. The tail estimates are the same as in the travelling
-wave lemma (uniform decay rate $\lambda_0=\frac12\sqrt{f(1-\delta_1/2)}/g_2$).
+and $\Psi''$ is bounded. The tail estimates are proved as in Lemma~\ref{an:lem:profile}(4) (uniform decay rate $\lambda_0=\frac12\sqrt{f(1-\delta_1/2)}/g_2$).
 (iv): $C^2$ dependence on $(G,W,\kappa)$ of the unstable manifold and of the
 transversal intersection defining $\Psi_m$ (implicit function theorem,
 $\partial_{\Psi_m}[B-\frac{G^2}{2}-\kappa\int P]=(\Psi_m+W)f(\Psi_m)-\kappa\ge c>0$).
@@ -674,8 +673,8 @@ independent of $\ve$ (Section~\ref{sec:experiments}).
 % ---------------------------------------------------------------------------
 \section{A provably monotone version of the scheme}\label{sec:theory}
 
-The free boundary community will rightly ask which properties of
-\eqref{eq:Peps} survive the discretization. In this section we isolate a
+A convergence theory for the scheme requires to know which structural
+properties of \eqref{eq:Peps} survive the discretization. In this section we isolate a
 simple version of the method for which the basic structural properties can
 be proved: a discrete comparison principle that holds for every time step,
 positivity of the reactant, and $L^\infty$ bounds uniform in $\ve$. These are
@@ -697,12 +696,8 @@ level while the reactant is implicit. Subtracting, $W^n=Y^n-U^n$ solves the
 implicit Euler scheme for the heat equation, exactly as $w^\ve=Y^\ve-u^\ve$
 is caloric. Each step requires two tridiagonal solves.
 
-We assume
-\begin{itemize}
-\item[(F)] $f$ is Lipschitz and \emph{nonincreasing}, $f>0$ on $(-\infty,1)$,
-$f=0$ on $[1,\infty)$.
-\end{itemize}
-Monotonicity of $f$ is not needed in \cite{FernandezBonderWolanski2000}; it
+We assume (F) of Section~\ref{sec:rate}: $f$ is Lipschitz and \emph{nonincreasing},
+$f>0$ on $(-\infty,1)$, $f=0$ on $[1,\infty)$. Monotonicity of $f$ is not needed in \cite{FernandezBonderWolanski2000}; it
 holds for $f(s)=(1-s)^+$ and for Arrhenius-type rates (recall that $u$ is
 minus the temperature).
 
@@ -797,8 +792,10 @@ $c_{\rm(S)}-c_\ve$ with respect to the exact speed of \eqref{eq:Peps}.}\label{ta
 \section{$\ve$-uniform error estimates}\label{sec:analysis}
 
 We prove error estimates, uniform in $\ve$, for the monotone schemes in the
-travelling wave case. The setting is one space dimension with $w^\ve\equiv\ve w_0$
-constant; the extension to general data is discussed in Section~\ref{sec:conclusions}.
+travelling wave case: one space dimension with $w^\ve\equiv\ve w_0$
+constant. Combined with Theorem~\ref{q:thm:rate} they give the convergence of the
+discrete solutions to the limit problem; the extension of the discrete
+barriers to general data is discussed in Section~\ref{sec:conclusions}.
 
 \subsection{Setting}\label{an:sec:setting}
 
@@ -807,9 +804,8 @@ constant, so $Y=u+\ve w_0$ and
 \begin{equation}\label{an:eq:P}
 u_t=u_{xx}-g_\ve(u),\qquad g_\ve(s)=(s+\ve w_0)f_\ve(s),\quad f_\ve(s)=\ve^{-2}f(s/\ve).
 \end{equation}
-\textbf{(F)} $f$ is Lipschitz (constant $L_f$), nonincreasing, $f>0$ on
-$(-\infty,1)$ and $f=0$ on $[1,\infty)$. \textbf{(F$'$)} In addition
-$f\in C^{1,1}(\R)$.
+We assume (F) (with Lipschitz constant $L_f$) and, when stated,
+\textbf{(F$'$)}: in addition $f\in C^{1,1}(\R)$.
 
 \subsubsection*{Scheme} Uniform grid $x_j=jh$, $j\in\Z$, time step $\Delta t$,
 $t_n=n\Delta t$, $\delta^2V_j=(V_{j+1}-2V_j+V_{j-1})/h^2$. For bounded
@@ -817,8 +813,9 @@ sequences $V=(V^n_j)$ define
 \begin{equation}\label{an:eq:L}
 \Lop[V]^n_j=\frac{V^{n+1}_j-V^n_j}{\Delta t}-\delta^2V^{n+1}_j+f_\ve(V^n_j)\,\big(V^{n+1}_j+\ve w_0\big).
 \end{equation}
-The scheme (S) is $\Lop[U]=0$ with $U^0$ given. (It is the scheme of the
-paper with $W\equiv\ve w_0$; constants are discrete-caloric.)
+The scheme (S) is $\Lop[U]=0$ with $U^0$ given; it is the scheme of
+Section~\ref{sec:theory} on a uniform grid with $W\equiv\ve w_0$ (constants are
+discrete-caloric).
 
 \subsubsection*{Comparison on $\Z$} A bounded $V$ is a \emph{supersolution} if
 $\Lop[V]\ge0$ and $V+\ve w_0\ge0$; a \emph{subsolution} if $\Lop[V]\le0$.
@@ -830,7 +827,7 @@ analogous statement holds for subsolutions.
 \end{lemma}
 
 \begin{proof}
-As in the paper, $D=U^{n+1}-V^{n+1}$ satisfies
+As in Lemma~\ref{lem:comparison}, $D=U^{n+1}-V^{n+1}$ satisfies
 $(\Delta t^{-1}+F_j)D_j-\delta^2D_j\le0$ for all $j$, where
 $F=f_\ve(U^n)\ge0$. Let $s=\sup_jD_j$ and assume $s>0$. Given $\eta>0$ pick $j$
 with $D_j>s-\eta$. Then $-\delta^2D_j\ge\frac{2}{h^2}(D_j-s)\ge-\frac{2\eta}{h^2}$
@@ -847,8 +844,8 @@ $c=c_\ve$,
 \end{equation}
 normalized by $\Phi(0)=\ve$. Then $\Phi(z)=A-(A-\ve)e^{-cz}$ for $z\ge0$, and
 $\Phi(z)=\ve\varphi(z/\ve)$ for $z\le0$, where $\varphi$ solves
-$\varphi''+\sigma\varphi'=(\varphi+w_0)f(\varphi)$, $\sigma=\ve c$ (see the
-paper). Let $c_0=\sqrt{2M}/A$ and $\kappa_0=\sqrt{f(-w_0)}$.
+$\varphi''+\sigma\varphi'=(\varphi+w_0)f(\varphi)$, $\sigma=\ve c$ (Section~\ref{sec:exact}).
+Let $c_0=\sqrt{2M}/A$.
 
 \begin{lemma}[Profile estimates]\label{an:lem:profile}
 Assume (F) and let $a=f(-w_0)>0$, $\kappa_0=\sqrt a$. There are $\ve_0>0$ and
@@ -1092,8 +1089,9 @@ pointwise of size $\Delta t/\ve^2$ (lagged reaction) and $h^2/\ve^3$
 $\sigma\Phi'$, so that the front is allowed to drift at speed $O(\rho)$.
 The actual drift is the \emph{average} of the truncation error against the
 adjoint eigenfunction of the linearized operator, which is a factor $\ve$
-smaller: the experiments give speed errors $\approx-0.23\,\Delta t/\ve$ and
-$\approx0.016\,(h/\ve)^2\cdot\ve^0$, i.e. $\Delta t/\ve$ and $(h/\ve)^2$.
+smaller: the experiments give speed errors $\approx-0.23\,\Delta t/\ve$ for the
+time step, and $O(h/\ve)$ for the mesh size with $f=(1-s)^+$
+(Section~\ref{sec:experiments}); see Section~\ref{an:sec:sharp}.
 \end{remark}
 
 
@@ -1212,23 +1210,19 @@ $|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma t_n+q_n\le C(\rho_h+\mu)$ for $t_n\le T$,
 and the second estimate follows from Lemma~\ref{an:lem:profile}(1),(5).
 \end{proof}
 
-\noindent\textbf{Numerical check.} Rigid mesh translating with $v=c_\ve$
-($\mu=0$), $f=(1-s)^+$, $w_0=0$, $h_f=\ve/16$: the speed error
-$c_{\rm ALE}-c_\ve$ is $|{\cdot}|\le5\cdot10^{-6}$ for $\ve=0.005$ and
-$\le8\cdot10^{-7}$ for $\ve=0.001$, for $\Delta t=0.1,0.05,0.02,0.01$, with no
-trend in $\Delta t$ --- although $\Delta t=0.1$ is $10^5\ve^2$ for $\ve=10^{-3}$.
-This is the content of Theorem~\ref{an:thm:ale}: the time step plays no role for
-the travelling wave.
+For a mesh translating rigidly with $v=c_\ve$ ($\mu=0$) the theorem contains no
+time step at all; this is confirmed in Figure~\ref{fig:B3}, where $\Delta t$ goes up to
+$10^5\ve^2$.
 
 \begin{remark}
 \begin{enumerate}
 \item The absence of $\Delta t$ is specific to the travelling wave, which is
 steady in the moving frame. For general data the solution evolves in the frame
 of the front and an $O(\Delta t)$ term (with an $\ve$-independent constant) is
-expected; this is what the experiments show ($\approx0.05\,\Delta t$).
+expected; this is what the experiments show (Figure~\ref{fig:B4}).
 \item The mesh-velocity error $\mu$ enters linearly: the comparison argument
-needs the barrier to outrun the mismatch between mesh and front. In practice
-$v$ is the front speed measured in the previous steps, so $\mu=O(\Delta t)$.
+needs the barrier to outrun the mismatch between mesh and front. In the
+implementation $v_n$ is chosen implicitly (Section~\ref{an:sec:impl}).
 For $v=0$ (Eulerian scheme) \eqref{an:eq:sigmamu} fails and one falls back on
 Theorem~\ref{an:thm:main}.
 \item On band meshes the negative powers of $\ve$ only affect the mesh size in
@@ -1349,11 +1343,7 @@ which has $O(\log(1/\ve)/(h_f/\ve))$ nodes.
 \item $h_c$ appears to first order because the truncation error of the
 three-point formulas is first order on the geometric transition; on a mesh that
 is uniform outside the band (or with supraconvergence arguments) it should be
-$h_c^2$.
-\item In the code the rigid zone is not the whole line (nodes far away do not
-move) and the mesh is occasionally rebuilt; both introduce only $O(h_c)$ or
-$O(h_c^2)$ perturbations away from the front, at the price of the positive
-(linear) interpolation at remeshing, which preserves the comparison principle.
+$h_c^2$, which is what the experiments show (Figure~\ref{fig:B2}).
 \end{enumerate}
 \end{remark}
 
@@ -1395,7 +1385,8 @@ $\frac12(\dot x_i-c+\sigma)^2\Delta t|\Phi''|\le C\Delta t\,|\Phi''|$. Outside t
 zone $|\Phi''|\le Ce^{-cR_1}$ (ahead) or is exponentially small (behind), so
 this adds $O(T\Delta t\,e^{-cR_1})$ to the error. This explains the observation
 that the rigid zone must contain several decay lengths $1/c$ of the profile
-ahead of the front (in the code $R_1\ge\max(2,3/c)$): otherwise an
+ahead of the front (in the code the rigid zone extends a distance
+$\ell_0\ge\max(2,3/c)$ beyond the band): otherwise an
 $O(\Delta t)$ error appears.
 
 \begin{corollary}
@@ -1420,15 +1411,17 @@ spans the kernel of the adjoint. The barrier
 $V=\Phi(z+\xi)+\Delta t\,\Psi_1(z+\xi)+h^2\Psi_2(z+\xi)\pm q$ with
 $\xi'=\Delta t\lambda_1+h^2\lambda_2+$(higher order) has a residual one
 order smaller, and the front drift is $\Delta t\lambda_1+h^2\lambda_2$. Scaling
-gives $\lambda_1=O(1/\ve)$ and $\lambda_2=O(1/\ve^2)$, which are exactly the
-observed $\Delta t/\ve$ and $(h/\ve)^2$. The technical points are: bounds on
+gives $\lambda_1=O(1/\ve)$ and, under (F$'$), $\lambda_2=O(1/\ve^2)$, i.e.\ drifts
+$\Delta t/\ve$ and $(h/\ve)^2$. For $f=(1-s)^+$ the kink of $f$ at $1$ produces a
+truncation error of size $h/\ve^2$ concentrated on one cell, whose projection
+is $O(h/\ve)$; this is the first-order behaviour of Figure~\ref{fig:B2}. The technical points are: bounds on
 $\Psi_i$ and its derivatives uniform in $\ve$ (in the inner variables this is a
 regular problem), the behaviour of $\psi^*$ ahead of the front ($e^{cz}$
 growth against the $e^{-cz}$ decay of $\Phi'$: $\psi^*$ is bounded), and the
 nonsmoothness of $f$ at $1$ when only (F) holds.
 
 
-\subsubsection*{Numerical check of the two mechanisms}
+\subsubsection*{Numerical evidence}
 A direct computation evaluates the truncation
 error $\tau=\Lop[\Phi(x-ct)]$ of (S) on the exact wave ($f=(1-s)^+$, $A=1$),
 averaged over the position of the front relative to the grid.
@@ -1444,17 +1437,9 @@ $\delta c/(\Delta t/\ve)=-0.2351,-0.2345,-0.2342$ for $\ve=0.02,0.01,0.005$
 $\approx-0.23\,\Delta t/\ve$ measured in the simulations of (S). The
 spatial part of $\delta c$ is below $4\cdot10^{-5}$ for $h\le\ve/8$.
 \end{itemize}
-This supports the corrector programme of Section~\ref{an:sec:sharp}: the sharp
-estimate should read $C_T(\ve+\Delta t/\ve+\text{(small spatial term)})$.
-
-\medskip
-\noindent\textbf{Plan.}
-(1) Complete Lemma~\ref{an:lem:profile} (ODE phase-plane, uniform in $\sigma$).
-(2) Numerical check of the barriers of Theorem~\ref{an:thm:main} (sign of $\Lop[V]$).
-(3) Correctors and the sharp estimate.
-(4) General data in 1D/radial with a classical solution: quantitative
-version of \cite[Theorem~4.1]{FernandezBonderWolanski2004} for the continuous problem, then the
-discrete barriers as above.
+This supports the corrector approach: for the Eulerian scheme the sharp
+estimate should read $C_T(\ve+\Delta t/\ve+h_f/\ve)$ for Lipschitz $f$ and
+$C_T(\ve+\Delta t/\ve+(h_f/\ve)^2)$ under (F$'$). We do not pursue this here.
 
 
 % ---------------------------------------------------------------------------
