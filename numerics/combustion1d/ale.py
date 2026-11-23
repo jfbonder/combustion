@@ -1,4 +1,4 @@
-"""Monotone scheme (S) in ALE form: the mesh follows the flame (planar, N = 1).
+"""Monotone scheme (S) in ALE form: the mesh follows the flame (planar or radial).
 
 Nodes move with velocity  xdot_i = v(t) chi(x_i),  chi = 1 on a neighbourhood of the fine band,
 decaying linearly to 0 over a distance ell0 (nodes far from the front do not
@@ -15,7 +15,10 @@ of the Eulerian scheme still holds.
 
 The band travels rigidly with the front, so inside the band the reaction layer
 is (nearly) steady in the node frame and the time step is not limited by
-eps. The mesh is rebuilt (on the lattice of the current band, hence exactly in
+eps. By default the mesh velocity is IMPLICIT: at each step v is chosen (secant
+method, 2-4 solves) so that the front ends the step at the band reference
+point; this keeps the mesh-velocity error small also for accelerating fronts
+(e.g. extinction), where an explicit estimate lags by (acceleration)*dt. The mesh is rebuilt (on the lattice of the current band, hence exactly in
 the band) only when the transition region has been distorted.
 """
 
@@ -54,8 +57,9 @@ def _matrix(Lap, x, xdot, react, dt):
 
 
 def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=None,
-                 control_steps=10, recenter_time=None, remesh_distance=None,
-                 snapshot_times=(), fixed_velocity=None):
+                 recenter_time=None, remesh_distance=None,
+                 snapshot_times=(), fixed_velocity=None, N=1, record_mesh=False,
+                 implicit=True):
     mp = mesh or MeshParams()
     # the rigidly moving zone must contain several decay lengths 1/c of the
     # profile ahead of the front; otherwise the end of the zone, where u is not
@@ -73,8 +77,11 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
     # decaying linearly to 0 over a distance ell0; nodes far away do not move
     R1 = (max(mp.K_burnt, mp.K_fresh) + mp.K_margin) * eps + 0.5 * ell0
 
+    ell_end = min(0.5, 0.1 * L)       # taper near the ends (no node may cross r = 0)
+
     def chi(z):
-        return np.clip(1.0 - (np.abs(z - xc) - R1) / ell0, 0.0, 1.0)
+        c = np.clip(1.0 - (np.abs(z - xc) - R1) / ell0, 0.0, 1.0)
+        return c * np.clip(z / ell_end, 0.0, 1.0) * np.clip((L - z) / ell_end, 0.0, 1.0)
 
     res = Result(t=None, front=None)
     nsteps = int(round(t_end / dt))
@@ -86,38 +93,70 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
     moved = 0.0
     t_prev, xf_prev = 0.0, xf
     pending = sorted(snapshot_times)
-    for n in range(nsteps):
+    if record_mesh:
+        res.mesh_history.append((0.0, x.copy()))
+    def advance(v):
+        """One step of (S) on the mesh moving with velocity v*chi."""
         xdot = v * chi(x)
+        xdot[0] = xdot[-1] = 0.0          # the ends of [0, L] stay fixed
         xn = x + dt * xdot
-        Lap = laplacian(xn, 1)
+        Lap = laplacian(xn, N)
         F = f_eps(u, eps)
-        y = solve_banded((1, 1), _matrix(Lap, xn, xdot, F, dt), y / dt)
-        u = solve_banded((1, 1), _matrix(Lap, xn, xdot, np.zeros_like(F), dt), u / dt - F * y)
-        x = xn
+        yn = solve_banded((1, 1), _matrix(Lap, xn, xdot, F, dt), y / dt)
+        un = solve_banded((1, 1), _matrix(Lap, xn, xdot, np.zeros_like(F), dt), u / dt - F * yn)
+        xfn, _ = find_front(xn, un, eps)
+        return xn, un, yn, xfn
+
+    for n in range(nsteps):
+        if implicit and fixed_velocity is None:
+            # implicit mesh velocity: choose v so that, at the end of the step,
+            # the front sits at the band reference point xc + dt v (secant method)
+            def gap(vv):
+                out = advance(vv)
+                return (np.inf if out[3] is None else out[3] - (xc + dt * vv)), out
+            v0, (g0, out0) = v, gap(v)
+            v1 = v0 + 0.05 * abs(v0) + 0.01
+            g1, out1 = gap(v1)
+            for _ in range(8):
+                if not np.isfinite(g0) or not np.isfinite(g1) or g1 == g0:
+                    break
+                v2 = v1 - g1 * (v1 - v0) / (g1 - g0)
+                v0, g0, out0 = v1, g1, out1
+                v1 = v2
+                g1, out1 = gap(v1)
+                if abs(g1) < 1e-3 * h_f:
+                    break
+            if np.isfinite(g1):
+                v, (x, u, y, xf) = v1, out1
+            else:
+                v, (x, u, y, xf) = v0, out0
+        else:
+            x, u, y, xf = advance(v)
         xc += dt * v
-        moved += dt * v
+        moved += dt * abs(v)
         t = (n + 1) * dt
         res.n_steps += 1
-        if (n + 1) % control_steps == 0 or n == nsteps - 1:
-            xf, _ = find_front(x, u, eps)
-            ts.append(t)
-            fronts.append(xf)
-            # speed estimate + relaxation of the front towards the band centre
+        ts.append(t)
+        fronts.append(xf)
+        if not implicit and fixed_velocity is None:
             v_meas = (xf - xf_prev) / (t - t_prev)
-            if fixed_velocity is None:
-                v = v_meas + (xf - xc) / recenter_time
-            t_prev, xf_prev = t, xf
-            if pending and t >= pending[0] - 1e-12:
-                res.snapshots[pending.pop(0)] = (x.copy(), u.copy(), (y - u).copy())
-            if moved > remesh_distance:
-                band_nodes = x[np.abs(np.diff(x, prepend=x[0] - 1)) < 1.5 * h_f]
-                anchor = band_nodes[0] if band_nodes.size else 0.0
-                x_new, _ = build_mesh(x, u, eps, L, mp, anchor=anchor)
-                u, y = np.interp(x_new, x, u), np.interp(x_new, x, y)
-                x = x_new
-                xc = xf
-                moved = 0.0
-                res.n_remesh += 1
-            res.n_nodes.append(x.size)
+            v = v_meas + (xf - xc) / recenter_time
+        t_prev, xf_prev = t, xf
+        if pending and t >= pending[0] - 1e-12:
+            res.snapshots[pending.pop(0)] = (x.copy(), u.copy(), (y - u).copy())
+        # rebuild (exactly on the band lattice) when the mesh has travelled far
+        # or when the front has drifted from the band reference point
+        if moved > remesh_distance or abs(xf - xc) > 0.25 * mp.K_margin * eps:
+            band_nodes = x[np.abs(np.diff(x, prepend=x[0] - 1)) < 1.5 * h_f]
+            anchor = band_nodes[0] if band_nodes.size else 0.0
+            x_new, _ = build_mesh(x, u, eps, L, mp, anchor=anchor)
+            u, y = np.interp(x_new, x, u), np.interp(x_new, x, y)
+            x = x_new
+            xc = xf
+            moved = 0.0
+            res.n_remesh += 1
+        res.n_nodes.append(x.size)
+        if record_mesh:
+            res.mesh_history.append((t, x.copy()))
     res.t, res.front = np.array(ts), np.array(fronts, dtype=float)
     return res

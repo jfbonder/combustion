@@ -141,6 +141,7 @@ class Result:
     n_remesh: int = 0
     n_steps: int = 0
     n_nodes: list = field(default_factory=list)
+    mesh_history: list = field(default_factory=list)   # [(t, nodes)] if requested
 
 
 def initial_data(x, u0, w0, eps):
@@ -157,7 +158,7 @@ def initial_data(x, u0, w0, eps):
 
 def simulate(u0, w0, eps, L, t_end, N=1, mesh=None, speed_guess=1.0,
              snapshot_times=(), rtol=1e-5, atol_rel=1e-4, max_dt_remesh=None,
-             verbose=False):
+             verbose=False, record_mesh=False):
     mp = mesh or MeshParams()
     max_dt_remesh = max_dt_remesh or 0.05 * t_end
     x = np.linspace(0.0, L, 20001)
@@ -222,6 +223,8 @@ def simulate(u0, w0, eps, L, t_end, N=1, mesh=None, speed_guess=1.0,
         x = x_new
         res.n_remesh += 1
         res.n_nodes.append(x.size)
+        if record_mesh:
+            res.mesh_history.append((t, x.copy()))
         if verbose and res.n_remesh % 200 == 0:
             print(f"  t={t:.4f} front={xf} nodes={x.size} v={v_est:.3f}")
 
