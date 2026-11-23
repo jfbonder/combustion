@@ -438,6 +438,11 @@ Added in the second revision (November 2026), in response to the second referee 
 ## G and the third revision (after the third referee report)
 
 - **G** (`in_hypotheses.py`, 1 min): uniform mesh with $h=\varepsilon^2/8$ and $\varepsilon^2/16$, ε ∈ {0.1, 0.05}, translating rigidly with a prescribed velocity, from $\Phi_\varepsilon$, $T=3$ (the setting of the moving-mesh theorem). With $v=c_\varepsilon$: $E\le7.6\cdot10^{-6}$ for Δt = 0.1 and 0.01 ($\rho_hT$ = 0.19–0.38). With $v=c_\varepsilon+0.01$: $E$ = 6.6e-3 / 1.0e-3 (ε = 0.1, Δt = 0.1 / 0.01) and 9.8e-3 / 2.0e-3 (ε = 0.05), below $K\mu T\approx1.7\cdot10^{-2}$.
+
+- **H** (`convergence_thm.py`, 1 min, `H_convergence_thm.json`): the setting of the convergence theorem (Theorem 5.1 of the paper). Radial self-similar solution $v$ of the limit problem ($N=2$, $w_0=0.5$, extinction time 1), data (eq:initdata), $0\le t\le 0.5$, no remeshing, $h_f=\varepsilon/16$, ε ∈ {0.02, 0.01, 0.005}, Δt/ε ∈ {1/64, 1/16, 1/4, 1, 4}. $E_v=\max_{n,j}|U^n_j-v(x^n_j,t_n)|$.
+  - *Fixed uniform mesh* ($v_n=0$): $E_v$ = 0.022–0.023, 0.076–0.077, 0.177, 0.264, 0.296–0.302 for the five values of Δt/ε, the same for the three ε to two digits (a function of Δt/ε only); the front $\{u=\varepsilon\}$ at $t=0.5$ is behind by 0.002–0.018, 0.06–0.08, 0.21–0.23, 0.43–0.45, 0.57–0.62.
+  - *Band mesh with prescribed velocity* $v_n=\dot R(t_n)$ (ALE with `fixed_velocity`, `remesh=False`, `ell0=0.5`, $L=5$; the cells outside the rigid zone stretch up to 0.044): $E_v=0.5\,\varepsilon=\varepsilon w_0$ for Δt ≤ ε (the value of $v-u^\varepsilon$ in the burnt region), and 0.64–0.67 ε for Δt = 4ε; the front is at −1.01…−1.07 ε from $R(0.5)$ for Δt ≤ ε (the shift $-\varepsilon/\sqrt{2M}=-0.94\,\varepsilon$ plus −0.07…−0.13 ε), and −0.33…−0.37 ε for Δt = 4ε.
+  - New options of `simulate_ale`: `fixed_velocity` may be a function of $t$ (evaluated at $t_n$), and `remesh=False` disables the rebuilding of the mesh.
 - **D3 recomputed on a late window.** The mesh velocity relaxes on the time scale $4/c^2$; D3 now uses $T=32$ ($w_0=0$) and $T=8$ ($w_0=1$, with $\ell_0=4$) and the mean of $v_n-c_\varepsilon$ on the last eighth of the run. Settled values (ε = 0.01, 16 phases), min / max / mean:
 
 | $h_f/\varepsilon$ | $w_0=0$ | $w_0=1$ |

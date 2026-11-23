@@ -244,12 +244,13 @@ paper, and the history of the changes made after the referee report are in
 | Table `tab:speedcoef` (Prop. 2.1) | `experiments.paper.speed_coefficient` | shooting | 10 s |
 | Section 5.5, averaged truncation error (`an:eq:solv`) | `experiments.truncation_check` | — | 15 s |
 | Fig. `fig:A5` (solution and mesh at successive times) | `experiments.paper.mesh_snapshots` | ALE | 10 s |
-| Fig. `fig:A1`, Table `tab:A3` (node trajectories, cost) | `experiments.paper.meshes` | ALE, BDF | 4 min |
+| Fig. `fig:A1` and the cost figures of Section 6.1 (node trajectories, nodes per zone, steps) | `experiments.paper.meshes` | ALE, BDF | 4 min |
 | Figs. `fig:D1`, `fig:D2`, `fig:D3`; drag ratios (error from $\Phi_\varepsilon$, lattice pinning) | `experiments.paper.tw_error` | ALE, Eulerian (S) | 6 min |
-| Section 6.2, uniform mesh inside the hypotheses of the theorem | `experiments.paper.in_hypotheses` | ALE (rigid mesh) | 1 min |
+| Section 6.2, uniform mesh inside the hypotheses of the travelling wave theorem | `experiments.paper.in_hypotheses` | ALE (rigid mesh) | 1 min |
+| Section 6.3, setting of the convergence theorem (fixed uniform mesh; band with prescribed velocity, no remeshing) | `experiments.paper.convergence_thm` | (S) on a fixed mesh, ALE with `fixed_velocity`, `remesh=False` | 1 min |
 | Fig. `fig:D6`; accumulated mesh-velocity error $M_T$; errors over the lattice phase | `experiments.paper.transient` | ALE, Eulerian (S) | 30 min |
 | Fig. `fig:B4` (radial extinction, error against Δt) | `experiments.paper.convergence` | ALE | 2 min |
-| Figs. `fig:C1`, `fig:C2`, `fig:C3` (limit problem, self-similar extinction, quenching) | `experiments.paper.limit_examples` | ALE, BDF, limit | 12 min |
+| Figs. `fig:C1`, `fig:C2` (limit problem, self-similar extinction); `C3_quenching.png` (quenching of small kernels, an extra example that is not in the paper) | `experiments.paper.limit_examples` | ALE, BDF, limit | 12 min |
 | Fig. `fig:instability` | `experiments.traveling_wave`, then `experiments.plots` | BDF | 20 min |
 | Table `tab:limit` | `experiments.limit_comparison`, then `experiments.plots` | BDF, limit | 15 min |
 

@@ -60,7 +60,8 @@ def _matrix(Lap, x, xdot, react, dt):
 def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=None,
                  recenter_time=None, remesh_distance=None,
                  snapshot_times=(), fixed_velocity=None, N=1, record_mesh=False,
-                 implicit=True, rigid_extra=1.0, exact_initial=False, monitor=None):
+                 implicit=True, rigid_extra=1.0, exact_initial=False, monitor=None,
+                 remesh=True):
     """ALE version of scheme (S).
 
     rigid_extra: the mesh velocity is v on the band plus `rigid_extra*ell0`
@@ -69,6 +70,9 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
         it was 0.5; that left an O(dt e^{-c R}) error from the non-rigid zone
         of about 0.06 dt for w0 = 1 with the default ell0 = 2 (now about
         0.011 dt); see experiments/paper/README.md, section D.
+    fixed_velocity: prescribed mesh velocity, a number or a function of t
+        (evaluated at t_n for the step n -> n+1); None = computed (implicit).
+    remesh: if False the mesh is never rebuilt (setting of Theorem cv:thm:main).
     exact_initial: if True, u(x, 0) = u0(x) and w = eps*w0 exactly (no
         modification of u0 near the front; use with the eps-travelling wave).
     monitor: optional callable monitor(t, x, u, v) called at t = 0 (v = None)
@@ -112,7 +116,8 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
     dt = t_end / nsteps
     recenter_time = recenter_time or 20 * dt
     ts, fronts = [0.0], [xf]
-    v = speed_guess if fixed_velocity is None else fixed_velocity
+    v_of_t = fixed_velocity if callable(fixed_velocity) else None
+    v = speed_guess if fixed_velocity is None else (v_of_t(0.0) if v_of_t else fixed_velocity)
     xc = xf                         # where we want the front (band reference point)
     moved = 0.0
     t_prev, xf_prev = 0.0, xf
@@ -166,6 +171,8 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
             else:                             # fall back to the previous velocity
                 x, u, y, xf = advance(v)
         else:
+            if v_of_t is not None:
+                v = v_of_t(n * dt)
             x, u, y, xf = advance(v)
         if xf is None:                    # the flame has gone out
             ts.append((n + 1) * dt)
@@ -187,7 +194,7 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
             res.snapshots[pending.pop(0)] = (x.copy(), u.copy(), (y - u).copy())
         # rebuild (exactly on the band lattice) when the mesh has travelled far
         # or when the front has drifted from the band reference point
-        if moved > remesh_distance or abs(xf - xc) > 0.25 * mp.K_margin * eps:
+        if remesh and (moved > remesh_distance or abs(xf - xc) > 0.25 * mp.K_margin * eps):
             # anchor the new band on the lattice of the current one: a node whose
             # cell to the right has exactly the band spacing h_f (transition cells
             # are >= growth * h_f, so they are excluded)

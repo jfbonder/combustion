@@ -27,6 +27,7 @@ step "tests";                                          $PY -m pytest -q
 step "Table tab:speedcoef (Prop. 2.1), ~10 s";         $PY -m experiments.paper.speed_coefficient
 step "Averaged truncation error, eq. (an:eq:solv), ~15 s"; $PY -m experiments.truncation_check
 step "Uniform mesh inside the hypotheses (Section 6.2), ~1 min"; $PY -m experiments.paper.in_hypotheses
+step "Setting of the convergence theorem (Section 6.3), ~1 min"; $PY -m experiments.paper.convergence_thm
 step "Figure A5 (mesh snapshots), ~10 s";              $PY -m experiments.paper.mesh_snapshots
 step "Figure A1, Table tab:A3 (node trajectories, cost), ~4 min";      $PY -m experiments.paper.meshes
 step "Figures D1-D3, drag ratios (error from the eps-wave), ~8 min";        $PY -m experiments.paper.tw_error
