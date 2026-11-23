@@ -47,15 +47,19 @@ experiments illustrate the method and confirm the estimates.
 
 The system
 \begin{equation}\label{eq:system}
-\Delta u^\ve-u^\ve_t=Y^\ve f_\ve(u^\ve),\qquad
-\Delta Y^\ve-Y^\ve_t=Y^\ve f_\ve(u^\ve),\qquad f_\ve(s)=\frac1{\ve^2}f\Big(\frac s\ve\Big),
+T^\ve_t=\Delta T^\ve+Y^\ve f_\ve(T_f-T^\ve),\qquad
+Y^\ve_t=\Delta Y^\ve-Y^\ve f_\ve(T_f-T^\ve),\qquad f_\ve(s)=\frac1{\ve^2}f\Big(\frac s\ve\Big),
 \end{equation}
 arises in the theory of equidiffusional premixed flames (Lewis number one)
-\cite{BuckmasterLudford1982,ZeldovichFrankKamenetskii1938}: $Y^\ve\ge0$ is the
-mass fraction of the reactant, $u^\ve=\lambda(T_f-T^\ve)$ a rescaled
-temperature, and $\ve$ is essentially the inverse of the activation energy;
-$f$ is Lipschitz, positive on $(-\infty,1)$ and zero on $[1,\infty)$. Since
-$w^\ve=Y^\ve-u^\ve$ is caloric, \eqref{eq:system} reduces to
+\cite{BuckmasterLudford1982,ZeldovichFrankKamenetskii1938}: $T^\ve$ is the
+temperature and $Y^\ve\ge0$ the mass fraction of the reactant, normalized so
+that $T_f$ is the adiabatic flame temperature, and $\ve$ is essentially the
+inverse of the activation energy; $f$ is Lipschitz, positive on $(-\infty,1)$
+and zero on $[1,\infty)$, so that the reaction only takes place where
+$T^\ve>T_f-\ve$. In terms of
+$u^\ve=T_f-T^\ve$, \eqref{eq:system} reads
+$\Delta u^\ve-u^\ve_t=Y^\ve f_\ve(u^\ve)=\Delta Y^\ve-Y^\ve_t$, so that
+$w^\ve=Y^\ve-u^\ve$ is caloric and \eqref{eq:system} reduces to
 \begin{equation}\label{eq:Peps}\tag{$P_\ve$}
 u_t=\Delta u-(u+w^\ve)f_\ve(u),\qquad w^\ve_t=\Delta w^\ve.
 \end{equation}
