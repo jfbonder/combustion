@@ -74,12 +74,13 @@ def extinction_time(t, s, k=6):
 
 
 def run_C2(job):
-    N, eps_list, dt = job
+    N, eps_dt = job
     a = LAM * R0 / 2.0
     u0 = lambda r: a * np.maximum(1.0 - (r / R0) ** 2, 0.0)
     V = SelfSimilar(N, W0)
     lim = solve_radial(u0, W0, N, R0, 10.0, n=1600)
-    T = extinction_time(lim.t, lim.s)
+    m = lim.s < 0.3
+    T = extinction_time(lim.t[m], lim.s[m], k=int(m.sum()))
     # profile times: radius 1.5, 1.0, 0.5, 0.25
     prof_t = [float(lim.t[np.argmin(np.abs(lim.s - q))]) for q in (1.5, 1.0, 0.5, 0.25)]
     profiles = []
@@ -93,16 +94,19 @@ def run_C2(job):
                eta=np.linspace(0, V.R, 200), phi=V.kappa * V.phi(np.linspace(0, V.R, 200)),
                eps_runs=[])
     L = 1.5 * R0 + 1.0
-    for eps in eps_list:
+    for eps, dt in eps_dt:
         # stop when the limit radius is ~ max(0.15, 30 eps)
-        t_end = float(lim.t[np.argmax(lim.s < max(0.15, 30 * eps))])
+        s_end = max(0.15, 30 * eps)
+        t_end = float(lim.t[np.argmax(lim.s < s_end)])
         snaps = tuple(np.round(np.array(prof_t) / dt) * dt)
         with Timer() as tm:
             r, err = simulate_ale_safe(u0, W0, eps, L, t_end, dt, mesh=MeshParams(),
                                        speed_guess=-N / R0, N=N, ell0=1.0, remesh_distance=0.1,
                                        snapshot_times=snaps)
         s_eps = r.front + eps / LAM
-        T_eps = extinction_time(r.t[-200::20], s_eps[-200::20])
+        # T_eps from s^2 ~ R^2 (T_eps - t) on s in [s_end, 2 s_end]
+        m = (s_eps < 2 * s_end) & (s_eps > 0)
+        T_eps = extinction_time(r.t[m], s_eps[m], k=int(m.sum()))
         eprof = []
         for tq, sq in zip(snaps, prof_t):
             if tq in r.snapshots:
@@ -184,6 +188,7 @@ def bisect_critical(args):
 
 
 EPS_C3 = (0.01, 0.005, 0.0025, 0.00125)
+DT_C3 = 0.001
 
 
 def run_all(what=("C1", "C2", "C3")):
@@ -203,7 +208,10 @@ def run_all(what=("C1", "C2", "C3")):
         save_json("C1_limit_comparison.json", res)
     if "C2" in what:
         with ProcessPoolExecutor(2) as ex:
-            res = list(ex.map(run_C2, [(2, (0.01, 0.002), 1e-4), (3, (0.01, 0.002), 1e-4)]))
+            # dt = 2.5e-5 for eps = 0.002: near r = 0 the mesh velocity is tapered
+            # and an O(dt v/eps) lag appears (see README)
+            eps_dt = ((0.01, 1e-4), (0.002, 2.5e-5))
+            res = list(ex.map(run_C2, [(2, eps_dt), (3, eps_dt)]))
         for r in res:
             print("C2 N={N} T={T:.6f} R={R:.6f}".format(**r),
                   [(e["eps"], round(e["T_eps"], 5), e["steps"], round(e["seconds"], 1), e["error"])
@@ -212,17 +220,17 @@ def run_all(what=("C1", "C2", "C3")):
     if "C3" in what:
         with ProcessPoolExecutor(4) as ex:
             crit = list(ex.map(bisect_critical,
-                               [(e, 0.005, "ale", 0.6, 0.8, 0.001) for e in EPS_C3]
-                               + [(0.005, 0.001, "ale", 0.6, 0.8, 0.001),
+                               [(e, DT_C3, "ale", 0.6, 0.8, 0.001) for e in EPS_C3]
+                               + [(0.00125, 0.00025, "ale", 0.6, 0.8, 0.001),
                                   (0.01, None, "euler", 0.6, 0.8, 0.001)]))
             for c in crit:
                 print("C3 crit eps={eps} dt={dt} {method}: r0* in [{lo:.4f}, {hi:.4f}]".format(**c),
                       flush=True)
-            rc = {c["eps"]: c["r_crit"] for c in crit if c["method"] == "ale" and c["dt"] == 0.005}
+            rc = {c["eps"]: c["r_crit"] for c in crit if c["method"] == "ale" and c["dt"] == DT_C3}
             r0s = [0.6, 0.8, rc[0.01] - 0.01, rc[0.01] + 0.01, 1.0, 1.2, 1.5]
-            runs = list(ex.map(run_kernel, [dict(r0=r0, eps=0.01, dt=0.005, t_end=4.0)
+            runs = list(ex.map(run_kernel, [dict(r0=r0, eps=0.01, dt=DT_C3, t_end=4.0)
                                             for r0 in r0s]))
-            runs += list(ex.map(run_kernel, [dict(r0=r0, eps=0.0025, dt=0.005, t_end=4.0)
+            runs += list(ex.map(run_kernel, [dict(r0=r0, eps=0.0025, dt=DT_C3, t_end=4.0)
                                              for r0 in (rc[0.0025] - 0.01, rc[0.0025] + 0.01)]))
         for r in runs:
             print("C3 r0={r0:.4f} eps={eps} {outcome} r_min={r_min:.4f} at t={t_min:.3f} "
@@ -333,17 +341,17 @@ def fig_C3():
     ax.set_xlabel("$t$")
     ax.set_ylabel("front radius $r_f(t)$")
     ax.legend(loc="upper right", fontsize=8)
-    title(ax, "$\\varepsilon=0.01$, ALE $\\Delta t=0.005$")
+    title(ax, f"$\\varepsilon=0.01$, ALE $\\Delta t={DT_C3:g}$")
     ax = axs[1]
-    crit = sorted((c for c in d["critical"] if c["method"] == "ale" and c["dt"] == 0.005),
+    crit = sorted((c for c in d["critical"] if c["method"] == "ale" and c["dt"] == DT_C3),
                   key=lambda c: c["eps"])
     e = np.array([c["eps"] for c in crit])
     rc = np.array([c["r_crit"] for c in crit])
     err = np.array([0.5 * (c["hi"] - c["lo"]) for c in crit])
     ax.errorbar(e, rc, yerr=err, color=SERIES[0], marker="o", mfc="white", mew=1.3, ms=6,
-                capsize=3, label="ALE, $\\Delta t=0.005$")
+                capsize=3, label=f"ALE, $\\Delta t={DT_C3:g}$")
     for c in d["critical"]:
-        if c["method"] == "ale" and c["dt"] != 0.005:
+        if c["method"] == "ale" and c["dt"] != DT_C3:
             ax.errorbar([c["eps"]], [c["r_crit"]], yerr=[0.5 * (c["hi"] - c["lo"])],
                         color=SERIES[2], marker="^", ms=6, mfc="none", capsize=3, ls="none",
                         label=f"ALE, $\\Delta t={c['dt']:g}$")
