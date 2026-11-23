@@ -133,7 +133,7 @@ def plot_all():
         a1.plot(0.5 * (w[:, 0] + w[:, 1]), w[:, 3], ls, color=col, marker=MARKERS[[0.25, 1, 4].index(r["k"])],
                 ms=4, label=r"$\varepsilon=%g$, $\Delta t/\varepsilon=%g$" % (r["eps"], r["k"] * r["eps"]))
     a1.axhline(-0.2351, color=MUTED, lw=1, ls=":")
-    a1.text(59, -0.2351, "solvability", color=MUTED, fontsize=7, va="bottom", ha="right")
+    a1.text(1.5, -0.2351, "averaged truncation error", color=MUTED, fontsize=7, va="bottom", ha="left")
     a1.set_xlabel("$t$ (midpoint of the window)")
     a1.set_ylabel(r"$(c_h-c_\varepsilon)\,/\,(\Delta t/\varepsilon)$")
     a1.legend(fontsize=7, ncol=2)
@@ -141,7 +141,7 @@ def plot_all():
     E2 = sorted([r for r in R if r["group"] == "E2"], key=lambda r: r["theta"])
     for i, r in enumerate(E2):
         a2.plot(r["vt"], np.array(r["vv"]) * 1e4, color=(SERIES + [MUTED])[i],
-                label=r"$\vartheta=%.3g$" % r["theta"])
+                label=r"$\vartheta=%s$" % {1 / 32: "1/32", 17 / 32: "17/32", 25 / 32: "25/32"}.get(r["theta"], "%.2f" % r["theta"]))
     a2.axhline(0, color=MUTED, lw=0.8)
     a2.set_xlabel("$t$")
     a2.set_ylabel(r"$(v_n-c_\varepsilon)\cdot10^{4}$")
