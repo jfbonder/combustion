@@ -115,48 +115,46 @@ also what a numerical analysis needs: an $\ve$-uniform estimate for the
 discretization of \eqref{eq:Peps} only yields an estimate with respect to the
 free boundary problem when combined with a bound for $u^\ve-v$.
 
-In this paper we
-\begin{enumerate}
-\item \emph{Rate of convergence of the singular limit} (Section~\ref{sec:rate}). We
-make the approximation theorems of \cite{FernandezBonderWolanski2004} quantitative
-and prove that, if \eqref{eq:P} has a classical solution $v$ that is $C^{2,1}$ up
-to its free boundary, then $u^\ve-v\le C(\ve+\eta_\ve)$ and
-$u^\ve-v\ge-C(\ve\log(1/\ve)+\eta_\ve)$, where $\eta_\ve=\|w^\ve/\ve-w_0\|_\infty$
-(Theorem~\ref{q:thm:rate}); the logarithm disappears for well-prepared data.
-The key point is an explicit barrier, an inner profile composed with an
-extension of the super/subsolution, whose error does not depend on the
-strictness of the super/subsolution. Barriers of this type are classical for
-Allen--Cahn type limits
-\cite{Chen1992,DeMottoniSchatzman1995,AlfaroHilhorstMatano2008}; to our knowledge this
-is the first rate for the present singular limit. The order $\ve$ cannot be improved.
-\item \emph{A front-following method with error estimates for travelling waves}
+Our first result is a rate of convergence for the singular limit
+(Section~\ref{sec:rate}). We make the approximation theorems of
+\cite{FernandezBonderWolanski2004} quantitative and prove that, if \eqref{eq:P} has a
+classical solution $v$ that is $C^{2,1}$ up to its free boundary, then
+$u^\ve-v\le C(\ve+\eta_\ve)$ and $u^\ve-v\ge-C(\ve\log(1/\ve)+\eta_\ve)$, where
+$\eta_\ve=\|w^\ve/\ve-w_0\|_\infty$ (Theorem~\ref{q:thm:rate}); the logarithm disappears
+for well-prepared data, and the order $\ve$ cannot be improved. The proof rests
+on an explicit barrier, an inner profile composed with an extension of the
+super- or subsolution, whose error does not depend on the strictness of the
+super- or subsolution. Barriers of this type are classical for Allen--Cahn
+type limits \cite{Chen1992,DeMottoniSchatzman1995,AlfaroHilhorstMatano2008}; to our
+knowledge this is the first rate for the present singular limit.
+
+Our second contribution is a numerical method that follows the flame
 (Sections~\ref{sec:method}--\ref{sec:analysis}). A fine band of width
-$O(\ve\log(1/\ve))$ travels with the flame in an arbitrary Lagrangian--Eulerian (ALE) formulation with implicit
-mesh velocity; the mesh is refined ahead of the front and coarsened behind it,
-and, for a fixed ratio $h_f/\ve$, the number of nodes grows only logarithmically
-in $1/\ve$. A linearly
-implicit time discretization satisfies a discrete comparison principle for
-every $\Delta t$. For travelling waves we prove
-$\|U-u\|_\infty\le C_T(\ve+\mu+\rho_f+h_c)$, where $\mu$ is the error of the mesh
-velocity, $\rho_f$ involves only the mesh size $h_f$ in the band and $h_c$ is the
-mesh size elsewhere: the time step does not appear, and negative powers of
-$\ve$ multiply only $h_f$. For the Eulerian version (fixed mesh between
-remeshings) the time step enters as $\Delta t/\ve^2$, and as $\Delta t/\ve$ in practice.
-These estimates come from pointwise barriers and are not sharp: they require
-$\rho_f=h_f/\ve^2$ to be small, i.e.\ $h_f\lesssim\ve^2$, whereas the experiments,
-run with $h_f=\ve/16$, behave as the sharper estimate suggested by a
-solvability argument (Section~\ref{an:sec:sharp}).
-\item \emph{Exact reference solutions} (Section~\ref{sec:exact}): travelling waves
-of \eqref{eq:Peps} with uniform profile estimates, the first-order correction
-of the flame speed in closed form (Proposition~\ref{prop:speed}), and the radial
-self-similar solution of \eqref{eq:P} in terms of Kummer's function.
-\item \emph{Numerical experiments} (Section~\ref{sec:experiments}): the meshes and
-how they are refined and coarsened, verification of the estimates,
-comparison with a second-order front-fixing solver for \eqref{eq:P} for general
-data, examples from the literature (extinction, convergence to self-similar
-profiles, quenching of small kernels), and the instability of the limit with
-respect to $w_0$.
-\end{enumerate}
+$O(\ve\log(1/\ve))$ travels with the front in an arbitrary Lagrangian--Eulerian
+(ALE) formulation with implicit mesh velocity, so that the mesh is refined
+ahead of the front and coarsened behind it; for a fixed ratio $h_f/\ve$ the
+number of nodes grows only logarithmically in $1/\ve$. The time discretization
+is linearly implicit and satisfies a discrete comparison principle for every
+$\Delta t$, which reduces the error analysis to the construction of barriers. For
+travelling waves we prove $\|U-u\|_\infty\le C_T(\ve+\mu+\rho_f+h_c)$, where $\mu$ is the
+error of the mesh velocity, $\rho_f$ involves only the mesh size $h_f$ in the band,
+and $h_c$ is the mesh size elsewhere: the time step does not appear, and
+negative powers of $\ve$ multiply only $h_f$. On meshes that are fixed between
+remeshings, instead, the time step enters as $\Delta t/\ve^2$ in the estimate and as
+$\Delta t/\ve$ in practice. These estimates come from pointwise barriers and are not
+sharp: they require $h_f\lesssim\ve^2$, whereas the experiments, run with
+$h_f=\ve/16$, behave as the sharper estimate suggested by a solvability argument
+(Section~\ref{an:sec:sharp}).
+
+Both parts rely on exact reference solutions, which we collect in
+Section~\ref{sec:exact}: travelling waves of \eqref{eq:Peps}, with the first-order
+correction of the flame speed (Proposition~\ref{prop:speed}), and the radial
+self-similar solutions of \eqref{eq:P}. Finally, Section~\ref{sec:experiments}
+shows the meshes and how they are refined and coarsened, tests the estimates,
+compares \eqref{eq:Peps} with a front-fixing solver for \eqref{eq:P} for general
+data, revisits examples from the literature (extinction, convergence to
+self-similar profiles, quenching of small kernels), and displays the
+instability of the limit with respect to $w_0$.
 
 Throughout, $f(s)=(1-s)^+$, for which
 \begin{equation}\label{eq:M}
