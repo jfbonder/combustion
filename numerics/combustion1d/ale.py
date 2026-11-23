@@ -55,7 +55,7 @@ def _matrix(Lap, x, xdot, react, dt):
 
 def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=None,
                  control_steps=10, recenter_time=None, remesh_distance=None,
-                 snapshot_times=()):
+                 snapshot_times=(), fixed_velocity=None):
     mp = mesh or MeshParams()
     # the rigidly moving zone must contain several decay lengths 1/c of the
     # profile ahead of the front; otherwise the end of the zone, where u is not
@@ -81,7 +81,7 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
     dt = t_end / nsteps
     recenter_time = recenter_time or 20 * dt
     ts, fronts = [0.0], [xf]
-    v = speed_guess
+    v = speed_guess if fixed_velocity is None else fixed_velocity
     xc = xf                         # where we want the front (band reference point)
     moved = 0.0
     t_prev, xf_prev = 0.0, xf
@@ -104,7 +104,8 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
             fronts.append(xf)
             # speed estimate + relaxation of the front towards the band centre
             v_meas = (xf - xf_prev) / (t - t_prev)
-            v = v_meas + (xf - xc) / recenter_time
+            if fixed_velocity is None:
+                v = v_meas + (xf - xc) / recenter_time
             t_prev, xf_prev = t, xf
             if pending and t >= pending[0] - 1e-12:
                 res.snapshots[pending.pop(0)] = (x.copy(), u.copy(), (y - u).copy())

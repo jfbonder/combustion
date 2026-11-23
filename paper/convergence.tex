@@ -22,8 +22,10 @@
 
 \noindent\textbf{Status.} Working notes. Sections~\ref{sec:setting}--\ref{sec:main}
 contain a complete argument for the non-sharp estimate of
-Theorem~\ref{thm:main}, modulo the profile estimates of Lemma~\ref{lem:profile},
-for which we give the proof in outline. Section~\ref{sec:sharp} describes how to
+Theorem~\ref{thm:main} (Eulerian scheme), and Section~\ref{sec:ale} for the
+ALE scheme (Theorem~\ref{thm:ale}, no $\Delta t$ in the error), modulo the
+profile estimates of Lemma~\ref{lem:profile}, for which we give the proof in
+outline. Section~\ref{sec:sharp} describes how to
 reach the sharp rates suggested by the experiments.
 
 % ---------------------------------------------------------------------------
@@ -262,6 +264,150 @@ The actual drift is the \emph{average} of the truncation error against the
 adjoint eigenfunction of the linearized operator, which is a factor $\ve$
 smaller: the experiments give speed errors $\approx-0.23\,\Delta t/\ve$ and
 $\approx0.016\,(h/\ve)^2\cdot\ve^0$, i.e. $\Delta t/\ve$ and $(h/\ve)^2$.
+\end{remark}
+
+
+% ---------------------------------------------------------------------------
+\section{The ALE version: an estimate without $\Delta t$}\label{sec:ale}
+
+\subsection*{Scheme}
+The grid translates with a prescribed velocity: $x^n_j=jh+X_n$,
+$X_{n+1}=X_n+v_n\Delta t$. Along node trajectories $D_tu=u_t+v\,u_x$, so in the
+node variables the scheme reads
+\begin{equation}\label{eq:Lv}
+\Lop_v[V]^n_j=\frac{V^{n+1}_j-V^n_j}{\Delta t}-\delta^2V^{n+1}_j-v_n\,DV^{n+1}_j
++f_\ve(V^n_j)\big(V^{n+1}_j+\ve w_0\big),\qquad DV_j=\frac{V_{j+1}-V_{j-1}}{2h}.
+\end{equation}
+(This is the planar scheme of \texttt{combustion1d/ale.py} with $\chi\equiv1$ and
+a uniform grid.) If $|v_n|h\le2$, the matrix
+$\Delta t^{-1}I-\delta^2-v_nD+\operatorname{diag}F$ has nonpositive
+off-diagonal entries $-h^{-2}\mp v_n/(2h)$ and is strictly diagonally
+dominant, so the proof of Lemma~\ref{lem:comp} applies verbatim:
+\emph{the ALE scheme satisfies the discrete comparison principle for every
+$\Delta t>0$}.
+
+\subsection*{Why $\Delta t$ disappears}
+In the Eulerian scheme the barrier moves across the nodes with speed $\approx c$,
+and the lag in $f_\ve(V^n)$ produces the term $B=O(c\Delta t/\ve^2)$ of
+Lemma~\ref{lem:residual}. In the ALE scheme the barrier
+$\Phi(x-ct\pm\xi)\pm q$ moves with respect to the nodes with speed
+$c-v\mp\sigma$. If the drift dominates the mesh-velocity error,
+\begin{equation}\label{eq:sigmamu}
+|v_n-c|\le\mu\le\sigma ,
+\end{equation}
+then the supersolution moves \emph{towards} the burnt side relative to the
+nodes and the subsolution towards the fresh side, and in both cases the lag
+has the favourable sign: the only remaining contribution of $B$ comes from
+$q$, with no $\Delta t$.
+
+\subsection*{Residual}
+Let $V^n_j=\Phi(z^n_j)+q_n$ with $z^n_j=x^n_j-ct_n+\xi_n$, $\xi_n=\sigma t_n$.
+Then $z^{n+1}_j-z^n_j=d_n\Delta t$ with $d_n=v_n-c+\sigma\in[0,2\sigma]$ by
+\eqref{eq:sigmamu}. Write $z'=z^{n+1}_j$, $z=z^n_j\le z'$.
+
+\begin{lemma}[ALE residual]\label{lem:ale}
+Assume (F), \eqref{eq:sigmamu}, $h\le\ve$, $\sigma\Delta t\le\ve$. Then
+\[
+\Lop_v[V]^n_j\ \ge\ \dot q_n+\sigma\Phi'(z')-r_1-r_2-r_3+f_\ve(V^n_j)q_{n+1}-B,
+\]
+with $r_1=2\sigma^2\Delta t\sup_I|\Phi''|$, $r_2$ as in Lemma~\ref{lem:residual},
+$r_3=|v_n|\frac{h^2}{6}\sup_I|\Phi'''|$, and
+\[
+0\le B\le\frac{L_f}{\ve^3}\big(\Phi(z')+\ve w_0\big)\,q_n ,\qquad B=0\ \text{if}\ \Phi(z')\ge\ve .
+\]
+\end{lemma}
+
+\begin{proof}
+Time difference: $(\Phi(z')-\Phi(z))/\Delta t=d_n\Phi'(z')+R$,
+$|R|\le\frac12d_n^2\Delta t\sup|\Phi''|\le r_1$. Advection:
+$|D\Phi(z')-\Phi'(z')|\le\frac{h^2}6\sup|\Phi'''|$. Diffusion as before. Collecting the
+leading terms and using \eqref{eq:tw},
+$d_n\Phi'-\Phi''-v_n\Phi'+g_\ve(\Phi)=(\sigma-c)\Phi'-\Phi''+g_\ve(\Phi)=\sigma\Phi'$. Reaction: as in Lemma~\ref{lem:residual},
+$f_\ve(V^n)(V^{n+1}+\ve w_0)=g_\ve(\Phi(z'))+f_\ve(V^n)q_{n+1}-B$ with
+$B=\big(f_\ve(\Phi(z'))-f_\ve(V^n)\big)(\Phi(z')+\ve w_0)$. Now
+$V^n=\Phi(z)+q_n\le\Phi(z')+q_n$ because $z\le z'$; since $f_\ve$ is
+nonincreasing, $f_\ve(V^n)\ge f_\ve(\Phi(z')+q_n)$, hence
+$B\le\big(f_\ve(\Phi(z'))-f_\ve(\Phi(z')+q_n)\big)(\Phi(z')+\ve w_0)\le L_f\ve^{-3}q_n(\Phi(z')+\ve w_0)$.
+(The lag $\Phi(z')-\Phi(z)$ has disappeared from the bound.) If $B<0$ it can
+only help; we keep $B\ge0$ for simplicity of notation.
+\end{proof}
+
+For the subsolution $\Phi(z^n_j-2\xi_n)-q_n$ (same $z$, drift $-\sigma$) one
+has $z'\le z$, $V^n\ge\Phi(z')-q_n$, and the same bound with reversed signs.
+
+\begin{theorem}[ALE, travelling wave]\label{thm:ale}
+Assume (F) [resp. (F$'$)], $w_0>-1$ constant, $U^0_j=\Phi_\ve(x^0_j)$, and let
+the mesh velocities satisfy $|v_n|h\le2$ and $|v_n-c_\ve|\le\mu$. Let
+$\rho_h=h/\ve^2$ [resp. $h^2/\ve^3$]. For every $T>0$ there are $C,\gamma>0$,
+depending only on $f,w_0,A,T$ and $\sup|v_n|$, such that if
+$\ve\le\ve_0$, $h\le\ve$,
+\[
+\rho_h+\mu\le\gamma\qquad\text{and}\qquad \Delta t\,(\rho_h+\mu)\le\gamma\,\ve,
+\]
+then
+\[
+\max_{t_n\le T}\sup_j\big|U^n_j-\Phi_\ve(x^n_j-c_\ve t_n)\big|\le C(\rho_h+\mu),
+\qquad
+\max_{t_n\le T}\sup_j\big|U^n_j-u(x^n_j,t_n)\big|\le C(\ve+\rho_h+\mu).
+\]
+There is no term in $\Delta t$, and the restriction on $\Delta t$ is
+$\Delta t\lesssim\ve/(\rho_h+\mu)$; in particular, for $\rho_h+\mu\lesssim\ve$ it is
+$\Delta t\le\gamma$, independent of $\ve$.
+\end{theorem}
+
+\begin{proof}
+Same regions, constants $\mu_0=f(-w_0)/4$, $\delta$, $Z$, $\theta$ and $a$ as in
+the proof of Theorem~\ref{thm:main}. Take
+\[
+\sigma=\mu+C_4\rho_h,\qquad q_n=q_*+C_2(h^a+\sigma^2\Delta t)\,t_n,\qquad q_*=C_3\ve^2\rho_h .
+\]
+Then \eqref{eq:sigmamu} holds, $\sigma\Delta t\le(1+C_4)\gamma\ve\le\ve$, and
+$q_n\le C_5\ve^2(\rho_h+\sigma^2\Delta t/\ve^2)\le C_5'\ve^2\rho_h+C_5'\ve\sigma\gamma$,
+which is $\le\ve\delta$ for $\gamma$ small. By Lemma~\ref{lem:profile}:
+\begin{itemize}
+\item[(I)] $r_1\le C\sigma^2\Delta t$, $r_2+r_3\le Ch^a$, $B=0$: $\Lop_v[V]\ge\dot q_n-C(\sigma^2\Delta t+h^a)\ge0$.
+\item[(III)] $r_1\le C\sigma^2\Delta t/\ve$, $r_2+r_3\le C\rho_h$,
+$B\le\frac{\mu_0}{4}\ve^{-2}q_n$, and $f_\ve(V^n)q_{n+1}\ge2\mu_0\ve^{-2}q_n$:
+$\Lop_v[V]\ge\frac{7\mu_0}4\ve^{-2}q_*-C\rho_h-C\sigma^2\Delta t/\ve\ge0$, using
+$\sigma^2\Delta t/\ve\le\gamma\sigma\le\rho_h\cdot\gamma(1+C_4)+\gamma\mu$ --- here
+we also take $q_*\ge C\ve^2\mu\gamma$, i.e. $q_*=C_3\ve^2(\rho_h+\gamma\mu)$.
+\item[(II)] $r_1\le 2K\sigma^2\Delta t/\ve\le\frac{\theta}{4}\sigma$ by
+$\sigma\Delta t\le\gamma'\ve$; $r_2+r_3\le C\rho_h$; $B\le C\ve^{-2}q_n\le C(\rho_h+\gamma\sigma)$:
+$\Lop_v[V]\ge\sigma\theta-\frac\theta4\sigma-C\gamma\sigma-C\rho_h\ge\frac\theta2\sigma-C\rho_h\ge0$
+if $C_4\ge2C/\theta$ and $\gamma$ is small.
+\end{itemize}
+The subsolution is handled symmetrically (in region (III) the term
+$-f_\ve(V^n)q_{n+1}\le-2\mu_0\ve^{-2}q_n$ has the right sign). By the
+comparison principle,
+$|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma t_n+q_n\le C(\rho_h+\mu)$ for $t_n\le T$,
+and the second estimate follows from Lemma~\ref{lem:profile}(1),(5).
+\end{proof}
+
+\noindent\textbf{Numerical check.} Rigid mesh translating with $v=c_\ve$
+($\mu=0$), $f=(1-s)^+$, $w_0=0$, $h_f=\ve/16$: the speed error
+$c_{\rm ALE}-c_\ve$ is $|{\cdot}|\le5\cdot10^{-6}$ for $\ve=0.005$ and
+$\le8\cdot10^{-7}$ for $\ve=0.001$, for $\Delta t=0.1,0.05,0.02,0.01$, with no
+trend in $\Delta t$ --- although $\Delta t=0.1$ is $10^5\ve^2$ for $\ve=10^{-3}$.
+This is the content of Theorem~\ref{thm:ale}: the time step plays no role for
+the travelling wave.
+
+\begin{remark}
+\begin{enumerate}
+\item The absence of $\Delta t$ is specific to the travelling wave, which is
+steady in the moving frame. For general data the solution evolves in the frame
+of the front and an $O(\Delta t)$ term (with an $\ve$-independent constant) is
+expected; this is what the experiments show ($\approx0.05\,\Delta t$).
+\item The mesh-velocity error $\mu$ enters linearly: the comparison argument
+needs the barrier to outrun the mismatch between mesh and front. In practice
+$v$ is the front speed measured in the previous steps, so $\mu=O(\Delta t)$.
+For $v=0$ (Eulerian scheme) \eqref{eq:sigmamu} fails and one falls back on
+Theorem~\ref{thm:main}.
+\item On the band/coarse meshes of the code, the same argument with $q$ localized
+ahead of the front by a cut-off $\chi(z)$ that varies on an $O(1)$ scale (no
+reaction there, and $\Phi'\ge c>0$ absorbs $q\chi''$, $q\chi'$) gives
+$C_T(\ve+\rho_{h_f}+\mu+h_c)$, with $\rho_{h_f}$ involving only the mesh size
+$h_f$ in the reaction layer. (To be written.)
+\end{enumerate}
 \end{remark}
 
 % ---------------------------------------------------------------------------
