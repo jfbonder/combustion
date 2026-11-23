@@ -242,14 +242,19 @@ paper, and the history of the changes made after the referee report are in
 | in the paper | script (run with `python -m ...`) | solver | time |
 |---|---|---|---|
 | Table `tab:speedcoef` (Prop. 2.1) | `experiments.paper.speed_coefficient` | shooting | 10 s |
-| Section 5, Table `tab:simple` | `experiments.paper.tab_simple` | Eulerian (S) | 3 min |
-| Section 6.6, truncation and solvability numbers | `experiments.truncation_check` | — | 15 s |
-| Figs. A1–A4, Table `tab:A3` (meshes, refinement and coarsening, cost) | `experiments.paper.meshes` | ALE, BDF | 4 min |
-| Figs. D1–D5 (error from $\Phi_\varepsilon$, lattice pinning, drag, Eulerian) | `experiments.paper.tw_error` | ALE, Eulerian (S) | 6 min |
-| Figs. B1, B4, Table `tab:B1` | `experiments.paper.convergence` | ALE, Eulerian (S) | 2 min |
-| Figs. C1–C3, Table `tab:C2` (limit problem, self-similar extinction, quenching) | `experiments.paper.limit_examples` | ALE, BDF, limit | 12 min |
-| Table `tab:tw`, Figs. `fig:tw`, `fig:instability` | `experiments.traveling_wave`, then `experiments.plots` | BDF | 20 min |
-| Table `tab:limit`, Fig. `fig:limit` | `experiments.limit_comparison`, then `experiments.plots` | BDF, limit | 15 min |
+| Section 5.5, averaged truncation error (`an:eq:solv`) | `experiments.truncation_check` | — | 15 s |
+| Fig. `fig:A5` (solution and mesh at successive times) | `experiments.paper.mesh_snapshots` | ALE | 10 s |
+| Fig. `fig:A1`, Table `tab:A3` (node trajectories, cost) | `experiments.paper.meshes` | ALE, BDF | 4 min |
+| Figs. `fig:D1`, `fig:D2`, `fig:D3`; drag ratios (error from $\Phi_\varepsilon$, lattice pinning) | `experiments.paper.tw_error` | ALE, Eulerian (S) | 6 min |
+| Fig. `fig:D6`; accumulated mesh-velocity error $M_T$; errors over the lattice phase | `experiments.paper.transient` | ALE, Eulerian (S) | 30 min |
+| Fig. `fig:B4` (radial extinction, error against Δt) | `experiments.paper.convergence` | ALE | 2 min |
+| Figs. `fig:C1`, `fig:C2`, `fig:C3` (limit problem, self-similar extinction, quenching) | `experiments.paper.limit_examples` | ALE, BDF, limit | 12 min |
+| Fig. `fig:instability` | `experiments.traveling_wave`, then `experiments.plots` | BDF | 20 min |
+| Table `tab:limit` | `experiments.limit_comparison`, then `experiments.plots` | BDF, limit | 15 min |
+
+Some scripts also produce figures and tables that were in earlier drafts and are not in
+the paper (`A2`–`A4`, `B1`–`B3`, `D4`, `D5`, `tab_simple.py`); they are described in
+[`experiments/paper/README.md`](experiments/paper/README.md).
 
 The scripts in `experiments/paper/` accept `run` or `plot` as an argument; with no
 argument they do both. Some also accept a list of groups, for example

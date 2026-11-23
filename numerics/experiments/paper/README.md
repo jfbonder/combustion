@@ -414,6 +414,27 @@ The old values were smaller in magnitude because the actual step was smaller tha
 
 ---
 
+## E. Transients, accumulated mesh-velocity error, phases (`transient.py`), and A5 (`mesh_snapshots.py`)
+
+Added in the second revision (November 2026), in response to the second referee report.
+
+- **A5 `A5_mesh_snapshots.png`** (`mesh_snapshots.py`, 10 s): the solution ($u$, $Y$) and the mesh (one tick per node) at four times, ALE, ε = 0.02, $h_f=\varepsilon/16$, $h_c=0.05$. Left: planar travelling wave ($w_0=0$, 1464 nodes at all times). Right: radial extinction of the self-similar ball ($N=2$, $w_0=0.5$, 1012 nodes). Insets: the reaction layer in units of ε. This figure and A1 are the mesh figures of the paper; A2–A4 are no longer in the paper.
+- **E1** (figure `D6_transients.png`, left): Eulerian scheme (S) from $\Phi_\varepsilon$, $w_0=0$, ε ∈ {0.02, 0.01}, Δt ∈ {4ε², ε², ε²/4}, $T=60$. Speed error by least squares on successive windows of length 6, divided by Δt/ε. The speed relaxes slowly (time scale $4/c^2\approx12$); the values on the last windows are in the table below. The values of `tab_simple.py` ($T=12$, window [6, 12]) and of D5 ($T=4$, window [2, 4]) are transient values (second referee report, N5).
+- **E2** (figure `D6_transients.png`, right): ALE from $\Phi_\varepsilon$, ε = 0.01, Δt = 0.02, $T=24$: block means of $v_n-c_\varepsilon$ for the lattice phases ϑ = 1/32, 0.37, 17/32, 25/32.
+- **E3**: the quantities of the ALE theorem, ALE from $\Phi_\varepsilon$, $T=8$, ϑ = 0.37:
+
+| ε | Δt | $M_T=\Delta t\sum\lvert v_n-c_\varepsilon\rvert$ | $\max_n\lvert v_n-c_\varepsilon\rvert$ | $E$ | $E_s$ |
+|---|---|---|---|---|---|
+| 0.01 | 0.1 | 8.16e-4 | 2.74e-4 | 4.68e-4 | 6.10e-5 |
+| 0.01 | 0.02 | 7.78e-4 | 5.65e-4 | 4.46e-4 | 4.29e-5 |
+| 0.01 | 0.0025 | 7.70e-4 | 1.45e-3 | 4.42e-4 | 4.44e-5 |
+| 0.001 | 0.1 | 8.31e-4 | 2.76e-4 | 4.80e-4 | 7.31e-5 |
+| 0.001 | 0.02 | 7.80e-4 | 5.78e-4 | 4.50e-4 | 4.26e-5 |
+| 0.001 | 0.0025 | 7.67e-4 | 1.59e-3 | 4.43e-4 | 4.45e-5 |
+
+  $M_T$ does not depend on Δt or ε; the maximum of $\lvert v_n-c_\varepsilon\rvert$ is attained in the first steps and grows as Δt decreases.
+- **E4**: over 16 lattice phases (ε = 0.01, Δt = 0.02, $T=8$): $E$ from 1.3e-5 to 9.5e-4, $E_s$ from 1.3e-5 to 9.6e-5, speed error from −1.7e-4 to +1.0e-4, $M_T$ from 2.5e-5 to 1.7e-3. For ε = 0.001 (8 phases): $E$ from 1.1e-4 to 7.7e-4, speed error from −1.3e-4 to +9.6e-5.
+
 ## Issues in `combustion1d/`
 
 1. **`simulate_ale` may stop when the front disappears** (kernel quenching, extinction). `common.simulate_ale_safe` keeps the partial result and records the remeshing steps. Not re-examined after the fixes.
