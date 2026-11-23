@@ -19,22 +19,22 @@ if [ "${1:-all}" = "plots" ]; then
   ls results/paper/A_mesh_*.npz >/dev/null 2>&1 || { step "A: meshes (node histories)"; $PY -m experiments.paper.meshes run; }
   for m in meshes convergence limit_examples tw_error transient; do step "plot $m"; $PY -m experiments.paper.$m plot; done
   step "plot mesh snapshots (runs two short simulations)"; $PY -m experiments.paper.mesh_snapshots
-  step "figures 'Flame speed', 'Instability', 'Comparison with the limit problem'"; $PY -m experiments.plots
+  step "figures of the BDF experiments (fig:instability)"; $PY -m experiments.plots
   exit 0
 fi
 
 step "tests";                                          $PY -m pytest -q
 step "Table tab:speedcoef (Prop. 2.1), ~10 s";         $PY -m experiments.paper.speed_coefficient
-step "Section 6.6 numbers (truncation, solvability), ~15 s"; $PY -m experiments.truncation_check
-step "Table tab:simple (earlier drafts), ~3 min";      $PY -m experiments.paper.tab_simple
+step "Averaged truncation error, eq. (an:eq:solv), ~15 s"; $PY -m experiments.truncation_check
+step "Uniform mesh inside the hypotheses (Section 6.2), ~1 min"; $PY -m experiments.paper.in_hypotheses
 step "Figure A5 (mesh snapshots), ~10 s";              $PY -m experiments.paper.mesh_snapshots
-step "Figures A1-A4, Table tab:A3 (meshes, cost), ~4 min";      $PY -m experiments.paper.meshes
-step "Figures D1-D5 (error from the eps-wave), ~6 min";        $PY -m experiments.paper.tw_error
+step "Figure A1, Table tab:A3 (node trajectories, cost), ~4 min";      $PY -m experiments.paper.meshes
+step "Figures D1-D3, drag ratios (error from the eps-wave), ~8 min";        $PY -m experiments.paper.tw_error
 step "Figure D6, M_T, phases (transients), ~30 min";    $PY -m experiments.paper.transient
-step "Figures B1, B4, Table tab:B1, ~2 min";            $PY -m experiments.paper.convergence
-step "Figures C1-C3, Table tab:C2, ~12 min";            $PY -m experiments.paper.limit_examples
-step "Table tab:tw, Figures fig:tw, fig:instability (BDF), ~20 min"; $PY -m experiments.traveling_wave
-step "Table tab:limit, Figure fig:limit (BDF + limit solver), ~15 min"; $PY -m experiments.limit_comparison
+step "Figure B4 (radial extinction), ~2 min";            $PY -m experiments.paper.convergence
+step "Figures C1-C3 (limit problem, extinction, quenching), ~12 min";            $PY -m experiments.paper.limit_examples
+step "Figure fig:instability (BDF), ~20 min"; $PY -m experiments.traveling_wave
+step "Table tab:limit (BDF + limit solver), ~15 min"; $PY -m experiments.limit_comparison
 step "radial validation (not in the paper), ~5 min";   $PY -m experiments.radial
 step "figures of the BDF experiments";                  $PY -m experiments.plots
 echo; echo "Done. Figures in figures/ and figures/paper/, data in results/ and results/paper/."

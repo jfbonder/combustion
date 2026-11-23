@@ -435,6 +435,20 @@ Added in the second revision (November 2026), in response to the second referee 
   $M_T$ does not depend on Δt or ε; the maximum of $\lvert v_n-c_\varepsilon\rvert$ is attained in the first steps and grows as Δt decreases.
 - **E4**: over 16 lattice phases (ε = 0.01, Δt = 0.02, $T=8$): $E$ from 1.3e-5 to 9.5e-4, $E_s$ from 1.3e-5 to 9.6e-5, speed error from −1.7e-4 to +1.0e-4, $M_T$ from 2.5e-5 to 1.7e-3. For ε = 0.001 (8 phases): $E$ from 1.1e-4 to 7.7e-4, speed error from −1.3e-4 to +9.6e-5.
 
+## G and the third revision (after the third referee report)
+
+- **G** (`in_hypotheses.py`, 1 min): uniform mesh with $h=\varepsilon^2/8$ and $\varepsilon^2/16$, ε ∈ {0.1, 0.05}, translating rigidly with a prescribed velocity, from $\Phi_\varepsilon$, $T=3$ (the setting of the moving-mesh theorem). With $v=c_\varepsilon$: $E\le7.6\cdot10^{-6}$ for Δt = 0.1 and 0.01 ($\rho_hT$ = 0.19–0.38). With $v=c_\varepsilon+0.01$: $E$ = 6.6e-3 / 1.0e-3 (ε = 0.1, Δt = 0.1 / 0.01) and 9.8e-3 / 2.0e-3 (ε = 0.05), below $K\mu T\approx1.7\cdot10^{-2}$.
+- **D3 recomputed on a late window.** The mesh velocity relaxes on the time scale $4/c^2$; D3 now uses $T=32$ ($w_0=0$) and $T=8$ ($w_0=1$, with $\ell_0=4$) and the mean of $v_n-c_\varepsilon$ on the last eighth of the run. Settled values (ε = 0.01, 16 phases), min / max / mean:
+
+| $h_f/\varepsilon$ | $w_0=0$ | $w_0=1$ |
+|---|---|---|
+| 1/8 | −6.08e-4 / +3.84e-4 / +1.2e-5 | −3.52e-3 / +2.03e-3 / −5.1e-5 |
+| 1/16 | −1.45e-4 / +1.02e-4 / +9.9e-6 | −9.24e-4 / +4.54e-4 / −6.3e-5 |
+| 1/32 | −2.90e-5 / +3.26e-5 / +9.5e-6 | −2.81e-4 / +6.27e-5 / −6.6e-5 |
+
+  The oscillating part scales exactly like $(h_f/\varepsilon)^2$ (half-ranges 4.96e-4, 1.24e-4, 3.08e-5 and 2.78e-3, 6.89e-4, 1.72e-4); the mean is an offset independent of $h_f$ (about +1e-5 and −6e-5). The values quoted in section D3 above (window $[T/2,T]$ with $T=4$ and 2) were transient values.
+- **Eulerian residual.** The Δt-independent part of the Eulerian speed error (about +4.5e-5 at ε = 0.01) is a coarse-mesh contribution: with $h_c=0.005$ or with margins of 30ε the slope at ε = 0.01, Δt = 4ε², on [30, 36], changes from −9.089e-3 to −9.132e-3; at ε = 0.02 with $h_c=0.02$ the same shift appears.
+
 ## Issues in `combustion1d/`
 
 1. **`simulate_ale` may stop when the front disappears** (kernel quenching, extinction). `common.simulate_ale_safe` keeps the partial result and records the remeshing steps. Not re-examined after the fixes.

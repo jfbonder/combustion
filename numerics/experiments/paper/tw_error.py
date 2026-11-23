@@ -84,7 +84,8 @@ class Monitor:
         if self.v:
             v = np.array(self.v)
             out.update(mu=np.max(np.abs(v[:, 1])), mu1=np.max(np.abs(v[v[:, 0] >= 1.0, 1])),
-                       mu_first=abs(v[0, 1]), v_mean2=np.mean(v[v[:, 0] >= 0.5 * T, 1]))
+                       mu_first=abs(v[0, 1]), v_mean2=np.mean(v[v[:, 0] >= 0.5 * T, 1]),
+                       v_tail=np.mean(v[v[:, 0] >= 0.875 * T, 1]))
         # coarse time series for plots
         idx = np.unique(np.linspace(0, len(a) - 1, 160).astype(int))
         out["series"] = dict(t=a[idx, 0], E=a[idx, 1], Es=a[idx, 2], s=a[idx, 3])
@@ -176,11 +177,15 @@ def jobs(groups):
                    mesh=dict(pts_per_eps=32, h_coarse=hc))
               for w0 in (0.0, 1.0) for e in EPS for hc in (0.04, 0.02, 0.01, 0.005, 0.0025)]
     if "D3" in groups:
+        # long runs: the mesh velocity relaxes on the time scale 4/c^2 (12 for w0 = 0,
+        # 1.5 for w0 = 1); the pinned speed is the mean of v_n - c_eps on [7T/8, T]
         J += [dict(group="D3", kind="ale", w0=w0, eps=0.01, dt=0.02, theta=th,
-                   T={0.0: 4.0, 1.0: 2.0}[w0], mesh=dict(pts_per_eps=p))
+                   T={0.0: 32.0, 1.0: 8.0}[w0], mesh=dict(pts_per_eps=p),
+                   kw=(dict(ell0=4.0) if w0 == 1.0 else {}))
               for w0 in (0.0, 1.0) for p in (8, 16, 32) for th in np.arange(16) / 16 + 1 / 32]
         J += [dict(group="D3", kind="ale", w0=w0, eps=0.001, dt=0.02, theta=th,
-                   T={0.0: 4.0, 1.0: 2.0}[w0], mesh=dict(pts_per_eps=16))
+                   T={0.0: 32.0, 1.0: 8.0}[w0], mesh=dict(pts_per_eps=16),
+                   kw=(dict(ell0=4.0) if w0 == 1.0 else {}))
               for w0 in (0.0, 1.0) for th in np.arange(8) / 8 + 1 / 16]
     if "D4" in groups:
         for w0 in (0.0, 1.0):
@@ -338,15 +343,15 @@ def fig_D3(d):
         for k, p in enumerate((8, 16, 32)):
             rs = sorted([r for r in _sel(d, group="D3", w0=w0, eps=0.01)
                          if r["mesh"]["pts_per_eps"] == p], key=lambda r: r["theta"])
-            ax.plot([r["theta"] for r in rs], [r["v_mean2"] for r in rs], color=BLUES[k + 1],
+            ax.plot([r["theta"] for r in rs], [r["v_tail"] for r in rs], color=BLUES[k + 1],
                     marker="o", ms=4, mfc="white", mew=1.2,
                     label=f"$h_f=\\varepsilon/{p}$, $\\varepsilon=0.01$")
         rs = sorted([r for r in _sel(d, group="D3", w0=w0, eps=0.001)], key=lambda r: r["theta"])
-        ax.plot([r["theta"] for r in rs], [r["v_mean2"] for r in rs], ls="none", color=SERIES[1],
+        ax.plot([r["theta"] for r in rs], [r["v_tail"] for r in rs], ls="none", color=SERIES[1],
                 marker="x", ms=6, label="$h_f=\\varepsilon/16$, $\\varepsilon=0.001$")
         ax.axhline(0, color=MUTED, lw=0.8)
         ax.set_xlabel("phase $\\vartheta$ of the front in the band lattice ($x_f=x_k+\\vartheta h_f$)")
-        title(ax, f"$w_0={w0:g}$: mean $v_n-c_\\varepsilon$, $t\\in[T/2,T]$")
+        title(ax, f"$w_0={w0:g}$: mean $v_n-c_\\varepsilon$ on $[{28 if w0 == 0 else 7:g},{32 if w0 == 0 else 8:g}]$")
         ax.set_xlim(0, 1)
     axs[0].legend(fontsize=7)
     axs[0].set_ylabel("speed error")
