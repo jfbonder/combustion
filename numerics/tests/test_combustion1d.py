@@ -118,3 +118,46 @@ def test_tw_profile_eps_solves_the_ode(w0):
     gl = (P(np.array([0.0]))[0] - P(np.array([-d]))[0]) / d
     gr = (P(np.array([d]))[0] - P(np.array([0.0]))[0]) / d
     assert gl == pytest.approx(gr, rel=1e-4)
+
+
+def test_set_reaction_custom_f():
+    """A user-supplied f: M by quadrature, travelling-wave speed -> sqrt(2M)/A,
+    and restoring the default."""
+    from combustion1d import model
+    from combustion1d.exact import tw_speed_eps, tw_speed_limit
+
+    try:
+        # same f as the default, given as a plain function: M by quadrature
+        model.set_reaction(lambda s: np.maximum(1.0 - s, 0.0))
+        assert abs(model.M(0.5) - 1.5**3 / 6) < 1e-10
+        # a different rate: f(s) = ((1 - s)^+)^2, M(0) = int_0^1 s (1-s)^2 = 1/12
+        model.set_reaction(lambda s: np.maximum(1.0 - s, 0.0) ** 2,
+                           lambda s: np.where(s < 1.0, -2.0 * (1.0 - s), 0.0))
+        assert abs(model.M(0.0) - 1.0 / 12.0) < 1e-10
+        c0 = tw_speed_limit(1.0, 0.0)
+        assert abs(c0 - np.sqrt(1.0 / 6.0)) < 1e-10
+        c = tw_speed_eps(1.0, 0.0, 1e-3)
+        assert abs(c - c0) < 5e-3
+    finally:
+        model.set_reaction()
+    assert abs(model.M(0.0) - 1.0 / 6.0) < 1e-14
+
+
+def test_ale_travelling_wave_from_exact_profile():
+    """ALE scheme started from Phi_eps: profile and speed errors are small
+    and do not change with the time step (Theorem an:thm:ale)."""
+    from combustion1d.ale import simulate_ale
+    from combustion1d.exact import tw_profile_eps, tw_speed_eps
+
+    A, w0, eps, T, x0 = 1.0, 0.0, 0.01, 2.0, 2.0
+    c = tw_speed_eps(A, w0, eps)
+    L = x0 + c * T + 12.0 / c
+    errs = []
+    for dt in (0.05, 0.01):
+        res = simulate_ale(lambda x: tw_profile_eps(x - x0, A, w0, eps), w0, eps, L, T, dt,
+                           speed_guess=c, exact_initial=True, snapshot_times=(T,))
+        x, u, _ = res.snapshots[T]
+        errs.append(np.max(np.abs(u - tw_profile_eps(x - x0 - c * T, A, w0, eps))))
+        assert abs(res.front[-1] - (x0 + c * T)) < 2e-3
+    assert max(errs) < 2e-3
+    assert abs(errs[0] - errs[1]) < 0.2 * max(errs)

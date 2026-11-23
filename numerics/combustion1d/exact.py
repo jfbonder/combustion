@@ -21,7 +21,7 @@ from scipy.integrate import solve_ivp
 from scipy.optimize import brentq
 from scipy.special import hyp1f1
 
-from .model import f, fb_slope
+from . import model
 
 
 # ---------------------------------------------------------------------------
@@ -29,7 +29,7 @@ from .model import f, fb_slope
 # ---------------------------------------------------------------------------
 
 def tw_speed_limit(A, w0):
-    return fb_slope(w0) / A
+    return model.fb_slope(w0) / A
 
 
 def tw_profile_limit(x, t, A, c, x0=0.0):
@@ -59,7 +59,7 @@ def tw_speed_eps(A, w0, eps, tol=1e-13):
         # s = -z ; y = (phi, p) with p = dphi/dz
         def rhs(s, y):
             phi, p = y
-            return [-p, -((phi + w0) * f(phi) - sigma * p)]
+            return [-p, -((phi + w0) * model.f(phi) - sigma * p)]
 
         def overshoot(s, y):
             return y[0] + w0
@@ -80,7 +80,7 @@ def tw_speed_eps(A, w0, eps, tol=1e-13):
             return -1  # sigma too small
         return +1 if sol.y[0, -1] + w0 < 0 else -1
 
-    hi = fb_slope(w0) / gamma  # zero initial energy: always overshoots
+    hi = model.fb_slope(w0) / gamma  # zero initial energy: always overshoots
     lo = hi * 1e-3
     while classify(lo) > 0:
         lo *= 0.1
@@ -110,7 +110,7 @@ class SelfSimilar:
             z_hi *= 2.0
         z0 = brentq(g, 0.0, z_hi, xtol=1e-15)
         self.R = 2.0 * np.sqrt(z0)
-        self.kappa = fb_slope(w0) / abs(self.dphi(self.R))
+        self.kappa = model.fb_slope(w0) / abs(self.dphi(self.R))
 
     def phi(self, r):
         return hyp1f1(self._a, self._b, np.asarray(r) ** 2 / 4.0)
@@ -139,13 +139,13 @@ _PROFILE_CACHE = {}
 def _tw_inner(A, w0, eps):
     """Inner profile phi on [-s_end, 0] (inner variable z = xi/eps) plus the
     exponential tail beyond. Returns (c_eps, evaluator of phi(z) for z <= 0)."""
-    key = (float(A), float(w0), float(eps))
+    key = (float(A), float(w0), float(eps), model.version)
     if key in _PROFILE_CACHE:
         return _PROFILE_CACHE[key]
     c = tw_speed_eps(A, w0, eps)
     sigma = c * eps
     gamma = A / eps - 1.0
-    a = 1.0 + w0                      # f(-w0) = 1 + w0 (needs -w0 < 1)
+    a = float(model.f(-w0))            # f(-w0) > 0 (needs -w0 < 1)
     # decaying rate of psi = phi + w0 as z -> -inf: psi'' + sigma psi' = a psi
     lam = 0.5 * (-sigma + np.sqrt(sigma**2 + 4.0 * a))
     # integrate backwards (s = -z) until psi is small; beyond that point the
@@ -155,7 +155,7 @@ def _tw_inner(A, w0, eps):
 
     def rhs(s, y):
         phi, p = y
-        return [-p, -((phi + w0) * f(phi) - sigma * p)]
+        return [-p, -((phi + w0) * model.f(phi) - sigma * p)]
 
     def small(s, y):
         return y[0] + w0 - tol_psi

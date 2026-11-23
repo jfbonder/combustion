@@ -1,4 +1,16 @@
-# Combustion: tesis doctoral
+# Combustion
+
+This repository contains:
+
+- **`paper/`** — the article *The high activation energy limit of an equidiffusional flame
+  model: rate of convergence and a front-following numerical method* (J. Fernández Bonder,
+  2026): LaTeX source `main.tex`, bibliography and the compiled draft.
+- **`numerics/`** — the Python code of the article (package `combustion1d`), the scripts
+  that reproduce every figure and table, and examples. See
+  [`numerics/README.md`](numerics/README.md) for installation, usage and reproduction.
+- The two thesis papers (below), on which the article builds.
+
+## Tesis doctoral
 
 Papers de la tesis doctoral de Julián Fernández Bonder, en colaboración con Noemí Wolanski.
 
