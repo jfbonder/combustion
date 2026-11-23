@@ -158,8 +158,11 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
         # rebuild (exactly on the band lattice) when the mesh has travelled far
         # or when the front has drifted from the band reference point
         if moved > remesh_distance or abs(xf - xc) > 0.25 * mp.K_margin * eps:
-            band_nodes = x[np.abs(np.diff(x, prepend=x[0] - 1)) < 1.5 * h_f]
-            anchor = band_nodes[0] if band_nodes.size else 0.0
+            # anchor the new band on the lattice of the current one: a node whose
+            # cell to the right has exactly the band spacing h_f (transition cells
+            # are >= growth * h_f, so they are excluded)
+            exact = np.nonzero(np.abs(np.diff(x) - h_f) < 1e-6 * h_f)[0]
+            anchor = x[exact[0]] if exact.size else 0.0
             x_new, _ = build_mesh(x, u, eps, L, mp, anchor=anchor)
             u, y = np.interp(x_new, x, u), np.interp(x_new, x, y)
             x = x_new

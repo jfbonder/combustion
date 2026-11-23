@@ -175,34 +175,76 @@ bisection for $\sigma$ (hence $c_\ve=\sigma/\ve$) to machine precision,
 independent of the PDE solver.
 
 \begin{proposition}\label{prop:speed}
-Let $I=\int_{-w_0}^1\sqrt{2G(\varphi)}\,d\varphi$. Then
+Let $f$ be Lipschitz and nonincreasing, with $f>0$ on $(-\infty,1)$ and $f=0$ on
+$[1,\infty)$, and let $w_0>-1$, $A>0$. Let $I=\int_{-w_0}^1\sqrt{2G(\varphi)}\,d\varphi$.
+There are $\ve_0,C>0$ such that for $0<\ve\le\ve_0$
 \[
-c_\ve=c_0\Big[1+\frac\ve A\Big(1-\frac{I}{\sqrt{2M}}\Big)\Big]+o(\ve).
+\Big|c_\ve-c_0\Big[1+\frac\ve A\Big(1-\frac{I}{\sqrt{2M}}\Big)\Big]\Big|\le C\ve^2\log\frac1\ve .
 \]
 For $f(s)=(1-s)^+$, $I/\sqrt{2M}=\kappa(1+w_0)$ with
 $\kappa=\frac{3\sqrt3-2}{5}\approx0.6392$.
 \end{proposition}
 
-\begin{proof}[Sketch of proof]
-Integrating $\frac{d}{dz}E=-\sigma\varphi'^2$ on $(-\infty,0)$ and using
-$E(-\infty)=0$, $E(0)=\frac12\varphi'(0)^2-M$,
+\begin{proof}
+\emph{Step 1: the wave.} By Lemma~\ref{an:lem:profile} (whose proof does not use
+this section), for $\ve\le\ve_0$ the travelling wave exists, is unique up to
+translation, $\varphi'>0$ on $(-\infty,0]$, and $c_0/2\le c_\ve\le2c_0$. We write $c=c_\ve$,
+$\sigma=\ve c$ and $p=\varphi'$. Since $U$ is $C^1$ at the point where $U=\ve$,
+$p(0)=c(A-\ve)$.
+
+\emph{Step 2: energy.} With $E=\frac12p^2-G(\varphi)$,
+$\frac{dE}{dz}=p\big(\varphi''-(\varphi+w_0)f(\varphi)\big)=-\sigma p^2$, and $E\to0$ as
+$z\to-\infty$ (since $\varphi\to-w_0$, $p\to0$). Since $p>0$ we may use $\varphi$ as the
+independent variable on $(-w_0,1]$, and integrating,
+\begin{equation}\label{eq:energyphi}
+\tfrac12p(\varphi)^2=G(\varphi)-\sigma J(\varphi),\qquad
+J(\varphi)=\int_{-\infty}^{z(\varphi)}p^2\,dz=\int_{-w_0}^{\varphi}p(\phi)\,d\phi .
+\end{equation}
+
+\emph{Step 3: $J(1)$ is close to $I$.} By \eqref{eq:energyphi}, $p\le\sqrt{2G}$, hence
+$0\le J\le I$ and $0\le2G-p^2=2\sigma J\le2\sigma I$. Therefore
 \[
-\tfrac12\varphi'(0)^2=M-\sigma\int_{-\infty}^0\varphi'^2\,dz
-=M-\sigma\int_{-w_0}^{1}\varphi'\,d\varphi .
+0\le\sqrt{2G}-p=\frac{2G-p^2}{\sqrt{2G}+p}\le\min\Big\{\sqrt{2\sigma I},\ \frac{2\sigma I}{\sqrt{2G}}\Big\}.
 \]
-As $\sigma\to0$, $\varphi'\to\sqrt{2G(\varphi)}$ uniformly as a function of
-$\varphi$, so the last integral is $I+o(1)$. Since
-$\varphi'(0)=c(A-\ve)$ and $\sigma=\ve c$, we get
-$c(A-\ve)=\sqrt{2M}-\ve cI/\sqrt{2M}+o(\ve)$, which is the claim. For
-$f=(1-s)^+$ and $a=1+w_0$, $G=\frac a2t^2-\frac13t^3$ with $t=\varphi+w_0$, and
-$I=\int_0^at\sqrt{a-\tfrac23t}\,dt=\tfrac94a^{5/2}\big[\tfrac4{15}-\tfrac23 3^{-3/2}+\tfrac25 3^{-5/2}\big]$;
-with $\sqrt{2M}=a^{3/2}/\sqrt3$ this gives $I/\sqrt{2M}=\frac{3\sqrt3-2}5\,a$.
+Let $t=\varphi+w_0\in(0,1+w_0]$. Since $f\ge m>0$ on $[-w_0,\frac{1-w_0}2]$ and
+$G$ is increasing, $G(\varphi)\ge g_0t^2$ with $g_0>0$ depending only on $f,w_0$.
+Hence, for $\sigma\le\frac12$,
+\[
+0\le I-J(1)=\int_{-w_0}^1\big(\sqrt{2G}-p\big)\,d\varphi
+\le\int_0^{1+w_0}\min\Big\{\sqrt{2\sigma I},\frac{\sqrt2\,\sigma I}{\sqrt{g_0}\,t}\Big\}dt
+\le C\sigma\Big(1+\log\frac1\sigma\Big),
+\]
+splitting the integral at $t=\sqrt{\sigma I/g_0}$. Since $\sigma\le2c_0\ve$,
+$J(1)=I-r_\ve$ with $0\le r_\ve\le C\ve\log(1/\ve)$.
+
+\emph{Step 4: the speed.} At $\varphi=1$, \eqref{eq:energyphi} reads
+$\frac12c^2(A-\ve)^2=M-\ve cJ(1)$. With $x=\ve cJ(1)/M\in[0,C\ve]$ and
+$\sqrt{1-x}=1-\frac x2+O(x^2)$,
+\[
+c(A-\ve)=\sqrt{2M}-\frac{\ve cJ(1)}{\sqrt{2M}}+O(\ve^2),
+\qquad\text{i.e.}\qquad
+c\Big(A-\ve+\frac{\ve J(1)}{\sqrt{2M}}\Big)=\sqrt{2M}+O(\ve^2),
+\]
+so that $c=c_0\big[1+\frac\ve A\big(1-\frac{J(1)}{\sqrt{2M}}\big)\big]+O(\ve^2)$. Replacing
+$J(1)$ by $I$ costs $c_0\ve r_\ve/(A\sqrt{2M})=O(\ve^2\log(1/\ve))$.
+
+\emph{Step 5: $f(s)=(1-s)^+$.} Let $a=1+w_0$ and $t=\varphi+w_0$. Then $f(\varphi)=a-t$ for
+$t\le a$, $G=\frac a2t^2-\frac13t^3$, $M=G(a)=\frac{a^3}6$ and $\sqrt{2M}=a^{3/2}/\sqrt3$.
+With $t=a\tau$ and then $v=1-\frac23\tau$,
+\[
+I=\int_0^at\sqrt{a-\tfrac23t}\,dt=a^{5/2}\int_0^1\tau\sqrt{1-\tfrac23\tau}\,d\tau
+=\frac94a^{5/2}\int_{1/3}^1\big(v^{1/2}-v^{3/2}\big)\,dv
+=\frac94a^{5/2}\Big[\frac4{15}-\frac{2}{3^{5/2}}+\frac{2}{5\cdot3^{5/2}}\Big],
+\]
+and $\frac{I}{\sqrt{2M}}=\frac{9\sqrt3}{4}a\Big[\frac4{15}-\frac{8}{5\cdot3^{5/2}}\Big]
+=a\Big(\frac{3\sqrt3}5-\frac25\Big)=\kappa a$.
 \end{proof}
 
 Berestycki, Nicolaenko and Scheurer proved that $c_\ve\to c_0$ and that the
 profiles converge, by compactness and without a rate
 \cite[Thm.~5.2]{BerestyckiNicolaenkoScheurer1985} (for $w_0=0$);
-Proposition~\ref{prop:speed} gives the rate and the first-order coefficient,
+Proposition~\ref{prop:speed} gives the first-order coefficient with an
+$O(\ve^2\log(1/\ve))$ remainder,
 also in the presence of the $O(\ve)$ perturbation $w_0$.
 In particular the first-order correction is positive for
 $w_0<w_0^*=\frac5{3\sqrt3-2}-1\approx0.564$ and negative for $w_0>w_0^*$.
@@ -236,8 +278,13 @@ h''+\Big(\frac{N-1}r-\frac r2\Big)h'+\frac12h=0.
 variables $z=r^2/4$ turns \eqref{eq:h} into Kummer's equation
 $zh_{zz}+(\frac N2-z)h_z+\frac12h=0$, so the solution regular at the origin is
 \[
-h(r)=\kappa_N\,{}_1F_1\big(-\tfrac12;\tfrac N2;\tfrac{r^2}4\big).
+h(r)=\kappa_N\,{}_1F_1\big(-\tfrac12;\tfrac N2;\tfrac{r^2}4\big),
+\qquad
+{}_1F_1(a;b;z)=\sum_{k=0}^\infty\frac{(a)_k}{(b)_k}\frac{z^k}{k!},
 \]
+where ${}_1F_1$ is Kummer's confluent hypergeometric function, $(a)_k=a(a+1)\cdots(a+k-1)$
+is the Pochhammer symbol, and $\kappa_N>0$ is a constant (the second solution of
+Kummer's equation is singular at $z=0$ when $N\ge2$, and odd in $r$ when $N=1$).
 Since $-1<-\frac12<0$, ${}_1F_1(-\frac12;\frac N2;\cdot)$ has exactly one
 positive zero $z_N$; then $R=2\sqrt{z_N}$ and $\kappa_N$ is fixed by
 $h'(R)=-\sqrt{2M}$. Numerically $R=1.8483$, $2.5139$, $3.0040$ for $N=1,2,3$.
