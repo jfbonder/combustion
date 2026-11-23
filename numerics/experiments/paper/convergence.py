@@ -21,10 +21,17 @@ from combustion1d.model import fb_slope
 from combustion1d.simple import simulate_simple
 from combustion1d.solver import MeshParams, front_speed
 
-from .common import (INK, MARKERS, MUTED, SERIES, BLUES, Timer, extinction_setup, load_json,
-                     plt, save_json, savefig, slope_ref, title, tw_setup)
+from .common import (INK, MARKERS, MUTED, SERIES, BLUES, Timer, cycle_speed, extinction_setup,
+                     load_json, plt, save_json, savefig, simulate_ale_safe, slope_ref, title,
+                     tw_setup)
+from combustion1d.exact import tw_profile_limit
 
 T_TW = {0.0: 12.0, 1.0: 8.0}      # final time (front travels ~7 and ~13)
+T_RIGID = {0.0: 10.0, 1.0: 3.6}   # rigid mesh: front travels ~6 (see report: longer
+                                  # runs collapse the cells at the tapered end x = L)
+# width of the decay zone of the mesh velocity: the code default max(2, 3/c)
+# gives an O(dt) error for the fast wave w0 = 1 (c = 1.63); we use 4 there
+ELL0 = {0.0: None, 1.0: 4.0}
 EPS = (0.01, 0.005, 0.002, 0.001)
 DTS = (0.02, 0.01, 0.005)
 DTS_SIMPLE = (0.02, 0.01, 0.005, 0.002, 0.001)
@@ -35,23 +42,36 @@ def _speeds(r, T):
 
 
 def run_tw(job):
-    """job = dict(kind, w0, eps, dt, mesh=dict(...), rigid=bool)"""
+    """job = dict(kind, w0, eps, dt, mesh=dict(...))
+    kind: 'simple' (Eulerian monotone scheme), 'ale', 'ale_default' (code
+    default ell0), 'rigid' (ALE with the whole mesh translating at c_eps)."""
     w0, eps, dt = job["w0"], job["eps"], job["dt"]
-    T = T_TW[w0]
-    u0, L, c0 = tw_setup(w0, T)
+    T = T_RIGID[w0] if job["kind"] == "rigid" else T_TW[w0]
+    _, L, c0 = tw_setup(w0, T)
     c_eps = tw_speed_eps(1.0, w0, eps)
+    # initial datum: limit profile with the speed c_eps, i.e. exactly the fresh
+    # part of the (P_eps) travelling wave (removes a slowly decaying transient)
+    u0 = lambda x: tw_profile_limit(x, 0.0, 1.0, c_eps, x0=2.0)
     mp = MeshParams(**job.get("mesh", {}))
+    cycles = None
     with Timer() as tm:
         if job["kind"] == "simple":
             r = simulate_simple(u0, w0, eps, L, T, N=1, dt=dt, mesh=mp, speed_guess=c0)
+            c_num = front_speed(r, 0.5 * T)
         elif job["kind"] == "rigid":
             r = simulate_ale(u0, w0, eps, L, T, dt, mesh=mp, speed_guess=c_eps,
                              fixed_velocity=c_eps, ell0=1e6, remesh_distance=1e9)
+            c_num = front_speed(r, 0.5 * T)
         else:
-            r = simulate_ale(u0, w0, eps, L, T, dt, mesh=mp, speed_guess=c0)
-    c_half, c_q = _speeds(r, T)
-    return dict(job, T=T, c0=c0, c_eps=c_eps, c_num=c_half, c_num_late=c_q,
-                err=c_half - c_eps, err_late=c_q - c_eps, steps=r.n_steps,
+            ell0 = None if job["kind"] == "ale_default" else ELL0[w0]
+            r, fail = simulate_ale_safe(u0, w0, eps, L, T, dt, mesh=mp, speed_guess=c0,
+                                        ell0=ell0)
+            if fail:
+                raise RuntimeError(fail)
+            c_num, cycles = cycle_speed(r, 0.5 * T)
+    c_ls = front_speed(r, 0.5 * T)
+    return dict(job, T=T, c0=c0, c_eps=c_eps, c_num=c_num, err=c_num - c_eps,
+                err_lsq=c_ls - c_eps, cycles=cycles, steps=r.n_steps,
                 n_remesh=r.n_remesh, nodes=float(np.mean(r.n_nodes)), seconds=tm.seconds)
 
 
@@ -79,11 +99,12 @@ def run_radial(job):
 def jobs_B():
     B1 = [dict(group="B1", kind="ale", w0=w0, eps=e, dt=dt)
           for w0 in (0.0, 1.0) for e in EPS for dt in DTS]
+    B1 += [dict(group="B1", kind="ale_default", w0=1.0, eps=e, dt=dt) for e in EPS for dt in DTS]
     B1 += [dict(group="B1", kind="simple", w0=w0, eps=e, dt=dt)
            for w0 in (0.0, 1.0) for e in EPS for dt in DTS_SIMPLE]
     B2 = [dict(group="B2h", kind="ale", w0=0.0, eps=e, dt=0.01,
                mesh=dict(pts_per_eps=p, h_coarse=0.0025))
-          for e in EPS for p in (4, 8, 16, 32)]
+          for e in EPS for p in (4, 8, 16, 32, 64)]
     B2 += [dict(group="B2c", kind="ale", w0=0.0, eps=e, dt=0.01,
                 mesh=dict(pts_per_eps=32, h_coarse=hc))
            for e in (0.01, 0.001) for hc in (0.04, 0.02, 0.01, 0.005, 0.0025)]
@@ -96,7 +117,10 @@ def jobs_B():
 
 
 def _dispatch(job):
-    return run_radial(job) if job["group"] == "B4" else run_tw(job)
+    try:
+        return run_radial(job) if job["group"] == "B4" else run_tw(job)
+    except Exception as ex:
+        return dict(job, failed=repr(ex))
 
 
 def run_all():
@@ -105,12 +129,14 @@ def run_all():
     out = []
     with Timer() as tm, ProcessPoolExecutor(4) as ex:
         for r in ex.map(_dispatch, jobs):
-            if r["group"] == "B4":
+            if "failed" in r:
+                print("FAILED", r, flush=True)
+            elif r["group"] == "B4":
                 print("B4 N={N} eps={eps:<6} dt={dt:<7} shifted={front_err_shifted:.3e} "
                       "sup={sup_err:.3e} {seconds:.1f}s".format(**r), flush=True)
             else:
                 print("{group:<4} {kind:<6} w0={w0} eps={eps:<6} dt={dt:<6} mesh={m} err={err:+.3e} "
-                      "late={err_late:+.3e} steps={steps} {seconds:.1f}s".format(
+                      "lsq={err_lsq:+.3e} cyc={cycles} steps={steps} {seconds:.1f}s".format(
                           m=r.get("mesh", {}), **r), flush=True)
             out.append(r)
     print(f"total {tm.seconds:.0f}s")

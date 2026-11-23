@@ -61,20 +61,34 @@ def expanding_u0(r0, w0=0.5, A=1.0):
 # ---------------------------------------------------------------------------
 
 class _KeepResult(Result):
-    """Result that remembers the last instance (combustion1d.ale.simulate_ale
-    raises a TypeError when the front disappears; with this we keep the
-    snapshots / mesh history recorded up to that step)."""
+    """Result that (1) remembers the last instance: combustion1d.ale.simulate_ale
+    raises a TypeError when the front disappears, and with this we keep the
+    snapshots / mesh history recorded up to that step; (2) records the step
+    index of every remeshing (res.remesh_steps)."""
     last = None
 
-    def __post_init__(self):
+    def __init__(self, *a, **k):
+        self._nrm = 0
+        self.remesh_steps = []
+        super().__init__(*a, **k)
         _KeepResult.last = self
+
+    @property
+    def n_remesh(self):
+        return self._nrm
+
+    @n_remesh.setter
+    def n_remesh(self, val):
+        if val > self._nrm:
+            self.remesh_steps.append(len(self.n_nodes) + 1)   # = index into res.t
+        self._nrm = val
 
 
 def simulate_ale_safe(*args, **kw):
-    """simulate_ale; on failure returns (partial Result, error string).
-
-    In the partial result t / front are None: only snapshots, n_nodes and
-    mesh_history are available."""
+    """simulate_ale with remeshing times recorded (res.remesh_steps: indices
+    into res.t). On failure returns (partial Result, error string); in the
+    partial result t / front are None (snapshots, n_nodes and mesh_history
+    are available)."""
     old = _ale.Result
     _ale.Result = _KeepResult
     try:
@@ -83,6 +97,18 @@ def simulate_ale_safe(*args, **kw):
         return _KeepResult.last, repr(ex)
     finally:
         _ale.Result = old
+
+
+def cycle_speed(res, t_from):
+    """Mean front speed between the first and the last remeshing after t_from
+    (whole remeshing cycles: the small periodic oscillation of the front
+    position over a cycle cancels). Falls back to least squares."""
+    idx = [i for i in res.remesh_steps if res.t[i] >= t_from]
+    if len(idx) >= 2:
+        a, b = idx[0], idx[-1]
+        return (res.front[b] - res.front[a]) / (res.t[b] - res.t[a]), len(idx) - 1
+    m = res.t >= t_from
+    return np.polyfit(res.t[m], res.front[m], 1)[0], 0
 
 
 # ---------------------------------------------------------------------------
