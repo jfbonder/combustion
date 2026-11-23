@@ -183,7 +183,7 @@ def bisect_critical(args):
                 history=hist)
 
 
-EPS_C3 = (0.01, 0.005, 0.0025)
+EPS_C3 = (0.01, 0.005, 0.0025, 0.00125)
 
 
 def run_all(what=("C1", "C2", "C3")):
@@ -212,12 +212,13 @@ def run_all(what=("C1", "C2", "C3")):
     if "C3" in what:
         with ProcessPoolExecutor(4) as ex:
             crit = list(ex.map(bisect_critical,
-                               [(e, 0.005, "ale", 0.5, 1.3, 0.004) for e in EPS_C3]
-                               + [(0.01, None, "euler", 0.5, 1.3, 0.004)]))
+                               [(e, 0.005, "ale", 0.6, 0.8, 0.001) for e in EPS_C3]
+                               + [(0.005, 0.001, "ale", 0.6, 0.8, 0.001),
+                                  (0.01, None, "euler", 0.6, 0.8, 0.001)]))
             for c in crit:
-                print("C3 crit eps={eps} {method}: r0* in [{lo:.4f}, {hi:.4f}]".format(**c),
+                print("C3 crit eps={eps} dt={dt} {method}: r0* in [{lo:.4f}, {hi:.4f}]".format(**c),
                       flush=True)
-            rc = {c["eps"]: c["r_crit"] for c in crit if c["method"] == "ale"}
+            rc = {c["eps"]: c["r_crit"] for c in crit if c["method"] == "ale" and c["dt"] == 0.005}
             r0s = [0.6, 0.8, rc[0.01] - 0.01, rc[0.01] + 0.01, 1.0, 1.2, 1.5]
             runs = list(ex.map(run_kernel, [dict(r0=r0, eps=0.01, dt=0.005, t_end=4.0)
                                             for r0 in r0s]))
@@ -334,13 +335,18 @@ def fig_C3():
     ax.legend(loc="upper right", fontsize=8)
     title(ax, "$\\varepsilon=0.01$, ALE $\\Delta t=0.005$")
     ax = axs[1]
-    crit = [c for c in d["critical"] if c["method"] == "ale"]
+    crit = sorted((c for c in d["critical"] if c["method"] == "ale" and c["dt"] == 0.005),
+                  key=lambda c: c["eps"])
     e = np.array([c["eps"] for c in crit])
     rc = np.array([c["r_crit"] for c in crit])
     err = np.array([0.5 * (c["hi"] - c["lo"]) for c in crit])
     ax.errorbar(e, rc, yerr=err, color=SERIES[0], marker="o", mfc="white", mew=1.3, ms=6,
-                capsize=3, label="ALE")
+                capsize=3, label="ALE, $\\Delta t=0.005$")
     for c in d["critical"]:
+        if c["method"] == "ale" and c["dt"] != 0.005:
+            ax.errorbar([c["eps"]], [c["r_crit"]], yerr=[0.5 * (c["hi"] - c["lo"])],
+                        color=SERIES[2], marker="^", ms=6, mfc="none", capsize=3, ls="none",
+                        label=f"ALE, $\\Delta t={c['dt']:g}$")
         if c["method"] == "euler":
             ax.errorbar([c["eps"]], [c["r_crit"]], yerr=[0.5 * (c["hi"] - c["lo"])],
                         color=SERIES[1], marker="s", ms=6, mfc="none", capsize=3, ls="none",

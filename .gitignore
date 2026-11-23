@@ -6,3 +6,4 @@ __pycache__/
 paper/pdfs/*
 !paper/pdfs/README.md
 numerics/figures/*.gif
+numerics/results/paper/*.npz
