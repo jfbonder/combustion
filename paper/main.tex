@@ -8,11 +8,14 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
 \newcommand{\ve}{\varepsilon}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Lop}{\mathcal{L}}
 
 \title[Numerics for the high activation energy limit]{Computing the high activation energy limit\\ of an equidiffusional flame model}
 
@@ -264,13 +267,42 @@ so that $(Y_0^\ve-u_0^\ve)/\ve=w_0$ exactly, $Y_0^\ve=0$ in the burnt region
 $\{u_0=0\}$, $Y_0^\ve\ge0$, and $u_0^\ve\to u_0$ uniformly with uniformly bounded
 Lipschitz constants, as required in \cite{FernandezBonderWolanski2004}.
 
-\begin{remark}
-The cost is dominated by the number of time steps, which grows like
-$\ve^{-1}$ to $\ve^{-3/2}$: on a mesh fixed between remeshings, the front
-crosses $O(\ve^{-1})$ fine cells. A genuinely moving mesh (ALE or MMPDE
-\cite{HuangRussell2011}), whose nodes travel with the front, would allow time
-steps independent of $\ve$ in travelling-wave regimes.
-\end{remark}
+\subsection*{The ALE version}
+The cost of the Eulerian version is dominated by the number of time steps,
+which grows like $\ve^{-1}$ to $\ve^{-3/2}$: on a mesh that is fixed between
+remeshings, the front crosses $O(\ve^{-1})$ fine cells, and the time step must
+resolve each crossing. In the ALE version the nodes travel with the front.
+\begin{itemize}
+\item \emph{Moving nodes.} Node $i$ moves with velocity $\dot x_i=v_n\chi(x_i)$,
+where $\chi=1$ on a neighbourhood of radius $R_1$ of the band and decays
+linearly to $0$ (nodes far away, and the ends of $[0,L]$, do not move). The band
+therefore travels rigidly with the front; $R_1$ must contain several decay
+lengths $1/c$ of the profile ahead of the front (we take $R_1\ge\max(2,3/c)$; see
+Section~\ref{sec:analysis}).
+\item \emph{Equation along the node trajectories.} With
+$D_tu=u_t+\dot x\,u_x$ the equation becomes
+$D_tu=\Delta u+\dot x\,u_x-(u+w)f_\ve(u)$, and $u_x$ is discretized by the
+three-point centred formula, which is second order and keeps the M-matrix
+structure as long as the cell P\'eclet number satisfies $|\dot x_i|h_i\le2$.
+\item \emph{Implicit mesh velocity.} At each step $v_n$ is chosen, by a
+secant iteration (two to four linear solves), so that the computed front ends the
+step at the reference point of the band. For accelerating fronts (for instance
+near extinction) an explicit estimate of $v_n$ from the previous steps lags by
+(acceleration)$\times\Delta t$, which violates the condition
+$\Delta t\,\mu\lesssim\ve$ of Theorem~\ref{an:thm:ale} for small $\ve$; the implicit
+choice removes this lag.
+\item \emph{Remeshing.} The mesh is rebuilt when it has travelled a distance
+$O(1)$, or when the front drifts from the band reference point. The new band
+lies on the same lattice as the old one, so the transfer of the solution
+(piecewise linear interpolation, an order preserving operator) is exact in the
+band.
+\item \emph{Time stepping.} The linearly implicit Euler scheme (S) of
+Section~\ref{sec:theory} with a fixed time step.
+\end{itemize}
+For the travelling wave the solution is steady in the frame of the nodes, and
+the error of the ALE scheme does not contain $\Delta t$ at all
+(Theorem~\ref{an:thm:ale}); for general data it is $O(\Delta t)$ with a constant
+independent of $\ve$ (Section~\ref{sec:experiments}).
 
 % ---------------------------------------------------------------------------
 \section{A provably monotone version of the scheme}\label{sec:theory}
@@ -373,42 +405,12 @@ rest. Note that it does not require $\Delta t\lesssim\ve^2$: a fully implicit
 treatment of $(u+w)f_\ve(u)$ would, because that function is not monotone
 in $u$.
 
-\subsection{Towards $\ve$-uniform error estimates}
+\subsection{Error estimates}
 Lemma~\ref{lem:comparison} reduces error estimates to the construction of
-barriers.
-
-\begin{proposition}\label{prop:barriers}
-Let $u$ be a solution of \eqref{eq:P} and $\delta\ge0$. Suppose that there
-are a discrete supersolution $V^+$ and a discrete subsolution $V^-$ with
-$V^{-,0}\le U^0\le V^{+,0}$ and $|V^{\pm,n}-u(\cdot,t_n)|\le\delta$ on
-$\mathcal T^n$ for $t_n\le T$. Then $\max_{t_n\le T}\|U^n-u(\cdot,t_n)\|_\infty\le\delta$.
-\end{proposition}
-
-The proof is immediate from Lemma~\ref{lem:comparison}. For fixed $\ve$, taking
-$V^\pm$ as the interpolant of $u^\ve$ plus a correction growing in time
-yields convergence of (S) to $u^\ve$ as $h,\Delta t\to0$, with constants that
-depend on $\ve$ (through the Lipschitz constant $\ve^{-2}$ of the reaction).
-The relevant question is an estimate uniform in $\ve$. In the planar
-travelling wave case we expect barriers of the form
-\[
-V^\pm(x,t)=U_\ve\big(x-ct\mp\xi(t)\big)\pm q(t),
-\]
-in the spirit of Fife and McLeod, where $U_\ve$ is the travelling wave of
-Section~\ref{sec:exact}, $\xi$ absorbs the truncation error inside the
-reaction layer (where $U_\ve'$ is bounded below), and $q$ absorbs it in the
-burnt region (where the state $-\ve w_0$ is exponentially stable) and ahead
-of the front (where $u$ is caloric and $q$ grows at most linearly in time).
-The truncation error of (S) on $U_\ve$ is
-$O(\Delta t/\ve^2+h_f^2/\ve^2)$ inside the layer, which suggests
-\begin{equation}\label{eq:conj}
-\max_{t_n\le T}\|U^n-u(\cdot,t_n)\|_\infty\le C_T\Big(\ve+\frac{\Delta t}{\ve}+\frac{h_f^2}{\ve}+h_c^2\Big).
-\end{equation}
-We have not completed the proof; the case of a general classical solution of
-\eqref{eq:P} requires, in addition, a quantitative version of the barrier
-construction of \cite[Theorem~4.1]{FernandezBonderWolanski2004}. The
-experiments in Table~\ref{tab:simple} are consistent with the term
-$\Delta t/\ve$: with $\Delta t=\kappa\ve^2$, the error in the flame speed is
-$\approx-0.23\,\kappa\,\ve$.
+discrete barriers; this is carried out in Section~\ref{sec:analysis}. For the
+Eulerian version the time step enters through the lag of the reaction rate,
+and the speed error is $\approx-0.23\,\Delta t/\ve$ (Table~\ref{tab:simple});
+in the ALE version this term disappears.
 
 \begin{table}[h]
 \centering
@@ -424,12 +426,669 @@ $\ve$ & $\Delta t=4\ve^2$ & $\Delta t=\ve^2$ & $\Delta t=\ve^2/4$\\
 $c_{\rm(S)}-c_\ve$ with respect to the exact speed of \eqref{eq:Peps}.}\label{tab:simple}
 \end{table}
 
-In practice we use the higher order version of Section~\ref{sec:method}
-(variable order BDF, monotone cubic transfer), which allows much larger time
-steps; the experiments below were run with it. Both versions were checked
-against the exact speed $c_\ve$: the error of the BDF version is below
-$10^{-4}$ (Section~\ref{sec:experiments}), and that of (S) is the
-$O(\Delta t/\ve)$ term of Table~\ref{tab:simple}.
+% ---------------------------------------------------------------------------
+\section{$\ve$-uniform error estimates}\label{sec:analysis}
+
+We prove error estimates, uniform in $\ve$, for the monotone schemes in the
+travelling wave case. The setting is one space dimension with $w^\ve\equiv\ve w_0$
+constant; the extension to general data is discussed in Section~\ref{sec:conclusions}.
+
+\subsection{Setting}\label{an:sec:setting}
+
+\subsubsection*{Equation} One space dimension, $w^\ve\equiv\ve w_0$ with $w_0>-1$
+constant, so $Y=u+\ve w_0$ and
+\begin{equation}\label{an:eq:P}
+u_t=u_{xx}-g_\ve(u),\qquad g_\ve(s)=(s+\ve w_0)f_\ve(s),\quad f_\ve(s)=\ve^{-2}f(s/\ve).
+\end{equation}
+\textbf{(F)} $f$ is Lipschitz (constant $L_f$), nonincreasing, $f>0$ on
+$(-\infty,1)$ and $f=0$ on $[1,\infty)$. \textbf{(F$'$)} In addition
+$f\in C^{1,1}(\R)$.
+
+\subsubsection*{Scheme} Uniform grid $x_j=jh$, $j\in\Z$, time step $\Delta t$,
+$t_n=n\Delta t$, $\delta^2V_j=(V_{j+1}-2V_j+V_{j-1})/h^2$. For bounded
+sequences $V=(V^n_j)$ define
+\begin{equation}\label{an:eq:L}
+\Lop[V]^n_j=\frac{V^{n+1}_j-V^n_j}{\Delta t}-\delta^2V^{n+1}_j+f_\ve(V^n_j)\,\big(V^{n+1}_j+\ve w_0\big).
+\end{equation}
+The scheme (S) is $\Lop[U]=0$ with $U^0$ given. (It is the scheme of the
+paper with $W\equiv\ve w_0$; constants are discrete-caloric.)
+
+\subsubsection*{Comparison on $\Z$} A bounded $V$ is a \emph{supersolution} if
+$\Lop[V]\ge0$ and $V+\ve w_0\ge0$; a \emph{subsolution} if $\Lop[V]\le0$.
+
+\begin{lemma}\label{an:lem:comp}
+Assume (F). If $V$ is a bounded supersolution, $U$ the bounded solution of (S)
+with $U^0+\ve w_0\ge0$, and $U^0\le V^0$, then $U^n\le V^n$ for all $n$. The
+analogous statement holds for subsolutions.
+\end{lemma}
+
+\begin{proof}
+As in the paper, $D=U^{n+1}-V^{n+1}$ satisfies
+$(\Delta t^{-1}+F_j)D_j-\delta^2D_j\le0$ for all $j$, where
+$F=f_\ve(U^n)\ge0$. Let $s=\sup_jD_j$ and assume $s>0$. Given $\eta>0$ pick $j$
+with $D_j>s-\eta$. Then $-\delta^2D_j\ge\frac{2}{h^2}(D_j-s)\ge-\frac{2\eta}{h^2}$
+and $(\Delta t^{-1}+F_j)D_j\ge\Delta t^{-1}(s-\eta)$, so
+$0\ge\Delta t^{-1}(s-\eta)-2\eta h^{-2}$, which fails for small $\eta$.
+\end{proof}
+
+\subsection{Travelling waves of \eqref{an:eq:P}}
+
+For $A>\ve$ let $\Phi=\Phi_\ve$ be the travelling wave: $u=\Phi(x-ct)$ with
+$c=c_\ve$,
+\begin{equation}\label{an:eq:tw}
+\Phi''+c\Phi'=g_\ve(\Phi),\qquad \Phi(-\infty)=-\ve w_0,\quad\Phi(+\infty)=A,
+\end{equation}
+normalized by $\Phi(0)=\ve$. Then $\Phi(z)=A-(A-\ve)e^{-cz}$ for $z\ge0$, and
+$\Phi(z)=\ve\varphi(z/\ve)$ for $z\le0$, where $\varphi$ solves
+$\varphi''+\sigma\varphi'=(\varphi+w_0)f(\varphi)$, $\sigma=\ve c$ (see the
+paper). Let $c_0=\sqrt{2M}/A$ and $\kappa_0=\sqrt{f(-w_0)}$.
+
+\begin{lemma}[Profile estimates]\label{an:lem:profile}
+Assume (F) and let $a=f(-w_0)>0$, $\kappa_0=\sqrt a$. There are $\ve_0>0$ and
+$K>0$ depending only on $f,w_0,A$, and for every $Z\ge1$ a constant
+$\theta(Z)>0$ depending only on $f,w_0,A,Z$, such that for $0<\ve\le\ve_0$:
+\begin{enumerate}
+\item $|c_\ve-c_0|\le K\ve$; in particular $c_0/2\le c_\ve\le 2c_0$;
+\item $\Phi'>0$ on $\R$, $\|\Phi'\|_\infty\le K$, $\|\Phi''\|_\infty\le K/\ve$,
+$\|\Phi'''\|_\infty\le K/\ve^2$ ($\Phi'''$ in the a.e.\ sense); under (F$'$)
+also $\|\Phi''''\|_\infty\le K/\ve^3$; on $[0,\infty)$ all derivatives up to
+order four are bounded by $K$;
+\item $\Phi'\ge\theta(Z)$ on $[-Z\ve,2\ve]$;
+\item for $z\le0$: $0\le\Phi(z)+\ve w_0\le K\ve e^{\kappa_0 z/(2\ve)}$ and
+$|\Phi^{(k)}(z)|\le K\ve^{1-k}e^{\kappa_0 z/(2\ve)}$ for $k=1,2,3$;
+\item $\sup_z|\Phi_\ve(z)-u_0(z)|\le K\ve$, where $u_0(z)=A(1-e^{-c_0z})^+$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Existence.} With $\tilde u(\tilde x)=(A-\Phi(-\tilde x))/(A+\ve w_0)$,
+\eqref{an:eq:tw} becomes $-\tilde u''+c\tilde u'=\tilde g(\tilde u)$ with
+$\tilde u(-\infty)=0$, $\tilde u(+\infty)=1$ and a Lipschitz
+$\tilde g\ge0$ vanishing on $[0,(A-\ve)/(A+\ve w_0)]$ and at $1$, positive in
+between; this is the scalar problem of \cite[Thm.~3.1]{BerestyckiNicolaenkoScheurer1985} (ignition-type $\tilde g$), which has a
+unique solution $(\tilde u,c)$ with $\tilde u'>0$ (up to translation). We
+normalize $\Phi(0)=\ve$.
+
+\emph{Inner variables and energy.} For $z\le0$ write $\Phi(z)=\ve\varphi(z/\ve)$,
+$\zeta=z/\ve$, $p=\varphi'$, $\sigma=\ve c$; then
+$\varphi''+\sigma p=(\varphi+w_0)f(\varphi)$ on $\zeta<0$,
+$\varphi(-\infty)=-w_0$, $\varphi(0)=1$, $p(0)=c(A-\ve)$ (matching with the
+explicit solution $\Phi=A-(A-\ve)e^{-cz}$ on $z\ge0$, since $\Phi\in C^1$). Let
+$G(\varphi)=\int_{-w_0}^\varphi(s+w_0)f(s)\,ds$ (so $G(1)=M$) and
+$E=\frac12p^2-G(\varphi)$. Then $\frac{dE}{d\zeta}=-\sigma p^2\le0$ and
+$E(-\infty)=0$, so
+\begin{equation}\label{an:eq:energy}
+E(\zeta)=-\sigma\int_{-\infty}^{\zeta}p^2\,d\zeta'\le0 .
+\end{equation}
+
+\emph{Monotonicity.} $p>0$ for $\zeta<0$: $p>0$ near $-\infty$ (unstable
+manifold of the saddle $(-w_0,0)$, along which $\varphi$ increases); if
+$\zeta_1<0$ were the first zero of $p$, then $-w_0<\varphi(\zeta_1)<1$ and
+$\varphi''(\zeta_1)=(\varphi+w_0)f(\varphi)>0$, so $\varphi$ would have a local
+minimum at $\zeta_1$, contradicting $p>0$ on $(-\infty,\zeta_1)$. On $z\ge0$,
+$\Phi'=(A-\ve)ce^{-cz}>0$.
+
+\emph{Item (1).} Since $p>0$, $\varphi$ is a valid variable and
+$\int_{-\infty}^0p^2\,d\zeta=\int_{-w_0}^1p\,d\varphi$. By \eqref{an:eq:energy},
+$p\le\sqrt{2G(\varphi)}$, hence $0\le\int_{-w_0}^1p\,d\varphi\le
+I:=\int_{-w_0}^1\sqrt{2G}\,d\varphi$, and evaluating \eqref{an:eq:energy} at $0$,
+\[
+2M-2\sigma I\le c^2(A-\ve)^2\le 2M .
+\]
+With $\sigma=\ve c$ and $c_0=\sqrt{2M}/A$ this gives
+$c\le c_0A/(A-\ve)$ and $c(A-\ve)\ge\sqrt{2M}-2\ve cI/\sqrt{2M}$, so
+$|c-c_0|\le K\ve$ for $\ve\le\ve_0$.
+
+\emph{Item (4) (uniform exponential tail).} Since $f$ is nonincreasing,
+$f(s)\le a$ for $s\ge-w_0$, so $G(\varphi)\le\frac a2(\varphi+w_0)^2$ and
+$p\le\sqrt a(\varphi+w_0)$. Hence
+$\int_{-\infty}^\zeta p^2=\int_{-w_0}^{\varphi}p\,d\varphi\le\frac{\sqrt a}{2}(\varphi+w_0)^2$.
+Also $G(\varphi)\ge\frac{f(\varphi)}2(\varphi+w_0)^2$. Fix $\varphi_*\in(-w_0,1)$
+with $f(\varphi_*)\ge a/2$. For $\varphi\le\varphi_*$, \eqref{an:eq:energy} gives
+\[
+p^2\ \ge\ 2G(\varphi)-2\sigma\tfrac{\sqrt a}{2}(\varphi+w_0)^2\ \ge\
+\big(\tfrac a2-\sigma\sqrt a\big)(\varphi+w_0)^2\ \ge\ \tfrac a4(\varphi+w_0)^2
+\]
+if $\sigma\le\sqrt a/4$. Thus $\frac{d}{d\zeta}\log(\varphi+w_0)\ge\frac{\sqrt a}2$
+while $\varphi\le\varphi_*$. Let $\zeta_*<0$ with $\varphi(\zeta_*)=\varphi_*$. On
+$[\varphi_*,1]$, \eqref{an:eq:energy} gives
+$p^2\ge2G(\varphi_*)-\sqrt a\,\sigma(1+w_0)^2\ge G(\varphi_*)$ for $\sigma$
+small, so $|\zeta_*|\le(1-\varphi_*)/\sqrt{G(\varphi_*)}=:Z_*$, independent of
+$\sigma$. Therefore $\varphi+w_0\le(1+w_0)e^{\frac{\sqrt a}{2}(\zeta+Z_*)}$ for
+$\zeta\le0$. For the derivatives: $0<p\le\sqrt a(\varphi+w_0)$;
+$|\varphi''|\le(\varphi+w_0)f(\varphi)+\sigma p\le C(\varphi+w_0)$; and, $g(s)=(s+w_0)f(s)$
+being Lipschitz with $g(-w_0)=0$,
+$|\varphi'''|=|g'(\varphi)p-\sigma\varphi''|\le C(\varphi+w_0)$ a.e. Scaling back,
+$\Phi^{(k)}(z)=\ve^{1-k}\varphi^{(k)}(z/\ve)$, which is (4).
+
+\emph{Item (2).} On $\zeta\le0$: $0<p\le\sqrt{2M}$, $|\varphi''|\le C$,
+$|\varphi'''|\le C$, and under (F$'$) $|\varphi''''|=|(g'(\varphi)p)'-\sigma\varphi'''|\le C$;
+scale back. On $z\ge0$ the explicit formula and (1) give bounds by $K$.
+
+\emph{Item (3).} On $[0,2\ve]$, $\Phi'\ge(A-\ve)ce^{-2c\ve}\ge Ac_0/4$. On
+$[-Z\ve,0]$, by item (4)'s argument $\varphi\ge\varphi_*$ on $[\zeta_*,0]$
+where $p^2\ge G(\varphi_*)$; and on $[-Z,\zeta_*]$ (if nonempty),
+$p\ge\frac{\sqrt a}2(\varphi+w_0)\ge\frac{\sqrt a}2(\varphi_*+w_0)e^{-\sqrt a\,(Z-|\zeta_*|)}$,
+using $\frac{d}{d\zeta}\log(\varphi+w_0)=p/(\varphi+w_0)\le\sqrt a$. Both bounds depend
+only on $f,w_0,A,Z$; call their minimum $\theta(Z)$.
+
+\emph{Item (5).} For $z\ge0$,
+$|\Phi(z)-u_0(z)|\le A|e^{-c_0z}-e^{-cz}|+\ve e^{-cz}\le A\,|c-c_0|\,\sup_{z\ge0}ze^{-\min(c,c_0)z}+\ve
+\le\frac{2A}{ec_0}K\ve+\ve$. For $z\le0$, $u_0=0$ and $-\ve w_0\le\Phi\le\ve$.
+\end{proof}
+
+\subsection{Barriers}
+
+For $\xi,q\colon\{t_n\}\to[0,\infty)$ nondecreasing let
+\[
+V^n_j=\Phi\big(x_j-ct_n+\xi_n\big)+q_n,\qquad
+\sigma_n=\frac{\xi_{n+1}-\xi_n}{\Delta t},\qquad \dot q_n=\frac{q_{n+1}-q_n}{\Delta t}.
+\]
+$V+\ve w_0\ge0$ since $\Phi\ge-\ve w_0$. Write $z'=x_j-ct_{n+1}+\xi_{n+1}$ and
+$z=x_j-ct_n+\xi_n=z'+(c-\sigma_n)\Delta t$. We assume throughout
+\begin{equation}\label{an:eq:small}
+h\le\ve,\qquad c\Delta t\le\ve,\qquad \sigma_n\le c.
+\end{equation}
+
+\begin{lemma}[Residual]\label{an:lem:residual}
+Assume (F) and \eqref{an:eq:small}. Then
+\[
+\Lop[V]^n_j\ \ge\ \dot q_n+\sigma_n\Phi'(z')-r_1-r_2+f_\ve(V^n_j)q_{n+1}-B,
+\]
+where, with $I=[z'-h,\,z'+\max(h,c\Delta t)]$,
+\[
+r_1=\tfrac12c^2\Delta t\,\sup_I|\Phi''|,\qquad
+r_2=\begin{cases}\tfrac h3\sup_I|\Phi'''|&\text{under (F)},\\[2pt]
+\tfrac{h^2}{12}\sup_I|\Phi''''|&\text{under (F$'$)},\end{cases}
+\]
+and $B=0$ if $\Phi(z')\ge\ve$, while in general
+\[
+0\le B\le\frac{L_f}{\ve^3}\big(\Phi(z')+\ve w_0\big)\big(c\Delta t\sup_I\Phi'+q_n\big).
+\]
+\end{lemma}
+
+\begin{proof}
+\emph{Time difference.} By Taylor,
+$\Phi(z')-\Phi(z)=-(c-\sigma_n)\Delta t\,\Phi'(z')+R$ with
+$|R|\le\frac12(c\Delta t)^2\sup_I|\Phi''|$, so
+$(V^{n+1}_j-V^n_j)/\Delta t=-c\Phi'(z')+\sigma_n\Phi'(z')+\dot q_n+R/\Delta t$.
+
+\emph{Space difference.}
+$\delta^2\Phi(z')-\Phi''(z')=h^{-2}\int_{-h}^h(h-|s|)\big(\Phi''(z'+s)-\Phi''(z')\big)ds$,
+which is bounded by $\frac h3\sup|\Phi'''|$; under (F$'$), symmetrizing and
+expanding to the next order gives $\frac{h^2}{12}\sup|\Phi''''|$.
+
+\emph{Reaction.} Since $z\ge z'$ and $\Phi$ is increasing,
+$\Phi(z)+q_n\ge\Phi(z')$, so $f_\ve(V^n_j)\le f_\ve(\Phi(z'))$ and
+\[
+f_\ve(V^n_j)(V^{n+1}_j+\ve w_0)=g_\ve(\Phi(z'))+f_\ve(V^n_j)q_{n+1}
+-\underbrace{\big(f_\ve(\Phi(z'))-f_\ve(V^n_j)\big)(\Phi(z')+\ve w_0)}_{=:B\ge0}.
+\]
+If $\Phi(z')\ge\ve$ both values of $f_\ve$ vanish. Otherwise
+$|f_\ve(a)-f_\ve(b)|\le L_f\ve^{-3}|a-b|$ and
+$0\le\Phi(z)+q_n-\Phi(z')\le c\Delta t\sup_I\Phi'+q_n$.
+
+\emph{Collecting.} Using \eqref{an:eq:tw} at $z'$,
+$-c\Phi'-\Phi''+g_\ve(\Phi)=0$.
+\end{proof}
+
+\subsection{Main estimate}\label{an:sec:main}
+
+Let
+\[
+\rho=\frac{\Delta t}{\ve^2}+\frac{h}{\ve^2}\ \text{ under (F)},\qquad
+\rho=\frac{\Delta t}{\ve^2}+\frac{h^2}{\ve^3}\ \text{ under (F$'$)}.
+\]
+
+\begin{theorem}\label{an:thm:main}
+Assume (F) [resp. (F$'$)], $w_0>-1$ constant, $A>0$, and let $U$ be the solution
+of (S) with $U^0_j=\Phi_\ve(x_j)$. For every $T>0$ there are $C,\gamma>0$,
+depending only on $f,w_0,A,T$, such that if $\ve\le\ve_0$, $h\le\ve$,
+$c_0\Delta t\le\ve/2$ and $\rho\le\gamma$, then
+\[
+\max_{t_n\le T}\ \sup_j\big|U^n_j-\Phi_\ve(x_j-c_\ve t_n)\big|\le C\rho,
+\qquad
+\max_{t_n\le T}\ \sup_j\big|U^n_j-u(x_j,t_n)\big|\le C(\ve+\rho),
+\]
+where $u(x,t)=A\big(1-e^{-c_0(x-c_0t)}\big)^+$ is the travelling wave of the
+limit free boundary problem.
+\end{theorem}
+
+In particular, with $\Delta t\le\ve^3$ and $h\le\ve^3$ (Lipschitz $f$) or
+$h\le\ve^2$ (under (F$'$)), the scheme converges to the limit problem with
+rate $O(\ve)$, uniformly in $\ve$.
+
+\begin{proof}
+We prove the upper bound; the lower bound is symmetric (use
+$\Phi(x-ct-\xi)-q$; in Lemma~\ref{an:lem:comp} for subsolutions one uses
+$U+\ve w_0=Y\ge0$). $K,\kappa_0,\theta(\cdot)$ are as in
+Lemma~\ref{an:lem:profile}; $C_1,C_2,\dots$ depend only on $f,w_0,A,T$. Let
+$a=1$ under (F) and $a=2$ under (F$'$); note that
+\begin{equation}\label{an:eq:rho}
+\Delta t\le\ve^2\rho,\qquad h^a\le\ve^2\rho .
+\end{equation}
+
+\emph{Constants $\mu,\delta,Z$.} Let $\mu=f(-w_0)/4>0$ and choose $\delta>0$ with
+$f(s)\ge2\mu$ for $s\le-w_0+3\delta$. Choose $Z\ge1$ with
+$Ke^{\kappa_0/2}e^{-\kappa_0Z/2}\le\delta$ and $L_fKe^{-\kappa_0Z/2}\le\mu/4$; this fixes
+$\theta=\theta(Z)>0$. With $\zeta=z'/\ve$ we split into the regions
+(I) $\zeta\ge2$, (II) $-Z\le\zeta\le2$, (III) $\zeta\le-Z$.
+Note $I\subset[z'-\ve,z'+\ve]$ by \eqref{an:eq:small}.
+
+\emph{Residual bounds from Lemma~\ref{an:lem:profile}.}
+\begin{itemize}
+\item[(I)] $I\subset[\ve,\infty)$, where derivatives are $O(1)$:
+$r_1+r_2\le C_1(\Delta t+h^a)$. Since $\Phi(z)+q_n\ge\Phi(z')\ge\ve$, $B=0$.
+\item[(II)] $r_1\le C_1\Delta t/\ve\le C_1\ve\rho$ and $r_2\le C_1\rho$
+(from $|\Phi'''|\le K\ve^{-2}$, resp. $|\Phi''''|\le K\ve^{-3}$). Since
+$\Phi(z')+\ve w_0\le(1+w_0)\ve$, $B\le C_1\ve^{-2}(\Delta t+q_n)$.
+\item[(III)] $r_1+r_2\le C_1\rho$ and, by item (4) and the choice of $Z$,
+$B\le\frac{\mu}{4}\ve^{-2}(c\Delta tK+q_n)$.
+\end{itemize}
+
+\emph{Stability in (III).} There $z\le z'+\ve\le(1-Z)\ve\le0$, so by item (4)
+$(\Phi(z)+\ve w_0)/\ve\le Ke^{\kappa_0(1-Z)/2}\le\delta$. If
+$q_n\le\ve\delta$, then $V^n_j/\ve\le-w_0+2\delta$, so $f_\ve(V^n_j)\ge2\mu\ve^{-2}$
+and $f_\ve(V^n_j)q_{n+1}\ge2\mu\ve^{-2}q_n$.
+
+\emph{Choice of $q$ and $\xi$.} Set
+\[
+q_n=q_*+C_2(\Delta t+h^a)t_n,\qquad q_*=C_3\ve^2\rho,\qquad
+\xi_n=\sigma t_n,\quad\sigma=C_4\rho .
+\]
+By \eqref{an:eq:rho}, $q_n\le(C_3+C_2T)\ve^2\rho$ for $t_n\le T$. If $\gamma$ is
+small, $\rho\le\gamma$ implies $q_n\le\ve\delta$ and $\sigma\le c_0/2\le c$, so
+\eqref{an:eq:small} and the stability bound hold.
+
+\emph{Sign of $\Lop[V]$} (Lemma~\ref{an:lem:residual}).
+\begin{itemize}
+\item[(I)] $\Lop[V]\ge\dot q_n-r_1-r_2\ge(C_2-C_1)(\Delta t+h^a)\ge0$ if $C_2\ge C_1$.
+\item[(III)] $\Lop[V]\ge2\mu\ve^{-2}q_n-\frac\mu4\ve^{-2}(c\Delta tK+q_n)-C_1\rho
+\ge\frac{7\mu}4\ve^{-2}q_*-\frac{\mu cK}{4}\ve^{-2}\Delta t-C_1\rho
+\ge\big(\tfrac{7\mu}{4}C_3-\tfrac{\mu cK}{4}-C_1\big)\rho\ge0$ if $C_3$ is large.
+\item[(II)] $\Lop[V]\ge\sigma\theta-C_1\ve\rho-C_1\rho-C_1\ve^{-2}(\Delta t+q_n)
+\ge\big(C_4\theta-C_1(2+1+C_3+C_2T)\big)\rho\ge0$ if $C_4$ is large.
+\end{itemize}
+Hence $V$ is a supersolution with $V^0_j\ge\Phi(x_j)=U^0_j$, and by
+Lemma~\ref{an:lem:comp}
+\[
+U^n_j\le\Phi(x_j-ct_n+\sigma t_n)+q_n\le\Phi(x_j-ct_n)+KC_4T\rho+(C_3+C_2T)\ve^2\rho .
+\]
+This gives the first estimate. The second follows from
+Lemma~\ref{an:lem:profile}(5),(1): $|\Phi_\ve(x-c_\ve t)-u(x,t)|\le K\ve+Ac_0|c_\ve-c_0|\,t\le C\ve$.
+\end{proof}
+
+\begin{remark}[What is lost]
+The estimate is not sharp. Inside the reaction layer the truncation error is
+pointwise of size $\Delta t/\ve^2$ (lagged reaction) and $h^2/\ve^3$
+(second differences), and a pointwise barrier must absorb it with
+$\sigma\Phi'$, so that the front is allowed to drift at speed $O(\rho)$.
+The actual drift is the \emph{average} of the truncation error against the
+adjoint eigenfunction of the linearized operator, which is a factor $\ve$
+smaller: the experiments give speed errors $\approx-0.23\,\Delta t/\ve$ and
+$\approx0.016\,(h/\ve)^2\cdot\ve^0$, i.e. $\Delta t/\ve$ and $(h/\ve)^2$.
+\end{remark}
+
+
+\subsection{The ALE version: an estimate without $\Delta t$}\label{an:sec:ale}
+
+\subsubsection*{Scheme}
+The grid translates with a prescribed velocity: $x^n_j=jh+X_n$,
+$X_{n+1}=X_n+v_n\Delta t$. Along node trajectories $D_tu=u_t+v\,u_x$, so in the
+node variables the scheme reads
+\begin{equation}\label{an:eq:Lv}
+\Lop_v[V]^n_j=\frac{V^{n+1}_j-V^n_j}{\Delta t}-\delta^2V^{n+1}_j-v_n\,DV^{n+1}_j
++f_\ve(V^n_j)\big(V^{n+1}_j+\ve w_0\big),\qquad DV_j=\frac{V_{j+1}-V_{j-1}}{2h}.
+\end{equation}
+(This is the planar scheme of the code with $\chi\equiv1$ and
+a uniform grid.) If $|v_n|h\le2$, the matrix
+$\Delta t^{-1}I-\delta^2-v_nD+\operatorname{diag}F$ has nonpositive
+off-diagonal entries $-h^{-2}\mp v_n/(2h)$ and is strictly diagonally
+dominant, so the proof of Lemma~\ref{an:lem:comp} applies verbatim:
+\emph{the ALE scheme satisfies the discrete comparison principle for every
+$\Delta t>0$}.
+
+\subsubsection*{Why $\Delta t$ disappears}
+In the Eulerian scheme the barrier moves across the nodes with speed $\approx c$,
+and the lag in $f_\ve(V^n)$ produces the term $B=O(c\Delta t/\ve^2)$ of
+Lemma~\ref{an:lem:residual}. In the ALE scheme the barrier
+$\Phi(x-ct\pm\xi)\pm q$ moves with respect to the nodes with speed
+$c-v\mp\sigma$. If the drift dominates the mesh-velocity error,
+\begin{equation}\label{an:eq:sigmamu}
+|v_n-c|\le\mu\le\sigma ,
+\end{equation}
+then the supersolution moves \emph{towards} the burnt side relative to the
+nodes and the subsolution towards the fresh side, and in both cases the lag
+has the favourable sign: the only remaining contribution of $B$ comes from
+$q$, with no $\Delta t$.
+
+\subsubsection*{Residual}
+Let $V^n_j=\Phi(z^n_j)+q_n$ with $z^n_j=x^n_j-ct_n+\xi_n$, $\xi_n=\sigma t_n$.
+Then $z^{n+1}_j-z^n_j=d_n\Delta t$ with $d_n=v_n-c+\sigma\in[0,2\sigma]$ by
+\eqref{an:eq:sigmamu}. Write $z'=z^{n+1}_j$, $z=z^n_j\le z'$.
+
+\begin{lemma}[ALE residual]\label{an:lem:ale}
+Assume (F), \eqref{an:eq:sigmamu}, $h\le\ve$, $\sigma\Delta t\le\ve$. Then
+\[
+\Lop_v[V]^n_j\ \ge\ \dot q_n+\sigma\Phi'(z')-r_1-r_2-r_3+f_\ve(V^n_j)q_{n+1}-B,
+\]
+with $r_1=2\sigma^2\Delta t\sup_I|\Phi''|$, $r_2$ as in Lemma~\ref{an:lem:residual},
+$r_3=|v_n|\frac{h^2}{6}\sup_I|\Phi'''|$, and
+\[
+0\le B\le\frac{L_f}{\ve^3}\big(\Phi(z')+\ve w_0\big)\,q_n ,\qquad B=0\ \text{if}\ \Phi(z')\ge\ve .
+\]
+\end{lemma}
+
+\begin{proof}
+Time difference: $(\Phi(z')-\Phi(z))/\Delta t=d_n\Phi'(z')+R$,
+$|R|\le\frac12d_n^2\Delta t\sup|\Phi''|\le r_1$. Advection:
+$|D\Phi(z')-\Phi'(z')|\le\frac{h^2}6\sup|\Phi'''|$. Diffusion as before. Collecting the
+leading terms and using \eqref{an:eq:tw},
+$d_n\Phi'-\Phi''-v_n\Phi'+g_\ve(\Phi)=(\sigma-c)\Phi'-\Phi''+g_\ve(\Phi)=\sigma\Phi'$. Reaction: as in Lemma~\ref{an:lem:residual},
+$f_\ve(V^n)(V^{n+1}+\ve w_0)=g_\ve(\Phi(z'))+f_\ve(V^n)q_{n+1}-B$ with
+$B=\big(f_\ve(\Phi(z'))-f_\ve(V^n)\big)(\Phi(z')+\ve w_0)$. Now
+$V^n=\Phi(z)+q_n\le\Phi(z')+q_n$ because $z\le z'$; since $f_\ve$ is
+nonincreasing, $f_\ve(V^n)\ge f_\ve(\Phi(z')+q_n)$, hence
+$B\le\big(f_\ve(\Phi(z'))-f_\ve(\Phi(z')+q_n)\big)(\Phi(z')+\ve w_0)\le L_f\ve^{-3}q_n(\Phi(z')+\ve w_0)$.
+(The lag $\Phi(z')-\Phi(z)$ has disappeared from the bound.) If $B<0$ it can
+only help; we keep $B\ge0$ for simplicity of notation.
+\end{proof}
+
+For the subsolution $\Phi(z^n_j-2\xi_n)-q_n$ (same $z$, drift $-\sigma$) one
+has $z'\le z$, $V^n\ge\Phi(z')-q_n$, and the same bound with reversed signs.
+
+\begin{theorem}[ALE, travelling wave]\label{an:thm:ale}
+Assume (F) [resp. (F$'$)], $w_0>-1$ constant, $U^0_j=\Phi_\ve(x^0_j)$, and let
+the mesh velocities satisfy $|v_n|h\le2$ and $|v_n-c_\ve|\le\mu$. Let
+$\rho_h=h/\ve^2$ [resp. $h^2/\ve^3$]. For every $T>0$ there are $C,\gamma>0$,
+depending only on $f,w_0,A,T$ and $\sup|v_n|$, such that if
+$\ve\le\ve_0$, $h\le\ve$,
+\[
+\rho_h+\mu\le\gamma\qquad\text{and}\qquad \Delta t\,(\rho_h+\mu)\le\gamma\,\ve,
+\]
+then
+\[
+\max_{t_n\le T}\sup_j\big|U^n_j-\Phi_\ve(x^n_j-c_\ve t_n)\big|\le C(\rho_h+\mu),
+\qquad
+\max_{t_n\le T}\sup_j\big|U^n_j-u(x^n_j,t_n)\big|\le C(\ve+\rho_h+\mu).
+\]
+There is no term in $\Delta t$, and the restriction on $\Delta t$ is
+$\Delta t\lesssim\ve/(\rho_h+\mu)$; in particular, for $\rho_h+\mu\lesssim\ve$ it is
+$\Delta t\le\gamma$, independent of $\ve$.
+\end{theorem}
+
+\begin{proof}
+Same regions, constants $\mu_0=f(-w_0)/4$, $\delta$, $Z$, $\theta$ and $a$ as in
+the proof of Theorem~\ref{an:thm:main}. Take
+\[
+\sigma=\mu+C_4\rho_h,\qquad q_n=q_*+C_2(h^a+\sigma^2\Delta t)\,t_n,\qquad q_*=C_3\ve^2\rho_h .
+\]
+Then \eqref{an:eq:sigmamu} holds, $\sigma\Delta t\le(1+C_4)\gamma\ve\le\ve$, and
+$q_n\le C_5\ve^2(\rho_h+\sigma^2\Delta t/\ve^2)\le C_5'\ve^2\rho_h+C_5'\ve\sigma\gamma$,
+which is $\le\ve\delta$ for $\gamma$ small. By Lemma~\ref{an:lem:profile}:
+\begin{itemize}
+\item[(I)] $r_1\le C\sigma^2\Delta t$, $r_2+r_3\le Ch^a$, $B=0$: $\Lop_v[V]\ge\dot q_n-C(\sigma^2\Delta t+h^a)\ge0$.
+\item[(III)] $r_1\le C\sigma^2\Delta t/\ve$, $r_2+r_3\le C\rho_h$,
+$B\le\frac{\mu_0}{4}\ve^{-2}q_n$, and $f_\ve(V^n)q_{n+1}\ge2\mu_0\ve^{-2}q_n$:
+$\Lop_v[V]\ge\frac{7\mu_0}4\ve^{-2}q_*-C\rho_h-C\sigma^2\Delta t/\ve\ge0$, using
+$\sigma^2\Delta t/\ve\le\gamma\sigma\le\rho_h\cdot\gamma(1+C_4)+\gamma\mu$ --- here
+we also take $q_*\ge C\ve^2\mu\gamma$, i.e. $q_*=C_3\ve^2(\rho_h+\gamma\mu)$.
+\item[(II)] $r_1\le 2K\sigma^2\Delta t/\ve\le\frac{\theta}{4}\sigma$ by
+$\sigma\Delta t\le\gamma'\ve$; $r_2+r_3\le C\rho_h$; $B\le C\ve^{-2}q_n\le C(\rho_h+\gamma\sigma)$:
+$\Lop_v[V]\ge\sigma\theta-\frac\theta4\sigma-C\gamma\sigma-C\rho_h\ge\frac\theta2\sigma-C\rho_h\ge0$
+if $C_4\ge2C/\theta$ and $\gamma$ is small.
+\end{itemize}
+The subsolution is handled symmetrically (in region (III) the term
+$-f_\ve(V^n)q_{n+1}\le-2\mu_0\ve^{-2}q_n$ has the right sign). By the
+comparison principle,
+$|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma t_n+q_n\le C(\rho_h+\mu)$ for $t_n\le T$,
+and the second estimate follows from Lemma~\ref{an:lem:profile}(1),(5).
+\end{proof}
+
+\noindent\textbf{Numerical check.} Rigid mesh translating with $v=c_\ve$
+($\mu=0$), $f=(1-s)^+$, $w_0=0$, $h_f=\ve/16$: the speed error
+$c_{\rm ALE}-c_\ve$ is $|{\cdot}|\le5\cdot10^{-6}$ for $\ve=0.005$ and
+$\le8\cdot10^{-7}$ for $\ve=0.001$, for $\Delta t=0.1,0.05,0.02,0.01$, with no
+trend in $\Delta t$ --- although $\Delta t=0.1$ is $10^5\ve^2$ for $\ve=10^{-3}$.
+This is the content of Theorem~\ref{an:thm:ale}: the time step plays no role for
+the travelling wave.
+
+\begin{remark}
+\begin{enumerate}
+\item The absence of $\Delta t$ is specific to the travelling wave, which is
+steady in the moving frame. For general data the solution evolves in the frame
+of the front and an $O(\Delta t)$ term (with an $\ve$-independent constant) is
+expected; this is what the experiments show ($\approx0.05\,\Delta t$).
+\item The mesh-velocity error $\mu$ enters linearly: the comparison argument
+needs the barrier to outrun the mismatch between mesh and front. In practice
+$v$ is the front speed measured in the previous steps, so $\mu=O(\Delta t)$.
+For $v=0$ (Eulerian scheme) \eqref{an:eq:sigmamu} fails and one falls back on
+Theorem~\ref{an:thm:main}.
+\item On band meshes the negative powers of $\ve$ only affect the mesh size in
+the reaction layer: see Theorem~\ref{an:thm:band}.
+\end{enumerate}
+\end{remark}
+
+
+\subsection{Band meshes: mesh conditions only at the flame front}\label{an:sec:band}
+
+\subsubsection*{Mesh} In the frame of the nodes the mesh is fixed (it translates
+rigidly with velocity $v_n$) and consists of
+\begin{itemize}
+\item a \emph{band} $\{y:\ -K_b\ve\log(1/\ve)\le y-y_*\le K_f\ve\}$ around the
+front, with uniform spacing $h_f\le\ve$; here $y_*$ is the front position at
+$t=0$, and $K_b,K_f$ are large constants;
+\item outside the band, spacings $h_i\le h_c$ with $h_{i+1}/h_i\in[1/g,g]$,
+$g\le2$ (geometric transition).
+\end{itemize}
+$\Delta_h$ is the finite volume Laplacian and $D$ the three-point centred
+derivative on this mesh. If $|v_n|h_c\le2$, the matrix of the scheme is an
+M-matrix and the comparison principle holds.
+
+\subsubsection*{Truncation} For $\varphi\in C^4$, on the band
+$|\Delta_h\varphi-\varphi''|\le\frac{h_f^2}{12}\|\varphi''''\|$ and
+$|D\varphi-\varphi'|\le\frac{h_f^2}6\|\varphi'''\|$; outside the band (non-uniform
+nodes) $|\Delta_h\varphi-\varphi''|+|D\varphi-\varphi'|\le C h_i(\|\varphi'''\|+\|\varphi''\|)$
+on the stencil. By Lemma~\ref{an:lem:profile}, $\Phi$ and its derivatives are
+$O(1)$ ahead of the front, and behind it they are bounded by
+$K\ve^{1-k}e^{\kappa_0\zeta/2}$. On the burnt side of the band
+$\zeta\le-K_b\log(1/\ve)$, so for $K_b\ge12/\kappa_0$ the truncation error there is
+$\le Ch_c\ve^{-2}\ve^{6}\le Ch_c$. Hence the truncation error of the leading terms
+is $O(\rho_f)$ in the band, with
+\[
+\rho_f=\frac{h_f}{\ve^2}\ \text{under (F)},\qquad \rho_f=\frac{h_f^2}{\ve^3}\ \text{under (F$'$)},
+\]
+and $O(h_c)$ outside it.
+
+\subsubsection*{Localized barrier} Let $\chi\in C^2(\R)$ be nondecreasing,
+$\chi=0$ on $(-\infty,K_f\ve/2]$, $\chi=1$ on $[K_f\ve/2+1,\infty)$, with
+$|\chi'|+|\chi''|\le C_\chi$. For the supersolution take
+\[
+V^n_j=\Phi(z^n_j)+q_b+Q_n\,\chi(z^n_j),\qquad z^n_j=y_j+X_n-ct_n+\sigma t_n ,
+\]
+with constants $q_b,\sigma$ and $Q_n=C_2(h_c+\sigma^2\Delta t)\,t_n$.
+
+\begin{theorem}[ALE, band mesh]\label{an:thm:band}
+Under the assumptions of Theorem~\ref{an:thm:ale}, on a band mesh as above,
+\[
+\max_{t_n\le T}\sup_j\big|U^n_j-u(x^n_j,t_n)\big|\le C_T\big(\ve+\mu+\rho_f+h_c\big),
+\]
+provided $\rho_f+\mu+h_c\le\gamma$, $\Delta t(\rho_f+\mu+h_c)\le\gamma\ve$ and
+$|v_n|h_c\le2$. The negative powers of $\ve$ multiply only the mesh size $h_f$
+in the band; outside the band the error is $O(h_c)$, without $\ve$.
+\end{theorem}
+
+\begin{proof}
+\emph{Regions.} With $\zeta=z'/\ve$ we use
+(III) $\zeta\le-Z$ (burnt tail), (II) $-Z\le\zeta\le2$ (layer),
+(II$_+$) $2\le\zeta\le K_f/2$ (fresh side of the band, where $\chi=0$),
+and (I) $\zeta\ge K_f/2$ (fresh region, support of $\chi$). In (III), (II),
+(II$_+$) we have $Q\chi=0$ and $V=\Phi(z)+q_b$; in (I) there is no reaction.
+
+\emph{Residual of the $Q\chi$ part.} With $z'-z=d_n\Delta t$, $d_n\in[0,2\sigma]$,
+\[
+\frac{Q_{n+1}\chi(z')-Q_n\chi(z)}{\Delta t}=\dot Q_n\chi(z')+Q_n\frac{\chi(z')-\chi(z)}{\Delta t}\ \ge\ \dot Q_n\chi(z')
+\]
+because $\chi$ is nondecreasing: the transport of $\chi$ relative to the nodes
+has the favourable sign. The diffusion and advection of $Q\chi$ contribute
+$-Q_{n+1}(\Delta_h\chi+v_nD\chi)(z')\ge-Q_{n+1}C_\chi(1+|v_n|)-CQ_{n+1}h_c$.
+
+\emph{Residual of the $\Phi$ part.} By Lemma~\ref{an:lem:ale} with the truncation
+bounds above: $\sigma\Phi'(z')-r-B+f_\ve(V^n)q_{b}$, where
+$r\le C(\sigma^2\Delta t/\ve+\rho_f)$ in (II), (III);
+$r\le C(\sigma^2\Delta t+h_f^a)$ in (II$_+$); $r\le C(\sigma^2\Delta t+h_c)$ in (I);
+and $B\le L_f\ve^{-3}(\Phi+\ve w_0)q_b$, $B=0$ in (II$_+$) and (I).
+
+\emph{Lower bounds for $\Phi'$.} $\Phi'\ge\theta(Z)$ in (II) by
+Lemma~\ref{an:lem:profile}(3). In (II$_+$) and on $\operatorname{supp}\chi'$, i.e.\
+for $z\le K_f\ve/2+1$, $\Phi'=(A-\ve)ce^{-cz}\ge\theta_1:=\frac{Ac_0}{4}e^{-2c_0(1+K_f\ve)}$,
+independent of $\ve$.
+
+\emph{Choice of constants.} $q_b=C_3\ve^2\rho_f$,
+$Q_n=C_2(h_c+\sigma^2\Delta t)\,t_n$, $\sigma=\mu+C_4(\rho_f+Th_c)$. Then
+\begin{itemize}
+\item[(III)] as in Theorem~\ref{an:thm:ale}: the stability term
+$f_\ve(V^n)q_b\ge2\mu_0\ve^{-2}q_b$ dominates $B$ and $r$ if $C_3$ is large.
+\item[(II)] $\sigma\theta\ge C(\rho_f+\sigma^2\Delta t/\ve+q_b/\ve^2)$ if $C_4$ is
+large and $\gamma$ small (recall $\sigma\Delta t\le\gamma'\ve$).
+\item[(II$_+$)] $\sigma\theta_1\ge C(h_f^a+\sigma^2\Delta t)$, implied by the choice of $\sigma$.
+\item[(I)] where $\chi'\ne0$ or $\chi''\ne0$:
+$\sigma\theta_1\ge C(1+C_\chi)(1+\sup|v|)\sup_{t_n\le T}Q_n+C(h_c+\sigma^2\Delta t)$,
+which holds since $\sup Q\le C_2T(h_c+\sigma^2\Delta t)$ and $\sigma\ge C_4Th_c$
+(and $\sigma^2\Delta t\le\gamma'\ve\sigma$); where $\chi=1$,
+$\dot Q_n=C_2(h_c+\sigma^2\Delta t)$ absorbs $r$.
+\end{itemize}
+Hence $V$ is a supersolution with $V^0\ge U^0$.
+
+\emph{Subsolution.} $W^n_j=\Phi(z^n_j-2\sigma t_n)-q_b-Q_n\chi(z^n_j-2\sigma t_n)$ (the
+shift in $z$ is now $-\sigma t$). All signs are reversed as in
+Theorem~\ref{an:thm:ale}; the only new point is that the reaction must vanish in
+(I), i.e.\ $W^n\ge\ve$ there. For $z\ge K_f\ve/2$,
+$\Phi(z)-\ve\ge\frac{Ac_0}{4}\min(z,1)$ while
+$q_b+Q\chi(z)\le q_b+QC_\chi(z-K_f\ve/2)^+$; since $q_b\le C\ve^2\rho_f\le\frac{Ac_0}{16}K_f\ve$
+and $Q\le C_2T(h_c+\sigma^2\Delta t)\le\frac{Ac_0}{8C_\chi}$ for $\gamma$ small, we get $W^n\ge\ve$.
+
+\emph{Conclusion.} By the comparison principle,
+$|U^n_j-\Phi(x^n_j-ct_n)|\le K\sigma T+q_b+\sup Q\le C_T(\mu+\rho_f+h_c)$; Lemma~\ref{an:lem:profile}(1),(5)
+adds $O(\ve)$.
+\end{proof}
+
+\begin{remark}
+\begin{enumerate}
+\item The layer term $\rho_f=h_f^2/\ve^3$ (smooth $f$) comes from pointwise
+barriers; the solvability (corrector) argument of Section~\ref{an:sec:sharp}
+should improve it to $(h_f/\ve)^2$. Either way it only concerns the band,
+which has $O(\log(1/\ve)/(h_f/\ve))$ nodes.
+\item $h_c$ appears to first order because the truncation error of the
+three-point formulas is first order on the geometric transition; on a mesh that
+is uniform outside the band (or with supraconvergence arguments) it should be
+$h_c^2$.
+\item In the code the rigid zone is not the whole line (nodes far away do not
+move) and the mesh is occasionally rebuilt; both introduce only $O(h_c)$ or
+$O(h_c^2)$ perturbations away from the front, at the price of the positive
+(linear) interpolation at remeshing, which preserves the comparison principle.
+\end{enumerate}
+\end{remark}
+
+
+\subsection{Remeshing and implicit mesh velocity}\label{an:sec:impl}
+
+The code differs from the setting of Theorem~\ref{an:thm:band} in two respects.
+
+\emph{Mesh velocity.} The velocity $v_n$ is chosen implicitly, so that the
+computed front ends the step at the band reference point. The comparison
+principle and the barrier argument only use the \emph{realised} sequence
+$(v_n)$, which is the same for the solution and for the barriers (the
+barriers are built a posteriori on the realised moving mesh). Therefore
+Theorem~\ref{an:thm:band} holds with $\mu=\max_n|v_n-c_\ve|$ for the realised
+velocities. For the travelling wave the implicit choice gives
+$v_n=c_\ve+O(\rho_f+h_c)$ (the computed front speed), so $\mu$ is of the order
+of the other terms; experimentally $\mu\lesssim10^{-4}$.
+
+\emph{Remeshing.} When the mesh is rebuilt, $U$ is transferred by the
+piecewise linear interpolation $\Pi$, which is order preserving. For a
+supersolution $V$ (a function of $z$ evaluated at the nodes), the transferred
+barrier $\Pi V^{\rm old}$ differs from $V$ evaluated on the new nodes by the
+interpolation error $\frac18h_i^2|V''|$. Because the band is rebuilt on the same
+lattice and the front is still inside it (the mesh travels with the front),
+the nodes of the band coincide and the error vanishes there; on the fresh
+side of the band and in the transition $|V''|\le C$, and behind the band it
+is exponentially small. Thus each remeshing costs at most $Ch_c^2$, which is
+absorbed by adding $Ch_c^2$ to $Q$ at each remeshing time. The number of
+remeshings in $[0,T]$ is $O(T)$ (the remeshing distance is $O(1)$, and with
+the implicit velocity the front does not drift from the band), so the total
+contribution is $O(Th_c^2)$, already contained in the $O(h_c)$ term.
+
+\emph{Non-rigid far field.} In the code only a neighbourhood of radius
+$R_1$ of the front moves rigidly; farther nodes slow down and stop
+($\dot x_i=v_n\chi(x_i)$). The algebra of Lemma~\ref{an:lem:ale} is unchanged with
+$v_n$ replaced by the local node velocity $\dot x_i$ (the convection term of the
+scheme uses $\dot x_i$), except that the time-difference error becomes
+$\frac12(\dot x_i-c+\sigma)^2\Delta t|\Phi''|\le C\Delta t\,|\Phi''|$. Outside the rigid
+zone $|\Phi''|\le Ce^{-cR_1}$ (ahead) or is exponentially small (behind), so
+this adds $O(T\Delta t\,e^{-cR_1})$ to the error. This explains the observation
+that the rigid zone must contain several decay lengths $1/c$ of the profile
+ahead of the front (in the code $R_1\ge\max(2,3/c)$): otherwise an
+$O(\Delta t)$ error appears.
+
+\begin{corollary}
+The estimate of Theorem~\ref{an:thm:band} holds for the scheme as implemented
+(implicit mesh velocity, remeshing with linear interpolation on the band
+lattice, rigid zone of radius $R_1$), with $\mu$ the realised mesh-velocity
+error and an additional term $O(\Delta t\,e^{-cR_1})$.
+\end{corollary}
+
+\subsection{Towards the sharp estimate}\label{an:sec:sharp}
+
+The standard remedy is a corrector. Write the truncation error of (S) on
+$\Phi$ as $\tau=\Delta t\,\tau_1+h^2\tau_2+\dots$ with $\tau_i$ explicit
+functions of $z$, concentrated in the layer. Let $\mathcal A=\partial_z^2+c\partial_z-g_\ve'(\Phi)$
+be the linearization at the wave. Since $\mathcal A\Phi'=0$, the equation
+\[
+\mathcal A\Psi_i=\tau_i+\lambda_i\Phi'
+\]
+is solvable (with bounded $\Psi_i$) iff
+$\lambda_i=-\int\tau_i\psi^*/\int\Phi'\psi^*$, where $\psi^*=e^{cz}\Phi'$
+spans the kernel of the adjoint. The barrier
+$V=\Phi(z+\xi)+\Delta t\,\Psi_1(z+\xi)+h^2\Psi_2(z+\xi)\pm q$ with
+$\xi'=\Delta t\lambda_1+h^2\lambda_2+$(higher order) has a residual one
+order smaller, and the front drift is $\Delta t\lambda_1+h^2\lambda_2$. Scaling
+gives $\lambda_1=O(1/\ve)$ and $\lambda_2=O(1/\ve^2)$, which are exactly the
+observed $\Delta t/\ve$ and $(h/\ve)^2$. The technical points are: bounds on
+$\Psi_i$ and its derivatives uniform in $\ve$ (in the inner variables this is a
+regular problem), the behaviour of $\psi^*$ ahead of the front ($e^{cz}$
+growth against the $e^{-cz}$ decay of $\Phi'$: $\psi^*$ is bounded), and the
+nonsmoothness of $f$ at $1$ when only (F) holds.
+
+
+\subsubsection*{Numerical check of the two mechanisms}
+A direct computation evaluates the truncation
+error $\tau=\Lop[\Phi(x-ct)]$ of (S) on the exact wave ($f=(1-s)^+$, $A=1$),
+averaged over the position of the front relative to the grid.
+\begin{itemize}
+\item \emph{Pointwise size} (what Theorem~\ref{an:thm:main} absorbs):
+$\max|\tau|\approx a\,\Delta t/\ve^2+b\,h/\ve^2$ with $b\approx0.085$ ($w_0=0$)
+and $b\approx0.47$ ($w_0=1$), for $\ve=0.01,0.005$ and $h=\ve/8,\ve/16$:
+the $h/\ve^2$ scaling of the Lipschitz case.
+\item \emph{Solvability (sharp) drift}
+$\delta c=\int\tau\psi^*/\int\Phi'\psi^*$: for $w_0=0$ and $\Delta t=\kappa\ve^2$,
+$\delta c/(\Delta t/\ve)=-0.2351,-0.2345,-0.2342$ for $\ve=0.02,0.01,0.005$
+(independent of $\kappa$), in agreement with the speed error
+$\approx-0.23\,\Delta t/\ve$ measured in the simulations of (S). The
+spatial part of $\delta c$ is below $4\cdot10^{-5}$ for $h\le\ve/8$.
+\end{itemize}
+This supports the corrector programme of Section~\ref{an:sec:sharp}: the sharp
+estimate should read $C_T(\ve+\Delta t/\ve+\text{(small spatial term)})$.
+
+\medskip
+\noindent\textbf{Plan.}
+(1) Complete Lemma~\ref{an:lem:profile} (ODE phase-plane, uniform in $\sigma$).
+(2) Numerical check of the barriers of Theorem~\ref{an:thm:main} (sign of $\Lop[V]$).
+(3) Correctors and the sharp estimate.
+(4) General data in 1D/radial with a classical solution: quantitative
+version of \cite[Theorem~4.1]{FernandezBonderWolanski2004} for the continuous problem, then the
+discrete barriers as above.
+
 
 % ---------------------------------------------------------------------------
 \section{Numerical experiments}\label{sec:experiments}
@@ -613,7 +1272,7 @@ inner profile while $V$ is linear in the distance $d$ to the free boundary; it
 is $O(\ve)$, with $\|(u^\ve)^+-V\|_\infty/\ve$ decreasing from $0.14$ to $0.086$.
 
 % ---------------------------------------------------------------------------
-\section{Conclusions and outlook}
+\section{Conclusions and outlook}\label{sec:conclusions}
 The experiments support first-order convergence in $\ve$ of the flame
 position and speed for \eqref{eq:Peps}, in planar and radial geometry,
 including in the presence of the $O(\ve)$ perturbation $w_0$ that changes the

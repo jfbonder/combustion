@@ -1,0 +1,646 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\ve}{\varepsilon}
+\newcommand{\R}{\mathbb{R}}
+
+\title[Numerics for the high activation energy limit]{Computing the high activation energy limit\\ of an equidiffusional flame model}
+
+\author{Juli\'an Fern\'andez Bonder}
+\address{Instituto de C\'alculo (UBA--CONICET) and Departamento de Matem\'atica, FCEyN,
+Universidad de Buenos Aires, Ciudad Universitaria, (1428) Buenos Aires, Argentina}
+\email{jfbonder@dm.uba.ar}
+
+\date{DRAFT, \today}
+
+\begin{document}
+
+\begin{abstract}
+We study numerically the singular limit $\ve\to0$ of the system
+$\Delta u-u_t=Yf_\ve(u)$, $\Delta Y-Y_t=Yf_\ve(u)$, $f_\ve(s)=\ve^{-2}f(s/\ve)$,
+which models premixed flames with unit Lewis number in the limit of high
+activation energy. When $(Y-u)/\ve\to w_0$, limit functions solve the free
+boundary problem $u_t=\Delta u$ in $\{u>0\}$, $|\nabla u|=\sqrt{2M(w_0)}$ on
+$\partial\{u>0\}$, so the limit depends on order-$\ve$ perturbations of the
+data. We propose a finite volume method on a mesh that follows the flame
+front (refining ahead of it and coarsening behind it), together with a
+linearly implicit version that satisfies a discrete comparison principle for
+every time step. We validate the method against exact travelling waves and
+the self-similar solution of Caffarelli and V\'azquez, and against a
+second-order front-fixing solver for the limit free boundary problem, and
+observe first-order convergence in $\ve$ of the flame position and speed in
+one space dimension and in radial symmetry ($N=2,3$). For
+travelling waves we derive the first-order correction of the flame speed,
+$c_\ve=c_0\big[1+\tfrac{\ve}{A}\big(1-\tfrac{3\sqrt3-2}{5}(1+w_0)\big)\big]+o(\ve)$
+for $f(s)=(1-s)^+$, which changes sign at $w_0\approx0.564$, and confirm it
+numerically.
+\end{abstract}
+
+\maketitle
+
+% ---------------------------------------------------------------------------
+\section{Introduction}
+
+The system
+\begin{equation}\label{eq:system}
+\Delta u^\ve-u^\ve_t=Y^\ve f_\ve(u^\ve),\qquad
+\Delta Y^\ve-Y^\ve_t=Y^\ve f_\ve(u^\ve),\qquad f_\ve(s)=\frac1{\ve^2}f\Big(\frac s\ve\Big),
+\end{equation}
+arises in the theory of equidiffusional premixed flames (Lewis number one)
+\cite{BuckmasterLudford1982,ZeldovichFrankKamenetskii1938}: $Y^\ve\ge0$ is the
+mass fraction of the reactant, $u^\ve=\lambda(T_f-T^\ve)$ a rescaled
+temperature, and $\ve$ is essentially the inverse of the activation energy;
+$f$ is Lipschitz, positive on $(-\infty,1)$ and zero on $[1,\infty)$. Since
+$w^\ve=Y^\ve-u^\ve$ is caloric, \eqref{eq:system} reduces to
+\begin{equation}\label{eq:Peps}\tag{$P_\ve$}
+u_t=\Delta u-(u+w^\ve)f_\ve(u),\qquad w^\ve_t=\Delta w^\ve.
+\end{equation}
+
+The free boundary problem obtained in the limit was introduced by Caffarelli
+and V\'azquez \cite{CaffarelliVazquez1995} (see also \cite{Vazquez1996}): in
+the case $u^\ve=Y^\ve$ they proved uniform estimates for the
+singular perturbation problem (see also \cite{Caffarelli1995Lipschitz}), passed to the limit $\ve\to0$, and constructed
+explicit solutions, among them the self-similar solutions that we use in
+Section~\ref{sec:exact}. The limit was further studied by Caffarelli, Lederman and Wolanski
+\cite{CaffarelliLedermanWolanski1997a,CaffarelliLedermanWolanski1997b} and, regarding uniqueness, by Lederman, V\'azquez and
+Wolanski \cite{LedermanVazquezWolanski2001} and Petrosyan \cite{Petrosyan2002}. In
+\cite{FernandezBonderWolanski2000} Wolanski and the author showed that if
+$w^\ve/\ve\to w_0>-1$ then limits of $u^\ve$ solve
+\begin{equation}\label{eq:P}\tag{$P$}
+u_t=\Delta u\ \text{ in }\{u>0\},\qquad |\nabla u|=\sqrt{2M}\ \text{ on }\partial\{u>0\},\qquad
+M=\int_{-w_0}^1(s+w_0)f(s)\,ds,
+\end{equation}
+in a pointwise and viscosity sense, and in \cite{FernandezBonderWolanski2004} that, under
+geometric assumptions, the limit is unique and coincides with the classical
+solution when one exists. Thus the high activation energy limit is
+\emph{unstable}: perturbations of order $\ve$ of the initial data, which do
+not change the limit of $u^\ve_0$, change the free boundary condition.
+
+To the best of our knowledge, no numerical study of the limit $\ve\to0$ in
+\eqref{eq:system}, or even in the case $u^\ve=Y^\ve$, is available: the
+analysis of the limit
+\cite{CaffarelliVazquez1995,CaffarelliLedermanWolanski1997a,Weiss2003,PetrosyanYip2008,WeissZhang2009}
+is purely theoretical, and Weiss and Zhang \cite{WeissZhang2009} point out that
+some limit behaviours are hard to capture numerically. Adaptive methods for
+thin combustion fronts at large activation energy have a long history
+\cite{Smooke1982,BaylissGottliebMatkowskyMinkoff1989,DenetHaldenwang1992},
+but they work at fixed activation energy and do not study the convergence to
+the free boundary problem. On the side of the limit problem, the elliptic
+(Bernoulli) analogue of \eqref{eq:P} \cite{AltCaffarelli1981,BerestyckiCaffarelliNirenberg1990} has a substantial numerical literature
+\cite{FlucherRumpf1997,Tiihonen1997,KarkkainenTiihonen1999,BouchonClainTouzani2005,HarbrechtMitrou2014},
+including a moving mesh method \cite{ShenDaiHuang2024}. The difficulty in the
+parabolic singular perturbation problem is the reaction layer of width
+$O(\ve)$, which moves with the flame and must be resolved: a uniform mesh needs
+$O(\ve^{-N})$ cells. In this paper we
+\begin{enumerate}
+\item propose a finite volume method on a mesh that follows the flame,
+with $O(\ve^{-1})$ cells in the layer and a geometric transition to a coarse
+mesh elsewhere (Section~\ref{sec:method});
+\item build exact reference solutions: travelling waves of \eqref{eq:Peps}
+computed by a shooting method with a monotone energy, and the radial
+self-similar solution of \eqref{eq:P}, which we write in terms of Kummer's
+function (Section~\ref{sec:exact});
+\item derive the first-order correction of the travelling wave speed
+(Proposition~\ref{prop:speed});
+\item isolate a linearly implicit version of the scheme that satisfies a
+discrete comparison principle for every time step and every sequence of
+meshes, with $L^\infty$ bounds uniform in $\ve$, and reduce $\ve$-uniform
+error estimates to the construction of discrete barriers
+(Section~\ref{sec:theory});
+\item solve the limit problem \eqref{eq:P} directly by front fixing, and
+observe first-order convergence in $\ve$ of front positions and speeds of
+\eqref{eq:Peps} towards it, as well as the instability of the limit with
+respect to $w_0$ (Section~\ref{sec:experiments}).
+\end{enumerate}
+
+Throughout, $f(s)=(1-s)^+$, for which
+\begin{equation}\label{eq:M}
+M(w_0)=\frac{(1+w_0)^3}{6}.
+\end{equation}
+
+% ---------------------------------------------------------------------------
+\section{Exact solutions}\label{sec:exact}
+
+\subsection{Travelling waves}
+For \eqref{eq:P} in one dimension, $u=A\big(1-e^{-c_0(x-c_0t)}\big)^+$ is a
+solution moving into the fresh region $\{u>0\}$ with speed
+$c_0=\sqrt{2M}/A$, where $A=\lim_{x\to\infty}u$.
+
+For \eqref{eq:Peps} with $w^\ve\equiv\ve w_0$ constant, travelling waves
+$u=U(x-ct)$ satisfy $U''+cU'=(U+\ve w_0)f_\ve(U)$, $U(-\infty)=-\ve w_0$,
+$U(+\infty)=A$. Ahead of the reaction zone ($U\ge\ve$) we have
+$U=A-(A-\ve)e^{-c(\xi-\xi_1)}$. In the variables $U=\ve\varphi$,
+$\xi-\xi_1=\ve z$, $\sigma=\ve c$,
+\begin{equation}\label{eq:tw}
+\varphi''+\sigma\varphi'=(\varphi+w_0)f(\varphi),\qquad
+\varphi(0)=1,\quad \varphi'(0)=\sigma\Big(\frac A\ve-1\Big),\qquad \varphi(-\infty)=-w_0.
+\end{equation}
+Let $G(\varphi)=\int_{-w_0}^{\varphi}(s+w_0)f(s)\,ds$ (so $G(1)=M$) and
+$E=\tfrac12\varphi'^2-G(\varphi)$. Along solutions,
+$\frac{d}{dz}E=-\sigma\varphi'^2\le0$. Integrating \eqref{eq:tw} backwards from
+$z=0$, if $\sigma$ is too large $E$ remains positive and $\varphi$ crosses
+$-w_0$; if $\sigma$ is too small, $\varphi'$ vanishes before. This gives a
+bisection for $\sigma$ (hence $c_\ve=\sigma/\ve$) to machine precision,
+independent of the PDE solver.
+
+\begin{proposition}\label{prop:speed}
+Let $I=\int_{-w_0}^1\sqrt{2G(\varphi)}\,d\varphi$. Then
+\[
+c_\ve=c_0\Big[1+\frac\ve A\Big(1-\frac{I}{\sqrt{2M}}\Big)\Big]+o(\ve).
+\]
+For $f(s)=(1-s)^+$, $I/\sqrt{2M}=\kappa(1+w_0)$ with
+$\kappa=\frac{3\sqrt3-2}{5}\approx0.6392$.
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+Integrating $\frac{d}{dz}E=-\sigma\varphi'^2$ on $(-\infty,0)$ and using
+$E(-\infty)=0$, $E(0)=\frac12\varphi'(0)^2-M$,
+\[
+\tfrac12\varphi'(0)^2=M-\sigma\int_{-\infty}^0\varphi'^2\,dz
+=M-\sigma\int_{-w_0}^{1}\varphi'\,d\varphi .
+\]
+As $\sigma\to0$, $\varphi'\to\sqrt{2G(\varphi)}$ uniformly as a function of
+$\varphi$, so the last integral is $I+o(1)$. Since
+$\varphi'(0)=c(A-\ve)$ and $\sigma=\ve c$, we get
+$c(A-\ve)=\sqrt{2M}-\ve cI/\sqrt{2M}+o(\ve)$, which is the claim. For
+$f=(1-s)^+$ and $a=1+w_0$, $G=\frac a2t^2-\frac13t^3$ with $t=\varphi+w_0$, and
+$I=\int_0^at\sqrt{a-\tfrac23t}\,dt=\tfrac94a^{5/2}\big[\tfrac4{15}-\tfrac23 3^{-3/2}+\tfrac25 3^{-5/2}\big]$;
+with $\sqrt{2M}=a^{3/2}/\sqrt3$ this gives $I/\sqrt{2M}=\frac{3\sqrt3-2}5\,a$.
+\end{proof}
+
+Berestycki, Nicolaenko and Scheurer proved that $c_\ve\to c_0$ and that the
+profiles converge, by compactness and without a rate
+\cite[Thm.~5.2]{BerestyckiNicolaenkoScheurer1985} (for $w_0=0$);
+Proposition~\ref{prop:speed} gives the rate and the first-order coefficient,
+also in the presence of the $O(\ve)$ perturbation $w_0$.
+In particular the first-order correction is positive for
+$w_0<w_0^*=\frac5{3\sqrt3-2}-1\approx0.564$ and negative for $w_0>w_0^*$.
+Table~\ref{tab:speedcoef} compares the prediction with the shooting method.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rcccc}
+\toprule
+$w_0$ & Prop.~\ref{prop:speed} & $\ve=10^{-2}$ & $\ve=10^{-3}$ & $\ve=10^{-4}$\\
+\midrule
+$-0.5$ & $+0.138883$ & $+0.139876$ & $+0.138982$ & $+0.138893$\\
+$0$    & $+0.208290$ & $+0.209515$ & $+0.208412$ & $+0.208303$\\
+$1$    & $-0.454725$ & $-0.448230$ & $-0.454072$ & $-0.454660$\\
+\bottomrule
+\end{tabular}
+\caption{$(c_\ve-c_0)/\ve$ from Proposition~\ref{prop:speed} and from the
+shooting method ($A=1$).}\label{tab:speedcoef}
+\end{table}
+
+\subsection{The radial self-similar solution}
+Caffarelli and V\'azquez \cite{CaffarelliVazquez1995} showed that \eqref{eq:P}
+has solutions $V(x,t)=(T-t)^{1/2}h\big(|x|(T-t)^{-1/2}\big)$ with compact
+support shrinking to a point at $t=T$; they are used in \cite[Prop.~4.3]{FernandezBonderWolanski2004}
+to show that limit solutions vanish in finite time. Substituting,
+$V$ is caloric in its positivity set if and only if
+\begin{equation}\label{eq:h}
+h''+\Big(\frac{N-1}r-\frac r2\Big)h'+\frac12h=0.
+\end{equation}
+(In \cite[(4.6)]{FernandezBonderWolanski2004} the sign of $r/2$ is misprinted.) The change of
+variables $z=r^2/4$ turns \eqref{eq:h} into Kummer's equation
+$zh_{zz}+(\frac N2-z)h_z+\frac12h=0$, so the solution regular at the origin is
+\[
+h(r)=\kappa_N\,{}_1F_1\big(-\tfrac12;\tfrac N2;\tfrac{r^2}4\big).
+\]
+Since $-1<-\frac12<0$, ${}_1F_1(-\frac12;\frac N2;\cdot)$ has exactly one
+positive zero $z_N$; then $R=2\sqrt{z_N}$ and $\kappa_N$ is fixed by
+$h'(R)=-\sqrt{2M}$. Numerically $R=1.8483$, $2.5139$, $3.0040$ for $N=1,2,3$.
+The free boundary is the sphere of radius $R\sqrt{T-t}$.
+
+% ---------------------------------------------------------------------------
+\section{Numerical method}\label{sec:method}
+
+We solve \eqref{eq:Peps} for $u$ and $w$ in planar ($N=1$) or radial
+($N=2,3$) symmetry on $[0,L]$ with zero flux at both ends.
+
+\emph{Space.} Vertex-centred finite volumes on a non-uniform mesh
+$0=x_0<\dots<x_n=L$: with faces $x_{i\pm1/2}$ at the midpoints,
+$|K_i|=(x_{i+1/2}^N-x_{i-1/2}^N)/N$ and
+\[
+(\Delta_hu)_i=\frac1{|K_i|}\Big(x_{i+1/2}^{N-1}\frac{u_{i+1}-u_i}{x_{i+1}-x_i}
+-x_{i-1/2}^{N-1}\frac{u_i-u_{i-1}}{x_i-x_{i-1}}\Big).
+\]
+The scheme is conservative, exact on quadratics, and needs no special
+treatment at $r=0$, where the weight $r^{N-1}$ vanishes.
+
+\emph{Time.} The resulting stiff system is integrated with the variable
+order, variable step BDF method of SciPy with the analytic sparse Jacobian
+($\mathrm{rtol}=10^{-5}$, $\mathrm{atol}=10^{-4}\ve$).
+
+\emph{Following the flame.} Every remeshing interval we
+(i) locate the front $x_f$ as the point where $u=\ve$ (for $u\ge\ve$ there is
+no reaction); (ii) define a band that covers the reaction layer ($5\ve$ on the
+fresh side, $20\ve$ on the burnt side, where $u$ decays exponentially to
+$-\ve w_0$) plus a margin of $15\ve$ on each side; (iii) build a new mesh
+with spacing $h_f=\ve/16$ in the band and cells growing geometrically by a
+factor $1.1$ away from it up to $h_c=0.01$; (iv) transfer $u,w$ to the new mesh
+by monotone cubic (PCHIP) interpolation. The remeshing interval is chosen so
+that the front, at its measured speed, moves at most half the margin.
+Refinement ahead of the front and coarsening behind it happen in the same
+step, and the number of nodes,
+$O(L/h_c)+O(1/\ve\cdot\ve/h_f)+O(\log(h_c/h_f))$, does not depend on how far the
+front travels.
+
+\emph{Initial data.} Given the initial datum $u_0\ge0$ of \eqref{eq:P} we take
+\[
+u_0^\ve=u_0-\ve w_0\Big(1-\frac{u_0}\ve\Big)^+,\qquad Y_0^\ve=u_0^\ve+\ve w_0,
+\]
+so that $(Y_0^\ve-u_0^\ve)/\ve=w_0$ exactly, $Y_0^\ve=0$ in the burnt region
+$\{u_0=0\}$, $Y_0^\ve\ge0$, and $u_0^\ve\to u_0$ uniformly with uniformly bounded
+Lipschitz constants, as required in \cite{FernandezBonderWolanski2004}.
+
+\begin{remark}
+The cost is dominated by the number of time steps, which grows like
+$\ve^{-1}$ to $\ve^{-3/2}$: on a mesh fixed between remeshings, the front
+crosses $O(\ve^{-1})$ fine cells. A genuinely moving mesh (ALE or MMPDE
+\cite{HuangRussell2011}), whose nodes travel with the front, would allow time
+steps independent of $\ve$ in travelling-wave regimes.
+\end{remark}
+
+% ---------------------------------------------------------------------------
+\section{A provably monotone version of the scheme}\label{sec:theory}
+
+The free boundary community will rightly ask which properties of
+\eqref{eq:Peps} survive the discretization. In this section we isolate a
+simple version of the method for which the basic structural properties can
+be proved: a discrete comparison principle that holds for every time step,
+positivity of the reactant, and $L^\infty$ bounds uniform in $\ve$. These are
+the discrete counterparts of the tools used in
+\cite{CaffarelliVazquez1995,FernandezBonderWolanski2000,FernandezBonderWolanski2004}.
+
+\subsection{The scheme}
+Let $\{\mathcal T^n\}$ be the sequence of meshes of Section~\ref{sec:method}
+(one per time level; most consecutive meshes coincide), $\Delta_h^n$ the
+finite volume Laplacian on $\mathcal T^n$ and $\Pi^n$ the piecewise
+\emph{linear} interpolation from $\mathcal T^n$ to $\mathcal T^{n+1}$. Given
+$(U^n,Y^n)$ on $\mathcal T^n$, the scheme (S) computes, on $\mathcal T^{n+1}$,
+\begin{align}
+\frac{Y^{n+1}-\Pi^nY^n}{\Delta t}&=\Delta_h^{n+1}Y^{n+1}-f_\ve(\Pi^nU^n)\,Y^{n+1},\label{eq:SY}\\
+\frac{U^{n+1}-\Pi^nU^n}{\Delta t}&=\Delta_h^{n+1}U^{n+1}-f_\ve(\Pi^nU^n)\,Y^{n+1}.\label{eq:SU}
+\end{align}
+The reaction is linearly implicit: its rate is frozen at the previous time
+level while the reactant is implicit. Subtracting, $W^n=Y^n-U^n$ solves the
+implicit Euler scheme for the heat equation, exactly as $w^\ve=Y^\ve-u^\ve$
+is caloric. Each step requires two tridiagonal solves.
+
+We assume
+\begin{itemize}
+\item[(F)] $f$ is Lipschitz and \emph{nonincreasing}, $f>0$ on $(-\infty,1)$,
+$f=0$ on $[1,\infty)$.
+\end{itemize}
+Monotonicity of $f$ is not needed in \cite{FernandezBonderWolanski2000}; it
+holds for $f(s)=(1-s)^+$ and for Arrhenius-type rates (recall that $u$ is
+minus the temperature).
+
+The two facts about the discretization that we use are:
+(a) $-\Delta_h^n$ is a singular M-matrix: positive diagonal, nonpositive
+off-diagonal entries, zero row sums (zero flux); and
+(b) $\Pi^n$ has nonnegative weights adding up to one, so it is order
+preserving and $\min V\le\Pi^nV\le\max V$.
+
+\begin{lemma}[Positivity and bounds]\label{lem:bounds}
+Assume (F), $\Delta t>0$ and $Y^0\ge0$. Then for all $n$:
+\begin{enumerate}
+\item (S) has a unique solution and $Y^n\ge0$;
+\item $W^n$ satisfies $\min W^0\le W^n\le\max W^0$;
+\item $-\max W^0\le U^n\le\max U^0$.
+\end{enumerate}
+In particular, if $U^0=u^\ve_0$ and $W^0=\ve w_0$, then
+$\|U^n\|_\infty\le\max(\|u_0\|_\infty,\ve\|w_0\|_\infty)+\ve\|w_0\|_\infty$,
+uniformly in $\ve$, $h$ and $\Delta t$.
+\end{lemma}
+
+\begin{proof}
+The matrix $A=\Delta t^{-1}I-\Delta_h^{n+1}+\operatorname{diag}f_\ve(\Pi^nU^n)$
+is strictly diagonally dominant with positive diagonal and nonpositive
+off-diagonal entries, hence a nonsingular M-matrix with $A^{-1}\ge0$. By
+\eqref{eq:SY}, $Y^{n+1}=A^{-1}\Pi^nY^n/\Delta t\ge0$. The same argument with
+$f_\ve\equiv0$ gives the maximum principle for $W$. From \eqref{eq:SU} and
+$f_\ve Y^{n+1}\ge0$, $(\Delta t^{-1}I-\Delta_h^{n+1})U^{n+1}\le\Pi^nU^n/\Delta t$,
+hence $\max U^{n+1}\le\max U^n$; and $U^{n+1}=Y^{n+1}-W^{n+1}\ge-W^{n+1}\ge-\max W^0$.
+\end{proof}
+
+\subsection{Discrete comparison}
+Fix the discrete caloric function $W^n$. We say that $V=(V^n)$ is a
+\emph{discrete supersolution} if $V^{n+1}+W^{n+1}\ge0$ and
+\[
+\frac{V^{n+1}-\Pi^nV^n}{\Delta t}-\Delta_h^{n+1}V^{n+1}+f_\ve(\Pi^nV^n)\,(V^{n+1}+W^{n+1})\ \ge\ 0
+\]
+for every $n$, and a \emph{discrete subsolution} if the reverse inequality
+holds (no sign condition is needed in that case).
+
+\begin{lemma}[Comparison]\label{lem:comparison}
+Assume (F) and let $U$ be the solution of (S). If $V$ is a discrete
+supersolution with $V^0\ge U^0$, then $V^n\ge U^n$ for all $n$. If $V$ is a
+discrete subsolution with $V^0\le U^0$, then $V^n\le U^n$ for all $n$. This
+holds for every $\Delta t>0$ and every sequence of meshes.
+\end{lemma}
+
+\begin{proof}
+Assume $U^n\le V^n$ and let $D=U^{n+1}-V^{n+1}$, $F_U=f_\ve(\Pi^nU^n)$,
+$F_V=f_\ve(\Pi^nV^n)$. By (b), $\Pi^nU^n\le\Pi^nV^n$, and since $f_\ve$ is
+nonincreasing, $F_U\ge F_V$. Subtracting the inequalities,
+\[
+\Big(\frac1{\Delta t}-\Delta_h^{n+1}\Big)D+F_U(U^{n+1}+W^{n+1})-F_V(V^{n+1}+W^{n+1})
+\le\frac{\Pi^n(U^n-V^n)}{\Delta t}\le0 .
+\]
+The reaction terms equal $F_UD+(F_U-F_V)(V^{n+1}+W^{n+1})\ge F_UD$, so
+$\big(\Delta t^{-1}I-\Delta_h^{n+1}+\operatorname{diag}F_U\big)D\le0$, and the
+M-matrix property gives $D\le0$. For subsolutions write the reaction terms as
+$F_VD'+(F_V-F_U)(U^{n+1}+W^{n+1})$ with $D'=V^{n+1}-U^{n+1}$ and use
+$U^{n+1}+W^{n+1}=Y^{n+1}\ge0$ (Lemma~\ref{lem:bounds}).
+\end{proof}
+
+Lemma~\ref{lem:comparison} is the discrete form of the comparison principle
+for \eqref{eq:Peps} on which the barrier arguments of
+\cite{LedermanVazquezWolanski2001,Petrosyan2002,FernandezBonderWolanski2004}
+rest. Note that it does not require $\Delta t\lesssim\ve^2$: a fully implicit
+treatment of $(u+w)f_\ve(u)$ would, because that function is not monotone
+in $u$.
+
+\subsection{Towards $\ve$-uniform error estimates}
+Lemma~\ref{lem:comparison} reduces error estimates to the construction of
+barriers.
+
+\begin{proposition}\label{prop:barriers}
+Let $u$ be a solution of \eqref{eq:P} and $\delta\ge0$. Suppose that there
+are a discrete supersolution $V^+$ and a discrete subsolution $V^-$ with
+$V^{-,0}\le U^0\le V^{+,0}$ and $|V^{\pm,n}-u(\cdot,t_n)|\le\delta$ on
+$\mathcal T^n$ for $t_n\le T$. Then $\max_{t_n\le T}\|U^n-u(\cdot,t_n)\|_\infty\le\delta$.
+\end{proposition}
+
+The proof is immediate from Lemma~\ref{lem:comparison}. For fixed $\ve$, taking
+$V^\pm$ as the interpolant of $u^\ve$ plus a correction growing in time
+yields convergence of (S) to $u^\ve$ as $h,\Delta t\to0$, with constants that
+depend on $\ve$ (through the Lipschitz constant $\ve^{-2}$ of the reaction).
+The relevant question is an estimate uniform in $\ve$. In the planar
+travelling wave case we expect barriers of the form
+\[
+V^\pm(x,t)=U_\ve\big(x-ct\mp\xi(t)\big)\pm q(t),
+\]
+in the spirit of Fife and McLeod, where $U_\ve$ is the travelling wave of
+Section~\ref{sec:exact}, $\xi$ absorbs the truncation error inside the
+reaction layer (where $U_\ve'$ is bounded below), and $q$ absorbs it in the
+burnt region (where the state $-\ve w_0$ is exponentially stable) and ahead
+of the front (where $u$ is caloric and $q$ grows at most linearly in time).
+The truncation error of (S) on $U_\ve$ is
+$O(\Delta t/\ve^2+h_f^2/\ve^2)$ inside the layer, which suggests
+\begin{equation}\label{eq:conj}
+\max_{t_n\le T}\|U^n-u(\cdot,t_n)\|_\infty\le C_T\Big(\ve+\frac{\Delta t}{\ve}+\frac{h_f^2}{\ve}+h_c^2\Big).
+\end{equation}
+We have not completed the proof; the case of a general classical solution of
+\eqref{eq:P} requires, in addition, a quantitative version of the barrier
+construction of \cite[Theorem~4.1]{FernandezBonderWolanski2004}. The
+experiments in Table~\ref{tab:simple} are consistent with the term
+$\Delta t/\ve$: with $\Delta t=\kappa\ve^2$, the error in the flame speed is
+$\approx-0.23\,\kappa\,\ve$.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rccc}
+\toprule
+$\ve$ & $\Delta t=4\ve^2$ & $\Delta t=\ve^2$ & $\Delta t=\ve^2/4$\\
+\midrule
+0.02 & $-1.85\cdot10^{-2}$ & $-4.60\cdot10^{-3}$ & $-9.30\cdot10^{-4}$\\
+0.01 & $-9.41\cdot10^{-3}$ & $-2.21\cdot10^{-3}$ & $-3.69\cdot10^{-4}$\\
+\bottomrule
+\end{tabular}
+\caption{Scheme (S), planar travelling wave, $w_0=0$: speed error
+$c_{\rm(S)}-c_\ve$ with respect to the exact speed of \eqref{eq:Peps}.}\label{tab:simple}
+\end{table}
+
+In practice we use the higher order version of Section~\ref{sec:method}
+(variable order BDF, monotone cubic transfer), which allows much larger time
+steps; the experiments below were run with it. Both versions were checked
+against the exact speed $c_\ve$: the error of the BDF version is below
+$10^{-4}$ (Section~\ref{sec:experiments}), and that of (S) is the
+$O(\Delta t/\ve)$ term of Table~\ref{tab:simple}.
+
+% ---------------------------------------------------------------------------
+\section{Numerical experiments}\label{sec:experiments}
+
+\subsection{Flame speed}
+For $A=1$ and $w_0\in\{-0.5,0,1\}$ we start from the limit travelling wave
+$u_0=A(1-e^{-c_0(x-2)})^+$ (with $u_0^\ve,Y_0^\ve$ as in Section~\ref{sec:method}),
+let the front travel a distance $8$, and measure its speed by a least squares
+fit over the second half of the run. Table~\ref{tab:tw} compares it with the
+exact speed $c_\ve$ of Section~\ref{sec:exact} and with the limit speed
+$c_0$; Figure~\ref{fig:tw} shows $|c-c_0|$.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{r ccc ccc}
+\toprule
+& \multicolumn{3}{c}{$(c_\ve-c_0)/\ve$} & \multicolumn{3}{c}{$(c_{\rm PDE}-c_\ve)\cdot10^{5}$}\\
+$\ve$ & $w_0=-0.5$ & $0$ & $1$ & $w_0=-0.5$ & $0$ & $1$\\
+\midrule
+0.1   & $+0.1495$ & $+0.2214$ & $-0.3925$ & $+225.7$ & $+67.9$ & $-32.9$\\
+0.05  & $+0.1440$ & $+0.2146$ & $-0.4229$ & $+108.6$ & $+34.2$ & $-8.3$\\
+0.02  & $+0.1409$ & $+0.2108$ & $-0.4418$ & $+44.0$ & $+14.1$ & $-4.3$\\
+0.01  & $+0.1399$ & $+0.2095$ & $-0.4482$ & $+22.6$ & $+7.4$ & $-5.2$\\
+0.005 & $+0.1394$ & $+0.2089$ & $-0.4515$ & $+11.2$ & $+2.9$ & $-0.6$\\
+0.002 & $+0.1391$ & $+0.2085$ & $-0.4534$ & $+4.5$ & $+1.2$ & $-4.4$\\
+0.001 & $+0.1390$ & $+0.2084$ & $-0.4541$ & $+2.3$ & $+1.0$ & $-0.6$\\
+\midrule
+Prop.~\ref{prop:speed} & $+0.1389$ & $+0.2083$ & $-0.4547$ &&&\\
+\bottomrule
+\end{tabular}
+\caption{Flame speed. Left: first-order coefficient of $c_\ve-c_0$, which
+converges to the value of Proposition~\ref{prop:speed}. Right: difference
+between the speed of the PDE solution and the exact speed of \eqref{eq:Peps}.}\label{tab:tw}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.62\textwidth]{../numerics/figures/tw_speed_convergence.png}
+\caption{$|c-c_0|$ as a function of $\ve$: exact travelling wave of
+\eqref{eq:Peps} (lines) and PDE solver (markers).}\label{fig:tw}
+\end{figure}
+
+The difference $c_{\rm PDE}-c_\ve$ is at most $5\cdot10^{-5}$ for
+$\ve\le0.005$, two orders of magnitude below $c_\ve-c_0$, so the solver
+resolves the $O(\ve)$ correction of the speed. For $w_0=-0.5$ it decreases
+linearly in $\ve$: the wave is slow ($c_0\approx0.20$, decay length $\approx5$),
+and the remaining transient of the profile ahead of the front over a run of
+length $8$ is of order $\ve$. The first-order coefficients converge to the values
+of Proposition~\ref{prop:speed}, including the change of sign for $w_0>w_0^*$.
+
+\subsection{Instability with respect to $w_0$}
+To display the instability proved in \cite{FernandezBonderWolanski2000} we
+take the \emph{same} initial temperature $u_0$ (the limit travelling wave for
+$w_0=0$) and three values of $w_0$, i.e. $Y_0^\ve=u_0^\ve+\ve w_0$ with
+$u_0^\ve\to u_0$. The limit problems differ through $M(w_0)$, and so do the
+flames (Figure~\ref{fig:instability}): after $t=20$ the fronts are at
+$x\approx3.7$, $13.6$ and $35.7$. The dashed lines are the free boundaries of the
+limit problem \eqref{eq:P} with each $M(w_0)$, computed with the solver of
+Section~\ref{sec:limit}; the solutions of \eqref{eq:Peps} follow them. For
+$w_0=-0.5$ the initial gradient $\sqrt{2M(0)}$ exceeds $\sqrt{2M(-0.5)}$ and
+the front first recedes before propagating; its speed approaches $c_0$ only
+slowly ($0.166$ at $t=20$ versus $c_0=0.204$), as does that of the limit
+problem.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/tw_instability.png}
+\caption{Same $u_0$, three values of $w_0$, $\ve=0.005$. Left: front
+positions for \eqref{eq:Peps} (colour) and for the computed limit problem
+\eqref{eq:P} (dashed). Right: $Y$ (solid) and $u$ (dashed) near the front at
+$t=20$.}\label{fig:instability}
+\end{figure}
+
+\subsection{Comparison with the computed limit problem}\label{sec:limit}
+The exact solutions of Section~\ref{sec:exact} are special. To compare
+\eqref{eq:Peps} with \eqref{eq:P} for general data we solve \eqref{eq:P}
+directly. In radial symmetry with $\{u>0\}=\{r<s(t)\}$ we set $r=s\xi$, so
+that $v(\xi,t)=u(s\xi,t)$ solves
+\[
+v_t=\frac{1}{s^2}\Big(v_{\xi\xi}+\frac{N-1}{\xi}v_\xi\Big)+\xi\frac{\dot s}{s}v_\xi,\quad 0<\xi<1,
+\qquad v_\xi(0)=0,\quad v(1)=0,\quad v_\xi(1)=-s\sqrt{2M}.
+\]
+Both free boundary conditions are imposed, the second one through a ghost
+node, and differentiating $v(1,t)=0$ gives $\dot s=\Delta u|_{r=s}/\sqrt{2M}$.
+In the planar case we use $x=s+(L-s)g(\xi)$ with $g$ exponentially clustered
+at the front. Second-order differences in $\xi$ and BDF in time give a
+second-order method: against the travelling wave and the self-similar
+solution the errors in the free boundary are at most $6\cdot10^{-6}$ with $800$ points.
+
+We take $w_0=0.5$ and data which are not exact solutions but satisfy the free
+boundary condition: $u_0=A\tanh\big(\sqrt{2M}(x-2)/A\big)^+$ (planar, $A=1$,
+up to $t=6$) and $u_0=a(1-r^2/R_0^2)^+$ with $a=\sqrt{2M}R_0/2$, $R_0=2$
+(radial, $N=2,3$, until the radius halves). Figure~\ref{fig:limit} and
+Table~\ref{tab:limit} show the results.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/limit_fronts.png}\\[4pt]
+\includegraphics[width=\textwidth]{../numerics/figures/limit_convergence.png}
+\caption{\eqref{eq:Peps} versus the computed limit problem \eqref{eq:P},
+$w_0=0.5$. Top: front positions. Bottom: front error, front error after
+removing the shift $\ve/\sqrt{2M}$, and sup error at the final
+time.}\label{fig:limit}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{r cc cc cc}
+\toprule
+& \multicolumn{2}{c}{planar} & \multicolumn{2}{c}{radial $N=2$} & \multicolumn{2}{c}{radial $N=3$}\\
+$\ve$ & front$^*/\ve$ & sup$/\ve$ & front$^*/\ve$ & sup$/\ve$ & front$^*/\ve$ & sup$/\ve$\\
+\midrule
+0.05  & 0.391 & 0.369 & 0.187 & 0.134 & 0.186 & 0.125\\
+0.02  & 0.325 & 0.327 & 0.118 & 0.102 & 0.115 & 0.096\\
+0.01  & 0.302 & 0.311 & 0.096 & 0.090 & 0.089 & 0.089\\
+0.005 & 0.300 & 0.312 & 0.083 & 0.092 & 0.075 & 0.089\\
+0.002 & 0.302 & 0.315 & 0.065 & 0.100 & 0.065 & 0.095\\
+0.001 & 0.285 & 0.292 & 0.067 & 0.093 & 0.053 & 0.101\\
+\bottomrule
+\end{tabular}
+\caption{\eqref{eq:Peps} versus \eqref{eq:P}: front error after removing the
+shift $\ve/\sqrt{2M}$ (front$^*$) and sup error at the final time, divided by
+$\ve$.}\label{tab:limit}
+\end{table}
+
+All errors are $O(\ve)$. Most of the raw front error is the shift
+$\ve/\sqrt{2M}$ between the tracked level set $\{u^\ve=\ve\}$ and the free
+boundary. What remains is about $0.07\ve$--$0.1\ve$ in radial symmetry and
+$0.3\ve$ in the planar case. The planar value is explained by
+Proposition~\ref{prop:speed}: the front moves essentially as a travelling wave
+with $A=1$, whose speed is $c_0+0.044\,\ve+o(\ve)$ for $w_0=0.5$, and over
+$0\le t\le6$ this accumulates to $\approx0.26\,\ve$.
+
+\subsection{Radial extinction}
+We take $w_0=0.5$, $T=1$, the exact solution $V$ of Section~\ref{sec:exact}
+as initial datum ($u_0=V(\cdot,0)$, so $u_0^\ve$ and $Y_0^\ve$ are as in
+Section~\ref{sec:method}), and integrate \eqref{eq:Peps} up to $t=0.75$, when the
+radius of the ball $\{V>0\}$ has halved. The initial datum is radially
+decreasing, hence starshaped, and $w_0$ is constant, so the uniqueness result
+of \cite{FernandezBonderWolanski2004} applies: $u^\ve\to V$.
+Figure~\ref{fig:radial} shows $u^\ve$ and $V$ for $\ve=0.01$, $N=2$, and the
+errors as $\ve\to0$; Table~\ref{tab:radial} lists them.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.48\textwidth]{../numerics/figures/radial_snapshots.png}\hfill
+\includegraphics[width=0.5\textwidth]{../numerics/figures/radial_convergence.png}
+\caption{Radial extinction, $w_0=0.5$. Left: $u^\ve$ (solid) and the exact
+solution $V$ (dashed) for $N=2$, $\ve=0.01$. Right: front error
+$\max_{t\in[0.05,0.75]}|r_\ve(t)-R\sqrt{T-t}|$ and
+$\max_x|(u^\ve)^+-V|$ at $t=0.75$, for $N=2,3$.}\label{fig:radial}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rcccc}
+\toprule
+& \multicolumn{2}{c}{front error$/\ve$} & \multicolumn{2}{c}{$\|(u^\ve)^+-V\|_\infty/\ve$}\\
+$\ve$ & $N=2$ & $N=3$ & $N=2$ & $N=3$\\
+\midrule
+0.05  & 1.128 & 1.120 & 0.142 & 0.136\\
+0.02  & 1.064 & 1.060 & 0.108 & 0.105\\
+0.01  & 1.048 & 1.045 & 0.102 & 0.099\\
+0.005 & 1.037 & 1.037 & 0.095 & 0.095\\
+0.002 & 1.026 & 1.023 & 0.086 & 0.089\\
+0.001 & 1.028 & 1.014 & 0.086 & 0.086\\
+\bottomrule
+\end{tabular}
+\caption{Radial extinction: errors divided by $\ve$.}\label{tab:radial}
+\end{table}
+
+The front error is $O(\ve)$, and most of it is the distance between the level
+set $\{u^\ve=\ve\}$ that we track and the free boundary: since
+$|\nabla V|=\sqrt{2M}$ there, this distance is $\ve/\sqrt{2M}+o(\ve)$, that is
+$0.943\,\ve$ for $w_0=0.5$; the remaining $\approx0.08\,\ve$ is consistent with the
+radial results of Section~\ref{sec:limit}. The sup error is attained inside
+the reaction layer, where $(u^\ve)^+$ has the shape $\ve\psi(d/\ve)$ of the
+inner profile while $V$ is linear in the distance $d$ to the free boundary; it
+is $O(\ve)$, with $\|(u^\ve)^+-V\|_\infty/\ve$ decreasing from $0.14$ to $0.086$.
+
+% ---------------------------------------------------------------------------
+\section{Conclusions and outlook}
+The experiments support first-order convergence in $\ve$ of the flame
+position and speed for \eqref{eq:Peps}, in planar and radial geometry,
+including in the presence of the $O(\ve)$ perturbation $w_0$ that changes the
+limit problem, and they make visible the instability proved in
+\cite{FernandezBonderWolanski2000}. Proposition~\ref{prop:speed} gives the
+first-order correction of the speed of planar waves, and it explains the
+residual front error observed against the computed limit problem. For the
+monotone version (S) of the scheme, the discrete comparison principle reduces
+$\ve$-uniform estimates to barriers; the construction of barriers around the
+travelling wave, and the sharp rate $\Delta t/\ve$ suggested by the
+solvability condition and by the experiments, are the subject of ongoing work.
+Whether an $O(\ve)$ rate holds for general limits of \eqref{eq:Peps} with a
+classical limit solution, as the experiments suggest, is open.
+
+Natural next steps are: (i) the elliptic problem in two dimensions, where the
+annulus provides explicit solutions with zero, one or two free boundaries, and
+the Bernoulli literature \cite{FlucherRumpf1997,ShenDaiHuang2024} provides
+comparisons; (ii) the parabolic problem in two and three dimensions with
+adaptive refinement and coarsening of a finite element mesh, which follows
+the strategy of Section~\ref{sec:method} with a cell indicator instead of an
+interval; (iii) a moving mesh (MMPDE) version in which time steps do not
+degrade as $\ve\to0$ \cite{HuangRussell2011,BuddHuangRussell2009}; and
+(iv) experiments without the geometric assumptions of
+\cite{FernandezBonderWolanski2004}, in search of the non-uniqueness and
+degenerate behaviours of \cite{PetrosyanYip2008,WeissZhang2009}.
+
+\bibliographystyle{amsplain}
+\bibliography{references}
+
+\end{document}
