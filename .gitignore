@@ -3,5 +3,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.log
-paper/pdfs/
+paper/pdfs/*
+!paper/pdfs/README.md
 numerics/figures/*.gif
