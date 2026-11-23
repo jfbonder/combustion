@@ -31,35 +31,13 @@ Universidad de Buenos Aires, Ciudad Universitaria, (1428) Buenos Aires, Argentin
 \begin{document}
 
 \begin{abstract}
-We study the singular limit $\ve\to0$ of the system
-$\Delta u-u_t=Yf_\ve(u)$, $\Delta Y-Y_t=Yf_\ve(u)$, $f_\ve(s)=\ve^{-2}f(s/\ve)$,
-which models premixed flames with unit Lewis number at high activation energy.
-When $(Y-u)/\ve\to w_0$, limits solve the free boundary problem
-$u_t=\Delta u$ in $\{u>0\}$, $|\nabla u|=\sqrt{2M(w_0)}$ on $\partial\{u>0\}$, so the limit
-depends on order-$\ve$ perturbations of the data. We prove two kinds of results.
-
-\emph{Rate of convergence.} If the free boundary problem has a classical
-solution $v$ that is $C^{2,1}$ up to its free boundary, then, in the strictly
-starshaped geometry where uniqueness is known, $\|u^\ve-v\|_\infty\le C\ve$. The
-proof makes the approximation theorems of Fern\'andez Bonder and Wolanski
-quantitative, replacing a blow-up argument by explicit barriers built from the
-inner profile.
-
-\emph{Numerical analysis.} We propose a finite volume method on a mesh that
-follows the flame: a fine band of width $O(\ve\log(1/\ve))$ travels with the
-front (arbitrary Lagrangian--Eulerian formulation with implicit mesh velocity)
-and the mesh is refined ahead of the front and coarsened behind it. A linearly
-implicit time discretization satisfies a discrete comparison principle for
-every time step. For travelling waves we prove error estimates uniform in
-$\ve$ in which the time step does not appear and negative powers of $\ve$
-multiply only the mesh size inside the band.
-
-Numerical experiments in one dimension and in radial symmetry illustrate the
-meshes, confirm the estimates, compare the singular limit with a second-order
-solver for the free boundary problem and with examples from the literature,
-and display the instability of the limit with respect to $w_0$. For
-travelling waves we also obtain the first-order correction of the flame
-speed in closed form.
+We study the high activation energy limit of an equidiffusional model of
+premixed flames, whose limit is a free boundary problem. We prove the first
+rate of convergence for this singular limit, of order $\ve$. We also propose a
+numerical method whose mesh follows the flame front, and prove error
+estimates that are uniform in $\ve$: the time step plays no role, and the
+small parameter only constrains the mesh near the front. Numerical
+experiments illustrate the method and confirm the estimates.
 \end{abstract}
 
 \maketitle
