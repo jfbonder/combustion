@@ -87,7 +87,7 @@ def find_front(x, u, level):
     return xf, (-1 if burnt_left else +1)
 
 
-def build_mesh(x, u, eps, L, mp):
+def build_mesh(x, u, eps, L, mp, anchor=0.0):
     xf, burnt_dir = find_front(x, u, eps)
     if xf is None:
         n = int(np.ceil(L / mp.h_coarse)) + 1
@@ -97,13 +97,14 @@ def build_mesh(x, u, eps, L, mp):
     a = max(0.0, xf - (lo_K + mp.K_margin) * eps)
     b = min(L, xf + (hi_K + mp.K_margin) * eps)
     h_fine = eps / mp.pts_per_eps
-    # snap the band to the global lattice h_fine * Z: consecutive bands share
+    # snap the band to the lattice anchor + h_fine * Z: consecutive bands share
     # their nodes, so the transfer of the solution is exact inside the band
     # (interpolation only acts in the graded transition, where u is smooth)
-    ia = int(np.floor(a / h_fine))
-    ib = int(np.ceil(b / h_fine))
-    ib = min(ib, int(np.floor(L / h_fine)))
-    band = h_fine * np.arange(ia, ib + 1)
+    ia = int(np.floor((a - anchor) / h_fine))
+    ib = int(np.ceil((b - anchor) / h_fine))
+    ia = max(ia, int(np.ceil((0.0 - anchor) / h_fine)))
+    ib = min(ib, int(np.floor((L - anchor) / h_fine)))
+    band = anchor + h_fine * np.arange(ia, ib + 1)
     a, b = band[0], band[-1]
     h0 = h_fine
     left = a - _graded(a, h0, mp.h_coarse, mp.growth)[::-1]
