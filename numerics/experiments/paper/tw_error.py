@@ -290,14 +290,14 @@ def fig_D1(d):
         axs[i, 0].set_ylabel(f"$w_0={w0:g}$")
     for ax in axs[1]:
         ax.set_xlabel("$\\Delta t$")
-        plain_ticks(ax, [0.0025, 0.01, 0.05])
+        plain_ticks(ax, [0.0025, 0.005, 0.01, 0.02, 0.05, 0.1])
     title(axs[0, 0], "$E=\\max_{n,j}|U^n_j-\\Phi_\\varepsilon(x^n_j-c_\\varepsilon t_n)|$")
     title(axs[0, 1], "$E$ with the front shift removed")
     title(axs[0, 2], "$\\mu_1=\\max_{t_n\\geq1}|v_n-c_\\varepsilon|$")
-    for ax in axs[:, 0]:
-        ax.legend(fontsize=7, loc="upper left")
+    axs[0, 0].legend(fontsize=7, loc="upper left")
+    axs[1, 0].legend(fontsize=7, loc="upper left", ncol=2)
     for ax in axs.flat:
-        ax.set_ylim(1e-6, 1e-1)
+        ax.set_ylim(1e-5, 1e-1)
     fig.tight_layout()
     savefig(fig, "D1_ale_error_vs_dt.png")
 
@@ -400,6 +400,8 @@ def fig_D5(d):
     axs[2].set_xticklabels(["1/32", "1/16", "1/8", "1/4"])
     axs[2].minorticks_off()
     axs[2].set_xlabel("$h_f/\\varepsilon$")
+    axs[2].set_ylim(1e-3, 4e-3)
+    plain_ticks(axs[2], [1e-3, 1.5e-3, 2e-3, 3e-3, 4e-3], axis="y", fmt="{:.1e}")
     title(axs[2], "$w_0=0$, $\\Delta t=0.01\\varepsilon$")
     axs[2].legend(fontsize=6.5)
     fig.tight_layout()
