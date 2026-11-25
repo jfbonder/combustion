@@ -10,14 +10,12 @@ Run from numerics/:  python -m experiments.paper.in_hypotheses     (~2 min, 2 pr
 Results: results/paper/G_in_hypotheses.json
 """
 
-from concurrent.futures import ProcessPoolExecutor
-
 import numpy as np
 
 from combustion1d.ale import simulate_ale
 from combustion1d.solver import MeshParams
 
-from .common import Timer, save_json
+from .common import RIGID_MIN_CELL, Timer, save_json, worker_pool
 from .tw_error import Monitor, setup
 
 T = 3.0
@@ -33,7 +31,7 @@ def run(job):
     with Timer() as tm:
         r = simulate_ale(lambda x: P(x - x0), 0.0, eps, L, T, dt, mesh=mp, speed_guess=c,
                          exact_initial=True, monitor=mon, fixed_velocity=c + mu, ell0=1e6,
-                         remesh_distance=1e9)
+                         remesh_distance=1e9, min_cell=RIGID_MIN_CELL)
     s = mon.summary(T)
     return dict(job, h=h, rho_h=h / eps**2, nodes=int(np.mean(r.n_nodes)), steps=r.n_steps,
                 E=s["E"], E_shift=s["E_shift"], s_max=s["s_max"], seconds=tm.seconds)
@@ -43,7 +41,7 @@ def main():
     jobs = [dict(eps=e, k=k, dt=dt, mu=mu)
             for e in (0.1, 0.05) for k in (8, 16) for dt in (0.1, 0.01) for mu in (0.0, 0.01)]
     out = []
-    with ProcessPoolExecutor(2) as ex:
+    with worker_pool(2) as ex:
         for r in ex.map(run, jobs):
             print("eps={eps} h=eps^2/{k} dt={dt} mu={mu}: E={E:.3e} E_s={E_shift:.3e} "
                   "s_max={s_max:.3e}  rho_h*T={rt:.3f} nodes={nodes} {seconds:.0f}s".format(

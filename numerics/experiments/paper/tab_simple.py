@@ -15,15 +15,13 @@ Run from numerics/:
     OMP_NUM_THREADS=1 ../.venv/bin/python -m experiments.paper.tab_simple
 """
 
-from concurrent.futures import ProcessPoolExecutor
-
 import numpy as np
 
 from combustion1d.exact import tw_profile_eps, tw_profile_limit, tw_speed_eps, tw_speed_limit
 from combustion1d.simple import simulate_simple
 from combustion1d.solver import MeshParams, front_speed
 
-from .common import Timer, save_json
+from .common import Timer, save_json, worker_pool
 
 OLD = {(0.02, 4): -1.85e-2, (0.02, 1): -4.60e-3, (0.02, 0.25): -9.30e-4,
        (0.01, 4): -9.41e-3, (0.01, 1): -2.21e-3, (0.01, 0.25): -3.69e-4}
@@ -63,7 +61,7 @@ def run(job):
 def main():
     jobs = [(e, k, s) for s in ("B1", "Phi") for e in (0.01, 0.02) for k in (0.25, 1, 4)]
     out = []
-    with ProcessPoolExecutor(4) as ex:
+    with worker_pool(4) as ex:
         for r in ex.map(run, jobs):
             print("{setup:<3} eps={eps} dt={dt:.2e} (k={k}) lsq={err_lsq:+.3e} end={err_end:+.3e} "
                   "old={old:+.2e} steps={steps} dts={dts} {seconds:.0f}s".format(**r), flush=True)

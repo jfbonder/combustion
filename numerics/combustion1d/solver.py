@@ -33,7 +33,28 @@ import scipy.sparse as sp
 from scipy.integrate import solve_ivp
 from scipy.interpolate import PchipInterpolator
 
-from .model import df_eps, f_eps
+from .model import resolve_reaction
+
+
+# ---------------------------------------------------------------------------
+# Failures
+# ---------------------------------------------------------------------------
+
+class NumericalFailure(RuntimeError):
+    """A run could not be continued for a numerical reason (as opposed to a
+    physical outcome such as the extinction of the flame, which is reported
+    in Result.status). `result` holds the partial Result (status "failed",
+    reason = the message), when the solver could build it."""
+    result = None
+
+
+class PecletError(NumericalFailure):
+    """The cell Peclet condition of the ALE scheme is violated: the matrix of
+    the step is not an M-matrix (see combustion1d.ale._matrix)."""
+
+
+class MeshError(NumericalFailure):
+    """The moving mesh is not valid (two nodes cross within one step)."""
 
 
 # ---------------------------------------------------------------------------
@@ -76,18 +97,48 @@ class MeshParams:
 
 
 def find_front(x, u, level):
-    """Position of the (single) crossing u = level, or None."""
+    """Position of the first crossing of u = level (linear interpolation), and
+    the side of the burnt region {u < level}: -1 = to the left of the front,
+    +1 = to the right. Returns (None, 0) if u - level does not change sign.
+
+    A node where u equals the level exactly counts as a crossing if u - level
+    has opposite signs on its two sides (the front is then that node); a node
+    that only touches the level (same sign on both sides) or a zero at an end
+    of the mesh is not a crossing.
+    """
     s = np.sign(u - level)
-    idx = np.nonzero(s[:-1] * s[1:] < 0)[0]
-    if idx.size == 0:
-        return None, 0
-    i = idx[0]
+    if np.any(s == 0):
+        # nodes exactly on the level: look for the sign change between the
+        # neighbouring nonzero values
+        nz = np.nonzero(s)[0]
+        k = np.nonzero(s[nz[:-1]] * s[nz[1:]] < 0)[0]
+        if k.size == 0:
+            return None, 0
+        i, j = nz[k[0]], nz[k[0] + 1]
+        if j > i + 1:                   # x[i+1] (.. x[j-1]) lie on the level
+            return float(x[i + 1]), (-1 if s[i] < 0 else +1)
+    else:
+        idx = np.nonzero(s[:-1] * s[1:] < 0)[0]
+        if idx.size == 0:
+            return None, 0
+        i = idx[0]
     xf = x[i] + (level - u[i]) * (x[i + 1] - x[i]) / (u[i + 1] - u[i])
     burnt_left = u[i] < level
     return xf, (-1 if burnt_left else +1)
 
 
+MIN_END_CELL = 0.5      # smallest cell at an end of [0, L], in units of h_fine
+
+
 def build_mesh(x, u, eps, L, mp, anchor=0.0):
+    """Band mesh around the front of (x, u): returns (nodes, front position).
+
+    The band has spacing h_fine = eps / pts_per_eps and lies on the lattice
+    anchor + h_fine * Z; outside it the cells grow geometrically up to
+    h_coarse. All cells are >= MIN_END_CELL * h_fine (for h_coarse >= h_fine).
+    Without a front the mesh is uniform with spacing h_coarse and the second
+    value is None.
+    """
     xf, burnt_dir = find_front(x, u, eps)
     if xf is None:
         n = int(np.ceil(L / mp.h_coarse)) + 1
@@ -105,6 +156,15 @@ def build_mesh(x, u, eps, L, mp, anchor=0.0):
     ia = max(ia, int(np.ceil((0.0 - anchor) / h_fine)))
     ib = min(ib, int(np.floor((L - anchor) / h_fine)))
     band = anchor + h_fine * np.arange(ia, ib + 1)
+    # A band that reaches an end of [0, L] leaves there a remainder shorter
+    # than h_fine (the anchor is arbitrary with respect to 0 and L). A
+    # remainder below MIN_END_CELL * h_fine is merged into the adjacent band
+    # cell (the last lattice node is dropped), so that every cell of the mesh
+    # is >= MIN_END_CELL * h_fine.
+    if band.size > 2 and 0.0 < band[0] < MIN_END_CELL * h_fine:
+        band = band[1:]
+    if band.size > 2 and 0.0 < L - band[-1] < MIN_END_CELL * h_fine:
+        band = band[:-1]
     a, b = band[0], band[-1]
     h0 = h_fine
     left = a - _graded(a, h0, mp.h_coarse, mp.growth)[::-1]
@@ -142,7 +202,16 @@ class Result:
     n_steps: int = 0
     n_nodes: list = field(default_factory=list)
     mesh_history: list = field(default_factory=list)   # [(t, nodes)] if requested
-    extinct: bool = False
+    extinct: bool = False      # True iff status == "extinct"
+    # "ok": the run reached t_end with a front;
+    # "extinct": the front {u = eps} disappeared (ALE stops at that step; the
+    #     Eulerian solvers continue on a uniform mesh), reason says when;
+    # "failed": numerical failure, reason says which (the ALE solver raises
+    #     the corresponding NumericalFailure, with this Result attached)
+    status: str = "ok"
+    reason: str = None
+    n_secant_fail: int = 0     # ALE: steps accepted with |front - reference| >= tolerance
+    n_mesh_remesh: int = 0     # ALE: remeshings forced by a cell below min_cell * h_f
     n_solves: int = 0          # tridiagonal solves (scheme (S): ALE and simple.py)
     n_trials: int = 0          # ALE: trial velocities (each = 2 tridiagonal solves)
     n_lu: int = 0              # BDF solver: LU factorisations (2n x 2n sparse)
@@ -163,16 +232,56 @@ def initial_data(x, u0, w0, eps):
     return u, eps * W0
 
 
+def _mark_extinct(res, t, u, eps):
+    """Record in res that no front was found at time t (first time only)."""
+    if res.status != "ok":
+        return
+    if not np.all(np.isfinite(u)):
+        res.status, res.reason = "failed", f"non-finite values in the solution at t = {t:.6g}"
+        return
+    side = "u > eps" if u[0] > eps else "u < eps"
+    res.status, res.extinct = "extinct", True
+    res.reason = f"front disappeared: {side} on the whole mesh at t = {t:.6g}"
+
+
 def simulate(u0, w0, eps, L, t_end, N=1, mesh=None, speed_guess=1.0,
              snapshot_times=(), rtol=1e-5, atol_rel=1e-4, max_dt_remesh=None,
-             verbose=False, record_mesh=False):
-    mp = mesh or MeshParams()
-    max_dt_remesh = max_dt_remesh or 0.05 * t_end
+             verbose=False, record_mesh=False, reaction=None):
+    """Reference solver: adaptive BDF on band meshes rebuilt around the front.
+
+    The mesh is rebuilt (and the BDF integrator restarted) after every time
+    interval of length
+        min(0.5 * K_margin * eps / v_est, max_dt_remesh, t_end - t),
+    shortened to land on the next snapshot time; v_est is the front speed
+    measured over the previous interval (speed_guess for the first one,
+    never below 1e-3). max_dt_remesh defaults to 0.05 * t_end, so the
+    sequence of meshes depends on the final time unless max_dt_remesh is
+    given. res.t / res.front hold one sample per interval.
+
+    reaction: None (the rate installed with model.set_reaction) or f or
+        (f, df) for this call only (see model.resolve_reaction).
+    """
+    mp = MeshParams() if mesh is None else mesh
+    if max_dt_remesh is None:
+        max_dt_remesh = 0.05 * t_end
+    if not max_dt_remesh > 0:
+        raise ValueError("max_dt_remesh must be positive")
+    f_r, df_r = resolve_reaction(reaction)
+
+    def f_eps(s, e):
+        return f_r(s / e) / e**2
+
+    def df_eps(s, e):
+        return df_r(s / e) / e**3
+
     x = np.linspace(0.0, L, 20001)
     u, w = initial_data(x, u0, w0, eps)
     x_new, xf = build_mesh(x, u, eps, L, mp)
     u, w = initial_data(x_new, u0, w0, eps)   # exact initial data on mesh
     x = x_new
+    # front of the initial datum on the actual mesh (build_mesh located it on
+    # the auxiliary uniform grid, whose spacing L/20000 can exceed eps)
+    xf = find_front(x, u, eps)[0]
 
     t = 0.0
     ts, fronts = [0.0], [xf if xf is not None else np.nan]
@@ -204,9 +313,13 @@ def simulate(u0, w0, eps, L, t_end, N=1, mesh=None, speed_guess=1.0,
             dt = pending[0] - t
         sol = solve_ivp(rhs, (t, t + dt), np.concatenate((u, w)), method="BDF",
                         jac=jac, rtol=rtol, atol=atol_rel * eps,
-                        first_step=min(h_last, dt) if h_last else None)
+                        first_step=min(h_last, dt) if h_last is not None else None)
         if not sol.success:
-            raise RuntimeError(sol.message)
+            res.status, res.reason = "failed", f"BDF integrator at t = {t:.6g}: {sol.message}"
+            res.t, res.front = np.array(ts), np.array(fronts)
+            err = NumericalFailure(res.reason)
+            err.result = res
+            raise err
         t = sol.t[-1]
         if sol.t.size > 2:
             h_last = sol.t[-2] - sol.t[-3]   # last full step
@@ -219,6 +332,8 @@ def simulate(u0, w0, eps, L, t_end, N=1, mesh=None, speed_guess=1.0,
         if xf_new is not None and xf is not None:
             v_est = max(abs(xf_new - xf) / dt, 1e-3)
         xf = xf_new
+        if xf is None:
+            _mark_extinct(res, t, u, eps)
         ts.append(t)
         fronts.append(xf if xf is not None else np.nan)
         if pending and abs(t - pending[0]) < 1e-12:

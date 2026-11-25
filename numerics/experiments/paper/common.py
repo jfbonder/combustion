@@ -1,7 +1,7 @@
 """Shared setup, I/O and plotting helpers for the paper experiments.
 
 Run the group scripts from numerics/, e.g.
-    OMP_NUM_THREADS=1 ../.venv/bin/python -m experiments.paper.meshes
+    OMP_NUM_THREADS=1 python -m experiments.paper.meshes
 """
 
 import json
@@ -13,7 +13,8 @@ import numpy as np
 import combustion1d.ale as _ale
 from combustion1d.exact import SelfSimilar, tw_profile_limit, tw_speed_limit
 from combustion1d.model import fb_slope
-from combustion1d.solver import MeshParams, Result
+from combustion1d.solver import MeshParams, NumericalFailure, Result
+from experiments.util import to_jsonable, with_provenance, worker_pool  # noqa: F401
 
 # palette / rcParams of the existing figures (experiments/plots.py)
 from experiments.plots import BLUES, GRID, INK, MARKERS, MUTED, SERIES, plt  # noqa: F401
@@ -56,22 +57,29 @@ def expanding_u0(r0, w0=0.5, A=1.0):
     return lambda r: np.where(r > r0, A * np.tanh(lam * (r - r0) / A), 0.0)
 
 
+# Rigid-mesh experiments (the whole mesh translates: ell0 = 1e6,
+# remesh_distance = 1e9). By construction the cells in the tapered zones at
+# the ends of [0, L] are compressed far below h_f (the mesh moves, the ends do
+# not), and the experiments rely on the mesh never being rebuilt. They pass
+# min_cell = RIGID_MIN_CELL to simulate_ale, which switches off the remeshing
+# of compressed cells (crossing nodes still raise MeshError); the travel
+# distance is limited by hand in those scripts.
+RIGID_MIN_CELL = 0.0
+
+
 # ---------------------------------------------------------------------------
 # ALE runs that may end with the disappearance of the front
 # ---------------------------------------------------------------------------
 
 class _KeepResult(Result):
-    """Result that (1) remembers the last instance: combustion1d.ale.simulate_ale
-    raises a TypeError when the front disappears, and with this we keep the
-    snapshots / mesh history recorded up to that step; (2) records the step
-    index of every remeshing (res.remesh_steps)."""
-    last = None
+    """Result that also records the step index of every remeshing
+    (res.remesh_steps: indices into res.t), by intercepting the updates of
+    the counter n_remesh."""
 
     def __init__(self, *a, **k):
         self._nrm = 0
         self.remesh_steps = []
         super().__init__(*a, **k)
-        _KeepResult.last = self
 
     @property
     def n_remesh(self):
@@ -86,15 +94,27 @@ class _KeepResult(Result):
 
 def simulate_ale_safe(*args, **kw):
     """simulate_ale with remeshing times recorded (res.remesh_steps: indices
-    into res.t). On failure returns (partial Result, error string); in the
-    partial result t / front are None (snapshots, n_nodes and mesh_history
-    are available)."""
+    into res.t). Returns (res, error):
+
+    * error is None when the run ended normally: res.status is "ok", or
+      "extinct" if the front disappeared (a physical outcome; res.reason
+      says when, and res.front ends with nan);
+    * a numerical failure of the scheme (combustion1d.solver.NumericalFailure:
+      Peclet condition, crossing nodes) is returned as (partial res with
+      status "failed", message). The caller must treat it as a failed run,
+      never as an outcome of the model.
+
+    Any other exception (programming errors, invalid arguments, failures of
+    the linear solver) is not caught.
+    """
     old = _ale.Result
     _ale.Result = _KeepResult
     try:
         return _ale.simulate_ale(*args, **kw), None
-    except Exception as ex:          # front disappeared (extinction), etc.
-        return _KeepResult.last, repr(ex)
+    except NumericalFailure as ex:
+        if ex.result is None:
+            raise
+        return ex.result, f"{type(ex).__name__}: {ex}"
     finally:
         _ale.Result = old
 
@@ -116,19 +136,16 @@ def cycle_speed(res, t_from):
 # ---------------------------------------------------------------------------
 
 def save_json(name, obj):
-    (RES / name).write_text(json.dumps(obj, indent=1, default=_conv))
+    """Write obj to results/paper/<name> with its provenance (code commit and
+    library versions; see experiments.util.with_provenance)."""
+    (RES / name).write_text(json.dumps(with_provenance(obj), indent=1, default=_conv))
 
 
 def load_json(name):
     return json.loads((RES / name).read_text())
 
 
-def _conv(o):
-    if isinstance(o, np.ndarray):
-        return o.tolist()
-    if isinstance(o, (np.floating, np.integer)):
-        return o.item()
-    raise TypeError(type(o))
+_conv = to_jsonable
 
 
 def save_mesh_history(name, hist, **extra):

@@ -25,8 +25,6 @@ Run from numerics/:
 """
 
 import sys
-from concurrent.futures import ProcessPoolExecutor
-
 import numpy as np
 
 from combustion1d.ale import simulate_ale
@@ -34,8 +32,9 @@ from combustion1d.exact import tw_profile_eps, tw_profile_limit, tw_speed_eps, t
 from combustion1d.simple import simulate_simple
 from combustion1d.solver import MeshParams, find_front, front_speed
 
-from .common import (BLUES, MARKERS, MUTED, SERIES, Timer, cycle_speed, load_json, plain_ticks,
-                     plt, save_json, savefig, simulate_ale_safe, slope_ref, title)
+from .common import (BLUES, MARKERS, MUTED, RIGID_MIN_CELL, SERIES, Timer, cycle_speed, load_json,
+                     plain_ticks, plt, save_json, savefig, simulate_ale_safe, slope_ref, title,
+                     worker_pool)
 
 X0 = 2.0
 THETA = 0.37          # lattice phase of the initial front: x0 = (k + THETA) h_f, k h_f ~ X0
@@ -101,9 +100,10 @@ def run_ale(job):
     mon = Monitor(P, x0, c, eps)
     kw = dict(job.get("kw", {}))
     if job["kind"] == "drag":
-        kw.update(fixed_velocity=c + job["dv"], ell0=1e6, remesh_distance=1e9)
+        kw.update(fixed_velocity=c + job["dv"], ell0=1e6, remesh_distance=1e9,
+                  min_cell=RIGID_MIN_CELL)
     elif job["kind"] == "rigid_impl":
-        kw.update(ell0=1e6, remesh_distance=1e9)
+        kw.update(ell0=1e6, remesh_distance=1e9, min_cell=RIGID_MIN_CELL)
     with Timer() as tm:
         r = simulate_ale(lambda x: P(x - x0), w0, eps, L, T, dt, mesh=mp, speed_guess=c,
                          exact_initial=True, monitor=mon, **kw)
@@ -142,7 +142,7 @@ def run_floor(job):
     u0 = lambda x: tw_profile_limit(x, 0.0, 1.0, c, x0=2.0)
     kw = dict(job.get("kw", {}))
     if job["kind"] == "floor_rigid":
-        kw.update(ell0=1e6, remesh_distance=1e9)
+        kw.update(ell0=1e6, remesh_distance=1e9, min_cell=RIGID_MIN_CELL)
     with Timer() as tm:
         r, fail = simulate_ale_safe(u0, w0, eps, L, T, dt, mesh=MeshParams(), speed_guess=c0, **kw)
     if fail:
@@ -235,7 +235,7 @@ def run_all(groups):
     except FileNotFoundError:
         pass
     out = []
-    with Timer() as tm, ProcessPoolExecutor(4) as ex:
+    with Timer() as tm, worker_pool(4) as ex:
         for r in ex.map(_dispatch, J):
             if "failed" in r:
                 print("FAILED", r, flush=True)

@@ -12,13 +12,23 @@ and report
 (the numerical front then moves at c + delta_c).
 
 Run from numerics/:  python -m experiments.truncation_check
+
+Prints the two tables and writes them to results/paper/truncation_check.json
+(rows "time_step": eps, kappa, dt, h, max_tau, dc and the normalised values
+max_tau*eps^2/dt and dc/(dt/eps); rows "mesh_size": w0, eps, m, h, dt,
+max_tau, dc and max_tau*eps^2/h, dc/(h/eps)^2).
 """
+
+from pathlib import Path
 
 import numpy as np
 from scipy.integrate import solve_ivp
 
 from combustion1d.exact import tw_speed_eps
 from combustion1d.model import f, f_eps
+from experiments.util import write_json
+
+OUT = Path(__file__).resolve().parent.parent / "results" / "paper"
 
 
 class Profile:
@@ -71,7 +81,8 @@ class Profile:
 
 def truncation(P, h, dt, s, Zl=60.0, Zr=None):
     e, c, w0 = P.eps, P.c, P.w0
-    Zr = Zr or 40.0 / c
+    if Zr is None:
+        Zr = 40.0 / c
     j = np.arange(int(np.floor(-Zl * e / h)) - 1, int(np.ceil(Zr / h)) + 2)
     x = (j + s) * h
     Vn = P(x)
@@ -91,14 +102,18 @@ def report(A, w0, eps, h, dt, nshift=16):
     return max(r[0] for r in res), float(np.mean([r[1] for r in res]))
 
 
-if __name__ == "__main__":
+def main():
     A = 1.0
+    rows_dt, rows_h = [], []
     print("time step: w0=0, h = eps/64, dt = kappa eps^2")
     for eps in (0.02, 0.01, 0.005):
         for kappa in (1.0, 0.25):
             mx, dc = report(A, 0.0, eps, eps / 64, kappa * eps**2)
             print(f"  eps={eps:<6} kappa={kappa:<5} max|tau|*eps^2/dt={mx*eps**2/(kappa*eps**2):7.3f}"
                   f"   predicted dc/(dt/eps)={dc/(kappa*eps):+.4f}")
+            rows_dt.append(dict(A=A, w0=0.0, eps=eps, kappa=kappa, dt=kappa * eps**2, h=eps / 64,
+                                max_tau=mx, dc=dc, max_tau_eps2_over_dt=mx * eps**2 / (kappa * eps**2),
+                                dc_over_dt_eps=dc / (kappa * eps)))
     print("mesh size: dt = 1e-3 eps^2, h = eps/m")
     for w0 in (0.0, 1.0):
         for eps in (0.01, 0.005):
@@ -107,3 +122,13 @@ if __name__ == "__main__":
                 mx, dc = report(A, w0, eps, h, 1e-3 * eps**2)
                 print(f"  w0={w0} eps={eps:<6} h=eps/{m:<3} max|tau|*eps^2/h={mx*eps**2/h:7.3f}"
                       f"   predicted dc={dc:+.2e}  dc/(h/eps)^2={dc/(h/eps)**2:+.4f}")
+                rows_h.append(dict(A=A, w0=w0, eps=eps, m=m, h=h, dt=1e-3 * eps**2, max_tau=mx,
+                                   dc=dc, max_tau_eps2_over_h=mx * eps**2 / h,
+                                   dc_over_h_eps_sq=dc / (h / eps)**2))
+    write_json(OUT / "truncation_check.json",
+               dict(nshift=16, time_step=rows_dt, mesh_size=rows_h))
+    print("wrote", OUT / "truncation_check.json")
+
+
+if __name__ == "__main__":
+    main()

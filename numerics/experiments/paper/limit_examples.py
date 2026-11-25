@@ -8,12 +8,18 @@ C3  quenching of small burnt kernels (expanding flame, tanh data): critical
     initial radius vs eps, front radius r_f(t) for several r0
 
 Run from numerics/:
-    OMP_NUM_THREADS=1 ../.venv/bin/python -m experiments.paper.limit_examples [run|plot]
+    OMP_NUM_THREADS=1 python -m experiments.paper.limit_examples [run|plot] [C1 C2 C3]
+
+Failures. A numerical failure of a run (Peclet condition, invalid mesh, BDF
+integrator) is never used as a result: C2 and C3 stop with an error. In C3 a
+run counts as "quenching" only if the front {u = eps} disappeared (status
+"extinct" of the solver) or if the run ended with a front radius below
+0.5 r0; the criterion that decided every bisection step is stored in the
+history of C3_quenching.json.
 """
 
 import json
 import sys
-from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
 
@@ -25,7 +31,8 @@ from combustion1d.solver import MeshParams, find_front, simulate
 from experiments.limit_comparison import case, limit_solution, t_end_of
 
 from .common import (BLUES, INK, MARKERS, MUTED, RES, ROOT, SERIES, Timer, expanding_u0,
-                     load_json, plt, save_json, savefig, simulate_ale_safe, slope_ref, title)
+                     load_json, plt, save_json, savefig, simulate_ale_safe, slope_ref, title,
+                     worker_pool)
 
 W0 = 0.5
 LAM = float(fb_slope(W0))
@@ -107,6 +114,8 @@ def run_C2(job):
             r, err = simulate_ale_safe(u0, W0, eps, L, t_end, dt, mesh=MeshParams(),
                                        speed_guess=-N / R0, N=N, ell0=1.0, remesh_distance=0.1,
                                        snapshot_times=snaps)
+        if err is not None:
+            raise RuntimeError(f"C2 N={N} eps={eps} dt={dt}: ALE run failed: {err}")
         s_eps = r.front + eps / LAM
         # T_eps from s^2 ~ R^2 (T_eps - t) on s in [s_end, 2 s_end]
         m = (s_eps < 2 * s_end) & (s_eps > 0)
@@ -121,7 +130,9 @@ def run_C2(job):
                                   v=np.maximum(u[m], 0) / np.sqrt(tau)))
         out["eps_runs"].append(dict(eps=eps, dt=dt, T_eps=T_eps, t=r.t[::4], s=s_eps[::4],
                                     profiles=eprof, steps=r.n_steps, seconds=tm.seconds,
-                                    error=err))
+                                    error=err, status=r.status, reason=r.reason,
+                                    n_secant_fail=r.n_secant_fail,
+                                    n_mesh_remesh=r.n_mesh_remesh))
     # reference for the smallest eps: Eulerian BDF solver (adaptive in time)
     eps = eps_dt[-1][0]
     s_end = max(0.15, 30 * eps)
@@ -151,18 +162,35 @@ L_EXP = 12.0
 T_EXP = 6.0
 
 
+class KernelRunFailed(RuntimeError):
+    """A kernel run ended with a numerical failure (not a physical outcome)."""
+
+
 def run_kernel(job):
     """Expanding-flame run from a kernel of radius r0; returns the front
-    history and the outcome ('ignition' / 'quenching')."""
+    history and the outcome:
+
+    'quenching'  the front disappeared (solver status "extinct"), or the run
+                 ended with a front radius below 0.5 r0 (collapsing kernel);
+    'ignition'   the run ended with a front radius above r0 + 0.5;
+    'undecided'  the run ended with a front in between.
+
+    The entry 'reason' says which criterion decided, 'status' is the status
+    of the solver. A numerical failure raises KernelRunFailed: it is never
+    turned into an outcome.
+    """
     r0, eps, dt, method = job["r0"], job["eps"], job["dt"], job.get("method", "ale")
     t_end = job.get("t_end", T_EXP)
     u0 = expanding_u0(r0, W0)
     L = max(L_EXP, r0 + C0 * t_end + 4.0)
     snaps = tuple(np.round(np.arange(0.02, t_end + 1e-9, 0.02), 10))
+    counters = {}
     with Timer() as tm:
         if method == "ale":
             r, err = simulate_ale_safe(u0, W0, eps, L, t_end, dt, mesh=MeshParams(),
                                        speed_guess=C0, N=2, snapshot_times=snaps)
+            if err is not None:
+                raise KernelRunFailed(f"r0={r0} eps={eps} dt={dt} (ALE): {err}")
             ts, fs = [0.0], [r0 + eps / LAM]
             for s in sorted(r.snapshots):
                 x, u, _ = r.snapshots[s]
@@ -171,40 +199,67 @@ def run_kernel(job):
                 fs.append(np.nan if xf is None else xf)
             ts, fs = np.array(ts), np.array(fs)
             steps = len(r.n_nodes)
+            counters = dict(n_secant_fail=r.n_secant_fail, n_mesh_remesh=r.n_mesh_remesh)
         else:
+            # a failure of the BDF integrator raises NumericalFailure (not caught)
             r = simulate(u0, W0, eps, L, t_end, N=2, mesh=MeshParams(), speed_guess=C0,
                          max_dt_remesh=0.02)
-            ts, fs, err, steps = r.t, r.front, None, r.n_steps
+            ts, fs, steps = r.t, r.front, r.n_steps
+    if r.status not in ("ok", "extinct"):
+        raise KernelRunFailed(f"r0={r0} eps={eps} dt={dt} ({method}): {r.status}: {r.reason}")
     ok = np.isfinite(fs)
     last = fs[ok][-1]
-    if err is not None or not np.all(ok) or last < 0.5 * r0:
+    if r.status == "extinct":
+        outcome, reason = "quenching", r.reason
+    elif not np.all(ok):
+        # a recorded sample without a front although the solver reports one
+        raise KernelRunFailed(f"r0={r0} eps={eps} dt={dt} ({method}): front samples missing "
+                              "but the solver did not report extinction")
+    elif last < 0.5 * r0:
         outcome = "quenching"
+        reason = f"front radius {last:.6g} < 0.5 r0 at t = {ts[-1]:.6g} (front still present)"
     elif last > r0 + 0.5:
-        outcome = "ignition"
+        outcome, reason = "ignition", f"front radius {last:.6g} > r0 + 0.5 at t = {ts[-1]:.6g}"
     else:
         outcome = "undecided"
-    return dict(job, t=ts, front=fs, outcome=outcome, r_min=float(np.nanmin(fs)),
-                t_min=float(ts[np.nanargmin(fs)]), steps=steps, seconds=tm.seconds, error=err)
+        reason = f"front radius {last:.6g} in [0.5 r0, r0 + 0.5] at t = {ts[-1]:.6g}"
+    return dict(job, t=ts, front=fs, outcome=outcome, reason=reason, status=r.status,
+                r_min=float(np.nanmin(fs)), t_min=float(ts[np.nanargmin(fs)]), steps=steps,
+                seconds=tm.seconds, error=None, **counters)
 
 
 def bisect_critical(args):
+    """Bisection of the critical radius. Every step is recorded in `history`
+    as a dict (r0, t_end, outcome, reason, status, seconds, ...). A kernel
+    that is still undecided after the extended run (t = 2 T_EXP), or a run
+    that fails, stops the bisection with an error: such a step is not counted
+    as quenching."""
     eps, dt, method, lo, hi, tol = args
     hist = []
+
+    def one(mid, t_end):
+        try:
+            r = run_kernel(dict(r0=mid, eps=eps, dt=dt, method=method, t_end=t_end))
+        except Exception as ex:
+            raise RuntimeError(f"C3 bisection (eps={eps}, dt={dt}, {method}) aborted at r0={mid}: "
+                               f"{ex!r}; steps so far: {hist}") from ex
+        hist.append({k: r[k] for k in ("r0", "t_end", "outcome", "reason", "status", "r_min",
+                                       "t_min", "steps", "seconds", "n_secant_fail",
+                                       "n_mesh_remesh") if k in r})
+        return r["outcome"]
+
     while hi - lo > tol:
         mid = 0.5 * (lo + hi)
-        r = run_kernel(dict(r0=mid, eps=eps, dt=dt, method=method))
-        hist.append((mid, r["outcome"], r["seconds"]))
-        if r["outcome"] == "ignition":
+        outcome = one(mid, T_EXP)
+        if outcome == "undecided":   # slow: extend the run
+            outcome = one(mid, 2 * T_EXP)
+        if outcome == "ignition":
             hi = mid
-        elif r["outcome"] == "quenching":
+        elif outcome == "quenching":
             lo = mid
-        else:   # slow: extend the run
-            r = run_kernel(dict(r0=mid, eps=eps, dt=dt, method=method, t_end=2 * T_EXP))
-            hist.append((mid, r["outcome"] + " (long)", r["seconds"]))
-            if r["outcome"] == "ignition":
-                hi = mid
-            else:
-                lo = mid
+        else:
+            raise RuntimeError(f"C3 bisection (eps={eps}, dt={dt}, {method}): r0={mid} still "
+                               f"undecided at t = {2 * T_EXP}; steps so far: {hist}")
     return dict(eps=eps, dt=dt, method=method, lo=lo, hi=hi, r_crit=0.5 * (lo + hi),
                 history=hist)
 
@@ -221,7 +276,7 @@ def run_all(what=("C1", "C2", "C3")):
         print("C1 t_end:", t_ends, flush=True)
         jobs = [(g, e, dt, t_ends[g]) for e in EPS_C1 for g in geoms for dt in DT_C1]
         res = []
-        with ProcessPoolExecutor(4) as ex:
+        with worker_pool(4) as ex:
             for r in ex.map(run_C1, jobs):
                 print("C1 {geom} eps={eps:<6} dt={dt:<7} front={front_err:.3e} "
                       "shifted={front_err_shifted:.3e} sup={sup_err:.3e} steps={steps} "
@@ -229,18 +284,18 @@ def run_all(what=("C1", "C2", "C3")):
                 res.append(r)
         save_json("C1_limit_comparison.json", res)
     if "C2" in what:
-        with ProcessPoolExecutor(2) as ex:
+        with worker_pool(2) as ex:
             # dt = 2.5e-5 for eps = 0.002: near r = 0 the mesh velocity is tapered
             # and an O(dt v/eps) lag appears (see README)
             eps_dt = ((0.01, 1e-4), (0.002, 2.5e-5))
             res = list(ex.map(run_C2, [(2, eps_dt), (3, eps_dt)]))
         for r in res:
             print("C2 N={N} T={T:.6f} R={R:.6f}".format(**r), "BDF T_eps", r["bdf_run"]["T_eps"],
-                  [(e["eps"], round(e["T_eps"], 5), e["steps"], round(e["seconds"], 1), e["error"])
-                   for e in r["eps_runs"]], flush=True)
+                  [(e["eps"], round(e["T_eps"], 5), e["steps"], round(e["seconds"], 1), e["status"],
+                    e["n_secant_fail"], e["n_mesh_remesh"]) for e in r["eps_runs"]], flush=True)
         save_json("C2_self_similar.json", res)
     if "C3" in what:
-        with ProcessPoolExecutor(4) as ex:
+        with worker_pool(4) as ex:
             crit = list(ex.map(bisect_critical,
                                [(e, DT_C3, "ale", 0.6, 0.8, 0.001) for e in EPS_C3]
                                + [(0.00125, 0.00025, "ale", 0.6, 0.8, 0.001),
@@ -248,6 +303,9 @@ def run_all(what=("C1", "C2", "C3")):
             for c in crit:
                 print("C3 crit eps={eps} dt={dt} {method}: r0* in [{lo:.4f}, {hi:.4f}]".format(**c),
                       flush=True)
+                for h in c["history"]:
+                    print("     r0={r0:.6f} t_end={t_end:g} {outcome}: {reason}".format(**h),
+                          flush=True)
             rc = {c["eps"]: c["r_crit"] for c in crit if c["method"] == "ale" and c["dt"] == DT_C3}
             r0s = [0.6, 0.8, rc[0.01] - 0.01, rc[0.01] + 0.01, 1.0, 1.2, 1.5]
             runs = list(ex.map(run_kernel, [dict(r0=r0, eps=0.01, dt=DT_C3, t_end=4.0)
@@ -256,7 +314,7 @@ def run_all(what=("C1", "C2", "C3")):
                                              for r0 in (rc[0.0025] - 0.01, rc[0.0025] + 0.01)]))
         for r in runs:
             print("C3 r0={r0:.4f} eps={eps} {outcome} r_min={r_min:.4f} at t={t_min:.3f} "
-                  "{seconds:.1f}s".format(**r), flush=True)
+                  "{seconds:.1f}s [{reason}]".format(**r), flush=True)
         save_json("C3_quenching.json", dict(critical=crit, runs=runs, c0=C0, inv_c0=1 / C0))
 
 

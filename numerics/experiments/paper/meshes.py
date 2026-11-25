@@ -10,7 +10,6 @@ Run from numerics/:
 """
 
 import sys
-from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
 from matplotlib.collections import LineCollection
@@ -24,7 +23,7 @@ from combustion1d.solver import MeshParams, build_mesh, front_speed, initial_dat
 from .common import (BLUES, INK, MARKERS, MUTED, SERIES, Timer, expanding_u0,
                      extinction_setup, load_json, load_mesh_history, mesh_parts,
                      mesh_parts_predicted, plt, save_json,
-                     save_mesh_history, savefig, title, tw_setup)
+                     save_mesh_history, savefig, title, tw_setup, worker_pool)
 
 W0_TW = 0.0
 EPS_MESH = 0.01
@@ -106,7 +105,7 @@ def run_all():
     jobs = [("ale", EPS_MESH, "ill", True), ("euler", EPS_MESH, "ill", True),
             ("ale", EPS_MESH, "def_", True), ("euler", EPS_MESH, "def_", False)]
     jobs += [(m, e, "def_", False) for e in EPS_NODES if e != EPS_MESH for m in ("ale", "euler")]
-    with ProcessPoolExecutor(4) as ex:
+    with worker_pool(4) as ex:
         fr = ex.submit(run_radial_mesh, "ill")
         fr2 = ex.submit(run_radial_mesh, "def_")
         fe = ex.submit(run_expanding_mesh, "ill")

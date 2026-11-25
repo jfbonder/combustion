@@ -14,15 +14,14 @@ B. Instability with respect to O(eps) perturbations of the data: the SAME
 Run from numerics/:  python -m experiments.traveling_wave
 """
 
-import json
 import time
-from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 import numpy as np
 
 from combustion1d.exact import tw_profile_limit, tw_speed_eps, tw_speed_limit
 from combustion1d.solver import MeshParams, front_speed, simulate
+from experiments.util import worker_pool, write_json
 
 A = 1.0
 X0 = 2.0
@@ -63,7 +62,7 @@ def run_B(w0):
 def main():
     OUT.mkdir(exist_ok=True)
     jobs = [(w0, eps) for eps in EPS for w0 in W0S]
-    with ProcessPoolExecutor(4) as ex:
+    with worker_pool(4) as ex:
         resB = list(ex.map(run_B, W0S))
         resA = []
         for res in ex.map(run_A, jobs):
@@ -71,7 +70,7 @@ def main():
                   "c0={c0:.6f} nodes={nodes:.0f} steps={steps} {seconds:.0f}s".format(**res),
                   flush=True)
             resA.append(res)
-    (OUT / "traveling_wave.json").write_text(json.dumps(dict(A=resA, B=resB), indent=1))
+    write_json(OUT / "traveling_wave.json", dict(A=resA, B=resB))
 
 
 if __name__ == "__main__":

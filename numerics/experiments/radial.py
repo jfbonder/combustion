@@ -17,15 +17,14 @@ u_0^eps built from V(., 0) and measure, as eps -> 0,
 Run from numerics/:  python -m experiments.radial
 """
 
-import json
 import time
-from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 import numpy as np
 
 from combustion1d.exact import SelfSimilar
 from combustion1d.solver import simulate
+from experiments.util import worker_pool, write_json
 
 T = 1.0
 T_END = 0.75
@@ -64,12 +63,12 @@ def main():
     OUT.mkdir(exist_ok=True)
     jobs = [(N, eps) for eps in EPS for N in NS]
     res = []
-    with ProcessPoolExecutor(4) as ex:
+    with worker_pool(4) as ex:
         for r in ex.map(run, jobs):
             print("N={N} eps={eps:<6} front_err={front_err:.3e} sup_err={sup_err:.3e} int={sup_err_int:.3e} "
                   "nodes={nodes:.0f} steps={steps} {seconds:.0f}s".format(**r), flush=True)
             res.append(r)
-    (OUT / "radial.json").write_text(json.dumps(res, indent=1))
+    write_json(OUT / "radial.json", res)
 
 
 if __name__ == "__main__":

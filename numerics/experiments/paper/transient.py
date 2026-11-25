@@ -20,15 +20,14 @@ Runtime: E1 about 25 min on 4 cores (2.4e6 steps for eps = 0.01, dt = eps^2/4); 
 """
 
 import sys
-from concurrent.futures import ProcessPoolExecutor
-
 import numpy as np
 
 from combustion1d.ale import simulate_ale
 from combustion1d.simple import simulate_simple
 from combustion1d.solver import MeshParams
 
-from .common import BLUES, MARKERS, MUTED, SERIES, Timer, load_json, plt, save_json, savefig, title
+from .common import (BLUES, MARKERS, MUTED, SERIES, Timer, load_json, plt, save_json, savefig,
+                     title, worker_pool)
 from .tw_error import Monitor, setup
 
 WINDOW = 6.0
@@ -108,7 +107,7 @@ def run_all(groups):
     J = jobs(groups)
     J.sort(key=lambda j: -(j["T"] / (j["k"] * j["eps"]**2) if j["group"] == "E1" else 0))
     out = []
-    with ProcessPoolExecutor(4) as ex:
+    with worker_pool(4) as ex:
         for r in ex.map(_run, J):
             if r["group"] == "E1":
                 print("E1 eps={eps} k={k} steps={steps} {seconds:.0f}s ".format(**r)

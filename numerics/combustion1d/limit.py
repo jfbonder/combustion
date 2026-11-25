@@ -17,6 +17,9 @@ Both free boundary conditions are imposed: u = 0 as a Dirichlet condition and
 u = 0 at the front, d/dt v(front) = 0, which gives s' = Delta u / lam (radial)
 and s' = -u_xx / lam (planar) evaluated at the front with the ghost node.
 Second order in space; BDF in time.
+
+w0 may be a number or a callable w0(x, t) (a caloric function): then the free
+boundary condition is |grad u| = sqrt(2M(w0(s(t), t))) at the front x = s(t).
 """
 
 from dataclasses import dataclass
@@ -48,6 +51,14 @@ class LimitResult:
         return np.interp(x, xs, vs, left=0.0, right=0.0 if self.geometry == "radial" else vs[-1])
 
 
+def _slope(w0):
+    """lam(s, t) = sqrt(2 M(w0)) at the front, for w0 a number or a callable w0(x, t)."""
+    if callable(w0):
+        return lambda s, t: float(fb_slope(w0(s, t)))
+    lam0 = float(fb_slope(w0))
+    return lambda s, t: lam0
+
+
 def _sparsity(m):
     """Tridiagonal in v, plus full coupling with s (last unknown) and with the
     unknown that enters s' (all rows depend on s')."""
@@ -63,19 +74,19 @@ def _sparsity(m):
 
 
 def solve_radial(u0, w0, N, s0, t_end, n=400, t_eval=None, rtol=1e-8, atol=1e-10):
-    lam = float(fb_slope(w0))
+    lam_of = _slope(w0)
     xi = np.linspace(0.0, 1.0, n + 1)
     h = xi[1] - xi[0]
     v0 = u0(s0 * xi[:-1])                 # unknowns v_0 .. v_{n-1}; v_n = 0
 
-    def front_speed(v, s):
+    def front_speed(v, s, lam):
         vxx = (2.0 * v[-1] - 2.0 * h * s * lam) / h**2      # ghost from v_xi = -s lam
         lap = (vxx + (N - 1) * (-s * lam)) / s**2
         return lap / lam
 
-    def rhs(_, y):
+    def rhs(t, y):
         v, s = y[:-1], y[-1]
-        sp_ = front_speed(v, s)
+        sp_ = front_speed(v, s, lam_of(s, t))
         vf = np.append(v, 0.0)
         dv = np.empty(n)
         # xi = 0: symmetry, Delta = N v_xixi
@@ -103,7 +114,7 @@ def solve_planar(u0, w0, L, s0, t_end, n=800, beta=4.0, t_eval=None, rtol=1e-8, 
         u_x = v_xi/(l g'),  u_xx = (v_xixi - (g''/g') v_xi)/(l g')^2,
         v_t = u_xx + s' (1 - g)/(l g') v_xi,
     with v(0) = 0, v_xi(0) = l g'(0) lam (ghost node) and v_xi(1) = 0."""
-    lam = float(fb_slope(w0))
+    lam_of = _slope(w0)
     xi = np.linspace(0.0, 1.0, n + 1)
     h = xi[1] - xi[0]
     E = np.expm1(beta)
@@ -112,15 +123,16 @@ def solve_planar(u0, w0, L, s0, t_end, n=800, beta=4.0, t_eval=None, rtol=1e-8, 
     g2 = beta * g1
     v0 = u0(s0 + g[1:] * (L - s0))         # unknowns v_1 .. v_n; v_0 = 0
 
-    def uxx_front(v, ell):
+    def uxx_front(v, ell, lam):
         vx0 = ell * g1[0] * lam
         vxx = (2.0 * v[0] - 2.0 * h * vx0) / h**2
         return (vxx - g2[0] / g1[0] * vx0) / (ell * g1[0]) ** 2
 
-    def rhs(_, y):
+    def rhs(t, y):
         v, s = y[:-1], y[-1]
         ell = L - s
-        sp_ = -uxx_front(v, ell) / lam
+        lam = lam_of(s, t)
+        sp_ = -uxx_front(v, ell, lam) / lam
         vf = np.concatenate(([0.0], v, [v[-2]]))             # ghost: v_xi(1) = 0
         i = np.arange(1, n + 1)
         vx = (vf[i + 1] - vf[i - 1]) / (2 * h)

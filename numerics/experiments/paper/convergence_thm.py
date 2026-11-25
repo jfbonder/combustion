@@ -17,8 +17,6 @@ Run from numerics/:  python -m experiments.paper.convergence_thm     (~3 min, 2 
 Results: results/paper/H_convergence_thm.json
 """
 
-from concurrent.futures import ProcessPoolExecutor
-
 import numpy as np
 from scipy.linalg import solve_banded
 
@@ -27,7 +25,7 @@ from combustion1d.exact import SelfSimilar
 from combustion1d.model import f_eps
 from combustion1d.solver import MeshParams, find_front, initial_data, laplacian
 
-from .common import Timer, save_json
+from .common import Timer, save_json, worker_pool
 
 N, W0, T_EXT, T, L = 2, 0.5, 1.0, 0.5, 5.0
 PTS = 16
@@ -87,7 +85,7 @@ def main():
     jobs = [dict(mesh=m, eps=e, dt_over_eps=q)
             for m in ("fixed", "band") for e in (0.02, 0.01, 0.005) for q in (1 / 64, 1 / 16, 0.25, 1.0, 4.0)]
     out = []
-    with ProcessPoolExecutor(2) as ex:
+    with worker_pool(2) as ex:
         for r in ex.map(run, jobs):
             print("{mesh:5s} eps={eps} dt/eps={dt_over_eps}: E={E:.3e}  E/eps={q:.2f} front={front_error:+.3e} nodes={nodes} "
                   "steps={steps} hmax={hmax:.4f} {seconds:.0f}s".format(q=r["E"] / r["eps"], **r), flush=True)

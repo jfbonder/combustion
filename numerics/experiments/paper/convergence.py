@@ -11,8 +11,6 @@ Run from numerics/:
 """
 
 import sys
-from concurrent.futures import ProcessPoolExecutor
-
 import numpy as np
 
 from combustion1d.ale import simulate_ale
@@ -21,9 +19,9 @@ from combustion1d.model import fb_slope
 from combustion1d.simple import simulate_simple
 from combustion1d.solver import MeshParams, front_speed
 
-from .common import (INK, MARKERS, MUTED, SERIES, BLUES, Timer, cycle_speed, extinction_setup,
-                     load_json, plain_ticks, plt, save_json, savefig, simulate_ale_safe, slope_ref, title,
-                     tw_setup)
+from .common import (BLUES, INK, MARKERS, MUTED, RIGID_MIN_CELL, SERIES, Timer, cycle_speed,
+                     extinction_setup, load_json, plain_ticks, plt, save_json, savefig,
+                     simulate_ale_safe, slope_ref, title, tw_setup, worker_pool)
 from combustion1d.exact import tw_profile_limit
 
 T_TW = {0.0: 12.0, 1.0: 8.0}      # final time (front travels ~7 and ~13)
@@ -60,7 +58,8 @@ def run_tw(job):
             c_num = front_speed(r, 0.5 * T)
         elif job["kind"] == "rigid":
             r = simulate_ale(u0, w0, eps, L, T, dt, mesh=mp, speed_guess=c_eps,
-                             fixed_velocity=c_eps, ell0=1e6, remesh_distance=1e9)
+                             fixed_velocity=c_eps, ell0=1e6, remesh_distance=1e9,
+                             min_cell=RIGID_MIN_CELL)
             c_num = front_speed(r, 0.5 * T)
         else:
             ell0 = None if job["kind"] == "ale_default" else ELL0[w0]
@@ -132,7 +131,7 @@ def run_all():
     tw_jobs, rad_jobs = jobs_B()
     jobs = sorted(tw_jobs + rad_jobs, key=lambda j: -j.get("dt", 0) * 0 + j["eps"])  # small eps first
     out = []
-    with Timer() as tm, ProcessPoolExecutor(4) as ex:
+    with Timer() as tm, worker_pool(4) as ex:
         for r in ex.map(_dispatch, jobs):
             if "failed" in r:
                 print("FAILED", r, flush=True)

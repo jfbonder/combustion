@@ -16,9 +16,7 @@ boundary condition). We record, as eps -> 0,
 Run from numerics/:  python -m experiments.limit_comparison
 """
 
-import json
 import time
-from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -26,6 +24,7 @@ import numpy as np
 from combustion1d.limit import solve_planar, solve_radial
 from combustion1d.model import fb_slope
 from combustion1d.solver import MeshParams, simulate
+from experiments.util import worker_pool, write_json
 
 W0 = 0.5
 EPS = (0.05, 0.02, 0.01, 0.005, 0.002, 0.001)
@@ -95,12 +94,12 @@ def main():
     print("t_end:", t_ends, flush=True)
     jobs = [(g, eps, t_ends[g]) for eps in EPS for g in geoms]
     res = []
-    with ProcessPoolExecutor(4) as ex:
+    with worker_pool(4) as ex:
         for r in ex.map(run, jobs):
             print("{geom:<8} eps={eps:<6} front={front_err:.3e} shifted={front_err_shifted:.3e} "
                   "sup={sup_err:.3e} steps={steps} {seconds:.0f}s".format(**r), flush=True)
             res.append(r)
-    (OUT / "limit_comparison.json").write_text(json.dumps(res))
+    write_json(OUT / "limit_comparison.json", res, indent=None)
 
 
 if __name__ == "__main__":
