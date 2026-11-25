@@ -26,7 +26,7 @@
 Universidad de Buenos Aires, Ciudad Universitaria, (1428) Buenos Aires, Argentina}
 \email{jfbonder@dm.uba.ar}
 
-\date{DRAFT, \today}
+\date{\today}
 
 \begin{document}
 
@@ -51,18 +51,25 @@ The system
 T^\ve_t=\Delta T^\ve+Y^\ve f_\ve(T_f-T^\ve),\qquad
 Y^\ve_t=\Delta Y^\ve-Y^\ve f_\ve(T_f-T^\ve),\qquad f_\ve(s)=\frac1{\ve^2}f\Big(\frac s\ve\Big),
 \end{equation}
-arises in the theory of equidiffusional premixed flames (Lewis number one)
-\cite{BuckmasterLudford1982}: $T^\ve$ is the
-temperature and $Y^\ve\ge0$ the mass fraction of the reactant, normalized so
-that $T_f$ is the adiabatic flame temperature, and $\ve$ is essentially the
-inverse of the activation energy; $f$ is Lipschitz, positive on $(-\infty,1)$
+is the constant density (thermo-diffusive) model of a premixed flame with one-step
+chemistry and equal diffusivities of heat and reactant (Lewis number one)
+\cite{BuckmasterLudford1982,MatkowskySivashinsky1979}: $T^\ve$ is the
+temperature and $Y^\ve\ge0$ the mass fraction of the reactant, scaled so that the
+reaction conserves $T^\ve+Y^\ve$; $T_f$ is a reference temperature; $\ve$ is
+essentially the inverse of the activation energy (the inverse of the Zeldovich number),
+and the factor $\ve^{-2}$ is the scaling for which the flame speed is of order one. The
+function $f$ is Lipschitz, positive on $(-\infty,1)$
 and zero on $[1,\infty)$, so that the reaction only takes place where
-$T^\ve>T_f-\ve$. In terms of $u^\ve=T_f-T^\ve$, \eqref{eq:system} reads
+$T^\ve>T_f-\ve$: the kinetics has a cut-off (an ignition temperature) at $T_f-\ve$. In
+terms of $u^\ve=T_f-T^\ve$, \eqref{eq:system} reads
 $\Delta u^\ve-u^\ve_t=Y^\ve f_\ve(u^\ve)=\Delta Y^\ve-Y^\ve_t$, so that
 $w^\ve=Y^\ve-u^\ve$ solves the heat equation and \eqref{eq:system} reduces to
 \begin{equation}\label{eq:Peps}\tag{$P_\ve$}
 u_t=\Delta u-(u+w^\ve)f_\ve(u),\qquad w^\ve_t=\Delta w^\ve.
 \end{equation}
+The function $w^\ve=Y^\ve+T^\ve-T_f$ is the excess of total enthalpy with respect to the
+reference: where the reactant is exhausted the temperature is $T_f+w^\ve$, so that $T_f$
+is the adiabatic flame temperature exactly when $w^\ve\equiv0$, that is, $u^\ve=Y^\ve$.
 
 The free boundary problem obtained in the limit was introduced by Caffarelli
 and V\'azquez \cite{CaffarelliVazquez1995} (see also \cite{Vazquez1996}): in
@@ -81,9 +88,19 @@ M=M(w_0)=\int_{-w_0}^1(s+w_0)f(s)\,ds,
 \end{equation}
 in a pointwise and viscosity sense, and in \cite{FernandezBonderWolanski2004} that, under
 geometric assumptions, the limit is unique and coincides with the classical
-solution when one exists. Thus the high activation energy limit is
-\emph{unstable}: perturbations of order $\ve$ of the initial data, which do
-not change the limit of $u^\ve_0$, change the free boundary condition.
+solution when one exists. Thus the high activation energy limit is not determined by
+the limit of $u^\ve_0$: perturbations of order $\ve$ of the initial data, which do
+not change that limit, change the free boundary condition. In physical terms, $w_0$ is the
+perturbation of the flame temperature measured in units of the width $\ve$ of the range of
+temperatures where the reaction takes place (the scaling of near-equidiffusional flames
+\cite{MatkowskySivashinsky1979}), and the dependence of $M$ on $w_0$ is the classical
+sensitivity of the flame speed to the flame temperature
+\cite{ZeldovichFrankKamenetskii1938}: formally, for the Arrhenius rate $f(s)=e^{-s}$, which
+has no cut-off and is not covered by our assumptions, $M(w_0)=e^{w_0}M(0)$. The
+restriction $w_0>-1$ means that the temperature of the burnt gas, $T_f+\ve w_0$, is above
+the cut-off; it is a feature of the cut-off kinetics. Problem \eqref{eq:P} is a
+one-phase problem because, to leading order, the burnt gas is at the uniform
+temperature $T_f$; the set $\{u>0\}$ is the \emph{fresh} region.
 
 The convergence results available for this limit
 \cite{CaffarelliVazquez1995,CaffarelliLedermanWolanski1997a,FernandezBonderWolanski2000}
@@ -94,8 +111,11 @@ the finer analysis of the limit \cite{Weiss2003,PetrosyanYip2008,WeissZhang2009}
 the recent regularity theory for singular perturbation problems of this type, in the
 parabolic \cite{RicarteTeymurazyanUrbano2019,AudritoSanzPerela2024} and in the elliptic
 case \cite{AudritoSerra2022}: the estimates are
-uniform in $\ve$, but they do not measure the distance to the limit. Quantitative
-information is available for travelling waves, where the limit of the speed was
+uniform in $\ve$, but they do not measure the distance to the limit. For travelling waves, whose
+high activation energy limit is studied in
+\cite{BerestyckiNicolaenkoScheurer1985,Glangetas1992} (see \cite{LangloisMarion2009} for a
+one-dimensional evolution problem with Lewis number close to one), quantitative
+information is available: the limit of the speed was
 obtained in \cite{BerestyckiNicolaenkoScheurer1985}, and
 a rigorous expansion up to order $\ve$ was recently proved for a related scalar
 equation in \cite{JelbartKristiansenSzmolyan2025}.
@@ -108,31 +128,53 @@ strictly starshaped, then
 \[
 -C\Big(\ve\log\frac1\ve+\eta_\ve\Big)\le u^\ve-v\le C(\ve+\eta_\ve),\qquad \eta_\ve=\|w^\ve/\ve-w_0\|_\infty
 \]
-(Theorem~\ref{q:thm:rate}), and the order $\ve$ is attained. The proof rests on
+(Theorem~\ref{q:thm:rate}). The setting is that of \cite{FernandezBonderWolanski2004}:
+the fresh region $\{u_0>0\}$ is bounded and starshaped, a pocket of fresh gas surrounded
+by burnt gas, which is consumed in finite time; flames with an unbounded fresh region
+(planar or expanding fronts) are not covered. The order $\ve$ cannot be improved in the
+sup norm when $w_0\not\equiv0$, and for travelling waves, which are outside this setting,
+the position of the front also differs by a quantity of order $\ve$
+(Remark~\ref{q:rem:rate}). The proof rests on
 an explicit barrier, an inner profile composed with an extension of a strict
 super- or subsolution, whose error does not depend on the strictness. Barriers of
 this type are classical for Allen--Cahn type limits
 \cite{Chen1992,AlfaroHilhorstMatano2008}; to our knowledge this is
-the first rate for the present singular limit beyond travelling waves. For the rate we
-need $f$ nonincreasing and of class $C^2$ up to $1$, as for $f(s)=(1-s)^+$.
+the first rate for the present singular limit beyond travelling waves. The relation
+with the constructions of \cite{Petrosyan2002,FernandezBonderWolanski2004} is discussed
+in Section~\ref{sec:rate}. For the rate we assume that $f$ is nonincreasing and of class
+$C^2$ up to $1$, as $f(s)=(1-s)^+$; the second derivative is used only to differentiate
+the inner profiles with respect to $w^\ve/\ve$, and is not needed when $w^\ve/\ve$ is
+constant.
 
 Our second contribution is a numerical method that follows the flame
-(Sections~\ref{sec:method} and \ref{sec:analysis}). We are not aware of numerical studies
-of the limit $\ve\to0$ in \eqref{eq:system}. Adaptive methods for thin combustion
-fronts at large activation energy have a long history
-\cite{Smooke1982,BaylissGottliebMatkowskyMinkoff1989}, but they work
-at fixed activation energy, and the numerical literature on the limit problem
+(Sections~\ref{sec:method} and \ref{sec:analysis}), and its analysis as $\ve\to0$. Adaptive
+and moving meshes for thin combustion fronts have a long history
+\cite{DwyerSanders1978,Smooke1982,BaylissGottliebMatkowskyMinkoff1989,FurzelandVerwerZegeling1990,HuangRussell2011},
+and so has the computation of the flame speed as an unknown of a problem posed in the
+frame of the flame \cite{SmookeMillerKee1983,BeynThummler2004}. These methods work at
+a fixed activation energy; we are not aware of error estimates for them that are uniform
+in $\ve$, or of estimates for the convergence to the free boundary problem. The numerical
+literature on the limit problem
 concerns its elliptic (Bernoulli) analogue
 \cite{AltCaffarelli1981,BerestyckiCaffarelliNirenberg1990}; see
 \cite{FlucherRumpf1997,HarbrechtMitrou2014,ShenDaiHuang2024}.
 The difficulty is the reaction layer of width $O(\ve)$, which moves with the flame and
 must be resolved. Layer-adapted meshes and parameter-uniform methods are well developed
-for layers at known positions
-\cite{RoosStynesTobiska2008}; here the
-position of the layer is part of the solution. The closest numerical analysis of a
-singular limit with coupled $\ve$, $h$ and $\Delta t$ is that of the Allen--Cahn
-approximation of mean curvature flow
-\cite{NochettoPaoliniVerdi1994,FengProhl2003}.
+for layers at known positions \cite{RoosStynesTobiska2008}, and for interior layers that
+move along a curve determined by the reduced problem \cite{GraciaORiordan2012a}; here the
+position of the layer is part of the solution. The closest numerical analyses of a
+singular limit with coupled $\ve$, $h$ and $\Delta t$ are those of the Allen--Cahn and
+double obstacle approximations of mean curvature flow
+\cite{NochettoPaoliniVerdi1994,NochettoVerdi1996,NochettoVerdi1997,FengProhl2003}: in
+\cite{NochettoVerdi1996,NochettoVerdi1997} fully discrete schemes are shown to converge
+to the limit interface, with rates, when $h^2$ and $\Delta t$ are bounded by powers of
+$\ve$. Theorem~\ref{cv:thm:main} below is a result of this kind for the present problem.
+Travelling waves of a singularly perturbed (phase relaxation) model and of its
+discretization in time are compared in \cite{NochettoPaoliniVerdi1994a}; our results for
+travelling waves (Theorem~\ref{an:thm:ale} and the lag of Section~\ref{an:sec:impl})
+are of that type. What is new in the method is not that the mesh follows the front, but
+the combination of a scheme that is monotone for every time step with a band mesh that
+moves with the front, and the analysis of both in the regime $\ve\to0$.
 
 Our time discretization is linearly implicit and satisfies a discrete comparison
 principle for every time step, on every mesh that satisfies a cell P\'eclet condition,
@@ -156,8 +198,9 @@ $\Delta t\lesssim\ve$ divided by the bound. Thus, for time steps of order $\ve$,
 resolved, $h_f\ll\ve$, but nothing finer is needed. On a mesh that follows the front the
 time step enters as $\Delta t$; on a mesh that does not move it enters as $\Delta t/\ve$, and
 indeed the computed front lags, by about $0.23\,(\Delta t/\ve)T$ for a travelling wave. For
-travelling waves on a mesh that moves with the wave the time step does not appear in the
-error at all (Theorem~\ref{an:thm:ale}). These results have limitations, which we state clearly
+a travelling wave on a mesh that translates rigidly with the wave, the solution is steady
+in the frame of the mesh and the time step does not appear in the error at all
+(Theorem~\ref{an:thm:ale}). These results have limitations, which we state clearly
 (Section~\ref{an:sec:impl}): in the method the velocity of the mesh is computed, not
 prescribed, so that $\mu$ is an output and the estimate is a posteriori; the band must be
 wider than the bound itself, and remeshing is not covered; and the terms $h_f/\ve$ and
@@ -170,7 +213,7 @@ radial self-similar solutions of \eqref{eq:P}. Section~\ref{sec:experiments} sho
 meshes and how they are refined and coarsened, tests the estimates, compares
 \eqref{eq:Peps} with a front-fixing solver for \eqref{eq:P} for general data, follows
 the approach to self-similar extinction of \cite{GalaktionovHulshofVazquez1997}, and
-displays the instability of the limit with respect to $w_0$.
+displays the dependence of the limit on $w_0$.
 
 \paragraph{Code availability} The Python code for all the schemes of this paper, and
 the scripts that produce every figure and table, are available at
@@ -184,10 +227,12 @@ In this section $f$ satisfies
 \item[(F)] $f$ is Lipschitz (constant $L_f$) and nonincreasing, $f>0$ on $(-\infty,1)$ and
 $f=0$ on $[1,\infty)$.
 \end{itemize}
-Monotonicity of $f$ is not needed in \cite{FernandezBonderWolanski2000}; it
-holds for $f(s)=(1-s)^+$ and for Arrhenius-type rates (recall that $u$ is
-minus the temperature), and it is what makes the scheme of
-Section~\ref{sec:method} monotone.
+Monotonicity of $f$ is not needed in \cite{FernandezBonderWolanski2000}. It means that
+the reaction rate increases with the temperature (recall that $u$ is minus the
+temperature); it holds for $f(s)=(1-s)^+$ and for Arrhenius rates with a cut-off, such
+as $f(s)=(e^{-s}-e^{-1})^+$ modified to be bounded for $s\to-\infty$, and it is what
+makes the scheme of Section~\ref{sec:method} monotone. The rate $e^{-s}$ itself does not
+vanish on $[1,\infty)$ and does not satisfy (F).
 
 \subsection{Travelling waves}\label{sec:tw}
 For \eqref{eq:P} in one dimension with $w_0>-1$ constant,
@@ -195,7 +240,10 @@ $u(x,t)=u_0(x-c_0t)$ with
 \[
 u_0(z)=A\big(1-e^{-c_0z}\big)^+,\qquad c_0=\frac{\sqrt{2M}}A ,
 \]
-is a solution moving into the fresh region $\{u>0\}$, where $A=\lim_{x\to\infty}u>0$.
+is a solution moving into the fresh region $\{u>0\}$, where $A=\lim_{x\to\infty}u>0$ is
+the difference between the reference temperature and the temperature of the fresh gas.
+The formula for $c_0$ is that of Zeldovich and Frank-Kamenetskii
+\cite{ZeldovichFrankKamenetskii1938}.
 
 For \eqref{eq:Peps} with $w^\ve\equiv\ve w_0$ the equation is
 $u_t=u_{xx}-g_\ve(u)$ with $g_\ve(s)=(s+\ve w_0)f_\ve(s)$, and a travelling wave
@@ -203,7 +251,11 @@ $u=\Phi(x-ct)$ satisfies
 \begin{equation}\label{an:eq:tw}
 \Phi''+c\Phi'=g_\ve(\Phi),\qquad \Phi(-\infty)=-\ve w_0,\quad\Phi(+\infty)=A .
 \end{equation}
-We normalize $\Phi(0)=\ve$. Ahead of the reaction zone there is no reaction,
+We normalize $\Phi(0)=\ve$: throughout the paper the \emph{front} of a solution of
+\eqref{eq:Peps} is the level set $\{u=\ve\}$, the cold edge of the reaction zone. This is
+a convention, and the distance from this level set to the free boundary of the limit,
+which is of order $\ve$, depends on it (Remark~\ref{q:rem:rate}). Ahead of the reaction
+zone there is no reaction,
 so $\Phi(z)=A-(A-\ve)e^{-cz}$ for $z\ge0$. For $z\le0$ we use the inner variables
 $\Phi(z)=\ve\varphi(z/\ve)$, $\zeta=z/\ve$, $\sigma=\ve c$:
 \begin{equation}\label{eq:tw}
@@ -224,9 +276,9 @@ unique up to translations, and, with $\Phi=\Phi_\ve$, $c=c_\ve$:
 \begin{enumerate}
 \item $|c_\ve-c_0|\le K\ve$; in particular $c_0/2\le c_\ve\le 2c_0$;
 \item $0<\Phi'\le K$ on $\R$, and $\Phi'\ge\theta_Z$ on $[-Z\ve,2\ve]$;
-\item for a.e.\ $z\in\R$, $|\Phi''(z)|\le K\ve^{-1}\Phi'(z)$ and
-$|\Phi'''(z)|\le K\ve^{-2}\Phi'(z)$; if in addition $f\in C^{1,1}(\R)$, then
-$|\Phi''''(z)|\le K\ve^{-3}\Phi'(z)$. Consequently
+\item $\Phi\in C^{2,1}(\R)$, $|\Phi''(z)|\le K\ve^{-1}\Phi'(z)$ for all $z$ and
+$|\Phi'''(z)|\le K\ve^{-2}\Phi'(z)$ for a.e.\ $z$; if in addition $f\in C^{1,1}(\R)$, then
+$\Phi\in C^{3,1}(\R)$ and $|\Phi''''(z)|\le K\ve^{-3}\Phi'(z)$ a.e. Consequently
 $\Phi'(z_1)\le e^{K|z_1-z_2|/\ve}\Phi'(z_2)$ for all $z_1,z_2$. On $(0,\infty)$,
 $\Phi^{(k)}=(-c)^{k-1}\Phi'$ for $k\ge1$;
 \item for $z\le0$, $0<\Phi(z)+\ve w_0\le K\ve\,e^{\alpha_0 z/(2\ve)}$;
@@ -249,8 +301,8 @@ between. This is the scalar problem with an ignition-type nonlinearity of
 $\tilde u'>0$, unique up to translations. In particular $\Phi'>0$, and $p=\varphi'>0$ on
 $(-\infty,0]$.
 
-\emph{Energy and monotonicity.} Let $E=\frac12p^2-B(\varphi)$. By \eqref{eq:tw},
-$\frac{dE}{d\zeta}=p\big(\varphi''-(\varphi+w_0)f(\varphi)\big)=-\sigma p^2\le0$, and $E\to0$ as
+\emph{Energy and monotonicity.} Let $\mathcal H=\frac12p^2-B(\varphi)$. By \eqref{eq:tw},
+$\frac{d\mathcal H}{d\zeta}=p\big(\varphi''-(\varphi+w_0)f(\varphi)\big)=-\sigma p^2\le0$, and $\mathcal H\to0$ as
 $\zeta\to-\infty$. Since $p>0$, $\varphi$ is a valid independent variable,
 $\int_{-\infty}^{\zeta}p^2\,d\zeta'=\int_{-w_0}^{\varphi(\zeta)}p\,d\phi$, and integrating we get the
 first identity in \eqref{eq:energyphi}. It gives $p\le\sqrt{2B}$, hence $0\le J\le I$.
@@ -277,10 +329,12 @@ the last inequality for $\sigma$ small.
 \emph{Item (4).} By \eqref{eq:plow}, $\frac{d}{d\zeta}\log(\varphi+w_0)\ge\frac{\alpha_0}2$
 while $\varphi\le\varphi_*$, and the point $\zeta_*$ where $\varphi=\varphi_*$ satisfies
 $|\zeta_*|\le(1-\varphi_*)/\sqrt{B(\varphi_*)}=:Z_*$. Hence
-$\varphi+w_0\le(1+w_0)e^{\frac{\alpha_0}{2}(\zeta+Z_*)}$ for $\zeta\le0$.
+$\varphi+w_0\le(1+w_0)e^{\frac{\alpha_0}{2}(\zeta+Z_*)}$ for $\zeta\le0$, which is (4) with
+$K=(1+w_0)e^{\alpha_0Z_*/2}$.
 
 \emph{Item (2).} $p\le\sqrt{2M}$, and $\Phi'=(A-\ve)ce^{-cz}\le Ac$ for $z\ge0$. On
-$[0,2\ve]$, $\Phi'\ge(A-\ve)ce^{-2c\ve}\ge Ac_0/4$. On $[-Z,0]$ in the variable $\zeta$:
+$[0,2\ve]$, $\Phi'\ge(A-\ve)ce^{-2c\ve}\ge Ac_0/4$. On $[-Z\ve,0]$, that is, for
+$\zeta\in[-Z,0]$:
 where $\varphi\ge\varphi_*$, $p\ge\sqrt{B(\varphi_*)}$ by \eqref{eq:plow}; where
 $\varphi\le\varphi_*$, $p\ge\frac{\alpha_0}2(\varphi+w_0)\ge\frac{\alpha_0}2(\varphi_*+w_0)e^{-\alpha_0Z}$,
 because $\frac{d}{d\zeta}\log(\varphi+w_0)=p/(\varphi+w_0)\le\alpha_0$.
@@ -301,8 +355,8 @@ $|\Phi(z)-u_0(z)|\le A|e^{-c_0z}-e^{-cz}|+\ve e^{-cz}\le A\,|c-c_0|\,\sup_{z\ge0
 \le\frac{2A}{ec_0}K\ve+\ve$. For $z\le0$, $u_0=0$ and $-\ve w_0\le\Phi\le\ve$.
 \end{proof}
 
-The identity $\frac{dE}{d\zeta}=-\sigma p^2$ also gives a numerical method for $c_\ve$:
-integrating \eqref{eq:tw} backwards from $\zeta=0$, if $\sigma$ is too large $E$ remains
+The identity $\frac{d\mathcal H}{d\zeta}=-\sigma p^2$ also gives a numerical method for $c_\ve$:
+integrating \eqref{eq:tw} backwards from $\zeta=0$, if $\sigma$ is too large $\mathcal H$ remains
 positive and $\varphi$ crosses $-w_0$, and if $\sigma$ is too small $\varphi'$ vanishes
 before. Bisection on $\sigma$ gives $c_\ve=\sigma/\ve$ to machine precision,
 independently of any PDE solver. We use it as a reference in
@@ -311,7 +365,9 @@ Section~\ref{sec:experiments}.
 \begin{proposition}[First-order correction of the flame speed]\label{prop:speed}
 Assume (F), $w_0>-1$ and $A>0$. There are $\ve_0,C>0$ such that for $0<\ve\le\ve_0$
 \[
-\Big|c_\ve-c_0\Big[1+\frac\ve A\Big(1-\frac{I}{\sqrt{2M}}\Big)\Big]\Big|\le C\ve^2\log\frac1\ve .
+\Big|c_\ve-c_0\Big[1+\frac\ve A\Big(1-\frac{I}{\sqrt{2M}}\Big)\Big]\Big|\le C\ve^2 ,
+\qquad
+1-\frac{I}{\sqrt{2M}}=-w_0+\int_{-w_0}^1\Big(1-\sqrt{\frac{B(\varphi)}{M}}\Big)\,d\varphi .
 \]
 For $f(s)=(1-s)^+$, $I/\sqrt{2M}=\kappa_*(1+w_0)$ with
 $\kappa_*=\frac{3\sqrt3-2}{5}\approx0.6392$.
@@ -320,20 +376,17 @@ $\kappa_*=\frac{3\sqrt3-2}{5}\approx0.6392$.
 \begin{proof}
 We use the notation of Lemma~\ref{an:lem:profile}, with $c=c_\ve$ and $\sigma=\ve c\le2c_0\ve$.
 
-\emph{Step 1: $J(1)$ is close to $I$.} By \eqref{eq:energyphi},
-$0\le2B-p^2=2\sigma J\le2\sigma I$, so
+\emph{Step 1: $J(1)$ is close to $I$.} Let $t=\varphi+w_0\in(0,1+w_0]$. Since
+$f\ge m>0$ on $[-w_0,\frac{1-w_0}2]$ and $B$ is increasing, $B(\varphi)\ge b_0t^2$ with
+$b_0>0$ depending only on $f,w_0$; and $J(\varphi)\le\frac12\alpha_0t^2$, as in the proof of
+Lemma~\ref{an:lem:profile}. By \eqref{eq:energyphi}, $0\le2B-p^2=2\sigma J$, so
 \[
-0\le\sqrt{2B}-p=\frac{2B-p^2}{\sqrt{2B}+p}\le\min\Big\{\sqrt{2\sigma I},\ \frac{2\sigma I}{\sqrt{2B}}\Big\}.
+0\le\sqrt{2B}-p=\frac{2\sigma J}{\sqrt{2B}+p}\le\frac{\sigma\alpha_0t^2}{\sqrt{2b_0}\,t}
+=\frac{\alpha_0}{\sqrt{2b_0}}\,\sigma\,t ,
+\qquad
+0\le I-J(1)=\int_{-w_0}^1\big(\sqrt{2B}-p\big)\,d\varphi\le C\sigma ,
 \]
-Let $t=\varphi+w_0\in(0,1+w_0]$. Since $f\ge m>0$ on $[-w_0,\frac{1-w_0}2]$ and
-$B$ is increasing, $B(\varphi)\ge b_0t^2$ with $b_0>0$ depending only on $f,w_0$.
-Hence, splitting the integral at $t=\sqrt{\sigma I/b_0}$,
-\[
-0\le I-J(1)=\int_{-w_0}^1\big(\sqrt{2B}-p\big)\,d\varphi
-\le\int_0^{1+w_0}\min\Big\{\sqrt{2\sigma I},\frac{\sqrt2\,\sigma I}{\sqrt{b_0}\,t}\Big\}dt
-\le C\sigma\Big(1+\log\frac1\sigma\Big),
-\]
-that is, $J(1)=I-r_\ve$ with $0\le r_\ve\le C\ve\log(1/\ve)$.
+that is, $J(1)=I-r_\ve$ with $0\le r_\ve\le C\ve$.
 
 \emph{Step 2: the speed.} At $\varphi=1$, \eqref{eq:energyphi} reads
 $\frac12c^2(A-\ve)^2=M-\ve cJ(1)$. With $\tau=\ve cJ(1)/M\in[0,C\ve]$ and
@@ -344,7 +397,9 @@ c(A-\ve)=\sqrt{2M}-\frac{\ve cJ(1)}{\sqrt{2M}}+O(\ve^2),
 c\Big(A-\ve+\frac{\ve J(1)}{\sqrt{2M}}\Big)=\sqrt{2M}+O(\ve^2),
 \]
 so that $c=c_0\big[1+\frac\ve A\big(1-\frac{J(1)}{\sqrt{2M}}\big)\big]+O(\ve^2)$. Replacing
-$J(1)$ by $I$ costs $c_0\ve r_\ve/(A\sqrt{2M})=O(\ve^2\log(1/\ve))$.
+$J(1)$ by $I$ costs $c_0\ve r_\ve/(A\sqrt{2M})=O(\ve^2)$. The second identity in the
+statement holds because $I/\sqrt{2M}=\int_{-w_0}^1\sqrt{B/M}\,d\varphi$ and the interval
+has length $1+w_0$.
 
 \emph{Step 3: $f(s)=(1-s)^+$.} Let $a=1+w_0$ and $t=\varphi+w_0$. Then $f(\varphi)=a-t$ for
 $t\le a$, $B=\frac a2t^2-\frac13t^3$, $M=B|_{t=a}=\frac{a^3}6$ and $\sqrt{2M}=a^{3/2}/\sqrt3$.
@@ -366,22 +421,30 @@ theory \cite{BushFendell1970,BuckmasterLudford1982}, and a rigorous one was rece
 obtained for a related scalar equation by geometric desingularization
 \cite{JelbartKristiansenSzmolyan2025}; what Proposition~\ref{prop:speed}
 adds, for the present model, is a rigorous remainder and the explicit dependence on the
-$O(\ve)$ perturbation $w_0$. In particular, for $f(s)=(1-s)^+$ the first-order correction
-is positive for $w_0<w_0^*=\frac1{\kappa_*}-1\approx0.564$ and negative for $w_0>w_0^*$.
+$O(\ve)$ perturbation $w_0$. The two terms of the correction have different origins. The
+term $-w_0$ is a matter of normalization: the temperature rise across the flame is
+$A+\ve w_0$, not $A$, and the formula of Zeldovich and Frank-Kamenetskii with this value is
+$\sqrt{2M}/(A+\ve w_0)=c_0(1-\ve w_0/A)+O(\ve^2)$. The integral is the correction due to the
+finite width of the reaction zone; it is positive, and for $f(s)=(1-s)^+$ it equals
+$(1-\kappa_*)(1+w_0)$. Hence, for this $f$, the first-order correction is positive for
+$w_0<w_0^*=\frac1{\kappa_*}-1\approx0.564$ and negative for $w_0>w_0^*$; the change of sign
+only reflects the choice of $A$ as the reference temperature rise.
 Table~\ref{tab:speedcoef} compares the prediction with the shooting method. The
-differences are about $0.1\,\ve$, $0.12\,\ve$ and $0.65\,\ve$ for the three values of $w_0$,
-with no visible logarithm: the factor $\log(1/\ve)$ in the remainder may be an
-artefact of Step~1.
+differences are $0.10\,\ve$, $0.12\,\ve$ and $0.65\,\ve$ for the three values of $w_0$, in
+agreement with the remainder $O(\ve^2)$ of the proposition. The values $\ve=0.1$ and
+$0.05$ correspond to Zeldovich numbers of $10$ and $20$, which are realistic; there $c_0$
+differs from $c_\ve$ by $2.5$ to $7\%$ and by $1.3$ to $3.4\%$ respectively, and the
+first-order correction reduces these differences to at most $0.5\%$ and $0.12\%$.
 
 \begin{table}[ht]
 \centering
-\begin{tabular}{rcccc}
+\begin{tabular}{rcccccc}
 \toprule
-$w_0$ & Prop.~\ref{prop:speed} & $\ve=10^{-2}$ & $\ve=10^{-3}$ & $\ve=10^{-4}$\\
+$w_0$ & Prop.~\ref{prop:speed} & $\ve=0.1$ & $\ve=0.05$ & $\ve=10^{-2}$ & $\ve=10^{-3}$ & $\ve=10^{-4}$\\
 \midrule
-$-0.5$ & $+0.138883$ & $+0.139876$ & $+0.138982$ & $+0.138893$\\
-$0$    & $+0.208290$ & $+0.209515$ & $+0.208412$ & $+0.208303$\\
-$1$    & $-0.454725$ & $-0.448230$ & $-0.454072$ & $-0.454660$\\
+$-0.5$ & $+0.138883$ & $+0.149534$ & $+0.144003$ & $+0.139876$ & $+0.138982$ & $+0.138893$\\
+$0$    & $+0.208290$ & $+0.221355$ & $+0.214589$ & $+0.209515$ & $+0.208412$ & $+0.208303$\\
+$1$    & $-0.454725$ & $-0.392476$ & $-0.422891$ & $-0.448230$ & $-0.454072$ & $-0.454660$\\
 \bottomrule
 \end{tabular}
 \caption{$(c_\ve-c_0)/\ve$ for $f(s)=(1-s)^+$ and $A=1$: the limit value given by
@@ -394,7 +457,14 @@ Caffarelli and V\'azquez \cite{CaffarelliVazquez1995} showed that, for $w_0$ con
 \[
 V(x,t)=(T-t)^{1/2}\,h\big(|x|(T-t)^{-1/2}\big)
 \]
-with compact support shrinking to a point at $t=T$; they are used in
+with compact support shrinking to a point at $t=T$: a ball of fresh gas that is consumed
+by the flame, whose front is concave towards the fresh gas and moves with speed
+proportional to $(T-t)^{-1/2}$. (As a model of a flame, \eqref{eq:P} is meaningful while
+the radius is large compared with $\ve$.) Following
+\cite{FernandezBonderWolanski2004,GalaktionovHulshofVazquez1997}, we call the instant at
+which the fresh region disappears the \emph{extinction time}; note that it is the fresh
+pocket that is extinguished, not the flame in the sense of combustion theory. These
+solutions are used in
 \cite[Prop.~4.3]{FernandezBonderWolanski2004} to show that limit solutions vanish in
 finite time. Substituting, $V$ is caloric in its positivity set if and only if
 \begin{equation}\label{eq:h}
@@ -433,6 +503,33 @@ depend on the strictness of the super- or subsolution, and this yields a rate
 for the convergence of $u^\ve$ to a classical solution
 (Theorem~\ref{q:thm:rate}).
 
+\emph{Relation with previous constructions.} For $w^\ve=0$ the uniqueness of the limit
+for starshaped data is due to Petrosyan \cite{Petrosyan2002}, whose results are
+qualitative; as observed in \cite{FernandezBonderWolanski2004}, the construction of
+approximating supersolutions used there does not extend to $w^\ve\ne0$ without further
+conditions on $f$.
+In \cite{FernandezBonderWolanski2004}, following
+\cite{LedermanVazquezWolanski2001}, the approximating function $u^\ve$ equals the strict
+supersolution $\tilde u$ where $\tilde u\ge(1-\theta)\ve$ and solves \eqref{eq:Peps} in the
+layer $\{\tilde u<(1-\theta)\ve\}$, so that $|u^\ve-\tilde u|\le C\ve$ is immediate; that
+$u^\ve$ is a supersolution, that is, that the jump of its gradient across the boundary of
+the layer has the right sign, is proved for $\ve<\ve_0$ by a blow-up argument by
+contradiction, which gives no information on how $\ve_0$ depends on the strictness
+$\delta$. What is new here is that the explicit barriers of
+Propositions~\ref{q:prop:super} and \ref{q:prop:sub} are super- and subsolutions as soon
+as $\ve\le c_*\delta$, with a threshold that is linear in $\delta$ and an error that does
+not depend on $\delta$; this is what produces a rate. With respect to the barriers used
+for Allen--Cahn type limits \cite{Chen1992,DeMottoniSchatzman1995,AlfaroHilhorstMatano2008},
+where the profile is a function of the signed distance to the interface and the
+strictness is provided by a shift of the interface that grows in time, there are three
+differences: the inner profile is coupled to the gradient of the outer solution, through
+the free boundary condition; it is not adjusted to the local value of that gradient but
+to an energy level $G_\pm(W)$ at a distance of order $\delta$ from $2M(W)$; and the
+strictness is provided by the dilations of starshaped data, as in
+\cite{FernandezBonderWolanski2004}. The barriers are coarse: they give the order $\ve$,
+but they do not capture the term of order $\ve$ of the solution, as the expansions of
+\cite{DeMottoniSchatzman1995} do in their setting.
+
 \subsection{Setting}
 Let $Q_T=\R^N\times(0,T)$. For $W>-1$ and $t\in\R$ let
 \[
@@ -455,20 +552,31 @@ $\|W^\ve-w_0\|_{L^\infty(Q_T)}\le\eta_\ve$, and $-1+\delta_1\le w_0\le \bar W$.
 Assumption (F$_2$) holds for $f(s)=(1-s)^+$. Assumption (W) is a restriction on
 the initial data of $w^\ve$; it holds with $\eta_\ve=0$ when $w^\ve(\cdot,0)=\ve w_0$ with
 $w_0$ constant. We write $W=W^\ve(x,t)$ and
-$\mathcal W=[-1+\delta_1/2,\bar W+1]$, and we assume $\eta_\ve\le\delta_1/2$, so that
-$W\in\mathcal W$. Note that $w_0$ is Lipschitz in $x$ with constant $C_W$, and that
-$M'(W)=\int_{-W}^1f>0$, so $M$ is increasing and Lipschitz on $\mathcal W$.
+$\mathcal W=[-1+\delta_1/2,\bar W+1]$, and we assume $\eta_\ve\le\min\{\delta_1/2,1\}$, so that
+$W\in\mathcal W$. Note that
+$M'(W)=\int_{-W}^1f>0$, so $M$ is increasing and Lipschitz on $\mathcal W$. If
+$W^\ve\equiv w_0$ is constant, then the term $\mathcal P$ in \eqref{q:eq:basic} below
+vanishes, the derivatives of the profiles with respect to $W$ are not needed, and
+assumption (F) is enough in this section.
 
 \textbf{Comparison.} We say that $V$ is a \emph{strong supersolution} of
 \eqref{eq:Peps} in an open set $D\subset Q_T$ if $V$ is bounded, $C^{1,1}$ in $x$ and
 Lipschitz in $t$ in $D$, and $\Delta V-V_t-(V+w^\ve)f_\ve(V)\le0$ a.e.\ in $D$; strong
-subsolutions satisfy the reverse inequality. For fixed $\ve$ the nonlinearity is
-Lipschitz in $V$, so the maximum principle for strong solutions
-\cite[Chapter~VII]{Lieberman1996} (applied, when $D$ is unbounded, to the difference
-multiplied by the usual weight $e^{-\beta t}/\cosh(|x|/R)$, the functions being bounded) gives: if $V$ is a strong supersolution in $D$,
+subsolutions satisfy the reverse inequality. The initial data $u_0^\ve$ are continuous
+and bounded, and solutions of \eqref{eq:Peps} are bounded classical solutions, continuous
+up to $t=0$. For fixed $\ve$ the nonlinearity is
+Lipschitz in $V$, with constant of order $\ve^{-2}$, so the maximum principle for strong
+solutions in (not necessarily cylindrical) bounded domains
+\cite[Chapters~II and VII]{Lieberman1996}, applied when $D$ is unbounded to the difference
+multiplied by the weight $e^{-\beta t}/\cosh(|x|/R)$ with $R\to\infty$ (the functions being
+bounded, this is the Phragm\'en--Lindel\"of argument), gives: if $V$ is a strong
+supersolution in $D$,
 $u$ is a bounded classical solution, and $V\ge u$ on the parabolic boundary of
 $D$ (that is, on $\overline D\cap\{t=0\}$ and on $\partial D\cap Q_T$), then $V\ge u$ in
-$D$; and similarly for subsolutions.
+$D$; and similarly for subsolutions. When $V$ is the composition of a $C^{1,1}$ profile
+with a $C^{1,1}$ function, the chain rule holds a.e.\ provided the set where the argument
+takes the values at which the second derivative of the profile jumps has measure zero;
+we check this in each case.
 
 \textbf{The basic identity.} Let $\tilde v$ be $C^{1,1}$ in $x$ and Lipschitz in
 $t$, and let $\Theta=\Theta(s;W)$ be $C^{1,1}$. For
@@ -538,125 +646,7 @@ In (b) the profile is linear only for $s\ge2$, beyond the point $\Theta=1+W$ whe
 reaction stops ($b(\Theta;W)=0$ for $\Theta\ge1+W$); this plays no role in this section, and
 it is used in Section~\ref{sec:analysis}.
 
-\begin{proof}
-Both profiles are increasing in $s$, so we parametrize them by $\Theta$: with
-$P(\Theta)=\Theta_s$ we have $\Theta_{ss}=PP_\Theta$, and the equations
-$G^2\Theta_{ss}\pm\kappa\Theta_s=b$ become
-$\frac{d}{d\Theta}\big(\frac{G^2}2P^2\big)=b(\Theta;W)\mp\kappa P$. We use that
-\begin{equation}\label{q:eq:Bquad}
-c\Theta^2\le\tilde B(\Theta;W)\le C\Theta^2\ \text{ for }-1\le\Theta\le1+W,\qquad
-|\partial_W\tilde B|+|\partial^2_{W}\tilde B|\le C\Theta^2 ,
-\end{equation}
-which follow from $2a_0\le f(t-W)\le C$ for $-1\le t\le\frac{1+W}2$, from
-$\partial_W\tilde B=-\int_0^\Theta tf'(t-W)\,dt$, and from (F$_2$). They also hold for
-$1+W\le\Theta\le2+W$, where $\tilde B(\Theta;W)=M(W)$. Note also that
-$G_\pm G_\pm'=M'$ is bounded, and that $G_\pm\ge c$.
-
-\smallskip
-(a) Let $G=G_-(W)$ and let $P$ be the branch $P>0$ of the unstable manifold of the saddle
-$(0,0)$ in the $(\Theta,P)$-plane:
-\begin{equation}\label{q:eq:Psup}
-\tfrac{G^2}2P^2=\tilde B(\Theta;W)-\kappa J(\Theta),\qquad J(\Theta)=\int_0^\Theta P .
-\end{equation}
-By \eqref{q:eq:Bquad}, $P\le\sqrt{2\tilde B}/G\le C\Theta$, so $\kappa J\le C\kappa\Theta^2$ and, for
-$\kappa$ small,
-\begin{equation}\label{q:eq:Plin}
-c\,\Theta\le P\le C\Theta\qquad\text{as long as $P$ is defined and }\Theta\le1+W .
-\end{equation} Let $F(\Theta)=\tilde B(\Theta;W)-\kappa J(\Theta)-(M(W)-\gamma)$. Then $F(0)<0$ and
-$F(1+W)=\gamma-\kappa J(1+W)\ge\gamma/2$ if $\kappa\le c\gamma$. Let $\Theta_m$ be the first
-zero of $F$: then $P(\Theta_m)=1$ and $0<P<1$ on $(0,\Theta_m)$. Set $s_m=\Theta_m-W$.
-Since
-\[
-\tfrac\gamma2\le\gamma-\kappa J(\Theta_m)=M-\tilde B(\Theta_m)=\int_{\Theta_m}^{1+W}tf(t-W)\,dt\le\gamma
-\]
-and $f>0$ on $(-\infty,1)$, we have $1-s_m\to0$ as $\gamma\to0$, uniformly in $W$; we take
-$\gamma_0$ so small that $1-s_m\le\min\{\frac12,\frac{\delta_1}4\}$. Then
-$\Theta_m\ge\frac{1+W}2$ and, since $f$ is nonincreasing,
-$\frac\gamma2\le(1-s_m)(1+W)f(s_m)\le\Theta_mf(s_m)=b(\Theta_m;W)$, and
-$b(\Theta;W)\ge\frac12b(\Theta_m;W)$ on $[\frac{1+W}2,\Theta_m]$. Hence, for $\kappa\le\gamma/8$,
-\begin{equation}\label{q:eq:top}
-b(\Theta;W)\ge\tfrac\gamma4\ \text{ on }[\tfrac{1+W}2,\Theta_m],\qquad
-\partial_\Theta F(\Theta_m)=b(\Theta_m;W)-\kappa\ge\tfrac12b(\Theta_m;W)\ge\tfrac\gamma4 .
-\end{equation}
-Define $s(\Theta)=s_m-\int_\Theta^{\Theta_m}d\theta/P(\theta)$ for $0<\Theta\le\Theta_m$, let
-$\Theta(\cdot)$ be its inverse on $(-\infty,s_m]$, and extend it by $\Theta=s+W$ for $s\ge s_m$.
-Since $P(\Theta_m)=1$, $\Theta\in C^1$, and $\Theta_{ss}=(b-\kappa\Theta_s)/G^2$ is bounded.
-
-(i) $\Theta_{ss}\ge0$: on $(0,\frac{1+W}2]$, $b\ge2a_0\Theta\ge cP\ge\kappa P$; on
-$[\frac{1+W}2,\Theta_m]$, $b\ge\gamma/4\ge\kappa\ge\kappa P$ by \eqref{q:eq:top}. In particular $P$ is
-nondecreasing in $\Theta$. Also $\Theta_{ss}\le b/G^2\le C\Theta\le C\Theta_s$ on the first interval
-and $\Theta_{ss}\le C\le C\Theta_s$ on the second. By \eqref{q:eq:Plin}, $c\,\Theta\le\Theta_s\le C\Theta$. Since $s_m<1$, this gives
-$\Theta(0)\ge\Theta_me^{-C}\ge c$, then $\Theta(-S)\ge c\,e^{-CS}$ and
-$\Theta_s\ge c\,\Theta\ge c\,e^{-CS}$ on $[-S,s_m]$; and $\Theta(s)\le\Theta(0)e^{cs}$ for $s\le0$.
-
-(ii) By (F$_2$), $b$ is $C^2$ in $(\Theta,W)$ for $\Theta\le1+W$, so the unstable manifold
-depends in a $C^2$ way on $W$, with $P_W=O(\Theta)$ and $P_{WW}=O(\Theta)$ as $\Theta\to0$
-(the eigenvalue of the saddle is a smooth function of $W$).
-Differentiating \eqref{q:eq:Psup} with respect to $W$ at fixed $\Theta$,
-\[
-G^2PP_W=\partial_W\tilde B-M'P^2-\kappa\int_0^\Theta P_W .
-\]
-By \eqref{q:eq:Bquad}, $|\partial_W\tilde B-M'P^2|\le C(\Theta^2+P^2)$. If
-$m(\Theta)=\sup_{(0,\Theta]}|P_W(\theta)|/\theta$, then by \eqref{q:eq:Plin}
-$|P_W|\le C\Theta+\frac{C\kappa}{\Theta}\cdot\frac{m(\Theta)\Theta^2}2$ on $(0,\Theta_m]$, i.e.\
-$m\le C+C\kappa m$, so $|P_W|\le C\Theta\le CP$ for $\kappa$ small. Differentiating once more and using $|\partial_W^2\tilde B|\le C\Theta^2$ and the bound
-for $P_W$, $|P_{WW}|\le CP$.
-
-Next, $\Theta_m$ is defined by $F=0$, and
-$\partial_WF(\Theta_m)=\partial_W\tilde B(\Theta_m;W)-\partial_W\tilde B(1+W;W)-\kappa J_W
-=\int_{\Theta_m}^{1+W}tf'(t-W)\,dt-\kappa J_W$, because $M'(W)=\partial_W\tilde B(1+W;W)$. Since
-$f'\le0$, the integral is bounded in absolute value by $(1+W)f(s_m)\le2b(\Theta_m;W)$, and
-$\kappa|J_W|\le C\kappa\le Cb(\Theta_m;W)$. With \eqref{q:eq:top},
-$|\Theta_m'(W)|=|\partial_WF/\partial_\Theta F|\le C$, and so $|s_m'|\le C$.
-
-At fixed $\Theta$, using $P(\Theta_m)=1$,
-\[
-s_W=s_m'-\Theta_m'+\int_\Theta^{\Theta_m}\frac{P_W}{P^2}\,d\theta
-=-1+\int_\Theta^{\Theta_m}\frac{P_W}{P^2}\,d\theta,\qquad\text{so}\qquad
-|s_W|\le1+C\int_\Theta^{\Theta_m}\frac{d\theta}P=1+C(s_m-s).
-\]
-Since $\Theta_W=-s_WP$ (at fixed $s$), this is the first bound. Next,
-$\Theta_{sW}=\partial_W[P(\Theta(s;W);W)]=P_\Theta\Theta_W+P_W$ with
-$P_\Theta=\Theta_{ss}/\Theta_s\in[0,C]$, which gives the second bound. Finally
-$s_{WW}=\Theta_m'P_W(\Theta_m)+\int_\Theta^{\Theta_m}\big(P_{WW}/P^2-2P_W^2/P^3\big)d\theta$, so
-$|s_{WW}|\le C(1+s_m-s)$, and
-\[
-\Theta_{WW}=\frac{P_W}P\Theta_W-s_{WW}P-s_W\big(P_\Theta\Theta_W+P_W\big)
-\]
-gives the third bound. At $s=s_m$ we have $\Theta_s=1$ and $\Theta_W=-s_WP=1$ from the
-left, which are the values from the right; hence $\Theta\in C^1$, with bounded second
-derivatives on each side.
-
-\smallskip
-(b) Let $G=G_+(W)$. Integrating backwards from $(\Theta,P)=(2+W,1)$ and using
-$G^2/2-M=\gamma$ and $\tilde B(2+W;W)=M$,
-\begin{equation}\label{q:eq:Psub}
-\tfrac{G^2}2P^2=\gamma+\tilde B(\Theta;W)-\kappa\int_\Theta^{2+W}P .
-\end{equation}
-As long as $P\ge0$ this gives $\frac{G^2}2P^2\le\gamma+\tilde B$, so $P\le1$ for
-$0\le\Theta\le2+W$ and $P\le C$ for $-1\le\Theta\le0$; then the last term is at most
-$C\kappa\le\gamma/2$ for $\kappa\le c\gamma$, and by \eqref{q:eq:Bquad}
-$c(\gamma+\Theta^2)\le P^2$ on $[-1,2+W]$. Hence the orbit reaches $\Theta=-\bar q$; with
-$s(\Theta)=2-\int_\Theta^{2+W}d\theta/P$ we set $s_c=s(0)$, $s_*=s(-\bar q)$, and
-\[
-s_*\ge2-C\int_{-1}^{C}\frac{d\theta}{\sqrt{\gamma+\theta^2}}\ge-C\log\frac1\gamma ;
-\]
-moreover $s_c\le2-(2+W)<1$, because $P\le1$.
-(i) $\Theta_{ss}=(b+\kappa\Theta_s)/G^2$ with $b\ge0$ for $\Theta\ge0$, $|b|\le C\bar q$ for
-$-\bar q\le\Theta<0$, and $|b|\le C|\Theta|\le C\Theta_s$; and $\Theta_s\ge c\Theta$ gives the
-exponential bound on $[s_c,2]$.
-
-(ii) Differentiating \eqref{q:eq:Psub},
-$G^2PP_W=\partial_W\tilde B-M'P^2-\kappa\big(1+\int_\Theta^{2+W}P_W\big)$, because $\gamma$
-does not depend on $W$. Now $|\partial_W\tilde B-M'P^2|\le CP^2$ and
-$\kappa\le c\gamma\le CP^2$, so $|P_W|\le CP+\frac{C\kappa}{P}\int_\Theta^{2+W}|P_W|$ with
-$\kappa/P\le C\sqrt\gamma$, and Gronwall's inequality (from $\Theta=2+W$ downwards)
-gives $|P_W|\le CP$; similarly $|P_{WW}|\le CP$ a.e.\ ($\partial_W^2\tilde B$ may jump across
-$\Theta=1+W$). Here $s_W=-1+\int_\Theta^{2+W}P_W/P^2$ and
-$s_{WW}=P_W(2+W)+\int_\Theta^{2+W}(P_{WW}/P^2-2P_W^2/P^3)$, with no dependence on a point
-$\Theta_m$, and the three bounds follow as in (a), using $|P_\Theta|=|\Theta_{ss}|/\Theta_s\le C$.
-At $s=2$, $\Theta_s=1$ and $\Theta_W=1$ from both sides.
-\end{proof}
+The proof of Lemma~\ref{q:lem:inner} is given in Appendix~\ref{app:proofs}.
 
 \subsection{Strict super- and subsolutions and their extensions}
 
@@ -710,52 +700,20 @@ The constants $2K_0$ and $\delta_0/2$ in (i) and (ii) do not depend on $\Lambda$
 $K_1$ do).
 \end{lemma}
 
-\begin{proof}
-Let $x\notin\Omega_t$ with $d\le r$ and let $y$ be a closest point of $\Gamma_t$. Then
-$x-y$ is normal to $\Gamma_t$, pointing outwards, and $\nabla\tilde u(y)$ is normal, pointing
-inwards, so $E\tilde u(x)=-|\nabla\tilde u(y)|d+R$ with $|R|\le\frac12K_0d^2$. Hence
-\begin{equation}\label{q:eq:Eu}
--K_0d\le E\tilde u\le-\delta_0d\qquad\text{for }x\notin\Omega_t,\ d\le r_0:=\min\{r,\delta_0/K_0\}.
-\end{equation}
-Let $\Lambda'=(\Lambda+2K_0^2+\delta_0K_0)/(8\delta_0^3)$ and
-$m=\min\{\delta_0r_0/4,\,1/(8\Lambda')\}$. Take $\psi\in C^\infty(\R)$ nondecreasing with
-$\psi(\tau)=\tau$ for $\tau\ge-m/2$, $\psi(\tau)=-m$ for $\tau\le-2m$ and $0\le\psi'\le1$, and set
-$\hat E=\psi(E\tilde u)$ on $\overline\Omega\cup\{d<r_0\}$ and $\hat E=-m$ elsewhere. By
-\eqref{q:eq:Eu}, $\hat E=-m$ where $r_0/2\le d<r_0$ outside $\Omega$, so $\hat E$ is $C^{1,1}$
-in $x$ and Lipschitz in $t$ on $\overline{Q_T}$; $\hat E=\tilde u$ in $\overline\Omega$; $-m\le\hat E<0$
-outside; and $\hat E=E\tilde u$ where $d\le r_1:=m/(2K_0)$. Let
-\[
-\tilde v^\pm=\hat E\pm\Lambda'\big(\hat E^-\big)^2,\qquad \hat E^-=\min\{\hat E,0\}.
-\]
-Then $\nabla\tilde v^\pm=(1\mp2\Lambda'|\hat E^-|)\nabla\hat E$ with
-$2\Lambda'|\hat E^-|\le\frac14$, which gives (ii) and
-$\frac34|\hat E|\le|\tilde v^\pm|\le\frac54|\hat E|$ outside $\Omega$; with \eqref{q:eq:Eu} and
-the monotonicity of $\psi$ this gives (i). For (iii), $\hat E=E\tilde u$, and
-$\big||\nabla E\tilde u(x)|^2-|\nabla\tilde u(y)|^2\big|\le2K_0^2d$. Therefore, using
-\eqref{q:eq:Eu} and $|\nabla\tilde u(y)|\ge2\delta_0$,
-\[
-|\nabla\tilde v^+|^2\le(1-2\Lambda'\delta_0d)\big(|\nabla\tilde u(y)|^2+2K_0^2d\big)
-\le|\nabla\tilde u(y)|^2-(8\Lambda'\delta_0^3-2K_0^2)d,
-\]
-\[
-|\nabla\tilde v^-|^2\ge(1+2\Lambda'\delta_0d)\big(|\nabla\tilde u(y)|^2-2K_0^2d\big)
-\ge|\nabla\tilde u(y)|^2+(8\Lambda'\delta_0^3-2K_0^2-4\Lambda'\delta_0K_0^2r_1)d,
-\]
-and $4\Lambda'\delta_0K_0^2r_1\le\delta_0K_0$. The upper bound for $|\nabla\tilde v^-|^2$ is
-immediate.
-\end{proof}
+The proof is given in Appendix~\ref{app:proofs}; we shall use that $\tilde v^\pm=\hat E\pm\Lambda'(\hat E^-)^2$, where $\hat E$ is a truncation of $E\tilde u$ that equals $E\tilde u$ for $d\le r_1$ and a negative constant away from $\overline\Omega$.
 
 \subsection{Quantitative approximation}
 
 \begin{proposition}[Quantitative version of {\cite[Theorem~4.1]{FernandezBonderWolanski2004}}]\label{q:prop:super}
-Assume (F$_2$), (W), and let $\tilde q\ge1$. There are $c_*,\delta_*,C$ depending only on
+Assume (F$_2$), (W), and let $\tilde q\ge1$. There are $\Lambda,K,c_1,c_*,\delta_*,C$
+depending only on
 $f,\delta_1,\bar W,C_W,\delta_0,r,K_0$ and $\tilde q$ (\emph{not} on $\delta$) such that, if
 $\tilde u$ is a regular strict supersolution with margins $(\delta,\delta_0,r,K_0)$ and
 \[
 \delta\le\delta_*,\qquad\ve+\eta_\ve\le c_*\delta,
 \]
-then, with $\tilde v=\tilde v^+$ from Lemma~\ref{q:lem:ext} and $\Theta=\Theta^+$ from
-Lemma~\ref{q:lem:inner}(a) (for suitable $\Lambda$, $\gamma=c_1\delta$ and $\kappa=K\ve$),
+then, with $\tilde v=\tilde v^+$ from Lemma~\ref{q:lem:ext} (with this $\Lambda$) and
+$\Theta=\Theta^+$ from Lemma~\ref{q:lem:inner}(a) with $\gamma=c_1\delta$ and $\kappa=K\ve$,
 \[
 V^\ve=-w^\ve+\ve\,\Theta\Big(\frac{\tilde v}\ve;W^\ve\Big)+\ve^2\tilde q
 \]
@@ -780,7 +738,7 @@ $|\nabla\tilde v|^2\le|\nabla\tilde u(y)|^2-\Lambda d$ and $d\ge\ve|s|/(2K_0)$. 
 $\gamma=c_1\delta$, $c_1$ small, and $\ve+\eta_\ve\le c_*\delta$, this gives \eqref{q:eq:marginsup}.
 
 \emph{The equation where $s<s_m$.} Write $V=-w+\ve(\Theta+\ve\tilde q)$. Since $f$ is
-nonincreasing and Lipschitz and $\Theta>0$,
+Lipschitz and $\Theta>0$,
 \[
 (V+w)f_\ve(V)=\tfrac1\ve(\Theta+\ve\tilde q)f(\Theta+\ve\tilde q-W)
 \ge\tfrac1\ve b(\Theta;W)-L_f\tilde q\,\Theta+\tilde q\,f(\Theta+\ve\tilde q-W).
@@ -823,8 +781,10 @@ $\mathcal R\le\Delta\tilde u-\tilde u_t\le0$.
 $C^{1,1}$ in $x$ and Lipschitz in $t$, and the set $\{\tilde v=\ve s_m(W)\}$ has measure zero,
 because $|\nabla(\tilde v-\ve s_m(W))|\ge2\delta_0-C\ve>0$ near it. So $V$ is a strong
 supersolution. The constants are chosen in this order: $\Lambda$ (which fixes $r_1$, $K_1$
-and $\Lambda_1$); then $K$; then $c_1$; then $c_*$, so that $\kappa=K\ve\le c\gamma$ and the
-conditions above hold; finally $\delta_*$ and $\ve$ small.
+and $\Lambda_1$); then $K$; then $c_1$; then $c_*$, so that $\kappa=K\ve\le Kc_*\delta\le c\gamma$
+(that is, $c_*\le c\,c_1/K$) and the
+conditions above hold; finally $\delta_*$ and $\ve$ small. In this proof the monotonicity of
+$f$ is used only through Lemma~\ref{q:lem:inner}(a) and the constant $a_0$.
 
 \emph{Error.} With $\tilde u=\ve s^+$, $V-\tilde u=\ve(\Theta-W-s^+)+\ve^2\tilde q$, and
 $\Theta-W-s^+$ vanishes for $s\ge s_m$, while $0<\Theta\le1+W$ for $s<s_m$.
@@ -835,12 +795,13 @@ Assume (F$_2$), (W), and let $\tilde q\ge1$. There are $c_*,\delta_*,C$ as in
 Proposition~\ref{q:prop:super}, depending also on $C_1$, such that, if $\tilde u$ is a
 regular strict subsolution with margins $(\delta,\delta_0,r,K_0)$, $\delta\le\delta_*$ and
 $\ve+\eta_\ve\le c_*\delta$, then, with $\tilde v=\tilde v^-$ from Lemma~\ref{q:lem:ext} and
-$\Theta=\Theta^-$ from Lemma~\ref{q:lem:inner}(b) (for suitable $\Lambda$, $\gamma=c_1\delta$,
+$\Theta=\Theta^-$ from Lemma~\ref{q:lem:inner}(b) (for constants $\Lambda$, $K$, $c_1$ as in
+Proposition~\ref{q:prop:super}, $\gamma=c_1\delta$,
 $\kappa=K\ve$, and $\bar q=\ve\tilde q$), the function
 \[
 V_1=-w^\ve+\ve\,\Theta\Big(\frac{\tilde v}\ve;W^\ve\Big)
 \]
-is a strong subsolution of \eqref{eq:Peps} in the open set
+is a strong subsolution of \eqref{eq:Peps} in the bounded open set
 $D=\{(x,t)\in Q_T:\tilde v>\ve s_*(W^\ve)\}$, and $V_1=-w^\ve-\ve^2\tilde q$ on $\partial D\cap Q_T$.
 Consequently, if $u$ is a bounded solution of \eqref{eq:Peps} with $u+w^\ve\ge0$, and
 \[
@@ -880,8 +841,12 @@ $|s|\le C\log(1/\gamma)$,
 \ge\Theta_s-C_{\Lambda,K}\,\tilde q\,\big(\sqrt{\delta_*}+\sqrt{c_*}\big)\sqrt\delta\\
 &\ge\big(c\sqrt{c_1}-C_{\Lambda,K}\,\tilde q\,(\sqrt{\delta_*}+\sqrt{c_*})\big)\sqrt\delta\ge0,
 \end{align*}
-if $K\ge K_1+C+2$ and then $\delta_*$, $c_*$ are small; we used $\gamma\ge\ve$ and
-$\ve\log(1/\ve)\le\sqrt{\ve}\le\sqrt{c_*\delta}$.
+if $K\ge K_1+C+2$ and then $\delta_*$, $c_*$ are small; we used $\gamma\ge\ve$ (that is,
+$c_*\le c_1$) and
+$\ve\log(1/\ve)\le\sqrt{\ve}\le\sqrt{c_*\delta}$. Note that $C_{\Lambda,K}$ does not depend on
+$c_1$, and that $\delta_*$ and $c_*$, which are chosen last, depend on $\tilde q$. The set $D$ is
+bounded because $\tilde v^-$ is a negative constant away from $\overline\Omega$
+(proof of Lemma~\ref{q:lem:ext}).
 
 \emph{The equation where $s\ge2$.} $V_1=\tilde u\ge2\ve$, there is no reaction, and
 $\mathcal R=\Delta\tilde u-\tilde u_t\ge0$. By Lemma~\ref{q:lem:inner}(b)(ii), $V_1$ is $C^{1,1}$ in
@@ -904,14 +869,21 @@ compact support, and $w_0$ satisfies the monotonicity condition
 \qquad |w_0(\lambda x,\lambda^2t)-w_0(x,t)|\le C_w|\lambda-1|
 \end{equation}
 for $\frac12\le\lambda\le2$ and $(x,t)$ in bounded sets (for instance, $w_0$ constant).
+When $\eta_\ve\to0$, $w_0$ is a bounded caloric function, and so is
+$(x,t)\mapsto w_0(\lambda x,\lambda^2t)$; hence the monotonicity in \eqref{q:eq:mono} holds for
+all $t$ if it holds at $t=0$, by the maximum principle, as in
+\cite{FernandezBonderWolanski2004}.
 Since $M$ is increasing, $M(w_0(\lambda x,\lambda^2t))\le M(w_0(x,t))$ for $\lambda\le1$, with the
 reverse inequality for $\lambda\ge1$.
 
 We say that $v$ is a \emph{regular classical solution} of \eqref{eq:P} on $[0,T^*]$ if
 $v\ge0$ is continuous on $\R^N\times[0,T^*]$, $v\in C^{2,1}(\{v>0\})$, $v_t=\Delta v$ in
 $\{v>0\}$, $|\nabla v|=\sqrt{2M(w_0)}$ on $\partial\{v>0\}$, and $v$ satisfies (R1), (R2) on
-$[0,T^*]$ for some $\delta_0,r,K_0>0$. In particular $v(\cdot,0)=u_0$ is $C^{1,1}$ up to
-$\partial\Omega_0$ and satisfies the free boundary condition there.
+$[0,T^*]$ for some $\delta_0,r,K_0>0$. Regularity up to $t=0$ is a compatibility
+condition on the data: $v(\cdot,0)=u_0$ is $C^{1,1}$ up to
+$\partial\Omega_0$ and satisfies the free boundary condition $|\nabla u_0|=\sqrt{2M(w_0)}$
+there. Recall that $\Omega_t=\{v(\cdot,t)>0\}$, the fresh region, is bounded
+(Definition~\ref{q:def:strict}).
 
 \begin{theorem}[Rate of convergence]\label{q:thm:rate}
 Assume (F$_2$), (W), \eqref{q:eq:mono}, and
@@ -1020,22 +992,48 @@ used for the upper bound; a two-sided $O(\ve)$ estimate for data with the tail o
 travelling wave would require sharp decay rates of the profiles $\Theta^\pm$, which we do
 not pursue. We do not know whether the logarithm is needed when $Y_0^\ve=0$ in the burnt
 region; the experiments of Section~\ref{sec:experiments}, which use such data, do not show
-it.
-\item \emph{The order $\ve$ is attained.} By the upper barrier, $0\le u^\ve+w^\ve\le C\ve^2$
+it. A natural way to remove it would be to wait for a time of order $\ve^2\log(1/\ve)$, in
+which $Y^\ve$ develops an exponential tail in the burnt region, and then to start the
+comparison from that time. This requires two estimates on that initial layer that we
+have not been able to prove: a lower bound for the tail of $Y^\ve$ with the same exponent as
+the barrier, whose decay rate differs from the natural one, $\sqrt{f(-w_0)}/\ve$
+per unit length, only by a factor $1+o(1)$, so that a crude bound does not suffice; and a
+lower bound for $u^\ve$ in the fresh
+region that loses only $O(\ve)$.
+\item \emph{The order $\ve$.} By the upper barrier, $0\le u^\ve+w^\ve\le C\ve^2$
 at the points of $\{v=0\}$ at distance at least $C(\ve\log(1/\ve)+\eta_\ve)$ from the free
 boundary.
 There $u^\ve-v=-\ve W^\ve+O(\ve^2)$, so the order $\ve$ cannot be improved in the sup norm
-when $w_0\not\equiv0$. For the position of the front, the travelling waves of
-Section~\ref{sec:tw} (which are not covered by the theorem, since their support is not
-compact) show the same order: for $z\ge0$, $\Phi_\ve(z)=A(1-e^{-c_\ve(z-z_\ve)})$ with
-$z_\ve=-\ve/\sqrt{2M}+O(\ve^2)$, that is, the level set $\{u^\ve=\ve\}$ lies at distance
-$\ve/\sqrt{2M}+O(\ve^2)$ ahead of the free boundary of the outer solution. The same shift
-is observed for general data in Section~\ref{sec:limit}.
-\item \emph{Existence of regular classical solutions.} Local existence of smooth
+when $w_0\not\equiv0$. This difference is the offset between the temperature of the burnt
+gas, $T_f+\ve w_0$, and the reference $T_f$; when $w_0\equiv0$ it gives no information, and
+a more significant quantity is the position of the front. For it we only have the example
+of the travelling waves of Section~\ref{sec:tw}, which are not covered by the theorem,
+since their fresh region is not bounded. By Proposition~\ref{prop:speed},
+$c_\ve-c_0=\beta\,\ve+O(\ve^2)$ with $\beta=\frac{c_0}A\big(1-\frac I{\sqrt{2M}}\big)$, which is not
+zero in general (for $f(s)=(1-s)^+$ it vanishes only for $w_0=w_0^*$). Hence the distance
+travelled in a time $t$ by any level set of $u^\ve$ differs from that of the free
+boundary by $\beta\,\ve\,t+O(\ve^2t)$, whatever level is used to define the front. In
+addition, at each time the front $\{u^\ve=\ve\}$ is ahead of the free boundary of the
+outer solution: for $z\ge0$, $\Phi_\ve(z)=A(1-e^{-c_\ve(z-z_\ve)})$ with
+$z_\ve=\log(1-\ve/A)/c_\ve=-\ve/\sqrt{2M}+O(\ve^2)$; this shift depends on the level that
+defines the front, and it is observed for general data in Section~\ref{sec:limit}.
+\item \emph{Existence of regular classical solutions.} The theorem is conditional on
+the existence of a regular classical solution, which includes the compatibility of the
+data at $t=0$. Local existence of smooth
 solutions for smooth compatible data is proved in \cite{BaconneauLunardi2004} for
-constant $M$. The radial self-similar solutions of Section~\ref{sec:selfsimilar} are
+constant $M$; for variable $w_0$ we do not know of an existence result. The radial
+self-similar solutions of Section~\ref{sec:selfsimilar} are
 explicit regular classical solutions that satisfy all the assumptions of the theorem
-on $[0,T^*]$ for every $T^*<T$.
+on $[0,T^*]$ for every $T^*<T$. Thus the class of solutions to which the theorem is known
+to apply consists of pockets of fresh gas with $w_0$ constant: smooth, compatible, strictly
+starshaped data, for short times, and the self-similar solutions up to any time before
+extinction.
+\item \emph{The constants.} The constant $C$ depends on $f,\delta_1,\bar W,C_W,C_w,C_0$ and
+$\varrho_0$, on the margins $\delta_0,r,K_0$ of $v$ on $[0,T^*]$, and on the Lipschitz constant
+of $v$ in $(x,t)$ and the diameter of its support, through \eqref{q:eq:vlam}; $\ve_1$
+depends in addition on $T^*-T$, because the dilations must satisfy $\lambda^2T\le T^*$.
+Assumption (H) is used only at $t=0$. No Gronwall argument is involved, so $C$ does not
+grow exponentially with $T$.
 \end{enumerate}
 \end{remark}
 
@@ -1104,7 +1102,14 @@ Given $(U^n,Y^n)$, the scheme (S) computes $(U^{n+1},Y^{n+1})$ from
 \frac{U^{n+1}-U^n}{\Delta t}&=\mathcal D^{n+1}U^{n+1}-f_\ve(U^n)\,Y^{n+1}.\label{eq:SU}
 \end{align}
 The reaction is linearly implicit: its rate is frozen at the previous time level
-while the reactant is implicit. Each step requires two tridiagonal solves. Subtracting
+while the reactant is implicit. This is the standard linearization of sink terms that
+preserves the positivity of concentrations
+\cite{Patankar1980}; what we add is the observation that, when $f$ is
+monotone, it gives a comparison principle for the coupled system
+(Lemma~\ref{lem:comparison}). The scheme is written along the trajectories of the nodes,
+in non-conservative form: $\Delta_h$ is conservative, but the convection term is not, so
+the total amount of reactant is not conserved exactly when the mesh moves, and no
+geometric conservation law is needed. Each step requires two tridiagonal solves. Subtracting
 the equations, $W_h^n=Y^n-U^n$ solves the scheme without reaction, exactly as
 $w^\ve=Y^\ve-u^\ve$ solves the heat equation; in particular, if $W_h^0\equiv\ve w_0$ is
 constant, then $W_h^n\equiv\ve w_0$ for all $n$. With $\dot x\equiv0$ the scheme is
@@ -1118,10 +1123,22 @@ We assume that the mesh velocities are such that
 \end{equation}
 For $N=1$ these entries are
 $-\frac{2+\dot x_ih_{i-1}}{h_i(h_{i-1}+h_i)}$ and $-\frac{2-\dot x_ih_i}{h_{i-1}(h_{i-1}+h_i)}$, so
-\eqref{eq:peclet} is the cell P\'eclet condition $|\dot x_i|\max\{h_{i-1},h_i\}\le2$; in
-radial symmetry the entries carry the weights of $\Delta_h$. The code checks
-\eqref{eq:peclet} at every step. Since the rows of $\Delta_h$ and of $D$ add up to zero,
-so do the rows of $\mathcal D^{n+1}$.
+\eqref{eq:peclet} is the cell P\'eclet condition $|\dot x_i|\max\{h_{i-1},h_i\}\le2$. In
+radial symmetry the number $2$ in these two entries is replaced by $2\theta_i^+$ and
+$2\theta_i^-$ respectively, where
+$\theta_i^\pm=x_{i\pm1/2}^{N-1}(h_{i-1}+h_i)/(2|K_i|)=1+O(h/x_i)$, and \eqref{eq:peclet} reads
+\[
+-2\theta_i^+\le\dot x_i\,h_{i-1},\qquad \dot x_i\,h_i\le2\theta_i^- .
+\]
+PECLETFILL
+Since the rows of $\Delta_h$ and of $D$ add up to zero,
+so do the rows of $\mathcal D^{n+1}$. All the statements below that hold ``for every time
+step and every mesh'' are subject to \eqref{eq:peclet}. With $h_c=0.01$ it allows mesh
+velocities up to about $200$; it becomes restrictive on coarser meshes when the front is
+fast, as at the end of the extinction of a fresh pocket, where the speed of the front is
+unbounded. An upwind discretization of the convection term outside the band would be
+monotone without restriction, at the price of first order accuracy there; we have not
+used it.
 
 \begin{lemma}[Positivity and bounds]\label{lem:bounds}
 Assume (F), \eqref{eq:peclet}, $\Delta t>0$ and $Y^0\ge0$. Then for all $n$:
@@ -1134,13 +1151,13 @@ In particular the bounds are uniform in $\ve$, in the mesh and in $\Delta t$.
 \end{lemma}
 
 \begin{proof}
-For $F\ge0$ the matrix $A_F=\Delta t^{-1}I-\mathcal D^{n+1}+\operatorname{diag}F$
+For $F\ge0$ the matrix $\mathsf A_F=\Delta t^{-1}I-\mathcal D^{n+1}+\operatorname{diag}F$
 has nonpositive off-diagonal entries and row sums $\Delta t^{-1}+F_i>0$, so it is
 strictly diagonally dominant with positive diagonal, hence a nonsingular
-M-matrix: $A_F^{-1}\ge0$. By \eqref{eq:SY} with $F=f_\ve(U^n)$,
-$Y^{n+1}=A_F^{-1}Y^n/\Delta t\ge0$. Since $A_0\mathbf 1=\Delta t^{-1}\mathbf 1$, the solution of
-$A_0W_h^{n+1}=W_h^n/\Delta t$ satisfies the maximum principle. From \eqref{eq:SU} and
-$f_\ve(U^n)Y^{n+1}\ge0$, $A_0U^{n+1}\le U^n/\Delta t$, hence $\max U^{n+1}\le\max U^n$;
+M-matrix: $\mathsf A_F^{-1}\ge0$. By \eqref{eq:SY} with $F=f_\ve(U^n)$,
+$Y^{n+1}=\mathsf A_F^{-1}Y^n/\Delta t\ge0$. Since $\mathsf A_0\mathbf 1=\Delta t^{-1}\mathbf 1$, the solution of
+$\mathsf A_0W_h^{n+1}=W_h^n/\Delta t$ satisfies the maximum principle. From \eqref{eq:SU} and
+$f_\ve(U^n)Y^{n+1}\ge0$, $\mathsf A_0U^{n+1}\le U^n/\Delta t$, hence $\max U^{n+1}\le\max U^n$;
 and $U^{n+1}=Y^{n+1}-W_h^{n+1}\ge-\max W_h^0$. The interpolation $\Pi$ preserves all
 these bounds.
 \end{proof}
@@ -1170,7 +1187,7 @@ Since $f_\ve$ is nonincreasing, $F_U\ge F_V$. Subtracting the inequality for $V$
 \le\frac{U^n-V^n}{\Delta t}\le0 .
 \]
 The reaction terms equal $F_UZ+(F_U-F_V)(V^{n+1}+W_h^{n+1})\ge F_UZ$, so
-$A_{F_U}Z\le0$, and $Z\le0$ because $A_{F_U}^{-1}\ge0$. For subsolutions, with
+$\mathsf A_{F_U}Z\le0$, and $Z\le0$ because $\mathsf A_{F_U}^{-1}\ge0$. For subsolutions, with
 $Z'=V^{n+1}-U^{n+1}$ the reaction terms are
 $F_VZ'+(F_V-F_U)(U^{n+1}+W_h^{n+1})\ge F_VZ'$, because now $F_V\ge F_U$ and
 $U^{n+1}+W_h^{n+1}=Y^{n+1}\ge0$ by Lemma~\ref{lem:bounds}. Finally $\Pi$ is order preserving.
@@ -1616,22 +1633,32 @@ we compare with the travelling wave $\Phi=\Phi_\ve$ of \eqref{eq:Peps} itself
 $\ve\log(1/\ve)$ either; the price is a worse dependence on the mesh size. We take $N=1$,
 $w^\ve\equiv\ve w_0$, assume only (F), and consider (S) for bounded sequences on the
 infinite grid $x^n_j=jh+X_n$, with $X_{n+1}=X_n+v_n\Delta t$, $|v_n|\le v_{\max}$,
-$v_{\max}h\le2$ and $h\le\ve\le\ve_0$; the scheme has a unique bounded solution and
-Lemma~\ref{lem:comparison} holds with the same proof. With
+$v_{\max}h\le2$ and $h\le\ve\le\ve_0$. On the infinite grid the results of
+Section~\ref{sec:theory} hold in $\ell^\infty$: for a bounded $F\ge0$ the matrix
+$\mathsf A_F=(\Delta t^{-1}+F)I-\delta^2-v_nD$ of the proof of Lemma~\ref{lem:bounds} is
+$\mathsf A_F=\mathfrak d\,(I-\mathfrak d^{-1}\mathfrak n)$, where
+$\mathfrak d=\operatorname{diag}(\Delta t^{-1}+F_j+2h^{-2})$ and $\mathfrak n\ge0$ (because
+$v_{\max}h\le2$) has row sums $2h^{-2}$; since
+$\|\mathfrak d^{-1}\mathfrak n\|_{\ell^\infty\to\ell^\infty}\le2h^{-2}/(\Delta t^{-1}+2h^{-2})<1$, $\mathsf A_F$ is
+invertible in $\ell^\infty$ and $\mathsf A_F^{-1}=\sum_{k\ge0}(\mathfrak d^{-1}\mathfrak n)^k\mathfrak d^{-1}\ge0$.
+Hence the scheme has a unique bounded solution, and
+Lemmas~\ref{lem:bounds} and \ref{lem:comparison}, whose proofs only use $\mathsf A_F^{-1}\ge0$ and
+$\mathsf A_0\mathbf 1=\Delta t^{-1}\mathbf 1$, hold for bounded sequences. With
 $\delta^2V_j=(V_{j+1}-2V_j+V_{j-1})/h^2$ and $DV_j=(V_{j+1}-V_{j-1})/(2h)$ the scheme reads
 $\Lop_v[U]=0$, where
 \begin{equation}\label{an:eq:Lv}
 \Lop_v[V]^n_j=\frac{V^{n+1}_j-V^n_j}{\Delta t}-\delta^2V^{n+1}_j-v_n\,DV^{n+1}_j
 +f_\ve(V^n_j)\big(V^{n+1}_j+\ve w_0\big).
 \end{equation}
-Let $\rho_h=h/\ve^2$, or $\rho_h=h^2/\ve^3$ if $f\in C^{1,1}(\R)$, and let
-$M_n=\Delta t\sum_{k<n}|v_k-c_\ve|$ be the accumulated mesh-velocity error.
+Let $\rho_h=h/\ve^2$, or $\rho_h=h^2/\ve^3$ if $f\in C^{1,1}(\R)$ (which forces $f'(1)=0$ and
+excludes $f(s)=(1-s)^+$), and let
+$\mathcal M_n=\Delta t\sum_{k<n}|v_k-c_\ve|$ be the accumulated mesh-velocity error.
 
 \begin{theorem}[Travelling waves on moving meshes]\label{an:thm:ale}
 Assume (F) and let $U$ be the solution of (S) on the grid $x^n_j=jh+X_n$ with
 $U^0_j=\Phi_\ve(x^0_j)$. There are $C_A,\nu>0$, depending only on $f,w_0,A$ and $v_{\max}$, such
 that, with $\sigma_n=|v_n-c_\ve|+C_A\rho_h$ and
-$\xi_n=\Delta t\sum_{k<n}\sigma_k=M_n+C_A\rho_ht_n$, if
+$\xi_n=\Delta t\sum_{k<n}\sigma_k=\mathcal M_n+C_A\rho_ht_n$, if
 \begin{equation}\label{an:eq:dtale}
 \sigma_n\,\Delta t\le\nu\,\ve\qquad\text{for all }n<\bar n,
 \end{equation}
@@ -1639,8 +1666,15 @@ then for all $n\le\bar n$ and $j$
 \[
 \Phi_\ve\big(x^n_j-c_\ve t_n-\xi_n\big)\ \le\ U^n_j\ \le\ \Phi_\ve\big(x^n_j-c_\ve t_n+\xi_n\big).
 \]
-In particular $|U^n_j-\Phi_\ve(x^n_j-c_\ve t_n)|\le K(M_n+C_A\rho_ht_n)$.
+In particular $|U^n_j-\Phi_\ve(x^n_j-c_\ve t_n)|\le K(\mathcal M_n+C_A\rho_ht_n)$.
 \end{theorem}
+
+As in Theorem~\ref{cv:thm:main}, the velocities $v_n$ are given; if they are computed from
+the solution, the statement is a posteriori, since $\mathcal M_n$ depends on the realised
+velocities. There is no circularity: the comparison principle is applied to the realised
+sequence $(v_n)$. The barriers are translates of the wave, as in the stability theory of
+travelling fronts of Fife and McLeod \cite{FifeMcLeod1977}; what is specific to the scheme
+is the sign of the lag of the reaction rate.
 
 \begin{proof}
 Let $V^n_j=\Phi(z^n_j)$ with $z^n_j=x^n_j-ct_n+\xi_n$. Then
@@ -1675,9 +1709,24 @@ this is $\Delta t\le\nu'$, independent of $\ve$. The barriers are translates of 
 slack $\sigma_n\Phi'$ is spread over the whole profile; this is why the mesh size enters
 through $\rho_h$, with one more power of $\ve^{-1}$ than in Theorem~\ref{cv:thm:main}, where
 the slack is concentrated in the layer. For $v_n\equiv0$ the theorem gives nothing,
-because $M_n=c_\ve t_n$: a barrier that keeps the favourable direction with respect to
+because $\mathcal M_n=c_\ve t_n$: a barrier that keeps the favourable direction with respect to
 fixed nodes cannot follow the wave, and one is in the situation of
 Remark~\ref{cv:rem:main}(1).
+
+The absence of the time step has a simple reason. When $v_n\equiv v$ is constant, the scheme
+on the translating grid is autonomous, and its steady states, the bounded solutions of
+$-\delta^2U-v\,DU+f_\ve(U)(U+\ve w_0)=0$, do not depend on $\Delta t$: a linearly implicit
+scheme leaves steady states invariant. A discrete travelling wave that moves with the
+grid is such a steady state, and Theorem~\ref{an:thm:ale} shows that, uniformly in the time
+step, the solution of the scheme stays close to the continuous wave, up to the mesh size
+and the accumulated error of the mesh velocity. Accordingly, it
+is a statement about travelling waves on rigidly translating grids, and not about the
+method of Section~\ref{sec:ale} in general: there the velocity is computed, only a
+neighbourhood of the band moves rigidly, the mesh is rebuilt, and for other data the
+solution is not steady in any frame; in all these cases the time step enters the error
+(Sections~\ref{an:sec:impl} and \ref{sec:experiments}). In the experiments the speed of the
+discrete wave depends on the position $\vartheta h$ of the front inside its cell, and its
+difference with $c_\ve$ is the lattice pinning error of Section~\ref{sec:exp:tw}.
 
 \subsection{The scheme as implemented, and what is not sharp}\label{an:sec:impl}
 
@@ -1701,21 +1750,28 @@ covered by the proof. Also, only a neighbourhood of the band moves rigidly, whic
 allowed by (M1)--(M2); but if the rigid zone is short, the nodes ahead of it see a
 solution that changes in time at a rate of order one, and an error $O(\Delta t)$ appears
 even for travelling waves. Hence the rigid zone must contain several decay lengths $1/c$
-of the profile.
+of the profile. Finally, Theorem~\ref{an:thm:ale} is stated on the whole line, while the
+code works on $[0,L]$ with zero flux at both ends; the translates of $\Phi_\ve$ do not
+satisfy this condition, with a defect that is exponentially small in $L/\ve$ at the burnt
+end and of the size of $\Phi_\ve'$ at the fresh end.
 
 \emph{What is sharp.} The barriers absorb the truncation error pointwise. In the layer
 this error, relative to the derivative of the profile, is of order
 $\rho=\Delta t/\ve^2$ for the lagged reaction on a fixed mesh and $h_f/\ve^2$ for the second
 differences, and a damping $K\sim\rho$ of the inner profile costs $K\ve$ in the free
 boundary condition: this is the origin of the terms $\Delta t/\ve$ and $h_f/\ve$. A formal
-expansion gives the same factor $\ve$. Let
+expansion, which we do not justify, gives the same factor $\ve$. Let
 $\mathcal A=\partial_z^2+c\,\partial_z-g_\ve'(\Phi)$ be the linearization at the travelling
 wave, and $\tau$ the truncation error of the scheme on it; $\mathcal A\Phi'=0$,
 $\psi^*=e^{cz}\Phi'$ spans the kernel of the adjoint, and the drift of the front is
 \[
 \lambda=-\frac{\int\tau\,\psi^*\,dz}{\int\Phi'\psi^*\,dz},
 \]
-an average of $\tau$ in which the layer has weight $\ve$. For the lagged reaction we have
+an average of $\tau$ in which the layer has weight $\ve$. (This is only heuristic: $\psi^*$
+does not decay as $z\to+\infty$ and the essential spectrum of $\mathcal A$ reaches the
+origin, so that a proof would require exponentially weighted spaces. The absence of a
+spectral gap is also behind the slow relaxation, on the time scale $4/c^2$, observed in
+Section~\ref{sec:exp:tw}.) For the lagged reaction we have
 evaluated it on the exact wave ($f(s)=(1-s)^+$, $A=1$, $w_0=0$):
 \begin{equation}\label{an:eq:solv}
 \lambda=-0.235\,\frac{\Delta t}\ve\,(1+o(1))\qquad(\ve=0.02,\ 0.01,\ 0.005:\ -0.2351,\ -0.2345,\ -0.2342),
@@ -1740,6 +1796,17 @@ travelling wave of \eqref{eq:Peps} is computed by shooting (Section~\ref{sec:tw}
 $h_f=\ve/16$ the layer is resolved, as Theorem~\ref{cv:thm:main} requires; the experiments
 differ from its setting in the width of the band, the remeshing, the computed mesh
 velocity (Section~\ref{an:sec:impl}), and in that many of them use $\Delta t\gg\ve$.
+
+\emph{The range of parameters.} Lengths are measured in units for which the flame speed
+is of order one, so the thermal thickness of the flame is $1/c_0$ ($1.7$ for $w_0=0$ and
+$A=1$). Most experiments use $\ve$ between $10^{-2}$ and $10^{-3}$, that is, Zeldovich numbers
+between $100$ and $1000$, far above those of real flames, which are between $5$ and $20$:
+our subject is the regime $\ve\to0$, in which the estimates are stated and in which methods
+that resolve the layer on a fixed mesh become expensive. For $\ve\ge0.05$ the band, of
+width $55\ve$, covers the whole flame, and the method reduces to a fine uniform mesh that
+travels with it. The value $h_c=0.01$ is small with respect to the thermal thickness; it
+was chosen so that the error of the coarse zone is negligible in the tables, and its
+effect is shown in Figure~\ref{fig:D2}.
 
 \subsection{The meshes: refinement ahead of the flame, coarsening behind it}
 
@@ -1781,7 +1848,7 @@ E=\max_{t_n\le T}\max_j\big|U^n_j-\Phi_\ve(x^n_j-x_0-c_\ve t_n)\big| ,
 \]
 the error $s_n$ in the position of the front, the error $E_s$ with the shift $s_n$
 removed (which measures the profile), and, for ALE, the accumulated mesh-velocity
-error $M_T=\Delta t\sum_n|v_n-c_\ve|$ of Theorem~\ref{an:thm:ale}. Note that $E$ grows
+error $\mathcal M_T=\Delta t\sum_n|v_n-c_\ve|$ of Theorem~\ref{an:thm:ale}. Note that $E$ grows
 linearly in time when the speed is wrong, while $E_s$ does not.
 
 \emph{Inside the hypotheses of Theorem~\ref{an:thm:ale}.} On a uniform mesh with
@@ -1794,8 +1861,8 @@ computed. Figure~\ref{fig:D1} shows $E$ and $E_s$ for $\Delta t$ from $0.0025$ t
 $\ve\in\{0.01,0.003,0.001\}$, that is, $\Delta t/\ve$ up to $100$ and $\Delta t/\ve^2$ up to $10^5$. For
 $w_0=0$ and $T=8$ we find $E=4.4$--$4.8\cdot10^{-4}$ and $E_s=4.3$--$4.4\cdot10^{-5}$ for all of
 them ($E_s=6$--$7\cdot10^{-5}$ for $\Delta t=0.1$): no dependence on $\Delta t$ or on $\ve$. As
-explained in Section~\ref{an:sec:impl}, $M_T$ coincides with the error in the position of the
-front, $7.7$--$8.3\cdot10^{-4}$, and $E\approx\Phi'(0)M_T$; the maximum of $|v_n-c_\ve|$, on the
+explained in Section~\ref{an:sec:impl}, $\mathcal M_T$ coincides with the error in the position of the
+front, $7.7$--$8.3\cdot10^{-4}$, and $E\approx\Phi'(0)\mathcal M_T$; the maximum of $|v_n-c_\ve|$, on the
 contrary, is attained in the first steps and grows as $\Delta t\to0$ (from $2.7\cdot10^{-4}$ for
 $\Delta t=0.1$ to $1.6\cdot10^{-3}$ for $\Delta t=0.0025$). For $w_0=1$ ($c_\ve\approx1.63$) the same
 holds if the rigid zone is long enough ($\ell_0=4$: $E\approx2.5\cdot10^{-3}$ at $T=4$,
@@ -1854,7 +1921,7 @@ $E_s$ and speed error against $h_f/\ve$ (left, middle; $h_c=0.0025$) and against
 velocity $c_\ve+\delta v$, $\delta v=10^{-3}$, the speed of the front is
 $c_\ve+\alpha\,\delta v$, where $\alpha$ is essentially a function of $\Delta t/\ve$: $\alpha=0.04$, $0.33$,
 $0.84$ and $0.98$ for $\Delta t/\ve=0.03$, $1$, $10$ and $100$ ($w_0=0$). This is the factor
-$\min\{1,\Delta t/\ve\}$ that multiplies $\mu$ in Theorem~\ref{cv:thm:main}, and the term $M_n$ of
+$\min\{1,\Delta t/\ve\}$ that multiplies $\mu$ in Theorem~\ref{cv:thm:main}, and the term $\mathcal M_n$ of
 Theorem~\ref{an:thm:ale} is attained when $\Delta t\gg\ve$: for large time steps the front
 locks to the mesh.
 
@@ -1883,8 +1950,10 @@ the front in its cell.}\label{fig:D6}
 \subsection{An accelerating front: the setting of Theorem~\ref{cv:thm:main}}\label{sec:exp:thm}
 
 For the extinction of the self-similar ball (Section~\ref{sec:selfsimilar}, $w_0=0.5$,
-$T=1$) the front accelerates without bound and the solution is not steady in any
-frame; it satisfies (V1), (V2). We first run (S) in the setting of
+$T=1$) the front accelerates, because it is concave towards the fresh gas, and the
+solution is not steady in any frame; it satisfies (V1), (V2) on $[0,T^*]$ for every
+$T^*<1$, and on the time intervals that we use the speed of the front is at most
+$R/(2\sqrt{T-t})\le R$. We first run (S) in the setting of
 Theorem~\ref{cv:thm:main}, without remeshing, for $N=2$, $0\le t\le0.5$,
 $\ve\in\{0.02,0.01,0.005\}$ and $h_f=\ve/16$, and record
 $E_v=\max_{n,j}|U^n_j-v(x^n_j,t_n)|$. On a uniform mesh that does not move, $E_v$ is a
@@ -1908,16 +1977,19 @@ to $40$, mostly beyond the time steps that the theorem covers.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.6\textwidth]{../numerics/figures/paper/B4_radial_extinction_dt.png}
-\caption{ALE, radial extinction (self-similar data, $w_0=0.5$, $t\le0.75$): error in the
+\caption{ALE, extinction of a self-similar ball of fresh gas ($w_0=0.5$, $t\le0.75$): error in the
 position of the front, after removing the shift $\ve/\sqrt{2M}$, against $\Delta t$, for
 $N=2,3$ and $\ve\in\{0.01,0.002,0.001\}$.}\label{fig:B4}
 \end{figure}
 
-\subsection{Instability with respect to $w_0$}
-To display the instability proved in \cite{FernandezBonderWolanski2000} we
+\subsection{Dependence of the limit on $w_0$}\label{sec:exp:w0}
+To display the dependence of the limit on the perturbation $w_0$, proved in
+\cite{FernandezBonderWolanski2000}, we
 take the \emph{same} initial temperature $u_0$ (the limit travelling wave for
 $w_0=0$) and three values of $w_0$, that is, $Y_0^\ve=u_0^\ve+\ve w_0$ with
-$u_0^\ve\to u_0$. The limit problems differ through $M(w_0)$, and so do the
+$u_0^\ve\to u_0$: three mixtures whose content of reactant differs by a quantity of order
+$\ve$, and whose flame temperatures therefore differ by the same amount. The limit problems
+differ through $M(w_0)$, and so do the
 flames (Figure~\ref{fig:instability}, computed with BDF): after $t=20$ the fronts are at
 $x\approx3.7$, $13.6$ and $35.7$. The dashed lines are the free boundaries of
 \eqref{eq:P} with each $M(w_0)$, computed with the solver of Section~\ref{sec:limit}; the
@@ -1974,7 +2046,10 @@ position of the front after removing the shift $\ve/\sqrt{2M}$ (front$^*$), and 
 of $(u^\ve)^+$ at the final time, both divided by $\ve$.}\label{tab:limit}
 \end{table}
 
-All the errors are $O(\ve)$, in agreement with Theorem~\ref{q:thm:rate}; the data have
+All the errors are $O(\ve)$. The radial data are pockets of fresh gas as in
+Theorem~\ref{q:thm:rate}, and the errors agree with its rate; the planar front is not
+covered by the theorem, whose setting requires a bounded fresh region, but it shows the
+same order. The data have
 $Y_0^\ve=0$ in the burnt region, and no logarithm is visible. Most of the raw error in the
 front is the shift $\ve/\sqrt{2M}$ between the level set $\{u^\ve=\ve\}$ and the free
 boundary. What remains is $0.3\,\ve$ in the planar case; in radial symmetry it decreases from
@@ -2043,6 +2118,16 @@ by $\ve$, and on meshes that follow the front it is not. In the experiments the 
 $\Delta t$ and $\mu$ are observed, also for $\Delta t\gg\ve$, while the mesh sizes enter as
 $(h_f/\ve)^2$ and $h_c^2$.
 
+The scope of these results is that of the model: constant density, no heat losses and
+equal diffusivities. The last assumption is what makes $w^\ve$ caloric and reduces the
+system to a scalar equation with a comparison principle, on which both the rate and the
+scheme rest; with a Lewis number different from one, or with heat losses, this structure
+is lost, and neither the barriers nor the monotonicity of the scheme extend directly. The
+rate theorem and the convergence theorem concern pockets of fresh gas; planar and
+expanding flames, for which the fresh region is unbounded, are covered only by the
+travelling wave estimates and by the experiments. And the experiments are in planar or
+radial symmetry, in the regime of very large activation energy.
+
 Several questions remain open: (i) an a priori bound for the implicit mesh velocity,
 the remeshing, time steps $\Delta t\gg\ve$ for general data, and the sharp dependence on the
 mesh sizes (Section~\ref{an:sec:impl});
@@ -2058,6 +2143,188 @@ problem in two and three dimensions, with adaptive refinement and coarsening of 
 that follows the flame, or with a moving mesh method
 \cite{HuangRussell2011}, for which the elliptic (Bernoulli) case
 \cite{FlucherRumpf1997,ShenDaiHuang2024} is a natural first step.
+
+
+\appendix
+\section{Proofs of Lemmas~\ref{q:lem:inner} and \ref{q:lem:ext}}\label{app:proofs}
+
+\begin{proof}[Proof of Lemma~\ref{q:lem:inner}]
+Both profiles are increasing in $s$, so we parametrize them by $\Theta$: with
+$P(\Theta)=\Theta_s$ we have $\Theta_{ss}=PP_\Theta$, and the equations
+$G^2\Theta_{ss}\pm\kappa\Theta_s=b$ become
+$\frac{d}{d\Theta}\big(\frac{G^2}2P^2\big)=b(\Theta;W)\mp\kappa P$. We use that
+\begin{equation}\label{q:eq:Bquad}
+c\Theta^2\le\tilde B(\Theta;W)\le C\Theta^2\ \text{ for }-1\le\Theta\le1+W,\qquad
+|\partial_W\tilde B|+|\partial^2_{W}\tilde B|\le C\Theta^2 ,
+\end{equation}
+which follow from $2a_0\le f(t-W)\le C$ for $-1\le t\le\frac{1+W}2$, from
+$\partial_W\tilde B=-\int_0^\Theta tf'(t-W)\,dt$, and from (F$_2$). They also hold for
+$1+W\le\Theta\le2+W$, where $\tilde B(\Theta;W)=M(W)$. Note also that
+$G_\pm G_\pm'=M'$ is bounded, and that $G_\pm\ge c$.
+
+\smallskip
+(a) Let $G=G_-(W)$ and let $P$ be the branch $P>0$ of the unstable manifold of the saddle
+$(0,0)$ in the $(\Theta,P)$-plane:
+\begin{equation}\label{q:eq:Psup}
+\tfrac{G^2}2P^2=\tilde B(\Theta;W)-\kappa J(\Theta),\qquad J(\Theta)=\int_0^\Theta P .
+\end{equation}
+By \eqref{q:eq:Bquad}, $P\le\sqrt{2\tilde B}/G\le C\Theta$, so $\kappa J\le C\kappa\Theta^2$ and, for
+$\kappa$ small,
+\begin{equation}\label{q:eq:Plin}
+c\,\Theta\le P\le C\Theta\qquad\text{as long as $P$ is defined and }\Theta\le1+W .
+\end{equation} Let $F(\Theta)=\tilde B(\Theta;W)-\kappa J(\Theta)-(M(W)-\gamma)$. Then $F(0)<0$ and
+$F(1+W)=\gamma-\kappa J(1+W)\ge\gamma/2$ if $\kappa\le c\gamma$. Let $\Theta_m$ be the first
+zero of $F$: then $P(\Theta_m)=1$ and $0<P<1$ on $(0,\Theta_m)$. Set $s_m=\Theta_m-W$.
+Since
+\[
+\tfrac\gamma2\le\gamma-\kappa J(\Theta_m)=M-\tilde B(\Theta_m)=\int_{\Theta_m}^{1+W}tf(t-W)\,dt\le\gamma
+\]
+and $f>0$ on $(-\infty,1)$, we have $1-s_m\to0$ as $\gamma\to0$, uniformly in $W$; we take
+$\gamma_0$ so small that $1-s_m\le\min\{\frac12,\frac{\delta_1}4\}$. Then
+$\Theta_m\ge\frac{1+W}2$ and, since $f$ is nonincreasing,
+$\frac\gamma2\le(1-s_m)(1+W)f(s_m)\le\Theta_mf(s_m)=b(\Theta_m;W)$, and
+$b(\Theta;W)\ge\frac12b(\Theta_m;W)$ on $[\frac{1+W}2,\Theta_m]$. Hence, for $\kappa\le\gamma/8$,
+\begin{equation}\label{q:eq:top}
+b(\Theta;W)\ge\tfrac\gamma4\ \text{ on }[\tfrac{1+W}2,\Theta_m],\qquad
+\partial_\Theta F(\Theta_m)=b(\Theta_m;W)-\kappa\ge\tfrac12b(\Theta_m;W)\ge\tfrac\gamma4 .
+\end{equation}
+Define $s(\Theta)=s_m-\int_\Theta^{\Theta_m}d\theta/P(\theta)$ for $0<\Theta\le\Theta_m$, let
+$\Theta(\cdot)$ be its inverse on $(-\infty,s_m]$, and extend it by $\Theta=s+W$ for $s\ge s_m$.
+Since $P(\Theta_m)=1$, $\Theta\in C^1$, and $\Theta_{ss}=(b-\kappa\Theta_s)/G^2$ is bounded.
+
+(i) $\Theta_{ss}\ge0$: on $(0,\frac{1+W}2]$, $b\ge2a_0\Theta\ge cP\ge\kappa P$; on
+$[\frac{1+W}2,\Theta_m]$, $b\ge\gamma/4\ge\kappa\ge\kappa P$ by \eqref{q:eq:top}. In particular $P$ is
+nondecreasing in $\Theta$. Also $\Theta_{ss}\le b/G^2\le C\Theta\le C\Theta_s$ on the first interval
+and $\Theta_{ss}\le C\le C\Theta_s$ on the second. By \eqref{q:eq:Plin}, $c\,\Theta\le\Theta_s\le C\Theta$. Since $s_m<1$, this gives
+$\Theta(0)\ge\Theta_me^{-C}\ge c$, then $\Theta(-S)\ge c\,e^{-CS}$ and
+$\Theta_s\ge c\,\Theta\ge c\,e^{-CS}$ on $[-S,s_m]$; and $\Theta(s)\le\Theta(0)e^{cs}$ for $s\le0$.
+
+(ii) We first check that $P$ is twice continuously differentiable in $W$ for
+$0<\Theta\le\Theta_m$, with $P_W=O(\Theta)$ and $P_{WW}=O(\Theta)$ as $\Theta\to0$. Write
+$P=\Theta Q$. By \eqref{q:eq:Psup} and \eqref{q:eq:Plin}, on every interval $(0,\Theta_1]$
+with $\Theta_1\le1+W$ the function $Q$ is the fixed point of
+\[
+\mathcal T(Q;W)(\Theta)=\frac{\sqrt2}{G(W)}\Big(\beta(\Theta;W)-\kappa\int_0^1\tau\,Q(\Theta\tau)\,d\tau\Big)^{1/2},
+\qquad\beta(\Theta;W)=\frac{\tilde B(\Theta;W)}{\Theta^2}=\int_0^1\tau f(\Theta\tau-W)\,d\tau,
+\]
+in the set $\{c\le Q\le C\}$ of $C([0,\Theta_1])$, where $\beta\ge c$ by \eqref{q:eq:Bquad}; for
+$\kappa$ small $\mathcal T(\cdot\,;W)$ maps this set into itself and is a contraction with
+constant $\frac12$. Fix $W_*$ and $\Theta_1<1+W_*$. By (F$_2$), $f''$ is uniformly
+continuous on compact subsets of $(-\infty,1]$, so for $W$ near $W_*$ the map
+$W\mapsto\beta(\cdot\,;W)$ is of class $C^2$ with values in $C([0,\Theta_1])$, and so is
+$(Q,W)\mapsto\mathcal T(Q;W)$. By the uniform contraction principle
+\cite[Section~2.2]{ChowHale1982}, $W\mapsto Q(\cdot\,;W)\in C([0,\Theta_1])$ is of class
+$C^2$. Since $\Theta_m<1+W$, this is the claim. We now bound the derivatives with
+constants that do not depend on $\gamma$ and $\kappa$.
+Differentiating \eqref{q:eq:Psup} with respect to $W$ at fixed $\Theta$,
+\[
+G^2PP_W=\partial_W\tilde B-M'P^2-\kappa\int_0^\Theta P_W .
+\]
+By \eqref{q:eq:Bquad}, $|\partial_W\tilde B-M'P^2|\le C(\Theta^2+P^2)$. If
+$m(\Theta)=\sup_{(0,\Theta]}|P_W(\theta)|/\theta$, then by \eqref{q:eq:Plin}
+$|P_W|\le C\Theta+\frac{C\kappa}{\Theta}\cdot\frac{m(\Theta)\Theta^2}2$ on $(0,\Theta_m]$, i.e.\
+$m\le C+C\kappa m$, so $|P_W|\le C\Theta\le CP$ for $\kappa$ small ($m$ is finite by the
+first step). Differentiating once more, and using $(G^2)'=2M'$,
+\[
+G^2PP_{WW}=\partial_W^2\tilde B-M''P^2-4M'PP_W-G^2P_W^2-\kappa\int_0^\Theta P_{WW} ,
+\]
+where $M''(W)=f(-W)$ is bounded and $|\partial_W^2\tilde B|\le C\Theta^2$ by
+\eqref{q:eq:Bquad}. With the bound for $P_W$, the first four terms on the right are bounded
+by $C\Theta^2$, and the same argument gives $|P_{WW}|\le C\Theta\le CP$.
+
+Next, $\Theta_m$ is defined by $F=0$, and
+$\partial_WF(\Theta_m)=\partial_W\tilde B(\Theta_m;W)-\partial_W\tilde B(1+W;W)-\kappa J_W
+=\int_{\Theta_m}^{1+W}tf'(t-W)\,dt-\kappa J_W$, because $M'(W)=\partial_W\tilde B(1+W;W)$. Since
+$f'\le0$, the integral is bounded in absolute value by $(1+W)f(s_m)\le2b(\Theta_m;W)$, and
+$\kappa|J_W|\le C\kappa\le Cb(\Theta_m;W)$. With \eqref{q:eq:top},
+$|\Theta_m'(W)|=|\partial_WF/\partial_\Theta F|\le C$, and so $|s_m'|\le C$.
+
+At fixed $\Theta$, using $P(\Theta_m)=1$,
+\[
+s_W=s_m'-\Theta_m'+\int_\Theta^{\Theta_m}\frac{P_W}{P^2}\,d\theta
+=-1+\int_\Theta^{\Theta_m}\frac{P_W}{P^2}\,d\theta,\qquad\text{so}\qquad
+|s_W|\le1+C\int_\Theta^{\Theta_m}\frac{d\theta}P=1+C(s_m-s).
+\]
+Since $\Theta_W=-s_WP$ (at fixed $s$), this is the first bound. Next,
+$\Theta_{sW}=\partial_W[P(\Theta(s;W);W)]=P_\Theta\Theta_W+P_W$ with
+$P_\Theta=\Theta_{ss}/\Theta_s\in[0,C]$, which gives the second bound. Finally
+$s_{WW}=\Theta_m'P_W(\Theta_m)+\int_\Theta^{\Theta_m}\big(P_{WW}/P^2-2P_W^2/P^3\big)d\theta$, so
+$|s_{WW}|\le C(1+s_m-s)$, and
+\[
+\Theta_{WW}=\frac{P_W}P\Theta_W-s_{WW}P-s_W\big(P_\Theta\Theta_W+P_W\big)
+\]
+gives the third bound. At $s=s_m$ we have $\Theta_s=1$ and $\Theta_W=-s_WP=1$ from the
+left, which are the values from the right; hence $\Theta\in C^1$, with bounded second
+derivatives on each side.
+
+\smallskip
+(b) Let $G=G_+(W)$. Integrating backwards from $(\Theta,P)=(2+W,1)$ and using
+$G^2/2-M=\gamma$ and $\tilde B(2+W;W)=M$,
+\begin{equation}\label{q:eq:Psub}
+\tfrac{G^2}2P^2=\gamma+\tilde B(\Theta;W)-\kappa\int_\Theta^{2+W}P .
+\end{equation}
+As long as $P\ge0$ this gives $\frac{G^2}2P^2\le\gamma+\tilde B$, so $P\le1$ for
+$0\le\Theta\le2+W$ and $P\le C$ for $-1\le\Theta\le0$; then the last term is at most
+$C\kappa\le\gamma/2$ for $\kappa\le c\gamma$, and by \eqref{q:eq:Bquad}
+$c(\gamma+\Theta^2)\le P^2$ on $[-1,2+W]$. Hence the orbit reaches $\Theta=-\bar q$; with
+$s(\Theta)=2-\int_\Theta^{2+W}d\theta/P$ we set $s_c=s(0)$, $s_*=s(-\bar q)$, and
+\[
+s_*\ge2-C\int_{-1}^{C}\frac{d\theta}{\sqrt{\gamma+\theta^2}}\ge-C\log\frac1\gamma ;
+\]
+moreover $s_c\le2-(2+W)<1$, because $P\le1$.
+(i) $\Theta_{ss}=(b+\kappa\Theta_s)/G^2$ with $b\ge0$ for $\Theta\ge0$, $|b|\le C\bar q$ for
+$-\bar q\le\Theta<0$, and $|b|\le C|\Theta|\le C\Theta_s$; and $\Theta_s\ge c\Theta$ gives the
+exponential bound on $[s_c,2]$.
+
+(ii) Differentiating \eqref{q:eq:Psub},
+$G^2PP_W=\partial_W\tilde B-M'P^2-\kappa\big(1+\int_\Theta^{2+W}P_W\big)$, because $\gamma$
+does not depend on $W$. Now $|\partial_W\tilde B-M'P^2|\le CP^2$ and
+$\kappa\le c\gamma\le CP^2$, so $|P_W|\le CP+\frac{C\kappa}{P}\int_\Theta^{2+W}|P_W|$ with
+$\kappa/P\le C\sqrt\gamma$, and Gronwall's inequality (from $\Theta=2+W$ downwards)
+gives $|P_W|\le CP$; similarly $|P_{WW}|\le CP$ a.e.\ ($\partial_W^2\tilde B$ may jump across
+$\Theta=1+W$). Here $s_W=-1+\int_\Theta^{2+W}P_W/P^2$ and
+$s_{WW}=P_W(2+W)+\int_\Theta^{2+W}(P_{WW}/P^2-2P_W^2/P^3)$, with no dependence on a point
+$\Theta_m$, and the three bounds follow as in (a), using $|P_\Theta|=|\Theta_{ss}|/\Theta_s\le C$.
+At $s=2$, $\Theta_s=1$ and $\Theta_W=1$ from both sides.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{q:lem:ext}]
+Let $x\notin\Omega_t$ with $d\le r$ and let $y$ be a closest point of $\Gamma_t$. Then
+$x-y$ is normal to $\Gamma_t$, pointing outwards, and $\nabla\tilde u(y)$ is normal, pointing
+inwards, so $E\tilde u(x)=-|\nabla\tilde u(y)|d+R$ with $|R|\le\frac12K_0d^2$ and
+$2\delta_0\le|\nabla\tilde u(y)|\le K_0$. Hence
+\begin{equation}\label{q:eq:Eu}
+-\tfrac32K_0d\le E\tilde u\le-\delta_0d\qquad\text{for }x\notin\Omega_t,\ d\le r_0:=\min\{r,\delta_0/K_0,1\}.
+\end{equation}
+Let $\Lambda'=(\Lambda+2K_0^2+\delta_0K_0)/(8\delta_0^3)$ and
+$m=\min\{\delta_0r_0/4,\,1/(8\Lambda')\}$. Take $\psi\in C^\infty(\R)$ nondecreasing with
+$\psi(\tau)=\tau$ for $\tau\ge-m/2$, $\psi(\tau)=-m$ for $\tau\le-2m$ and $0\le\psi'\le1$, and set
+$\hat E=\psi(E\tilde u)$ on $\overline\Omega\cup\{d<r_0\}$ and $\hat E=-m$ elsewhere. By
+\eqref{q:eq:Eu}, $\hat E=-m$ where $r_0/2\le d<r_0$ outside $\Omega$, so $\hat E$ is $C^{1,1}$
+in $x$ and Lipschitz in $t$ on $\overline{Q_T}$; $\hat E=\tilde u$ in $\overline\Omega$; $-m\le\hat E<0$
+outside; and $\hat E=E\tilde u$ where $d\le r_1:=m/(3K_0)$, because there
+$E\tilde u\ge-m/2$ by \eqref{q:eq:Eu}. Let
+\[
+\tilde v^\pm=\hat E\pm\Lambda'\big(\hat E^-\big)^2,\qquad \hat E^-=\min\{\hat E,0\}.
+\]
+Then $\nabla\tilde v^\pm=(1\mp2\Lambda'|\hat E^-|)\nabla\hat E$ with
+$2\Lambda'|\hat E^-|\le\frac14$, which gives (ii) and
+$\frac34|\hat E|\le|\tilde v^\pm|\le\frac54|\hat E|$ outside $\Omega$; with \eqref{q:eq:Eu} and
+the monotonicity of $\psi$ this gives (i) (note that $\frac54\cdot\frac32<2$ and
+$\frac34>\frac12$). For (iii), $\hat E=E\tilde u$, and
+$\big||\nabla E\tilde u(x)|^2-|\nabla\tilde u(y)|^2\big|\le2K_0^2d$. Therefore, using
+\eqref{q:eq:Eu} and $|\nabla\tilde u(y)|\ge2\delta_0$,
+\[
+|\nabla\tilde v^+|^2\le(1-2\Lambda'\delta_0d)\big(|\nabla\tilde u(y)|^2+2K_0^2d\big)
+\le|\nabla\tilde u(y)|^2-(8\Lambda'\delta_0^3-2K_0^2)d,
+\]
+\[
+|\nabla\tilde v^-|^2\ge(1+2\Lambda'\delta_0d)\big(|\nabla\tilde u(y)|^2-2K_0^2d\big)
+\ge|\nabla\tilde u(y)|^2+(8\Lambda'\delta_0^3-2K_0^2-4\Lambda'\delta_0K_0^2r_1)d,
+\]
+and $4\Lambda'\delta_0K_0^2r_1\le\delta_0K_0$. The upper bound for $|\nabla\tilde v^-|^2$ is
+immediate.
+\end{proof}
 
 \bibliographystyle{amsplain}
 \bibliography{references}
