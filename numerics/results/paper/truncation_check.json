@@ -173,7 +173,7 @@
   }
  ],
  "provenance": {
-  "git": "d29766010dfdabfd30e0103f217a4926d9027b60",
+  "git": "305e47b3df4acb954de2b4d780b643bc2aefb1c9",
   "git_dirty": true,
   "python": "3.13.18",
   "numpy": "2.5.3",

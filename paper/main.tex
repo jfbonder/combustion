@@ -1123,14 +1123,17 @@ We assume that the mesh velocities are such that
 \end{equation}
 For $N=1$ these entries are
 $-\frac{2+\dot x_ih_{i-1}}{h_i(h_{i-1}+h_i)}$ and $-\frac{2-\dot x_ih_i}{h_{i-1}(h_{i-1}+h_i)}$, so
-\eqref{eq:peclet} is the cell P\'eclet condition $|\dot x_i|\max\{h_{i-1},h_i\}\le2$. In
+\eqref{eq:peclet} is $-2\le\dot x_ih_{i-1}$ and $\dot x_ih_i\le2$, which is implied by the
+cell P\'eclet condition $|\dot x_i|\max\{h_{i-1},h_i\}\le2$. In
 radial symmetry the number $2$ in these two entries is replaced by $2\theta_i^+$ and
 $2\theta_i^-$ respectively, where
 $\theta_i^\pm=x_{i\pm1/2}^{N-1}(h_{i-1}+h_i)/(2|K_i|)=1+O(h/x_i)$, and \eqref{eq:peclet} reads
 \[
 -2\theta_i^+\le\dot x_i\,h_{i-1},\qquad \dot x_i\,h_i\le2\theta_i^- .
 \]
-PECLETFILL
+The code checks \eqref{eq:peclet} whenever a matrix is assembled. A trial velocity that
+violates it is discarded by the iteration of Section~\ref{sec:ale}, and if no admissible
+velocity is found the run stops with an error; the time step is not reduced.
 Since the rows of $\Delta_h$ and of $D$ add up to zero,
 so do the rows of $\mathcal D^{n+1}$. All the statements below that hold ``for every time
 step and every mesh'' are subject to \eqref{eq:peclet}. With $h_c=0.01$ it allows mesh
@@ -1228,8 +1231,14 @@ must contain several decay lengths $1/c$ of the profile ahead of the front
 front. At each step $v_n$ is chosen so that the computed front ends the step at
 the reference point: $x_f^{n+1}(v_n)=x_c+\Delta t\,v_n$, and then $x_c$ is advanced by
 $\Delta t\,v_n$. This scalar equation is solved by the secant method, starting from
-$v_{n-1}$, to a tolerance $10^{-3}h_f$; in all our runs it takes three evaluations, that
-is, six tridiagonal solves per step. The same idea underlies the freezing method
+$v_{n-1}$, until the front is within $10^{-3}h_f$ of the reference point. Each evaluation
+is a step of (S), that is, two tridiagonal solves; the iteration takes at least three
+evaluations and at most ten, after which the last iterate is accepted and the event is
+counted. For travelling waves it takes three evaluations per step, and for the
+accelerating fronts of Section~\ref{sec:exp:thm} between $3$ and $4.2$ on average,
+depending on the time step. The tolerance allows an error of $10^{-3}h_f/\Delta t$ in the
+velocity of a single step, which does not accumulate, because the equation is for the
+position of the front. The same idea underlies the freezing method
 for travelling waves \cite{BeynThummler2004}. An explicit choice of $v_n$ (the front
 speed measured in the previous steps) lags behind accelerating fronts by
 (acceleration)$\times\Delta t$, which is too much for small $\ve$; the implicit choice
@@ -1237,8 +1246,9 @@ removes this lag.
 
 \emph{Remeshing.} The cells of the decay zones are stretched or compressed by the
 motion. The mesh is rebuilt when it has travelled a distance $\ell_0/4$, or if the front
-drifts from the reference point by more than $15\ve/4$; then $x_c$ is reset to the
-front. The new band is placed on the lattice of the old band, so the transfer by $\Pi$
+drifts from the reference point by more than $15\ve/4$, or if a cell has been compressed
+below $h_f/2$; then $x_c$ is reset to the
+front. (A trial velocity for which two nodes would cross is discarded.) The new band is placed on the lattice of the old band, so the transfer by $\Pi$
 is exact in the band, and interpolation only acts in the transition and coarse zones,
 where the solution is smooth on the scale of the mesh.
 
@@ -1255,8 +1265,8 @@ For comparison we also use two solvers on meshes that do not move.
 
 \emph{Eulerian (S).} The scheme (S) with $\dot x\equiv0$ and a fixed time step, on a
 band mesh that is rebuilt around the current front after the time in which the front,
-at its measured speed, travels half the margin of the band ($7.5\,\ve$), with transfer by
-$\Pi$. It is covered by
+at its measured speed, travels half the margin of the band ($7.5\,\ve$), and in any case
+at least $20$ times in a run, with transfer by $\Pi$. It is covered by
 Lemmas~\ref{lem:bounds} and \ref{lem:comparison}.
 
 \emph{BDF.} A method-of-lines solver: the finite volume discretization on the same
@@ -1854,7 +1864,17 @@ linearly in time when the speed is wrong, while $E_s$ does not.
 \emph{Inside the hypotheses of Theorem~\ref{an:thm:ale}.} On a uniform mesh with
 $h=\ve^2/8$ and $\ve^2/16$, $\ve\in\{0.1,0.05\}$, translating rigidly with $v_n\equiv c_\ve$, we find
 $E\le8\cdot10^{-6}$ at $T=3$ for $\Delta t=0.1$ and $\Delta t=0.01$: the error does not depend on the
-time step, and the bound, with $\rho_hT=0.19$--$0.38$, is far from sharp.
+time step, and the bound, with $\rho_hT=0.19$--$0.38$, is far from sharp. To test the
+second alternative of the theorem we repeat the experiment with the rate
+$f(s)=3\big((1-s)^+\big)^2$, which is of class $C^{1,1}(\R)$, and $h=\ve^{3/2}/k$, so that
+$\rho_h=h^2/\ve^3=k^{-2}$. For $\ve=0.1$ and $k=2,4,8$ we find $E=7.7\cdot10^{-5}$,
+$1.3\cdot10^{-5}$ and $4.1\cdot10^{-6}$ with $\Delta t=0.1$, and $8.8\cdot10^{-5}$, $1.8\cdot10^{-5}$ and
+$5.8\cdot10^{-6}$ with $\Delta t=0.01$; for $\ve=0.05$ and $k=2,4$, $2.5\cdot10^{-5}$ and $3.9\cdot10^{-6}$
+with $\Delta t=0.1$. The error is roughly proportional to $\rho_h$ (for $\ve=0.1$ it decreases by factors $5.7$
+and $3.3$ when $\rho_h$ is divided by four), until it reaches the
+accuracy of the reference profile (about $10^{-6}$), and a factor of ten in the time step
+changes it by less than a factor $1.6$; the constant of the bound is again far from
+sharp.
 
 \emph{ALE with implicit velocity.} From now on $h_f=\ve/16$ and the mesh velocity is
 computed. Figure~\ref{fig:D1} shows $E$ and $E_s$ for $\Delta t$ from $0.0025$ to $0.1$ and
@@ -1891,7 +1911,10 @@ position grows linearly in time with slope $e(\vartheta)$, over $16$ values of $
 ($w_0=0$, $\ve=0.01$, $T=8$) $E$ ranges from $1.3\cdot10^{-5}$ to $9.5\cdot10^{-4}$, and $E_s$ from
 $1.3\cdot10^{-5}$ to $9.6\cdot10^{-5}$. That the speed of a discrete travelling wave depends on its
 position relative to the lattice is classical \cite{Keener1987}; for the freezing
-method see \cite{Thummler2008SINUM}.
+method see \cite{Thummler2008SINUM}. Changing $\vartheta$ at every remeshing would not
+average this error, because in the ALE version the mesh is rebuilt only a few times in a
+run, and it would make the transfer inexact on the band. We have not looked for other
+remedies; the error decreases like $(h_f/\ve)^2$.
 
 \begin{figure}[ht]
 \centering
