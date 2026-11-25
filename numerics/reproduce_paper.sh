@@ -4,6 +4,9 @@
 #   ./reproduce_paper.sh          run all experiments and make all figures (~1.5 h on 4 cores)
 #   ./reproduce_paper.sh plots    only redraw the figures from the stored results
 #
+# The times quoted here and in the step titles are approximate (one desktop machine,
+# 4 processes); a laptop can be several times slower.
+#
 # Run from numerics/. Uses the Python in ../.venv if it exists, else python3.
 set -euo pipefail
 cd "$(dirname "$0")"

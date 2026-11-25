@@ -4,7 +4,7 @@ Compares (c_eps - c_0)/eps, with c_eps the exact speed of the travelling wave
 of (P_eps) (ODE shooting, combustion1d.exact.tw_speed_eps), against the
 prediction of Proposition 2.1,
 
-    c_eps = c_0 [1 + (eps/A)(1 - kappa (1 + w0))] + O(eps^2 log(1/eps)),
+    c_eps = c_0 [1 + (eps/A)(1 - kappa (1 + w0))] + O(eps^2),
     kappa = (3 sqrt(3) - 2)/5          (for f(s) = (1 - s)^+).
 
 Run from numerics/:  python -m experiments.paper.speed_coefficient   (~10 s)
@@ -18,7 +18,7 @@ from .common import save_json
 
 A = 1.0
 W0S = (-0.5, 0.0, 1.0)
-EPS = (1e-2, 1e-3, 1e-4)
+EPS = (0.1, 0.05, 1e-2, 1e-3, 1e-4)
 KAPPA = (3.0 * np.sqrt(3.0) - 2.0) / 5.0
 
 

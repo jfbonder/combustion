@@ -13,9 +13,10 @@ Run from numerics/:
 Failures. A numerical failure of a run (Peclet condition, invalid mesh, BDF
 integrator) is never used as a result: C2 and C3 stop with an error. In C3 a
 run counts as "quenching" only if the front {u = eps} disappeared (status
-"extinct" of the solver) or if the run ended with a front radius below
-0.5 r0; the criterion that decided every bisection step is stored in the
-history of C3_quenching.json.
+"extinct" of the solver); the criterion that decided every bisection step is
+stored in the history of C3_quenching.json. A bisection that cannot decide
+a step is aborted: its steps are written to C3_quenching_aborted.json and
+the script stops without touching C3_quenching.json.
 """
 
 import json
@@ -27,7 +28,7 @@ from combustion1d.ale import simulate_ale
 from combustion1d.exact import SelfSimilar
 from combustion1d.limit import solve_radial
 from combustion1d.model import fb_slope
-from combustion1d.solver import MeshParams, find_front, simulate
+from combustion1d.solver import MeshParams, NumericalFailure, find_front, simulate
 from experiments.limit_comparison import case, limit_solution, t_end_of
 
 from .common import (BLUES, INK, MARKERS, MUTED, RES, ROOT, SERIES, Timer, expanding_u0,
@@ -160,6 +161,21 @@ def run_C2(job):
 
 L_EXP = 12.0
 T_EXP = 6.0
+# A kernel run is "quenching" when the front disappears. With QUENCH_BELOW = q
+# (a number in (0, 1)) a run that ends with a front radius below q*r0 is also
+# counted as quenching, although the front is still present; the reason stored
+# with the step says which criterion decided. None = extinction only.
+QUENCH_BELOW = None
+# Collapsing kernels enter the zone near r = 0 where the mesh velocity is
+# tapered; there the band nodes move more slowly than the front, and for small
+# eps (narrow band) the front leaves the fine band and stalls in cells that do
+# not resolve the reaction layer (for eps = 0.00125 it stays at r = 0.26
+# indefinitely). With REMESH_OFF_BAND the ALE mesh is rebuilt around the front
+# when that happens (simulate_ale(remesh_off_band=True)), so that the collapse
+# is followed until the front disappears. It has no effect on runs in which the
+# front stays in the band (all the igniting kernels). With False, such runs
+# are reported as 'unresolved' and the bisection is aborted.
+REMESH_OFF_BAND = True
 
 
 class KernelRunFailed(RuntimeError):
@@ -170,10 +186,13 @@ def run_kernel(job):
     """Expanding-flame run from a kernel of radius r0; returns the front
     history and the outcome:
 
-    'quenching'  the front disappeared (solver status "extinct"), or the run
-                 ended with a front radius below 0.5 r0 (collapsing kernel);
+    'quenching'  the front disappeared (solver status "extinct");
     'ignition'   the run ended with a front radius above r0 + 0.5;
-    'undecided'  the run ended with a front in between.
+    'undecided'  the run ended with a front and a radius below r0 + 0.5. This
+                 includes a kernel that has shrunk but whose front is still
+                 present at the end of the run (unless QUENCH_BELOW is set);
+    'unresolved' as 'undecided', and the front had left the fine band of the
+                 ALE mesh (res.n_front_off_band > 0): the run cannot decide.
 
     The entry 'reason' says which criterion decided, 'status' is the status
     of the solver. A numerical failure raises KernelRunFailed: it is never
@@ -188,7 +207,8 @@ def run_kernel(job):
     with Timer() as tm:
         if method == "ale":
             r, err = simulate_ale_safe(u0, W0, eps, L, t_end, dt, mesh=MeshParams(),
-                                       speed_guess=C0, N=2, snapshot_times=snaps)
+                                       speed_guess=C0, N=2, snapshot_times=snaps,
+                                       remesh_off_band=REMESH_OFF_BAND)
             if err is not None:
                 raise KernelRunFailed(f"r0={r0} eps={eps} dt={dt} (ALE): {err}")
             ts, fs = [0.0], [r0 + eps / LAM]
@@ -199,9 +219,11 @@ def run_kernel(job):
                 fs.append(np.nan if xf is None else xf)
             ts, fs = np.array(ts), np.array(fs)
             steps = len(r.n_nodes)
-            counters = dict(n_secant_fail=r.n_secant_fail, n_mesh_remesh=r.n_mesh_remesh)
+            counters = dict(n_secant_fail=r.n_secant_fail, n_mesh_remesh=r.n_mesh_remesh,
+                            n_front_off_band=r.n_front_off_band,
+                            t_front_off_band=r.t_front_off_band)
         else:
-            # a failure of the BDF integrator raises NumericalFailure (not caught)
+            # (a failure of the BDF integrator raises NumericalFailure)
             r = simulate(u0, W0, eps, L, t_end, N=2, mesh=MeshParams(), speed_guess=C0,
                          max_dt_remesh=0.02)
             ts, fs, steps = r.t, r.front, r.n_steps
@@ -215,14 +237,22 @@ def run_kernel(job):
         # a recorded sample without a front although the solver reports one
         raise KernelRunFailed(f"r0={r0} eps={eps} dt={dt} ({method}): front samples missing "
                               "but the solver did not report extinction")
-    elif last < 0.5 * r0:
-        outcome = "quenching"
-        reason = f"front radius {last:.6g} < 0.5 r0 at t = {ts[-1]:.6g} (front still present)"
     elif last > r0 + 0.5:
         outcome, reason = "ignition", f"front radius {last:.6g} > r0 + 0.5 at t = {ts[-1]:.6g}"
+    elif QUENCH_BELOW is not None and last < QUENCH_BELOW * r0:
+        outcome = "quenching"
+        reason = (f"front radius {last:.6g} < {QUENCH_BELOW:g} r0 at t = {ts[-1]:.6g} "
+                  "(front still present: no extinction)")
     else:
         outcome = "undecided"
-        reason = f"front radius {last:.6g} in [0.5 r0, r0 + 0.5] at t = {ts[-1]:.6g}"
+        reason = (f"front radius {last:.6g} <= r0 + 0.5 at t = {ts[-1]:.6g}, front still present "
+                  f"(minimum radius {np.nanmin(fs):.6g})")
+        if counters.get("n_front_off_band"):
+            # the front has left the fine band (tapered zone near r = 0) and sits
+            # in cells that do not resolve the reaction layer: it can stall there
+            outcome = "unresolved"
+            reason += (f"; the front left the fine band at t = {counters['t_front_off_band']:.6g} "
+                       f"({counters['n_front_off_band']} steps outside it)")
     return dict(job, t=ts, front=fs, outcome=outcome, reason=reason, status=r.status,
                 r_min=float(np.nanmin(fs)), t_min=float(ts[np.nanargmin(fs)]), steps=steps,
                 seconds=tm.seconds, error=None, **counters)
@@ -230,38 +260,47 @@ def run_kernel(job):
 
 def bisect_critical(args):
     """Bisection of the critical radius. Every step is recorded in `history`
-    as a dict (r0, t_end, outcome, reason, status, seconds, ...). A kernel
-    that is still undecided after the extended run (t = 2 T_EXP), or a run
-    that fails, stops the bisection with an error: such a step is not counted
-    as quenching."""
+    as a dict (r0, t_end, outcome, reason, status, seconds, ...).
+
+    A step is decided only by 'ignition' or 'quenching'. An undecided run is
+    repeated up to t = 2 T_EXP; if it is still undecided, if a run is
+    'unresolved' or if it fails numerically, the bisection is aborted: the
+    returned dict has r_crit = None and the key 'aborted' with the reason
+    (the step is not counted as quenching)."""
     eps, dt, method, lo, hi, tol = args
     hist = []
 
+    def result(aborted=None):
+        out = dict(eps=eps, dt=dt, method=method, lo=lo, hi=hi,
+                   r_crit=None if aborted else 0.5 * (lo + hi), history=hist)
+        if aborted:
+            out["aborted"] = aborted
+        return out
+
     def one(mid, t_end):
-        try:
-            r = run_kernel(dict(r0=mid, eps=eps, dt=dt, method=method, t_end=t_end))
-        except Exception as ex:
-            raise RuntimeError(f"C3 bisection (eps={eps}, dt={dt}, {method}) aborted at r0={mid}: "
-                               f"{ex!r}; steps so far: {hist}") from ex
+        r = run_kernel(dict(r0=mid, eps=eps, dt=dt, method=method, t_end=t_end))
         hist.append({k: r[k] for k in ("r0", "t_end", "outcome", "reason", "status", "r_min",
                                        "t_min", "steps", "seconds", "n_secant_fail",
-                                       "n_mesh_remesh") if k in r})
+                                       "n_mesh_remesh", "n_front_off_band",
+                                       "t_front_off_band") if k in r})
         return r["outcome"]
 
     while hi - lo > tol:
         mid = 0.5 * (lo + hi)
-        outcome = one(mid, T_EXP)
-        if outcome == "undecided":   # slow: extend the run
-            outcome = one(mid, 2 * T_EXP)
+        try:
+            outcome = one(mid, T_EXP)
+            if outcome == "undecided":   # slow: extend the run
+                outcome = one(mid, 2 * T_EXP)
+        except (KernelRunFailed, NumericalFailure) as ex:
+            hist.append(dict(r0=mid, outcome="failed", reason=f"{type(ex).__name__}: {ex}"))
+            return result(aborted=f"run failed at r0 = {mid}: {type(ex).__name__}: {ex}")
         if outcome == "ignition":
             hi = mid
         elif outcome == "quenching":
             lo = mid
         else:
-            raise RuntimeError(f"C3 bisection (eps={eps}, dt={dt}, {method}): r0={mid} still "
-                               f"undecided at t = {2 * T_EXP}; steps so far: {hist}")
-    return dict(eps=eps, dt=dt, method=method, lo=lo, hi=hi, r_crit=0.5 * (lo + hi),
-                history=hist)
+            return result(aborted=f"r0 = {mid} {outcome}: {hist[-1]['reason']}")
+    return result()
 
 
 EPS_C3 = (0.01, 0.005, 0.0025, 0.00125)
@@ -301,11 +340,17 @@ def run_all(what=("C1", "C2", "C3")):
                                + [(0.00125, 0.00025, "ale", 0.6, 0.8, 0.001),
                                   (0.01, None, "euler", 0.6, 0.8, 0.001)]))
             for c in crit:
-                print("C3 crit eps={eps} dt={dt} {method}: r0* in [{lo:.4f}, {hi:.4f}]".format(**c),
-                      flush=True)
+                print("C3 crit eps={eps} dt={dt} {method}: r0* in [{lo:.4f}, {hi:.4f}]".format(**c)
+                      + ("  ABORTED: " + c["aborted"] if "aborted" in c else ""), flush=True)
                 for h in c["history"]:
-                    print("     r0={r0:.6f} t_end={t_end:g} {outcome}: {reason}".format(**h),
-                          flush=True)
+                    print("     r0={r0:.6f} {outcome}: {reason}".format(**h), flush=True)
+            if any("aborted" in c for c in crit):
+                # keep the audit trail, do not overwrite the stored results
+                save_json("C3_quenching_aborted.json", dict(critical=crit, c0=C0, inv_c0=1 / C0))
+                raise RuntimeError(
+                    "C3: bisection aborted for " + ", ".join(
+                        f"(eps={c['eps']}, dt={c['dt']}, {c['method']})" for c in crit if "aborted" in c)
+                    + "; steps written to results/paper/C3_quenching_aborted.json")
             rc = {c["eps"]: c["r_crit"] for c in crit if c["method"] == "ale" and c["dt"] == DT_C3}
             r0s = [0.6, 0.8, rc[0.01] - 0.01, rc[0.01] + 0.01, 1.0, 1.2, 1.5]
             runs = list(ex.map(run_kernel, [dict(r0=r0, eps=0.01, dt=DT_C3, t_end=4.0)
@@ -413,7 +458,7 @@ def fig_C3():
     runs = sorted((r for r in d["runs"] if r["eps"] == 0.01), key=lambda r: r["r0"])
     y_prev = -1.0
     for k, r in enumerate(runs):
-        col = SERIES[0] if r["outcome"] == "quenching" else SERIES[1]
+        col = {"quenching": SERIES[0], "ignition": SERIES[1]}.get(r["outcome"], MUTED)
         t, f = np.array(r["t"]), np.array(r["front"])
         ax.plot(t, f, color=col, lw=1.4)
         y_lab = max(f[0], y_prev + 0.18)

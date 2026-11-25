@@ -102,9 +102,9 @@ print(res.t[-1], res.front[-1])                   # final time and front positio
 
 | module | contents |
 |---|---|
-| `model.py` | the reaction rate `f`, `f_eps`, their derivatives, `M(w0)`, `fb_slope(w0)` $=\sqrt{2M(w_0)}$, and `set_reaction` to install another $f$ |
+| `model.py` | the reaction rate `f`, `f_eps`, their derivatives, `M(w0)`, `fb_slope(w0)` $=\sqrt{2M(w_0)}$, and `set_reaction` to install another $f$ (state of the process; see [Another reaction rate](#another-reaction-rate)) |
 | `exact.py` | exact solutions: limit travelling wave (`tw_speed_limit`, `tw_profile_limit`), travelling wave of $(P_\varepsilon)$ (`tw_speed_eps`, `tw_profile_eps`, by ODE shooting), and the radial self-similar solution of $(P)$ (`SelfSimilar`, via Kummer's function) |
-| `solver.py` | band meshes (`MeshParams`, `build_mesh`, `find_front`), the finite volume Laplacian (`laplacian`), the initial data of the paper (`initial_data`), the `Result` container, and the reference **BDF solver** (`simulate`) |
+| `solver.py` | band meshes (`MeshParams`, `build_mesh`, `find_front`), the finite volume Laplacian (`laplacian`), the initial data of the paper (`initial_data`), the `Result` container, the exceptions (`NumericalFailure`, `PecletError`, `MeshError`), and the reference **BDF solver** (`simulate`) |
 | `ale.py` | the **ALE scheme** (`simulate_ale`): the monotone linearly implicit scheme (S) on a mesh that moves with the flame |
 | `simple.py` | the **Eulerian scheme** (S) (`simulate_simple`): the same scheme on band meshes rebuilt around the front, fixed time step |
 | `limit.py` | solvers for the **limit problem** (P) by front fixing: `solve_radial`, `solve_planar` |
@@ -123,7 +123,9 @@ A **band mesh** (`MeshParams`, `build_mesh`) has three zones:
 
 The band covers `K_burnt`·ε on the burnt side and `K_fresh`·ε on the fresh side,
 plus `K_margin`·ε on each side. The front is the point where $u=\varepsilon$; the
-reaction vanishes for $u\ge\varepsilon$.
+reaction vanishes for $u\ge\varepsilon$. The band lies on a lattice of spacing $h_f$; where it
+reaches an end of $[0,L]$, a remainder shorter than $h_f/2$ is merged into the neighbouring
+cell, so every cell of the mesh is at least $h_f/2$.
 
 | `MeshParams` field | default | meaning |
 |---|---|---|
@@ -143,17 +145,31 @@ $h_f/\varepsilon$ it grows only logarithmically in $1/\varepsilon$.
   reactant is implicit, $(Y^{n+1}-Y^n)/\Delta t=\Delta_hY^{n+1}-f_\varepsilon(U^n)Y^{n+1}$, and the
   same for $U$. Each step costs two tridiagonal solves, and the scheme satisfies a
   discrete comparison principle for every Δt.
-- *Moving mesh.* The nodes move with velocity $v\chi(x)$. Here $\chi=1$ on the band and
-  on a distance `rigid_extra*ell0` on each side of it, and then decays linearly to 0 over
-  `ell0`, with `ell0` $=\max(2,3/c)$ by default. The equation is written along the node
-  trajectories, which adds a convection term. The code checks that the matrices stay
-  M-matrices (cell Péclet number $|v|h\le2$).
+- *Moving mesh.* The nodes move with velocity $v\chi(x)$. Here $\chi=1$ (the rigid zone)
+  for $|x-x_c|\le R_1$, where $x_c$ is the reference point of the band and
+  $R_1=(\max(K_b,K_f)+K_m)\,\varepsilon+$ `rigid_extra*ell0`, the same on both sides; then $\chi$
+  decays linearly to 0 over `ell0`, with `ell0` $=\max(2,3/c)$ by default. (With the
+  default mesh the rigid zone extends `rigid_extra*ell0` beyond the band on the burnt side
+  and $15\varepsilon$ more than that on the fresh side.) Near the ends of $[0,L]$ the velocity
+  is tapered to zero. The equation is written along the node trajectories, which adds a
+  convection term. At every assembly the code checks that the matrices are M-matrices
+  (off-diagonal entries $\le0$; in the planar case this is $-2\le\dot x_ih_{i-1}$ and
+  $\dot x_ih_i\le2$, which holds if the cell Péclet number $|\dot x_i|\max(h_{i-1},h_i)$ is at
+  most 2) and raises `PecletError` otherwise.
 - *Implicit mesh velocity.* At each step, $v$ is chosen by a secant iteration so that the
-  computed front ends the step at the reference point of the band. This takes three trial
-  velocities, i.e. six tridiagonal solves per step.
+  computed front ends the step at the reference point of the band, with tolerance
+  $10^{-3}h_f$. Each trial velocity costs two tridiagonal solves. A step normally uses
+  at least three trials (the previous velocity, a perturbed one and one secant update;
+  the tolerance is tested only after an update), and exactly three in the travelling-wave
+  experiments; accelerating fronts with large steps need more (at most 8 updates). If the
+  tolerance is not met, the last trial that has a front is accepted and the step is
+  counted in `res.n_secant_fail`.
 - *Remeshing.* The mesh is rebuilt when it has travelled `remesh_distance` (default
-  `ell0/4`). The new band lies on the lattice of the old band, so the transfer by linear
-  interpolation is exact there.
+  `ell0/4`), when the front has drifted more than $K_m\varepsilon/4$ from the reference point,
+  or when a cell has been compressed below `min_cell`·$h_f$ (default $h_f/2$; counted in
+  `res.n_mesh_remesh`). The new band lies on the lattice of the old band, so the transfer
+  by linear interpolation is exact there. A trial step in which two nodes would cross
+  raises `MeshError`.
 
 Main options:
 
@@ -166,7 +182,11 @@ Main options:
 | `remesh_distance` | travel distance between remeshings |
 | `exact_initial` | `True`: use `u0` as given and $w=\varepsilon w_0$. `False` (default): the initial data of the paper, $u_0^\varepsilon=u_0-\varepsilon w_0(1-u_0/\varepsilon)^+$, which have $Y_0^\varepsilon=0$ in the burnt region |
 | `snapshot_times` | times at which $(x,u,w)$ is stored in `res.snapshots` |
-| `fixed_velocity` | prescribe the mesh velocity instead of computing it (rigid-mesh tests) |
+| `fixed_velocity` | prescribe the mesh velocity (a number or a function of $t$) instead of computing it |
+| `remesh` | `False`: never rebuild the mesh |
+| `min_cell` | threshold of the mesh validation, in units of $h_f$ (default 0.5; 0 switches off the remeshing of compressed cells) |
+| `remesh_off_band` | `True`: also rebuild the mesh when the front has left the fine band (default `False`: only counted) |
+| `reaction` | a reaction rate `f` for this call only (default: the installed one) |
 | `record_mesh` | store the node positions at every step in `res.mesh_history` |
 | `monitor` | callable `monitor(t, x, u, v)` called after every step |
 
@@ -181,18 +201,34 @@ the solution is transferred by monotone cubic interpolation. It is accurate but 
 covered by the analysis of the paper, and its number of steps grows like
 $\varepsilon^{-1.4}$.
 
+Both Eulerian solvers rebuild the mesh after every interval of length
+$\min(\tfrac12K_m\varepsilon/v_{est},\ $`max_dt_remesh`$)$, i.e. when the front has travelled about
+$7.5\varepsilon$ at the speed $v_{est}$ measured over the previous interval, but at least every
+`max_dt_remesh`. The default is `max_dt_remesh = 0.05*t_end`, so the sequence of meshes
+depends on the final time unless `max_dt_remesh` is given.
+
 All three solvers return a `Result` with:
 
 | field | content |
 |---|---|
 | `t`, `front` | time levels and front positions ($u=\varepsilon$); `nan` once the flame is extinct |
 | `snapshots` | `{t: (x, u, w)}` at the requested times |
-| `extinct` | `True` if the front disappeared (ALE stops there) |
+| `status`, `reason` | `"ok"`; `"extinct"` if the front disappeared (ALE stops at that step, the Eulerian solvers continue on a uniform mesh), with the time in `reason`; `"failed"` for a numerical failure (see below) |
+| `extinct` | `True` iff `status == "extinct"` |
 | `n_steps`, `n_remesh`, `n_nodes` | cost counters |
 | `n_solves`, `n_trials` | tridiagonal solves and trial velocities (scheme (S)) |
+| `n_secant_fail`, `n_mesh_remesh` | ALE: steps accepted without meeting the tolerance of the implicit velocity; remeshings forced by the mesh validation |
+| `n_front_off_band`, `t_front_off_band` | ALE diagnostic: number of steps that ended with the front outside the fine band, and the time of the first one (see the limitations) |
 | `n_lu`, `n_fev` | LU factorizations and RHS evaluations (BDF) |
 | `v` | ALE mesh velocity of each step |
 | `mesh_history` | `[(t, nodes)]` if `record_mesh=True` |
+
+**Failures.** A numerical failure is not a result. `simulate_ale` raises `PecletError`
+(no usable mesh velocity satisfies the Péclet condition) or `MeshError` (nodes would
+cross), and `simulate` raises `NumericalFailure` if the BDF integrator fails; all are
+subclasses of `RuntimeError`, and the exception carries the partial result (with
+`status == "failed"` and the message in `reason`) in its attribute `result`. The
+extinction of the flame is a regular outcome and does not raise.
 
 The arguments are:
 
@@ -221,8 +257,9 @@ The arguments are:
 
 ## Reproducing the paper
 
-One command reruns every experiment and redraws every figure (about one hour on
-4 cores):
+One command reruns every experiment and redraws every figure (roughly 1–1.5 h with
+4 processes on the machine where the results were generated; this and the other times
+below are approximate and machine dependent, and a laptop can be several times slower):
 
 ```bash
 ./reproduce_paper.sh
@@ -235,11 +272,12 @@ To only redraw the figures from the stored results (about one minute):
 ```
 
 The results are stored as JSON in `results/` and `results/paper/`, and the figures as
-PNG in `figures/` and `figures/paper/`. Detailed captions, every number quoted in the
-paper, and the history of the changes made after the referee report are in
+PNG in `figures/` and `figures/paper/`. Every JSON file written by the scripts records
+the commit of the code and the versions of Python, NumPy and SciPy (key `provenance`,
+see `experiments/util.py`). Detailed captions and the numbers quoted in the paper are in
 [`experiments/paper/README.md`](experiments/paper/README.md).
 
-| in the paper | script (run with `python -m ...`) | solver | time |
+| in the paper | script (run with `python -m ...`) | solver | time (approx.) |
 |---|---|---|---|
 | Table `tab:speedcoef` (Prop. 2.1) | `experiments.paper.speed_coefficient` | shooting | 10 s |
 | Section 5.5, averaged truncation error (`an:eq:solv`) | `experiments.truncation_check` | — | 15 s |
@@ -308,8 +346,12 @@ interface in $[0,L]$. In radial symmetry the burnt region can be either inside
   `remesh_distance`, as in `examples/ex2_radial_vs_limit.py` (`ell0=1`,
   `remesh_distance=0.1`). Near $r=0$ the mesh velocity is tapered to zero (see the
   limitations), so take smaller time steps when the front gets close to the origin.
-- **Péclet bound.** A `RuntimeError: cell Peclet number too large` means $|v|h>2$ on
-  some cell. Reduce `h_coarse` or `ell0`, or check `speed_guess`.
+- **Péclet bound.** A `PecletError` (a `RuntimeError`) with the message
+  `cell Peclet number too large` means $|v|h>2$ on some cell. Reduce `h_coarse` or `ell0`,
+  or check `speed_guess`.
+- **Checking a run.** Look at `res.status` (and `res.reason`) before using the result,
+  and at `res.n_secant_fail`, `res.n_mesh_remesh` and `res.n_front_off_band`: all three
+  are 0 in a well-resolved run.
 
 **Measuring.**
 
@@ -330,6 +372,23 @@ vectorized $f$, which every solver and exact solution in the package then uses:
 - `M(w0)` is computed by quadrature if it is not given.
 - `model.set_reaction()` with no arguments restores $(1-s)^+$.
 
+`set_reaction` changes **module state of the current process**. It is not thread safe,
+and it does not reach worker processes started with the `spawn` method (the default on
+macOS and Windows): a spawned worker imports the package afresh and uses the default $f$.
+To run a custom rate in parallel, install it in every worker,
+
+```python
+from experiments.util import worker_pool      # ProcessPoolExecutor + initializer
+with worker_pool(4) as ex:                    # workers get model.get_reaction()
+    results = list(ex.map(job, jobs))
+```
+
+(equivalently `ProcessPoolExecutor(4, initializer=model.install_reaction,
+initargs=(model.get_reaction(),))`); the functions must then be defined at module level,
+not as lambdas, so that they can be pickled. Alternatively, the three solvers accept
+`reaction=f` (or `reaction=(f, df)` for the BDF solver) for a single call, without
+touching the module state; the exact solutions and `M` always use the installed rate.
+
 The theory and the monotone schemes need $f$ Lipschitz and **nonincreasing**, positive on
 $(-\infty,1)$ and zero on $[1,\infty)$. Example 3 does this for
 $f(s)=((1-s)^+)^2$. Some scripts in `experiments/` and the self-similar solution assume
@@ -347,30 +406,56 @@ take a constant $w_0$.
 python -m pytest -q
 ```
 
-The tests (`tests/test_combustion1d.py`, about 10 s) check:
+The tests (`tests/test_combustion1d.py`; roughly 15 s on a desktop machine, more on a
+laptop) check:
 
 - the closed form of $M$ and the finite volume Laplacian;
 - the exact solutions (including that the self-similar profile solves the PDE);
 - the travelling-wave speed by shooting and the profile $\Phi_\varepsilon$ against its ODE;
-- the band meshes;
+- the band meshes, including random lattice anchors with the front next to either end
+  of the domain (no cell below $h_f/2$), and the exactness of the transfer on the band at
+  remeshing;
+- the front detector when a node lies exactly on the level;
 - the BDF solver and the ALE scheme against the exact travelling wave (the ALE error does not change with Δt);
+- the Eulerian scheme (S) (`simple.py`): exact nominal step, error proportional to
+  $\Delta t/\varepsilon$, initial front located on the mesh of the run;
+- the bounds of the scheme ($Y\ge0$, exact conservation of a constant $W=Y-U$, $\max U$
+  nonincreasing) for the Eulerian scheme and for a radial ALE run with $\Delta t$ up to
+  $5\varepsilon$, and the discrete comparison principle (two ordered data, fixed and moving
+  mesh, large time step);
+- the failure modes: the Péclet error, extinction reported as a status, the remeshing of
+  compressed cells, the detection of a front that has left the band;
 - the limit-problem solvers against the exact solutions (second order);
-- a custom reaction rate.
+- a custom reaction rate: `set_reaction`, the per-call argument, and worker processes
+  started with `spawn`;
+- one stored result (a case of `results/paper/B_convergence.json`) and the provenance
+  record.
 
 ## Known limitations
 
 - **Single front, one dimension or radial symmetry.** Several interfaces and genuinely
   2D/3D problems are not implemented.
-- **Near $r=0$** the ALE mesh velocity is tapered to zero so that no node crosses the
-  origin. When a collapsing front enters this zone the scheme becomes partly Eulerian, and
-  an $O(\Delta t\,v/\varepsilon)$ lag appears (about 1.5% in $s/\sqrt{T-t}$ at ε = 0.002 near
-  extinction, Figure C2).
+- **Near $r=0$** the ALE mesh velocity is tapered to zero (on $r<\min(0.5,0.1L)$) so that
+  no node crosses the origin. When a collapsing front enters this zone the scheme becomes
+  partly Eulerian, and an $O(\Delta t\,v/\varepsilon)$ lag appears (about 1.5% in $s/\sqrt{T-t}$ at
+  ε = 0.002 near extinction, Figure C2). Moreover the band nodes then move more slowly
+  than the front, so the front advances through the band; if the band is narrow (small ε)
+  the front leaves it before the next remeshing and can stall in cells that do not resolve
+  the reaction layer. The run counts these steps in `res.n_front_off_band`; pass
+  `remesh_off_band=True` to rebuild the mesh around the front when it happens (as the
+  kernel experiment C3 does), or use a shorter domain / smaller `remesh_distance`.
 - **Rigid zone for fast fronts.** With the default `ell0` and $c\approx1.6$ a term
   $\approx0.01\,\Delta t$ remains in the speed; `ell0=4` removes it.
 - **Lattice pinning.** With the implicit mesh velocity the front keeps its position
-  inside a band cell, and its speed depends on that position by $O((h_f/\varepsilon)^2)$, with
-  zero mean (Figure D3).
-- **The rigid mode** (`fixed_velocity`) is only usable for moderate travel distances.
+  inside a band cell, and its speed depends on that position: an oscillating part of
+  amplitude $O((h_f/\varepsilon)^2)$ plus an offset that does not depend on $h_f$ (about
+  $10^{-5}$ for $w_0=0$ and $-6\cdot10^{-5}$ for $w_0=1$; Figure D3).
+- **The rigid mode** (whole mesh translating, `ell0=1e6`) is only usable for moderate
+  travel distances: the cells in the tapered zone at the far end are compressed. With the
+  default `min_cell` the mesh is rebuilt when a cell falls below $h_f/2$; the rigid-mesh
+  experiments of the paper pass `min_cell=0` and limit the travel distance instead.
+- **Module state.** The reaction rate installed with `set_reaction` is state of one
+  process (see [Another reaction rate](#another-reaction-rate)).
 
 ## Citing
 

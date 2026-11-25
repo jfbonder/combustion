@@ -21,7 +21,8 @@ Mesh adaptivity ("chasing the flame"): every remeshing interval we
      near the new front and coarsening behind the old one happen together,
   4. transfer u and w to the new nodes by monotone cubic interpolation.
 The remeshing interval is adapted to the measured front speed so the front
-moves at most half the margin between remeshes.
+moves at most half the margin between remeshes, and it is at most
+max_dt_remesh (default 0.05 * t_end; see simulate).
 
 Assumption: a single front (the case for the 1D / radial tests).
 """
@@ -212,6 +213,11 @@ class Result:
     reason: str = None
     n_secant_fail: int = 0     # ALE: steps accepted with |front - reference| >= tolerance
     n_mesh_remesh: int = 0     # ALE: remeshings forced by a cell below min_cell * h_f
+    # ALE diagnostic: number of steps that ended with the front outside the
+    # fine band (in a transition or coarse cell, where the reaction layer is
+    # not resolved), and the time of the first one. Not acted upon.
+    n_front_off_band: int = 0
+    t_front_off_band: float = None
     n_solves: int = 0          # tridiagonal solves (scheme (S): ALE and simple.py)
     n_trials: int = 0          # ALE: trial velocities (each = 2 tridiagonal solves)
     n_lu: int = 0              # BDF solver: LU factorisations (2n x 2n sparse)

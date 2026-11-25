@@ -62,6 +62,7 @@ def _M_default(w0):
 
 f, df, _M = _f_default, _df_default, _M_default
 version = 0          # incremented by set_reaction; used to invalidate caches
+_spec = None         # arguments of the last set_reaction (None = default rate)
 
 
 def f_eps(s, eps):
@@ -90,7 +91,8 @@ def set_reaction(f_new=None, df_new=None, M_new=None):
     it; use install_reaction as pool initializer, or the per-call argument
     `reaction` of the solvers).
     """
-    global f, df, _M, version
+    global f, df, _M, version, _spec
+    _spec = None if f_new is None else (f_new, df_new, M_new)
     if f_new is None:
         f, df, _M = _f_default, _df_default, _M_default
     else:
@@ -116,27 +118,26 @@ def _fd_derivative(f_new, h=1e-7):
 
 
 def get_reaction():
-    """The installed reaction as a tuple (f, df, M), or None for the default
-    f(s) = (1 - s)^+. The value can be passed to install_reaction (in another
-    process, if the functions are picklable)."""
-    if f is _f_default:
-        return None
-    return (f, df, _M)
+    """The installed reaction as the tuple (f, df, M) of the arguments given
+    to set_reaction (df, M = None where they were left to the defaults), or
+    None for the default f(s) = (1 - s)^+. The value can be passed to
+    install_reaction, in another process if the functions are picklable."""
+    return _spec
 
 
 def install_reaction(reaction=None):
     """Install the value returned by get_reaction() (None = default rate).
     Meant as `initializer` of a process pool, so that the workers use the
     same reaction as the parent whatever the start method. Does nothing if
-    the requested reaction is already installed."""
+    that reaction is already installed."""
     if reaction is None:
-        if f is not _f_default:
+        if _spec is not None:
             set_reaction()
         return
-    f_new, df_new, M_new = (tuple(reaction) + (None, None))[:3]
-    if f_new is f and (df_new is None or df_new is df) and (M_new is None or M_new is _M):
+    reaction = (tuple(reaction) + (None, None))[:3]
+    if _spec is not None and all(a is b for a, b in zip(reaction, _spec)):
         return
-    set_reaction(f_new, df_new, M_new)
+    set_reaction(*reaction)
 
 
 def resolve_reaction(reaction=None):

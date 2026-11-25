@@ -80,11 +80,22 @@ def _band_anchor(x, h_f):
     return x[exact[0]] if exact.size else 0.0
 
 
+def _band_cells(x, h_f):
+    """(first, last) index of the cells of the band (the cells of spacing
+    h_f) of a mesh that has just been built; a band that reaches an end of
+    the domain is extended to that end. Cell j is [x[j], x[j+1]]."""
+    cells = np.nonzero(np.abs(np.diff(x) - h_f) < 1e-6 * h_f)[0]
+    if cells.size == 0:
+        return 0, x.size - 2
+    lo, hi = cells[0], cells[-1]
+    return (0 if lo <= 1 else lo), (x.size - 2 if hi >= x.size - 3 else hi)
+
+
 def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=None,
                  recenter_time=None, remesh_distance=None,
                  snapshot_times=(), fixed_velocity=None, N=1, record_mesh=False,
                  implicit=True, rigid_extra=1.0, exact_initial=False, monitor=None,
-                 remesh=True, min_cell=0.5, reaction=None):
+                 remesh=True, min_cell=0.5, remesh_off_band=False, reaction=None):
     """ALE version of scheme (S).
 
     ell0: width of the zone where the mesh velocity decays linearly from v
@@ -104,6 +115,16 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
         min_cell * h_f (h_f = eps/pts_per_eps); these remeshings are counted
         in res.n_mesh_remesh. With remesh=False the mesh is not rebuilt. A
         trial step in which two nodes would cross raises MeshError.
+        The run also counts the steps that end with the front outside the
+        fine band (res.n_front_off_band, first time res.t_front_off_band).
+        By default this is only a diagnostic. It happens where the mesh
+        velocity is tapered (near r = 0 or x = L), because there the band
+        nodes move more slowly than the front; once the front is in the
+        coarse cells the reaction layer is not resolved and the front can
+        stall.
+    remesh_off_band: if True, the mesh is also rebuilt (around the front)
+        after a step that ends with the front outside the fine band; these
+        remeshings are counted in res.n_mesh_remesh too. Default False.
     fixed_velocity: prescribed mesh velocity, a number or a function of t
         (evaluated at t_n for the step n -> n+1); None = computed (implicit).
     implicit: with fixed_velocity=None, True (default) = the mesh velocity of
@@ -156,6 +177,8 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
     # auxiliary uniform grid x0, whose spacing L/20000 can exceed eps; using
     # that value made the first implicit step jump by (xf error)/dt)
     xf = find_front(x, u, eps)[0]
+    if xf is None:
+        raise ValueError("the initial datum has no front (no crossing of u = eps)")
     h_f = eps / mp.pts_per_eps
 
     # chi = 1 for |x - xc| <= R1 (xc = band reference point), then decays
@@ -206,6 +229,7 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
         return xn, un, yn, xfn
 
     tol = SECANT_TOL * h_f
+    band = _band_cells(x, h_f)      # cells of the band (the nodes keep their indices)
 
     def step(n, v):
         """Advance one step; returns (v, x, u, y, xf) of the accepted state."""
@@ -283,17 +307,26 @@ def simulate_ale(u0, w0, eps, L, t_end, dt, mesh=None, speed_guess=1.0, ell0=Non
             v_meas = (xf - xf_prev) / (t - t_prev)
             v = v_meas + (xf - xc) / recenter_time
         t_prev, xf_prev = t, xf
+        # diagnostic: is the front still inside the fine band?
+        off_band = not band[0] <= np.searchsorted(x, xf) - 1 <= band[1]
+        if off_band:
+            res.n_front_off_band += 1
+            if res.t_front_off_band is None:
+                res.t_front_off_band = t
         if pending and t >= pending[0] - 1e-12:
             res.snapshots[pending.pop(0)] = (x.copy(), u.copy(), (y - u).copy())
         # rebuild (exactly on the band lattice) when the mesh has travelled far,
-        # when the front has drifted from the band reference point, or when a
-        # cell has been compressed below min_cell * h_f (mesh validation)
-        squeezed = remesh and np.diff(x).min() < min_cell * h_f
+        # when the front has drifted from the band reference point, or when the
+        # mesh validation asks for it: a cell compressed below min_cell * h_f
+        # (or, optionally, the front outside the band)
+        squeezed = remesh and (np.diff(x).min() < min_cell * h_f
+                               or (remesh_off_band and off_band))
         if remesh and (moved > remesh_distance or abs(xf - xc) > 0.25 * mp.K_margin * eps
                        or squeezed):
             x_new, _ = build_mesh(x, u, eps, L, mp, anchor=_band_anchor(x, h_f))
             u, y = np.interp(x_new, x, u), np.interp(x_new, x, y)
             x = x_new
+            band = _band_cells(x, h_f)
             xc = xf
             moved = 0.0
             res.n_remesh += 1

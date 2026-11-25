@@ -87,7 +87,7 @@ def write_json(path, obj, indent=1):
 # Process pools
 # ---------------------------------------------------------------------------
 
-def worker_pool(n, reaction="inherit"):
+def worker_pool(n, reaction="inherit", mp_context=None):
     """ProcessPoolExecutor(n) whose workers use the same reaction rate as the
     parent process, whatever the start method.
 
@@ -97,7 +97,8 @@ def worker_pool(n, reaction="inherit"):
     parent, model.get_reaction()) is installed in every worker by the pool
     initializer. A non-default reaction must be picklable (functions defined
     at module level); otherwise this raises a ValueError instead of running
-    the workers with the wrong rate.
+    the workers with the wrong rate. mp_context: a multiprocessing context
+    (default: the platform default).
     """
     if reaction == "inherit":
         reaction = model.get_reaction()
@@ -108,7 +109,8 @@ def worker_pool(n, reaction="inherit"):
             raise ValueError(
                 "the installed reaction cannot be sent to worker processes (define f, df, M as "
                 "module-level functions, not lambdas): " + repr(ex)) from ex
-    return ProcessPoolExecutor(n, initializer=model.install_reaction, initargs=(reaction,))
+    return ProcessPoolExecutor(n, mp_context=mp_context, initializer=model.install_reaction,
+                               initargs=(reaction,))
 
 
 if __name__ == "__main__":
