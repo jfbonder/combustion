@@ -78,6 +78,12 @@ The code, the numerical experiments, the figures and the tables were produced wi
 Claude Code (Anthropic), which also assisted in the proofs and in the writing of the
 article; see the statement at the end of the article.
 
+## License
+
+The code in `numerics/` is distributed under the MIT License (see [`LICENSE`](LICENSE)).
+The article and its supplement in `paper/` are © the author and are not covered by that
+license.
+
 ## Citing
 
 Until the article is published, please cite it as a preprint, with the address of this

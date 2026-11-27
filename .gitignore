@@ -20,6 +20,8 @@ numerics/figures/*.gif
 numerics/results/paper/*.npz
 # internal working files (not part of the paper)
 paper/referee_report*.md
+paper/referato_editorial.md
+paper/respuesta_referato.md
 paper/convergence.tex
 paper/convergence_notes.pdf
 paper/quantitative41.tex
