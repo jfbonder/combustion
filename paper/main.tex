@@ -1654,7 +1654,9 @@ $\bar q=\ve\tilde q$ and $\kappa=K\ve$; here $\Theta^-$ is continued to $s<s_*$ 
 the same equation down to $\Theta^-=-1$, and by $-1$ further on. On the continuation the
 bounds $c\sqrt\gamma\le\Theta^-_s\le C$ and $|\Theta^-_{ss}|\le C\Theta^-_s$ still hold, by the proof of
 Lemma~\ref{q:lem:inner}(b) (the bound $|\Theta^-_{ss}|\le C(\bar q+\kappa\Theta^-_s)$ does not, and it
-is not used there), and its length in $s$ is at least $c_e>0$. The new
+is not used there), and its length in $s$ is at least $c_e>0$; the margin
+\eqref{q:eq:marginsub} also holds there, since its proof only uses that
+$d\le C\ve\log(1/\gamma)\le r_1$ and Lemma~\ref{q:lem:ext}(iii). The new
 point is the size of the damping: we take
 \begin{equation}\label{cv:eq:K}
 K=C_K\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big),\qquad
@@ -1662,8 +1664,14 @@ K=C_K\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big
 \end{equation}
 so that $K\ve\le3C_K\mathcal E$. Lemma~\ref{q:lem:inner} requires $\kappa\le c\gamma$, that is,
 $3C_K\mathcal E\le c\,c_1\delta$, which holds if $a$ is large; this is where the truncation errors of
-the layer enter the error bound. The constants are chosen in the order $\beta$; $\Lambda$,
-$c_1$, $\delta_*$, $c_*$ (as in Section~\ref{sec:rate}, with $C_1$ fixed by $\beta$); $C_S$, $C_K$; $a$;
+the layer enter the error bound. From Section~\ref{sec:rate} we only take $\Lambda$, $c_1$
+and the thresholds $\delta_*$, $c_*$ under which the margins \eqref{q:eq:marginsup} and
+\eqref{q:eq:marginsub} hold (with $C_1$ fixed by $\beta$); these do not involve the damping.
+The further restrictions on $c_*$ and $\delta_*$ in Propositions~\ref{q:prop:super} and
+\ref{q:prop:sub}, which depend on $K$, are not used: here $\kappa\le c\gamma$ is obtained by
+taking $a$ large, and the term that they absorb in Proposition~\ref{q:prop:sub} is
+estimated in a different way in Step~6. The constants are chosen in the order $\beta$;
+$\Lambda$, $c_1$, $\delta_*$, $c_*$; $C_S$, $C_K$; $a$;
 $c_0$, $\ve_0$, $C_b$. Recall that $\Theta^+$ is convex, so $\Theta^+\ge s+w_0$, with equality for
 $s\ge s_m$; and $\Theta^-$ is convex on $[s_c,2]$ with $s_c<1$, so $\Theta^-\ge s+w_0$ for $s\ge1$, with
 equality for $s\ge2$.
@@ -1815,7 +1823,9 @@ $\underline V'=V_1'$, and $\underline V\ge V_1$ elsewhere, so that, again by \eq
 \end{equation}
 
 (a) \emph{Nodes with $s'\ge2$} (in the band, or outside it on the fresh side). All their
-evaluation points have $s\ge1$, where $V_1=\tilde u+\ve g$ with $g=\Theta-s-w_0\ge0$, and $g$
+evaluation points have $s\ge1$: near the front by the choice of $\zeta$, and at a distance
+$d\ge C\ve\log(1/\ve)$ from it because there $s'\ge\delta_0\min\{d,r\}/\ve$ and, as in
+Step~5(d), $s$ varies by at most $\zeta+C\Delta t\,s'\le\zeta+s'/2$ on the evaluation points. There $V_1=\tilde u+\ve g$ with $g=\Theta-s-w_0\ge0$, and $g$
 vanishes at $(x',t_{n+1})$. Hence $\Lop_0[\ve g]^n_j\le0$ by \eqref{eq:peclet}, so
 $\Lop_0[V_1]^n_j\le\Lop_0[\tilde u]^n_j\le0$ by (iii), and the reaction term
 vanishes because $\underline V_j\ge V_{1,j}\ge\ve$. Note that this uses that the profile is
