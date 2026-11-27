@@ -1575,9 +1575,9 @@ then the solution of (S) satisfies
 $C(\ve\log\frac1\ve+\frac{h_f+\Delta t}{\ve}+h_c)$: the time step is divided by $\ve$. This is
 the lag of the reaction rate $f_\ve(U^n)$ on a front that crosses the cells, and it is
 observed (Sections~\ref{sec:exp:tw} and \ref{sec:exp:thm}).
-\item \emph{Meshes that follow the front.} If $\mu\lesssim\mathcal E$ the bound is
-$C(\ve\log\frac1\ve+\frac{h_f}{\ve}+h_c+\Delta t+\mu)$: the time step enters as $\Delta t$, not as
-$\Delta t/\ve$.
+\item \emph{Meshes that follow the front.} Since $\mu\min\{1,\Delta t/\ve\}\le\mu$, the bound is
+at most $C(\ve\log\frac1\ve+\frac{h_f}{\ve}+h_c+\Delta t+\mu)$: when $\mu$ is small the time step
+enters as $\Delta t$, not as $\Delta t/\ve$.
 \item \emph{The time step.} The second condition in \eqref{cv:eq:hyp} says that in one
 step the mesh and the fronts of the barriers, whose velocities differ from $\dot R$ by a
 multiple of $\mathcal E$, move with respect to each other by a small fraction of the width
@@ -1662,8 +1662,11 @@ point is the size of the damping: we take
 K=C_K\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big),\qquad
 \mu_*=\begin{cases}\mu&\text{if }\Delta t<\ve,\\ 0&\text{if }\Delta t\ge\ve,\end{cases}
 \end{equation}
-so that $K\ve\le3C_K\mathcal E$. Lemma~\ref{q:lem:inner} requires $\kappa\le c\gamma$, that is,
-$3C_K\mathcal E\le c\,c_1\delta$, which holds if $a$ is large; this is where the truncation errors of
+so that $K\ve\le3C_K\mathcal E$ (recall that $\ve\le\ve\log\frac1\ve\le\mathcal E$).
+Lemma~\ref{q:lem:inner} requires $\kappa\le c\gamma$, that is,
+$3C_K\mathcal E\le c\,c_1\delta$, which holds if $a$ is large; the conditions $\delta\le\delta_*$ and
+$\ve\le c_*\delta$ of the margins hold too, because $\delta=c\,a\mathcal E\ge c\,a\,\ve\log\frac1\ve$, for
+$a$ large and then $c_0$ and $\ve_0$ small; this is where the truncation errors of
 the layer enter the error bound. From Section~\ref{sec:rate} we only take $\Lambda$, $c_1$
 and the thresholds $\delta_*$, $c_*$ under which the margins \eqref{q:eq:marginsup} and
 \eqref{q:eq:marginsub} hold (with $C_1$ fixed by $\beta$); these do not involve the damping.
@@ -1692,7 +1695,9 @@ evaluation points of a node lie in $\overline{\{\tilde u>0\}}$, then by (V2)
 \Lop_0[\tilde u]^n_j=(\tilde u_t-\Delta\tilde u)(x',t_{n+1})+\vartheta,\qquad|\vartheta|\le C_\beta(\Delta t+h_c),
 \end{equation}
 because $\Delta_h$ is consistent of first order on arbitrary meshes for radial functions
-with bounded third derivatives. By Step~1, if $a$ is large the right hand side has the
+(even functions, if $N=1$) whose third derivatives in Cartesian coordinates are bounded.
+This includes the rows next to $r=0$ and the row $j=0$, which is
+$2N(u_1-u_0)/h_0^2$ and is exact on quadratic functions of $r$. By Step~1, if $a$ is large the right hand side has the
 sign of $\mp\dot\lambda$: $\Lop_0[\tilde u]\ge0$ for the supersolution and $\Lop_0[\tilde u]\le0$ for the
 subsolution. (iv) Since $|\Theta^\pm_{ss}|\le C\Theta^\pm_s$, we have
 $\Theta^\pm_s(s_1)\le e^{C|s_1-s_2|}\Theta^\pm_s(s_2)$; and $(1+|s|)\Theta^+\le C$ for $s\le1$,
@@ -1723,8 +1728,12 @@ evaluation points of a band node at distance $d\le C\ve\log(1/\ve)$ from the fro
 \eqref{cv:eq:hyp}, which implies $\Delta t\log(1/\ve)\le c_0$, $\zeta$ is as small as we wish if
 $c_0$ is small (depending on $a$); in particular $\zeta\le\min\{\frac14,c_e\}$, and then, by
 (iv), $\Theta_s$ varies by a factor at most $2$ on these evaluation points; moreover
-$\Delta t\,\mu'^2\le\ve$ there. For $N\ge2$ the terms with $\epsilon_j,\epsilon_j'$ and $\frac{N-1}{x_j}D$ in (ii) are bounded by
+$\Delta t\,\mu'^2\le\ve$ there (note that $\mu\le v_{\max}+\sup|\dot R|$ by (M1), so $\mu'$ is
+bounded). For $N\ge2$ the terms with $\epsilon_j,\epsilon_j'$ and $\frac{N-1}{x_j}D$ in (ii) are bounded by
 $C\sup\Theta_s$, and they only change the constants below; we write the proof for $N=1$.
+The decomposition in (ii) is used only at band nodes at distance at most
+$C\ve\log(1/\ve)$ from the front or on the burnt side of it, where $x_j\ge R_{\min}/2$; the
+other band nodes on the fresh side, which may be close to $x=0$, are treated with (iii).
 
 \emph{Step 5. The supersolution.} Here $\Theta=\Theta^+$, $\tilde v=\tilde v^+$. Let
 $S_1=\lambda_0^{-1}\log(C_S/\ve)$. Since $V_x=\Theta_s\tilde v_x$ and
@@ -1768,7 +1777,9 @@ Adding up, and using $|\tilde v_t|\le K_1$,
 -L_f\tilde q\,\Theta'+\tilde q\,f(\Theta_j+\ve\tilde q-w_0).
 \]
 The last two terms are treated as in regions (A) and (B) of the proof of
-Proposition~\ref{q:prop:super}: where $\Theta'\le\Theta_0/2$ their sum is at least $a_0\tilde q$, and
+Proposition~\ref{q:prop:super}: where $\Theta'\le\Theta_0/2$ their sum is at least $a_0\tilde q$
+(because then $\Theta_j\le e^{C\zeta}\Theta'\le\Theta_0$, by $\Theta_s\le C\Theta$ and $|s_j-s'|\le\zeta$, so that
+$f(\Theta_j+\ve\tilde q-w_0)\ge2a_0$), and
 where $\Theta'>\Theta_0/2$ we have $L_f\tilde q\,\Theta'\le C\Theta_s'$. Hence $\Lop[V]^n_j\ge0$ if $C_K$ is large.
 
 \smallskip
@@ -1788,7 +1799,11 @@ reaction term itself, which is of order $\gamma/\ve$ because $s_m<1$.
 (c) \emph{Nodes with $\omega=0$ and $s'\ge s_m$, and nodes outside the band on the fresh side.}
 If $C_b$ is large, the evaluation points of a node with $x'<R(t_{n+1})-\ell_b$ lie in
 $\{\tilde u\ge2\ve\}$, because $|\tilde R-R|\le C_\beta a\mathcal E$ and the nodes move by at most
-$v_{\max}\Delta t$. In both cases $V=\tilde u+\ve^2\tilde q$ on the stencil, and
+$v_{\max}\Delta t$. For a band node of this case, if its path $(x_j(t),t)$ met $\{s<s_m\}$
+at some time of the step, then by \eqref{cv:eq:rel} the node would stay within a distance
+$C\ve$ of the front during the whole step, and $|s-s'|\le\zeta<s_m$ on the path; hence in
+all cases the evaluation points lie in $\overline{\{\tilde u>0\}}$, $s_j>0$, and $s_j<s_m$ is
+possible only for a band node. In both cases $V=\tilde u+\ve^2\tilde q$ on the stencil, and
 $V_j=\tilde u_j+\ve^2\tilde q+\ve g(s_j)$ with $g=\Theta-s-w_0\ge0$, $g=0$ for $s\ge s_m$ and
 $g(s)\le C(s_m-s)^2$ for $s<s_m$. If $s_j\ge s_m$, then $\Lop[V]^n_j\ge\Lop_0[\tilde u]^n_j\ge0$ by
 (iii), because the reaction term is nonnegative. If $s_j<s_m$ (a band node), then
@@ -1798,11 +1813,13 @@ $\Lop[V]^n_j\ge\Lop_0[\tilde u]^n_j-C+\gamma/(8\ve)\ge0$.
 
 \smallskip
 (d) \emph{The tail.} The remaining nodes are the band nodes with $s'<-2S_1$ and the
-nodes with $x'>R(t_{n+1})+\ell_b$. All their evaluation points have $s\le-S_1$. For the
-former: where $d\le r_1$, by \eqref{cv:eq:rel} and $d\le C\ve|s|$, $s$ changes by at most
+nodes with $x'>R(t_{n+1})+\ell_b$. All their evaluation points have $s\le-S_1+1$. For the
+former: where $d\le r_1$, by \eqref{cv:eq:rel}, $d\le C\ve|s|$ and Gronwall's inequality
+along the path, $s$ changes by at most
 $\zeta+C\Delta t|s'|\le\zeta+|s'|/2$ on the evaluation points, and where $d>r_1$ we have
 $s\le-\delta_0r_1/(2\ve)$. For the latter by Lemma~\ref{q:lem:ext}(i), if $C_b$ is large. There
-$\Theta$, $\Theta_s$ and $\Theta_{ss}$ are at most $Ce^{-\lambda_0S_1}$, so by the mean value theorem, (ii) and
+$\Theta$, $\Theta_s$ and $\Theta_{ss}$ are at most $Ce^{-\lambda_0(S_1-1)}\le Ce^{-\lambda_0S_1}$, so by the mean
+value theorem, (ii) and
 $|\dot x_j|\le v_{\max}$ the terms of $\Lop_0[V]^n_j$ are bounded by
 $C\ve^{-1}e^{-\lambda_0S_1}\le a_0$ if $C_S$ is large, while
 $f_\ve(V_j)(V'+\ve w_0)\ge\ve^{-2}f(\Theta_j+\ve\tilde q-w_0)\,\ve^2\tilde q\ge2a_0$. Within a distance
@@ -1825,7 +1842,8 @@ $\underline V'=V_1'$, and $\underline V\ge V_1$ elsewhere, so that, again by \eq
 (a) \emph{Nodes with $s'\ge2$} (in the band, or outside it on the fresh side). All their
 evaluation points have $s\ge1$: near the front by the choice of $\zeta$, and at a distance
 $d\ge C\ve\log(1/\ve)$ from it because there $s'\ge\delta_0\min\{d,r\}/\ve$ and, as in
-Step~5(d), $s$ varies by at most $\zeta+C\Delta t\,s'\le\zeta+s'/2$ on the evaluation points. There $V_1=\tilde u+\ve g$ with $g=\Theta-s-w_0\ge0$, and $g$
+Step~5(d), by Gronwall's inequality $s$ varies by at most $\zeta+C\Delta t\,s'\le\zeta+s'/2$ on
+the evaluation points. There $V_1=\tilde u+\ve g$ with $g=\Theta-s-w_0\ge0$, and $g$
 vanishes at $(x',t_{n+1})$. Hence $\Lop_0[\ve g]^n_j\le0$ by \eqref{eq:peclet}, so
 $\Lop_0[V_1]^n_j\le\Lop_0[\tilde u]^n_j\le0$ by (iii), and the reaction term
 vanishes because $\underline V_j\ge V_{1,j}\ge\ve$. Note that this uses that the profile is
