@@ -7,6 +7,7 @@ paper/pdfs/
 # published papers of the bibliography: kept locally, not distributed
 /ifbj.*
 /final.*
+Biblio/
 # LaTeX build files
 paper/*.aux
 paper/*.bbl
