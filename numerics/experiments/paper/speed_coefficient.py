@@ -3,9 +3,7 @@ flame speed.
 
 Compares (c_eps - c_0)/eps, with c_eps the exact speed of the travelling wave
 of (P_eps) (ODE shooting, combustion1d.exact.tw_speed_eps), against the
-prediction of Proposition prop:speed (Proposition 2.2 in the draft in paper/;
-the header printed by this script says "Prop 2.2", its number in an earlier
-draft),
+prediction of Proposition prop:speed (Proposition 2.2 in the draft in paper/),
 
     c_eps = c_0 [1 + (eps/A)(1 - kappa (1 + w0))] + O(eps^2),
     kappa = (3 sqrt(3) - 2)/5          (for f(s) = (1 - s)^+),
