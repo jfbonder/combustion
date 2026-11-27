@@ -8,46 +8,126 @@
    "hi": 0.715625,
    "r_crit": 0.715234375,
    "history": [
-    [
-     0.7,
-     "quenching",
-     3.3594369888305664
-    ],
-    [
-     0.75,
-     "ignition",
-     11.956844806671143
-    ],
-    [
-     0.725,
-     "ignition",
-     13.554409742355347
-    ],
-    [
-     0.7124999999999999,
-     "quenching",
-     4.930429935455322
-    ],
-    [
-     0.71875,
-     "ignition",
-     11.84259581565857
-    ],
-    [
-     0.715625,
-     "ignition",
-     12.00379204750061
-    ],
-    [
-     0.7140624999999999,
-     "quenching",
-     6.418478965759277
-    ],
-    [
-     0.71484375,
-     "quenching",
-     6.757807731628418
-    ]
+    {
+     "r0": 0.7,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 1623 (t = 1.623)",
+     "status": "extinct",
+     "r_min": 0.03466680520956323,
+     "t_min": 1.62,
+     "steps": 1622,
+     "seconds": 5.405749082565308,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 1,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.75,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.70378 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.6049916775454709,
+     "t_min": 0.72,
+     "steps": 6000,
+     "seconds": 21.001492738723755,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.725,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.19605 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5265221298926334,
+     "t_min": 1.12,
+     "steps": 6000,
+     "seconds": 20.64563226699829,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7124999999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 2432 (t = 2.432)",
+     "status": "extinct",
+     "r_min": 0.06927967732935558,
+     "t_min": 2.42,
+     "steps": 2431,
+     "seconds": 6.615463733673096,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 2,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.71875,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.83238 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4871758394986451,
+     "t_min": 1.46,
+     "steps": 6000,
+     "seconds": 21.356125593185425,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.715625,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.17801 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4388452870941297,
+     "t_min": 2.18,
+     "steps": 6000,
+     "seconds": 22.578718662261963,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7140624999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 2952 (t = 2.952)",
+     "status": "extinct",
+     "r_min": 0.06868977488329729,
+     "t_min": 2.94,
+     "steps": 2951,
+     "seconds": 8.973321676254272,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 2,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.71484375,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 3348 (t = 3.348)",
+     "status": "extinct",
+     "r_min": 0.05497889624503686,
+     "t_min": 3.34,
+     "steps": 3347,
+     "seconds": 12.17847990989685,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 2,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    }
    ]
   },
   {
@@ -58,46 +138,126 @@
    "hi": 0.715625,
    "r_crit": 0.715234375,
    "history": [
-    [
-     0.7,
-     "quenching",
-     3.390136241912842
-    ],
-    [
-     0.75,
-     "ignition",
-     12.064347743988037
-    ],
-    [
-     0.725,
-     "ignition",
-     13.555740356445312
-    ],
-    [
-     0.7124999999999999,
-     "quenching",
-     5.528114080429077
-    ],
-    [
-     0.71875,
-     "ignition",
-     12.929856777191162
-    ],
-    [
-     0.715625,
-     "ignition",
-     12.189518690109253
-    ],
-    [
-     0.7140624999999999,
-     "quenching",
-     5.861733436584473
-    ],
-    [
-     0.71484375,
-     "quenching",
-     7.212529182434082
-    ]
+    {
+     "r0": 0.7,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 1708 (t = 1.708)",
+     "status": "extinct",
+     "r_min": 0.04148554361309858,
+     "t_min": 1.7,
+     "steps": 1707,
+     "seconds": 6.231283664703369,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 2,
+     "n_front_off_band": 1,
+     "t_front_off_band": 1.676
+    },
+    {
+     "r0": 0.75,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.69212 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5995069020907833,
+     "t_min": 0.72,
+     "steps": 6000,
+     "seconds": 18.513938188552856,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.725,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.17328 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5200066682674289,
+     "t_min": 1.12,
+     "steps": 6000,
+     "seconds": 20.933074235916138,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7124999999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 2511 (t = 2.511)",
+     "status": "extinct",
+     "r_min": 0.04768377122590503,
+     "t_min": 2.5,
+     "steps": 2510,
+     "seconds": 9.183686256408691,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 2,
+     "n_front_off_band": 1,
+     "t_front_off_band": 2.477
+    },
+    {
+     "r0": 0.71875,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.78843 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4792903117737869,
+     "t_min": 1.5,
+     "steps": 6000,
+     "seconds": 22.126266479492188,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.715625,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 1.89655 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4201607064997308,
+     "t_min": 2.52,
+     "steps": 6000,
+     "seconds": 23.006215810775757,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7140624999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 2865 (t = 2.865)",
+     "status": "extinct",
+     "r_min": 0.0308571007076508,
+     "t_min": 2.86,
+     "steps": 2864,
+     "seconds": 9.709489345550537,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 2,
+     "n_front_off_band": 1,
+     "t_front_off_band": 2.831
+    },
+    {
+     "r0": 0.71484375,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 3550 (t = 3.55)",
+     "status": "extinct",
+     "r_min": 0.04458301112252541,
+     "t_min": 3.54,
+     "steps": 3549,
+     "seconds": 11.917587041854858,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 2,
+     "n_front_off_band": 1,
+     "t_front_off_band": 3.515
+    }
    ]
   },
   {
@@ -108,46 +268,126 @@
    "hi": 0.715625,
    "r_crit": 0.715234375,
    "history": [
-    [
-     0.7,
-     "quenching",
-     4.062217473983765
-    ],
-    [
-     0.75,
-     "ignition",
-     12.425633192062378
-    ],
-    [
-     0.725,
-     "ignition",
-     11.403253078460693
-    ],
-    [
-     0.7124999999999999,
-     "quenching",
-     6.203569173812866
-    ],
-    [
-     0.71875,
-     "ignition",
-     12.765307188034058
-    ],
-    [
-     0.715625,
-     "ignition",
-     12.164820432662964
-    ],
-    [
-     0.7140624999999999,
-     "quenching",
-     6.494770765304565
-    ],
-    [
-     0.71484375,
-     "quenching",
-     8.215869188308716
-    ]
+    {
+     "r0": 0.7,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 1887 (t = 1.887)",
+     "status": "extinct",
+     "r_min": 0.025546898579932437,
+     "t_min": 1.88,
+     "steps": 1886,
+     "seconds": 7.90937352180481,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 3,
+     "n_front_off_band": 3,
+     "t_front_off_band": 1.585
+    },
+    {
+     "r0": 0.75,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.6864 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5967934799157287,
+     "t_min": 0.72,
+     "steps": 6000,
+     "seconds": 21.100818395614624,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.725,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.16194 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5167610718806288,
+     "t_min": 1.14,
+     "steps": 6000,
+     "seconds": 19.2406268119812,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7124999999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 2761 (t = 2.761)",
+     "status": "extinct",
+     "r_min": 0.003295409366823099,
+     "t_min": 2.76,
+     "steps": 2760,
+     "seconds": 10.131181716918945,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 3,
+     "n_front_off_band": 3,
+     "t_front_off_band": 2.4290000000000003
+    },
+    {
+     "r0": 0.71875,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.76868 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.47575161900588864,
+     "t_min": 1.52,
+     "steps": 6000,
+     "seconds": 21.506503582000732,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.715625,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 1.95805 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.42218058286649063,
+     "t_min": 2.44,
+     "steps": 6000,
+     "seconds": 22.299291372299194,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7140624999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 3172 (t = 3.172)",
+     "status": "extinct",
+     "r_min": 0.03608282978231113,
+     "t_min": 3.16,
+     "steps": 3171,
+     "seconds": 11.707451820373535,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 3,
+     "n_front_off_band": 3,
+     "t_front_off_band": 2.829
+    },
+    {
+     "r0": 0.71484375,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 3682 (t = 3.682)",
+     "status": "extinct",
+     "r_min": 0.011335682328401557,
+     "t_min": 3.68,
+     "steps": 3681,
+     "seconds": 14.241426706314087,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 3,
+     "n_front_off_band": 3,
+     "t_front_off_band": 3.326
+    }
    ]
   },
   {
@@ -158,46 +398,126 @@
    "hi": 0.71484375,
    "r_crit": 0.7144531249999999,
    "history": [
-    [
-     0.7,
-     "quenching",
-     13.180440425872803
-    ],
-    [
-     0.75,
-     "ignition",
-     12.73266339302063
-    ],
-    [
-     0.725,
-     "ignition",
-     13.724493741989136
-    ],
-    [
-     0.7124999999999999,
-     "quenching",
-     12.858296632766724
-    ],
-    [
-     0.71875,
-     "ignition",
-     12.308259010314941
-    ],
-    [
-     0.715625,
-     "ignition",
-     13.871895790100098
-    ],
-    [
-     0.7140624999999999,
-     "quenching",
-     13.648119926452637
-    ],
-    [
-     0.71484375,
-     "ignition",
-     12.489197015762329
-    ]
+    {
+     "r0": 0.7,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 2241 (t = 2.241)",
+     "status": "extinct",
+     "r_min": 0.004279664917036177,
+     "t_min": 2.24,
+     "steps": 2240,
+     "seconds": 9.117003440856934,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 6,
+     "n_front_off_band": 6,
+     "t_front_off_band": 1.564
+    },
+    {
+     "r0": 0.75,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.68356 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5954438550213231,
+     "t_min": 0.72,
+     "steps": 6000,
+     "seconds": 19.23613667488098,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.725,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.15627 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5151479975133838,
+     "t_min": 1.14,
+     "steps": 6000,
+     "seconds": 20.303027868270874,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7124999999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 3343 (t = 3.343)",
+     "status": "extinct",
+     "r_min": 0.007298619458456441,
+     "t_min": 3.34,
+     "steps": 3342,
+     "seconds": 10.626535892486572,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 6,
+     "n_front_off_band": 6,
+     "t_front_off_band": 2.545
+    },
+    {
+     "r0": 0.71875,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.76459 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4746764107543748,
+     "t_min": 1.52,
+     "steps": 6000,
+     "seconds": 20.734347105026245,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.715625,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.16722 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4339013390598205,
+     "t_min": 2.16,
+     "steps": 6000,
+     "seconds": 20.99863028526306,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7140624999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 4094 (t = 4.094)",
+     "status": "extinct",
+     "r_min": 0.026296577284419864,
+     "t_min": 4.08,
+     "steps": 4093,
+     "seconds": 16.28293514251709,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 6,
+     "n_front_off_band": 6,
+     "t_front_off_band": 3.216
+    },
+    {
+     "r0": 0.71484375,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 1.57939 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4062883407142439,
+     "t_min": 2.84,
+     "steps": 6000,
+     "seconds": 19.730106353759766,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    }
    ]
   },
   {
@@ -208,46 +528,126 @@
    "hi": 0.7164062499999999,
    "r_crit": 0.7160156249999999,
    "history": [
-    [
-     0.7,
-     "quenching",
-     48.96338081359863
-    ],
-    [
-     0.75,
-     "ignition",
-     47.90691375732422
-    ],
-    [
-     0.725,
-     "ignition",
-     46.79310917854309
-    ],
-    [
-     0.7124999999999999,
-     "quenching",
-     46.970829010009766
-    ],
-    [
-     0.71875,
-     "ignition",
-     47.00109624862671
-    ],
-    [
-     0.715625,
-     "quenching",
-     46.752472162246704
-    ],
-    [
-     0.7171875,
-     "ignition",
-     48.41272330284119
-    ],
-    [
-     0.7164062499999999,
-     "ignition",
-     46.99093246459961
-    ]
+    {
+     "r0": 0.7,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 6790 (t = 1.6975)",
+     "status": "extinct",
+     "r_min": 0.062388064898673275,
+     "t_min": 1.68,
+     "steps": 6789,
+     "seconds": 21.53102469444275,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 6,
+     "n_front_off_band": 6,
+     "t_front_off_band": 1.32575
+    },
+    {
+     "r0": 0.75,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.68022 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5948548222803115,
+     "t_min": 0.72,
+     "steps": 24000,
+     "seconds": 77.72555923461914,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.725,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.14672 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5140325116414977,
+     "t_min": 1.14,
+     "steps": 24000,
+     "seconds": 72.2205879688263,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7124999999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 9775 (t = 2.44375)",
+     "status": "extinct",
+     "r_min": 0.022509194234787977,
+     "t_min": 2.44,
+     "steps": 9774,
+     "seconds": 28.07271099090576,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 6,
+     "n_front_off_band": 6,
+     "t_front_off_band": 2.0175
+    },
+    {
+     "r0": 0.71875,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.72763 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.47088931442636606,
+     "t_min": 1.56,
+     "steps": 24000,
+     "seconds": 71.68224167823792,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.715625,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh after step 14331 (t = 3.58275)",
+     "status": "extinct",
+     "r_min": 0.018051201836806405,
+     "t_min": 3.58,
+     "steps": 14330,
+     "seconds": 40.25571656227112,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 6,
+     "n_front_off_band": 6,
+     "t_front_off_band": 3.0785
+    },
+    {
+     "r0": 0.7171875,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.45646 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4498626658987035,
+     "t_min": 1.86,
+     "steps": 24000,
+     "seconds": 63.29648995399475,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    },
+    {
+     "r0": 0.7164062499999999,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.14928 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.43050298411109755,
+     "t_min": 2.22,
+     "steps": 24000,
+     "seconds": 67.34699249267578,
+     "n_secant_fail": 0,
+     "n_mesh_remesh": 0,
+     "n_front_off_band": 0,
+     "t_front_off_band": null
+    }
    ]
   },
   {
@@ -258,46 +658,94 @@
    "hi": 0.715625,
    "r_crit": 0.715234375,
    "history": [
-    [
-     0.7,
-     "quenching",
-     4.051514625549316
-    ],
-    [
-     0.75,
-     "ignition",
-     11.264959335327148
-    ],
-    [
-     0.725,
-     "ignition",
-     11.027304410934448
-    ],
-    [
-     0.7124999999999999,
-     "quenching",
-     3.6266863346099854
-    ],
-    [
-     0.71875,
-     "ignition",
-     10.227584838867188
-    ],
-    [
-     0.715625,
-     "ignition",
-     8.86146593093872
-    ],
-    [
-     0.7140624999999999,
-     "quenching",
-     4.014058351516724
-    ],
-    [
-     0.71484375,
-     "quenching",
-     4.481468439102173
-    ]
+    {
+     "r0": 0.7,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh at t = 1.53633",
+     "status": "extinct",
+     "r_min": 0.03236534942217291,
+     "t_min": 1.520000000000001,
+     "steps": 1713,
+     "seconds": 5.45977783203125
+    },
+    {
+     "r0": 0.75,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.70399 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.6047469317092011,
+     "t_min": 0.7000000000000003,
+     "steps": 3423,
+     "seconds": 12.653264045715332
+    },
+    {
+     "r0": 0.725,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 3.1945 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.5261239499565286,
+     "t_min": 1.1200000000000006,
+     "steps": 3209,
+     "seconds": 14.271418571472168
+    },
+    {
+     "r0": 0.7124999999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh at t = 2.28",
+     "status": "extinct",
+     "r_min": 0.09474864703529852,
+     "t_min": 2.2600000000000016,
+     "steps": 1642,
+     "seconds": 4.878953456878662
+    },
+    {
+     "r0": 0.71875,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 2.82655 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.4863614191410221,
+     "t_min": 1.4800000000000009,
+     "steps": 3036,
+     "seconds": 13.867492198944092
+    },
+    {
+     "r0": 0.715625,
+     "t_end": 6.0,
+     "outcome": "ignition",
+     "reason": "front radius 1.98459 > r0 + 0.5 at t = 6",
+     "status": "ok",
+     "r_min": 0.42763702109758084,
+     "t_min": 2.4400000000000017,
+     "steps": 2637,
+     "seconds": 11.149152517318726
+    },
+    {
+     "r0": 0.7140624999999999,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh at t = 2.62",
+     "status": "extinct",
+     "r_min": 0.07015294111132592,
+     "t_min": 2.600000000000002,
+     "steps": 1548,
+     "seconds": 5.472859621047974
+    },
+    {
+     "r0": 0.71484375,
+     "t_end": 6.0,
+     "outcome": "quenching",
+     "reason": "front disappeared: u > eps on the whole mesh at t = 2.96",
+     "status": "extinct",
+     "r_min": 0.11664700283077466,
+     "t_min": 2.940000000000002,
+     "steps": 1690,
+     "seconds": 6.149805545806885
+    }
    ]
   }
  ],
@@ -367,20 +815,26 @@
     0.30633945352093017,
     0.2912968267907797,
     0.27531597360830284,
-    0.25817354273644194,
-    0.2395811118539937,
-    0.21912122602575704,
-    0.1961851368792005,
-    0.16974127005051937,
-    0.13785067856035205,
-    0.09571882233164732
+    0.25817618854779995,
+    0.23958111806851629,
+    0.21914398473774893,
+    0.1962030324068066,
+    0.16976115791797936,
+    0.1378814976838216,
+    0.09573857229924457
    ],
    "outcome": "quenching",
-   "r_min": 0.09571882233164732,
+   "reason": "front disappeared: u > eps on the whole mesh after step 640 (t = 0.64)",
+   "status": "extinct",
+   "r_min": 0.09573857229924457,
    "t_min": 0.62,
    "steps": 639,
-   "seconds": 1.403761863708496,
-   "error": null
+   "seconds": 1.9678468704223633,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 1,
+   "n_front_off_band": 0,
+   "t_front_off_band": null
   },
   {
    "r0": 0.8,
@@ -794,11 +1248,17 @@
     2.4708699662101115
    ],
    "outcome": "ignition",
+   "reason": "front radius 2.47087 > r0 + 0.5 at t = 4",
+   "status": "ok",
    "r_min": 0.700146393013714,
    "t_min": 0.46,
    "steps": 4000,
-   "seconds": 8.304063558578491,
-   "error": null
+   "seconds": 12.655544519424438,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 0,
+   "n_front_off_band": 0,
+   "t_front_off_band": null
   },
   {
    "r0": 0.705234375,
@@ -969,36 +1429,42 @@
     0.3808869331058525,
     0.376145394865945,
     0.3712292818965123,
-    0.36612436861632935,
-    0.3608185894170419,
-    0.3552822723906214,
-    0.349509561506671,
-    0.3434629470822718,
-    0.3371248491273774,
-    0.33045747291982197,
-    0.3234293075515263,
-    0.316001636131282,
-    0.3081230203321512,
-    0.2997393915188318,
-    0.2907857195430214,
-    0.2811782909498909,
-    0.2708221516360526,
-    0.2595893608093187,
-    0.24731632172578108,
-    0.23380952698668703,
-    0.21877206092667417,
-    0.20179972718102307,
-    0.182270128791511,
-    0.15915718301623963,
-    0.1304944372507818,
-    0.09136846701040488
+    0.3661187358956521,
+    0.36082082740794663,
+    0.35527989630401047,
+    0.3495096865046304,
+    0.3434608690149565,
+    0.33712496951201015,
+    0.3304553244038317,
+    0.32343165650397915,
+    0.3159989076314084,
+    0.308124288143982,
+    0.29974030264074003,
+    0.29078441195202537,
+    0.2811829533544344,
+    0.2708259332884059,
+    0.25958768292839496,
+    0.24732064486272473,
+    0.23381495277345843,
+    0.2187776645865777,
+    0.201810236993534,
+    0.182281158274514,
+    0.15917689612211802,
+    0.13051984128957808,
+    0.091386574105755
    ],
    "outcome": "quenching",
-   "r_min": 0.09136846701040488,
+   "reason": "front disappeared: u > eps on the whole mesh after step 1840 (t = 1.84)",
+   "status": "extinct",
+   "r_min": 0.091386574105755,
    "t_min": 1.82,
    "steps": 1839,
-   "seconds": 4.003073453903198,
-   "error": null
+   "seconds": 5.710150241851807,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 2,
+   "n_front_off_band": 0,
+   "t_front_off_band": null
   },
   {
    "r0": 0.725234375,
@@ -1412,11 +1878,17 @@
     1.6553974201222135
    ],
    "outcome": "ignition",
+   "reason": "front radius 1.6554 > r0 + 0.5 at t = 4",
+   "status": "ok",
    "r_min": 0.5296187525101411,
    "t_min": 1.08,
    "steps": 4000,
-   "seconds": 8.235917329788208,
-   "error": null
+   "seconds": 11.634456634521484,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 0,
+   "n_front_off_band": 0,
+   "t_front_off_band": null
   },
   {
    "r0": 1.0,
@@ -1830,11 +2302,17 @@
     3.191988705429825
    ],
    "outcome": "ignition",
+   "reason": "front radius 3.19199 > r0 + 0.5 at t = 4",
+   "status": "ok",
    "r_min": 0.9615105192548712,
    "t_min": 0.2,
    "steps": 4000,
-   "seconds": 8.317702054977417,
-   "error": null
+   "seconds": 12.986035346984863,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 0,
+   "n_front_off_band": 0,
+   "t_front_off_band": null
   },
   {
    "r0": 1.2,
@@ -2248,11 +2726,17 @@
     3.640528948946724
    ],
    "outcome": "ignition",
+   "reason": "front radius 3.64053 > r0 + 0.5 at t = 4",
+   "status": "ok",
    "r_min": 1.1825245270517042,
    "t_min": 0.12,
    "steps": 4000,
-   "seconds": 7.888239622116089,
-   "error": null
+   "seconds": 12.920873403549194,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 0,
+   "n_front_off_band": 0,
+   "t_front_off_band": null
   },
   {
    "r0": 1.5,
@@ -2666,11 +3150,17 @@
     4.171015284689735
    ],
    "outcome": "ignition",
+   "reason": "front radius 4.17102 > r0 + 0.5 at t = 4",
+   "status": "ok",
    "r_min": 1.4959053366063246,
    "t_min": 0.08,
    "steps": 4000,
-   "seconds": 8.300350427627563,
-   "error": null
+   "seconds": 11.968632698059082,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 0,
+   "n_front_off_band": 0,
+   "t_front_off_band": null
   },
   {
    "r0": 0.705234375,
@@ -2783,9 +3273,7 @@
     2.04,
     2.06,
     2.08,
-    2.1,
-    2.12,
-    2.14
+    2.1
    ],
    "front": [
     0.7075913976039552,
@@ -2879,30 +3367,34 @@
     0.27667581654438017,
     0.2693940966292078,
     0.26178822465740587,
-    0.2537927450930463,
-    0.2453938409200615,
-    0.23660861694562457,
-    0.22749460835476149,
-    0.21820668261515475,
-    0.20818222578492013,
-    0.1989479710106007,
-    0.19198444781752608,
-    0.18277949661301604,
-    0.1756041899870661,
-    0.16465985924754561,
-    0.15175659504386793,
-    0.13773603657330807,
-    0.12084297313556377,
-    0.10137853511835661,
-    0.07742682342021699,
-    0.04789097623797204
+    0.2537905622672315,
+    0.24536800563488256,
+    0.2364792527990536,
+    0.22708405456323855,
+    0.21711028515233613,
+    0.20649329652965942,
+    0.1951375419540575,
+    0.1829310169800672,
+    0.1697270058979463,
+    0.15532894088478233,
+    0.13945986542578198,
+    0.12172336712247299,
+    0.10145541621274885,
+    0.0774616419725355,
+    0.046819647300098875
    ],
    "outcome": "quenching",
-   "r_min": 0.04789097623797204,
-   "t_min": 2.14,
-   "steps": 2156,
-   "seconds": 4.138146162033081,
-   "error": null
+   "reason": "front disappeared: u > eps on the whole mesh after step 2117 (t = 2.117)",
+   "status": "extinct",
+   "r_min": 0.046819647300098875,
+   "t_min": 2.1,
+   "steps": 2116,
+   "seconds": 7.528773546218872,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 3,
+   "n_front_off_band": 3,
+   "t_front_off_band": 1.807
   },
   {
    "r0": 0.725234375,
@@ -3316,13 +3808,27 @@
     1.6232506353379659
    ],
    "outcome": "ignition",
+   "reason": "front radius 1.62325 > r0 + 0.5 at t = 4",
+   "status": "ok",
    "r_min": 0.5195771571408085,
    "t_min": 1.12,
    "steps": 4000,
-   "seconds": 7.864590406417847,
-   "error": null
+   "seconds": 12.43097448348999,
+   "error": null,
+   "n_secant_fail": 0,
+   "n_mesh_remesh": 0,
+   "n_front_off_band": 0,
+   "t_front_off_band": null
   }
  ],
  "c0": 1.0606601717798212,
- "inv_c0": 0.9428090415820635
+ "inv_c0": 0.9428090415820635,
+ "provenance": {
+  "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+  "git_dirty": true,
+  "python": "3.13.18",
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "platform": "Linux x86_64"
+ }
 }

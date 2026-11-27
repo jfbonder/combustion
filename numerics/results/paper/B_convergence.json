@@ -16,10 +16,18 @@
   "steps": 600,
   "n_remesh": 5,
   "nodes": 4132.4366666666665,
-  "seconds": 2.275554895401001,
+  "seconds": 2.871225357055664,
   "trials_per_step": 3.0033333333333334,
   "solves_per_step": 6.006666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -38,10 +46,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 4132.4383333333335,
-  "seconds": 4.104649305343628,
+  "seconds": 6.755673885345459,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -60,10 +76,18 @@
   "steps": 2400,
   "n_remesh": 5,
   "nodes": 4132.437916666667,
-  "seconds": 9.114525079727173,
+  "seconds": 12.60310959815979,
   "trials_per_step": 3.0008333333333335,
   "solves_per_step": 6.001666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -82,10 +106,18 @@
   "steps": 400,
   "n_remesh": 12,
   "nodes": 3402.3875,
-  "seconds": 1.1187858581542969,
+  "seconds": 2.2795958518981934,
   "trials_per_step": 3.0125,
   "solves_per_step": 6.025,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -104,10 +136,18 @@
   "steps": 800,
   "n_remesh": 12,
   "nodes": 3402.3875,
-  "seconds": 2.4364302158355713,
+  "seconds": 4.578198432922363,
   "trials_per_step": 3.0075,
   "solves_per_step": 6.015,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -126,10 +166,18 @@
   "steps": 1600,
   "n_remesh": 13,
   "nodes": 3402.46125,
-  "seconds": 6.182162761688232,
+  "seconds": 8.98321533203125,
   "trials_per_step": 3.003125,
   "solves_per_step": 6.00625,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -148,10 +196,18 @@
   "steps": 400,
   "n_remesh": 25,
   "nodes": 3402.32,
-  "seconds": 1.1423208713531494,
+  "seconds": 1.7744126319885254,
   "trials_per_step": 3.0125,
   "solves_per_step": 6.025,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -170,10 +226,18 @@
   "steps": 800,
   "n_remesh": 25,
   "nodes": 3402.3875,
-  "seconds": 3.0827600955963135,
+  "seconds": 4.539642333984375,
   "trials_per_step": 3.0075,
   "solves_per_step": 6.015,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -192,10 +256,18 @@
   "steps": 1600,
   "n_remesh": 25,
   "nodes": 3402.3875,
-  "seconds": 6.247859239578247,
+  "seconds": 7.21595025062561,
   "trials_per_step": 3.003125,
   "solves_per_step": 6.00625,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -214,12 +286,20 @@
   "steps": 600,
   "n_remesh": 164,
   "nodes": 4132.414634146341,
-  "seconds": 0.3735778331756592,
+  "seconds": 0.47628164291381836,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.02
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -238,12 +318,20 @@
   "steps": 1200,
   "n_remesh": 257,
   "nodes": 4132.43579766537,
-  "seconds": 0.6412937641143799,
+  "seconds": 1.0289690494537354,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.01
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -262,12 +350,20 @@
   "steps": 2400,
   "n_remesh": 386,
   "nodes": 4132.419689119171,
-  "seconds": 1.8399734497070312,
+  "seconds": 1.9789769649505615,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.005
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -286,12 +382,20 @@
   "steps": 6000,
   "n_remesh": 550,
   "nodes": 4132.414545454545,
-  "seconds": 2.8729336261749268,
+  "seconds": 4.287730693817139,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.002
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -310,12 +414,20 @@
   "steps": 12000,
   "n_remesh": 669,
   "nodes": 4132.433482810165,
-  "seconds": 5.078161716461182,
+  "seconds": 6.5630269050598145,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.001
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -334,12 +446,20 @@
   "steps": 400,
   "n_remesh": 271,
   "nodes": 3402.3837638376385,
-  "seconds": 0.30541110038757324,
+  "seconds": 0.5625839233398438,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.02
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -350,20 +470,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6325390895751768,
-  "c_num": 0.31453392082083803,
-  "err": -1.3180051687543388,
-  "err_lsq": -1.3180051687543388,
-  "err_end": -1.3187015423319663,
+  "c_num": 0.3145340306263599,
+  "err": -1.3180050589488168,
+  "err_lsq": -1.3180050589488168,
+  "err_end": -1.3187013135161891,
   "cycles": null,
   "steps": 800,
   "n_remesh": 347,
-  "nodes": 3402.386167146974,
-  "seconds": 0.7213218212127686,
+  "nodes": 3402.3890489913547,
+  "seconds": 1.017503261566162,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.01
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -374,20 +502,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6325390895751768,
-  "c_num": 0.4514100591132791,
-  "err": -1.1811290304618978,
-  "err_lsq": -1.1811290304618978,
-  "err_end": -1.1817978612535232,
+  "c_num": 0.4514100754126772,
+  "err": -1.1811290141624995,
+  "err_lsq": -1.1811290141624995,
+  "err_end": -1.1817978935475852,
   "cycles": null,
   "steps": 1600,
   "n_remesh": 485,
   "nodes": 3402.3835051546394,
-  "seconds": 1.0284969806671143,
+  "seconds": 1.3223273754119873,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.005
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -398,20 +534,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6325390895751768,
-  "c_num": 0.671040141498587,
-  "err": -0.9614989480765898,
-  "err_lsq": -0.9614989480765898,
-  "err_end": -0.9619811463154863,
+  "c_num": 0.6710401644240649,
+  "err": -0.9614989251511119,
+  "err_lsq": -0.9614989251511119,
+  "err_end": -0.961981157737369,
   "cycles": null,
   "steps": 4000,
   "n_remesh": 742,
-  "nodes": 3402.39218328841,
-  "seconds": 1.7414672374725342,
+  "nodes": 3402.3908355795147,
+  "seconds": 2.8579812049865723,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.002
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -422,20 +566,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6325390895751768,
-  "c_num": 0.860430982013954,
-  "err": -0.7721081075612228,
-  "err_lsq": -0.7721081075612228,
-  "err_end": -0.7724106130186091,
+  "c_num": 0.8604306941673955,
+  "err": -0.7721083954077813,
+  "err_lsq": -0.7721083954077813,
+  "err_end": -0.7724107548672013,
   "cycles": null,
   "steps": 8000,
   "n_remesh": 947,
-  "nodes": 3402.386483632524,
-  "seconds": 3.220341682434082,
+  "nodes": 3402.388595564942,
+  "seconds": 4.6873250007629395,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.001
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -458,10 +610,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 12913.565,
-  "seconds": 8.402904510498047,
+  "seconds": 13.963088989257812,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -484,10 +644,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 13147.0,
-  "seconds": 9.99618411064148,
+  "seconds": 14.23789119720459,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -510,10 +678,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 13601.1875,
-  "seconds": 9.764999866485596,
+  "seconds": 15.503269672393799,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -536,10 +712,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 14495.561666666666,
-  "seconds": 10.254056692123413,
+  "seconds": 16.53986620903015,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -562,10 +746,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 16269.8125,
-  "seconds": 11.730704069137573,
+  "seconds": 17.050549268722534,
   "trials_per_step": 3.0033333333333334,
   "solves_per_step": 6.006666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -588,10 +780,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 2681.4383333333335,
-  "seconds": 3.3483712673187256,
+  "seconds": 5.977924823760986,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -614,10 +814,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 3458.0,
-  "seconds": 3.2139477729797363,
+  "seconds": 6.270899295806885,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -640,10 +848,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 5027.0,
-  "seconds": 3.8619167804718018,
+  "seconds": 7.832115173339844,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -666,10 +882,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 8178.5616666666665,
-  "seconds": 6.2172627449035645,
+  "seconds": 9.854938268661499,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -692,10 +916,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 14495.561666666666,
-  "seconds": 10.50027871131897,
+  "seconds": 16.077290534973145,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -714,10 +946,18 @@
   "steps": 100,
   "n_remesh": 0,
   "nodes": 4017.0,
-  "seconds": 0.08744931221008301,
+  "seconds": 0.1391315460205078,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -736,10 +976,18 @@
   "steps": 200,
   "n_remesh": 0,
   "nodes": 4017.0,
-  "seconds": 0.172776460647583,
+  "seconds": 0.3426346778869629,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -758,10 +1006,18 @@
   "steps": 500,
   "n_remesh": 0,
   "nodes": 4017.0,
-  "seconds": 0.4453916549682617,
+  "seconds": 0.6691329479217529,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -780,10 +1036,18 @@
   "steps": 1000,
   "n_remesh": 0,
   "nodes": 4017.0,
-  "seconds": 0.8592677116394043,
+  "seconds": 1.610543966293335,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -802,10 +1066,18 @@
   "steps": 2000,
   "n_remesh": 0,
   "nodes": 4017.0,
-  "seconds": 1.8430819511413574,
+  "seconds": 3.6547021865844727,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -824,10 +1096,18 @@
   "steps": 36,
   "n_remesh": 0,
   "nodes": 2684.0,
-  "seconds": 0.024318695068359375,
+  "seconds": 0.05387067794799805,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -846,10 +1126,18 @@
   "steps": 72,
   "n_remesh": 0,
   "nodes": 2684.0,
-  "seconds": 0.06871485710144043,
+  "seconds": 0.08719277381896973,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -868,10 +1156,18 @@
   "steps": 180,
   "n_remesh": 0,
   "nodes": 2684.0,
-  "seconds": 0.15560507774353027,
+  "seconds": 0.22381186485290527,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -890,10 +1186,18 @@
   "steps": 360,
   "n_remesh": 0,
   "nodes": 2684.0,
-  "seconds": 0.23951387405395508,
+  "seconds": 0.6501719951629639,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -912,10 +1216,18 @@
   "steps": 720,
   "n_remesh": 0,
   "nodes": 2684.0,
-  "seconds": 0.5077180862426758,
+  "seconds": 0.9313881397247314,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -931,7 +1243,15 @@
   "steps": 19,
   "n_remesh": 9,
   "nodes": 1438.3157894736842,
-  "seconds": 0.060137271881103516
+  "seconds": 0.11047911643981934,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -947,7 +1267,15 @@
   "steps": 38,
   "n_remesh": 10,
   "nodes": 1438.342105263158,
-  "seconds": 0.07036113739013672
+  "seconds": 0.1955735683441162,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -963,7 +1291,15 @@
   "steps": 75,
   "n_remesh": 11,
   "nodes": 1438.28,
-  "seconds": 0.13728809356689453
+  "seconds": 0.31879138946533203,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -979,7 +1315,15 @@
   "steps": 150,
   "n_remesh": 12,
   "nodes": 1438.26,
-  "seconds": 0.2308363914489746
+  "seconds": 0.5733153820037842,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -995,7 +1339,15 @@
   "steps": 300,
   "n_remesh": 12,
   "nodes": 1438.44,
-  "seconds": 0.47867536544799805
+  "seconds": 0.8288636207580566,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1011,7 +1363,15 @@
   "steps": 19,
   "n_remesh": 11,
   "nodes": 1511.6842105263158,
-  "seconds": 0.04846549034118652
+  "seconds": 0.10592174530029297,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1027,7 +1387,15 @@
   "steps": 38,
   "n_remesh": 13,
   "nodes": 1511.8684210526317,
-  "seconds": 0.09312129020690918
+  "seconds": 0.18598604202270508,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1043,7 +1411,15 @@
   "steps": 75,
   "n_remesh": 13,
   "nodes": 1511.52,
-  "seconds": 0.14492559432983398
+  "seconds": 0.3033149242401123,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1059,7 +1435,15 @@
   "steps": 150,
   "n_remesh": 14,
   "nodes": 1511.76,
-  "seconds": 0.2901585102081299
+  "seconds": 0.5978984832763672,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1075,7 +1459,15 @@
   "steps": 300,
   "n_remesh": 14,
   "nodes": 1511.6533333333334,
-  "seconds": 0.5671901702880859
+  "seconds": 1.2048261165618896,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1094,10 +1486,18 @@
   "steps": 600,
   "n_remesh": 5,
   "nodes": 4112.376666666667,
-  "seconds": 1.9689092636108398,
+  "seconds": 2.8488833904266357,
   "trials_per_step": 3.0033333333333334,
   "solves_per_step": 6.006666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1116,10 +1516,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 4112.8133333333335,
-  "seconds": 3.418806314468384,
+  "seconds": 6.0084228515625,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1138,10 +1546,18 @@
   "steps": 2400,
   "n_remesh": 5,
   "nodes": 4112.250416666667,
-  "seconds": 7.106007814407349,
+  "seconds": 13.277101278305054,
   "trials_per_step": 3.0008333333333335,
   "solves_per_step": 6.001666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1160,10 +1576,18 @@
   "steps": 400,
   "n_remesh": 12,
   "nodes": 3382.5425,
-  "seconds": 1.0158286094665527,
+  "seconds": 2.0123062133789062,
   "trials_per_step": 3.0125,
   "solves_per_step": 6.025,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1182,10 +1606,18 @@
   "steps": 800,
   "n_remesh": 12,
   "nodes": 3382.465,
-  "seconds": 2.4033467769622803,
+  "seconds": 4.2150492668151855,
   "trials_per_step": 3.0075,
   "solves_per_step": 6.015,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1204,10 +1636,18 @@
   "steps": 1600,
   "n_remesh": 13,
   "nodes": 3382.539375,
-  "seconds": 4.174504280090332,
+  "seconds": 8.687200546264648,
   "trials_per_step": 3.003125,
   "solves_per_step": 6.00625,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1226,10 +1666,18 @@
   "steps": 400,
   "n_remesh": 25,
   "nodes": 3382.56,
-  "seconds": 1.0603046417236328,
+  "seconds": 1.9104206562042236,
   "trials_per_step": 3.0125,
   "solves_per_step": 6.025,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1248,10 +1696,18 @@
   "steps": 800,
   "n_remesh": 25,
   "nodes": 3382.465,
-  "seconds": 1.8639216423034668,
+  "seconds": 4.384225368499756,
   "trials_per_step": 3.0075,
   "solves_per_step": 6.015,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1270,10 +1726,18 @@
   "steps": 1600,
   "n_remesh": 25,
   "nodes": 3382.3875,
-  "seconds": 4.130837678909302,
+  "seconds": 8.547621726989746,
   "trials_per_step": 3.003125,
   "solves_per_step": 6.00625,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1292,12 +1756,20 @@
   "steps": 600,
   "n_remesh": 129,
   "nodes": 4112.503875968992,
-  "seconds": 0.29882073402404785,
+  "seconds": 0.5530717372894287,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.02
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1316,12 +1788,20 @@
   "steps": 1200,
   "n_remesh": 192,
   "nodes": 4112.5,
-  "seconds": 0.5122449398040771,
+  "seconds": 0.9165153503417969,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.01
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1340,12 +1820,20 @@
   "steps": 2400,
   "n_remesh": 254,
   "nodes": 4112.527559055118,
-  "seconds": 1.056821346282959,
+  "seconds": 1.568434715270996,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.005
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1364,12 +1852,20 @@
   "steps": 6000,
   "n_remesh": 335,
   "nodes": 4112.489552238806,
-  "seconds": 1.972470998764038,
+  "seconds": 3.792022943496704,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.002
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1388,12 +1884,20 @@
   "steps": 12000,
   "n_remesh": 384,
   "nodes": 4112.505208333333,
-  "seconds": 4.3465986251831055,
+  "seconds": 6.994441032409668,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.001
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1404,20 +1908,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6320863210692715,
-  "c_num": 0.3146197962362105,
-  "err": -1.317466524833061,
-  "err_lsq": -1.317466524833061,
-  "err_end": -1.3181832952763706,
+  "c_num": 0.3146198406355077,
+  "err": -1.317466480433764,
+  "err_lsq": -1.317466480433764,
+  "err_end": -1.31818322564098,
   "cycles": null,
   "steps": 400,
   "n_remesh": 173,
-  "nodes": 3382.421965317919,
-  "seconds": 0.2537720203399658,
+  "nodes": 3382.416184971098,
+  "seconds": 0.44164180755615234,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.02
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1428,20 +1940,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6320863210692715,
-  "c_num": 0.45153996717742323,
-  "err": -1.1805463538918484,
-  "err_lsq": -1.1805463538918484,
-  "err_end": -1.181362327344927,
+  "c_num": 0.45146911568767956,
+  "err": -1.180617205381592,
+  "err_lsq": -1.180617205381592,
+  "err_end": -1.1812702308798153,
   "cycles": null,
   "steps": 800,
   "n_remesh": 242,
-  "nodes": 3382.4752066115702,
-  "seconds": 0.3630216121673584,
+  "nodes": 3382.4628099173556,
+  "seconds": 0.7527494430541992,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.01
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1452,20 +1972,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6320863210692715,
-  "c_num": 0.6137731033281469,
-  "err": -1.0183132177411247,
-  "err_lsq": -1.0183132177411247,
-  "err_end": -1.0188118744143093,
+  "c_num": 0.6137646036375726,
+  "err": -1.018321717431699,
+  "err_lsq": -1.018321717431699,
+  "err_end": -1.0188445480343393,
   "cycles": null,
   "steps": 1600,
-  "n_remesh": 345,
-  "nodes": 3382.4579710144926,
-  "seconds": 0.8111786842346191,
+  "n_remesh": 346,
+  "nodes": 3382.4710982658958,
+  "seconds": 1.2539081573486328,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.005
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1476,20 +2004,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6320863210692715,
-  "c_num": 0.8601752243990899,
-  "err": -0.7719110966701817,
-  "err_lsq": -0.7719110966701817,
-  "err_end": -0.7722044486040968,
+  "c_num": 0.8601926455464778,
+  "err": -0.7718936755227938,
+  "err_lsq": -0.7718936755227938,
+  "err_end": -0.7721922689323887,
   "cycles": null,
   "steps": 4000,
-  "n_remesh": 473,
-  "nodes": 3382.4545454545455,
-  "seconds": 1.5113410949707031,
+  "n_remesh": 474,
+  "nodes": 3382.4620253164558,
+  "seconds": 2.581784963607788,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.002
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1500,20 +2036,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6320863210692715,
-  "c_num": 1.0567194962219024,
-  "err": -0.5753668248473691,
-  "err_lsq": -0.5753668248473691,
-  "err_end": -0.5755232400358901,
+  "c_num": 1.05671821511039,
+  "err": -0.5753681059588815,
+  "err_lsq": -0.5753681059588815,
+  "err_end": -0.5755239623144928,
   "cycles": null,
   "steps": 8000,
   "n_remesh": 560,
-  "nodes": 3382.4625,
-  "seconds": 2.5483272075653076,
+  "nodes": 3382.4589285714287,
+  "seconds": 4.157063245773315,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.001
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -1536,10 +2080,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 12879.246666666666,
-  "seconds": 8.99029278755188,
+  "seconds": 15.761719942092896,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -1562,10 +2114,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 13111.561666666666,
-  "seconds": 8.535430908203125,
+  "seconds": 15.344717025756836,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -1588,10 +2148,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 13565.0,
-  "seconds": 9.427980899810791,
+  "seconds": 16.573768138885498,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -1614,10 +2182,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 14459.5625,
-  "seconds": 10.520455837249756,
+  "seconds": 17.038384437561035,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -1640,10 +2216,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 16233.813333333334,
-  "seconds": 11.818765640258789,
+  "seconds": 16.51114559173584,
   "trials_per_step": 3.0033333333333334,
   "solves_per_step": 6.006666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1659,7 +2243,15 @@
   "steps": 19,
   "n_remesh": 9,
   "nodes": 1418.421052631579,
-  "seconds": 0.04843282699584961
+  "seconds": 0.09165501594543457,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1675,7 +2267,15 @@
   "steps": 38,
   "n_remesh": 10,
   "nodes": 1418.3684210526317,
-  "seconds": 0.07775139808654785
+  "seconds": 0.12537598609924316,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1691,7 +2291,15 @@
   "steps": 75,
   "n_remesh": 11,
   "nodes": 1418.1733333333334,
-  "seconds": 0.15457606315612793
+  "seconds": 0.21231961250305176,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1707,7 +2315,15 @@
   "steps": 150,
   "n_remesh": 12,
   "nodes": 1418.28,
-  "seconds": 0.2678980827331543
+  "seconds": 0.3753993511199951,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1723,7 +2339,15 @@
   "steps": 300,
   "n_remesh": 12,
   "nodes": 1418.1366666666668,
-  "seconds": 0.46961498260498047
+  "seconds": 0.7499284744262695,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1739,7 +2363,15 @@
   "steps": 19,
   "n_remesh": 11,
   "nodes": 1491.6315789473683,
-  "seconds": 0.049158573150634766
+  "seconds": 0.07224893569946289,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1755,7 +2387,15 @@
   "steps": 38,
   "n_remesh": 13,
   "nodes": 1491.7894736842106,
-  "seconds": 0.08030033111572266
+  "seconds": 0.12319159507751465,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1771,7 +2411,15 @@
   "steps": 75,
   "n_remesh": 13,
   "nodes": 1491.7466666666667,
-  "seconds": 0.13719463348388672
+  "seconds": 0.1956191062927246,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1787,7 +2435,15 @@
   "steps": 150,
   "n_remesh": 14,
   "nodes": 1491.7933333333333,
-  "seconds": 0.2761101722717285
+  "seconds": 0.3781447410583496,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -1803,7 +2459,15 @@
   "steps": 300,
   "n_remesh": 14,
   "nodes": 1491.6933333333334,
-  "seconds": 0.5635986328125
+  "seconds": 0.7266473770141602,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1822,10 +2486,18 @@
   "steps": 600,
   "n_remesh": 5,
   "nodes": 4077.1883333333335,
-  "seconds": 1.728299856185913,
+  "seconds": 3.4533743858337402,
   "trials_per_step": 3.0033333333333334,
   "solves_per_step": 6.006666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1844,10 +2516,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 4077.1875,
-  "seconds": 3.683122158050537,
+  "seconds": 7.324137210845947,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1866,10 +2546,18 @@
   "steps": 2400,
   "n_remesh": 5,
   "nodes": 4077.375,
-  "seconds": 7.583600044250488,
+  "seconds": 13.227405309677124,
   "trials_per_step": 3.0008333333333335,
   "solves_per_step": 6.001666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1888,10 +2576,18 @@
   "steps": 400,
   "n_remesh": 12,
   "nodes": 3347.0,
-  "seconds": 1.122209072113037,
+  "seconds": 2.1854588985443115,
   "trials_per_step": 3.01,
   "solves_per_step": 6.02,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1910,10 +2606,18 @@
   "steps": 800,
   "n_remesh": 12,
   "nodes": 3347.2325,
-  "seconds": 2.130364418029785,
+  "seconds": 4.243659019470215,
   "trials_per_step": 3.00625,
   "solves_per_step": 6.0125,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1932,10 +2636,18 @@
   "steps": 1600,
   "n_remesh": 13,
   "nodes": 3347.230625,
-  "seconds": 4.545078992843628,
+  "seconds": 7.7422473430633545,
   "trials_per_step": 3.003125,
   "solves_per_step": 6.00625,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1954,10 +2666,18 @@
   "steps": 400,
   "n_remesh": 25,
   "nodes": 3347.085,
-  "seconds": 1.2664144039154053,
+  "seconds": 1.759258508682251,
   "trials_per_step": 3.01,
   "solves_per_step": 6.02,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1976,10 +2696,18 @@
   "steps": 800,
   "n_remesh": 25,
   "nodes": 3347.0775,
-  "seconds": 2.0246174335479736,
+  "seconds": 4.1151227951049805,
   "trials_per_step": 3.00625,
   "solves_per_step": 6.0125,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -1998,10 +2726,18 @@
   "steps": 1600,
   "n_remesh": 25,
   "nodes": 3347.19375,
-  "seconds": 3.738065004348755,
+  "seconds": 6.556363105773926,
   "trials_per_step": 3.003125,
   "solves_per_step": 6.00625,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2020,12 +2756,20 @@
   "steps": 600,
   "n_remesh": 85,
   "nodes": 4077.141176470588,
-  "seconds": 0.39435243606567383,
+  "seconds": 0.46212339401245117,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.02
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2044,12 +2788,20 @@
   "steps": 1200,
   "n_remesh": 110,
   "nodes": 4077.109090909091,
-  "seconds": 0.44256067276000977,
+  "seconds": 0.7932984828948975,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.01
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2068,12 +2820,20 @@
   "steps": 2400,
   "n_remesh": 134,
   "nodes": 4077.1567164179105,
-  "seconds": 0.8277690410614014,
+  "seconds": 1.4989361763000488,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.005
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2092,12 +2852,20 @@
   "steps": 6000,
   "n_remesh": 159,
   "nodes": 4077.1509433962265,
-  "seconds": 2.1445415019989014,
+  "seconds": 3.296502113342285,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.002
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2116,12 +2884,20 @@
   "steps": 12000,
   "n_remesh": 171,
   "nodes": 4077.1812865497077,
-  "seconds": 3.9129300117492676,
+  "seconds": 5.614646673202515,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.001
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2140,12 +2916,20 @@
   "steps": 400,
   "n_remesh": 115,
   "nodes": 3347.113043478261,
-  "seconds": 0.1881699562072754,
+  "seconds": 0.34941720962524414,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.02
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2164,12 +2948,20 @@
   "steps": 800,
   "n_remesh": 148,
   "nodes": 3347.108108108108,
-  "seconds": 0.30430030822753906,
+  "seconds": 0.5734469890594482,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.01
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2188,12 +2980,20 @@
   "steps": 1600,
   "n_remesh": 189,
   "nodes": 3347.1428571428573,
-  "seconds": 0.6471900939941406,
+  "seconds": 0.8312456607818604,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.005
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2212,12 +3012,20 @@
   "steps": 4000,
   "n_remesh": 243,
   "nodes": 3347.135802469136,
-  "seconds": 1.1817946434020996,
+  "seconds": 2.009190320968628,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.002
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2236,12 +3044,20 @@
   "steps": 8000,
   "n_remesh": 274,
   "nodes": 3347.109489051095,
-  "seconds": 2.329233169555664,
+  "seconds": 3.1812191009521484,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.001
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -2264,10 +3080,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 12800.188333333334,
-  "seconds": 9.536115169525146,
+  "seconds": 15.214568376541138,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -2290,10 +3114,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 13029.561666666666,
-  "seconds": 9.488404273986816,
+  "seconds": 14.460594892501831,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -2316,10 +3148,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 13481.4375,
-  "seconds": 10.158461332321167,
+  "seconds": 15.375359058380127,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -2342,10 +3182,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 14374.75,
-  "seconds": 11.189234018325806,
+  "seconds": 15.27971887588501,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -2368,10 +3216,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 16148.375,
-  "seconds": 10.904683589935303,
+  "seconds": 15.723050594329834,
   "trials_per_step": 3.0033333333333334,
   "solves_per_step": 6.006666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2390,10 +3246,18 @@
   "steps": 100,
   "n_remesh": 0,
   "nodes": 3962.0,
-  "seconds": 0.1046745777130127,
+  "seconds": 0.14710783958435059,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2412,10 +3276,18 @@
   "steps": 200,
   "n_remesh": 0,
   "nodes": 3962.0,
-  "seconds": 0.26030659675598145,
+  "seconds": 0.3584628105163574,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2434,10 +3306,18 @@
   "steps": 500,
   "n_remesh": 0,
   "nodes": 3962.0,
-  "seconds": 0.6471123695373535,
+  "seconds": 0.6468656063079834,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2456,10 +3336,18 @@
   "steps": 1000,
   "n_remesh": 0,
   "nodes": 3962.0,
-  "seconds": 1.1175029277801514,
+  "seconds": 1.7217364311218262,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2478,10 +3366,18 @@
   "steps": 2000,
   "n_remesh": 0,
   "nodes": 3962.0,
-  "seconds": 1.7782621383666992,
+  "seconds": 2.824098587036133,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2500,10 +3396,18 @@
   "steps": 36,
   "n_remesh": 0,
   "nodes": 2629.0,
-  "seconds": 0.027112245559692383,
+  "seconds": 0.03601241111755371,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2522,10 +3426,18 @@
   "steps": 72,
   "n_remesh": 0,
   "nodes": 2629.0,
-  "seconds": 0.056088924407958984,
+  "seconds": 0.07156896591186523,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2544,10 +3456,18 @@
   "steps": 180,
   "n_remesh": 0,
   "nodes": 2629.0,
-  "seconds": 0.13276100158691406,
+  "seconds": 0.2986314296722412,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2566,10 +3486,18 @@
   "steps": 360,
   "n_remesh": 0,
   "nodes": 2629.0,
-  "seconds": 0.26122260093688965,
+  "seconds": 0.5413341522216797,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B3",
@@ -2588,10 +3516,18 @@
   "steps": 720,
   "n_remesh": 0,
   "nodes": 2629.0,
-  "seconds": 0.44370222091674805,
+  "seconds": 0.8438563346862793,
   "trials_per_step": 1.0,
   "solves_per_step": 2.0,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2610,10 +3546,18 @@
   "steps": 600,
   "n_remesh": 5,
   "nodes": 4035.1883333333335,
-  "seconds": 1.8514018058776855,
+  "seconds": 2.2448103427886963,
   "trials_per_step": 3.0033333333333334,
   "solves_per_step": 6.006666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2632,10 +3576,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 4035.75,
-  "seconds": 3.14741849899292,
+  "seconds": 5.175952434539795,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2654,10 +3606,18 @@
   "steps": 2400,
   "n_remesh": 5,
   "nodes": 4035.8133333333335,
-  "seconds": 7.104862213134766,
+  "seconds": 10.031973600387573,
   "trials_per_step": 3.0008333333333335,
   "solves_per_step": 6.001666666666667,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2676,10 +3636,18 @@
   "steps": 400,
   "n_remesh": 12,
   "nodes": 3305.6975,
-  "seconds": 1.2750000953674316,
+  "seconds": 1.3449342250823975,
   "trials_per_step": 3.01,
   "solves_per_step": 6.02,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2698,10 +3666,18 @@
   "steps": 800,
   "n_remesh": 12,
   "nodes": 3305.61375,
-  "seconds": 1.8956854343414307,
+  "seconds": 2.74566912651062,
   "trials_per_step": 3.005,
   "solves_per_step": 6.01,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2720,10 +3696,18 @@
   "steps": 1600,
   "n_remesh": 13,
   "nodes": 3305.693125,
-  "seconds": 3.868830919265747,
+  "seconds": 5.535506963729858,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2742,10 +3726,18 @@
   "steps": 400,
   "n_remesh": 25,
   "nodes": 3305.68,
-  "seconds": 0.9939286708831787,
+  "seconds": 1.3834173679351807,
   "trials_per_step": 3.01,
   "solves_per_step": 6.02,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2764,10 +3756,18 @@
   "steps": 800,
   "n_remesh": 25,
   "nodes": 3305.6975,
-  "seconds": 1.9893498420715332,
+  "seconds": 2.6487319469451904,
   "trials_per_step": 3.005,
   "solves_per_step": 6.01,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2786,10 +3786,18 @@
   "steps": 1600,
   "n_remesh": 25,
   "nodes": 3305.729375,
-  "seconds": 4.5792741775512695,
+  "seconds": 6.490036487579346,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2808,12 +3816,20 @@
   "steps": 600,
   "n_remesh": 55,
   "nodes": 4035.890909090909,
-  "seconds": 0.20398926734924316,
+  "seconds": 0.2878432273864746,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.02
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2832,12 +3848,20 @@
   "steps": 1200,
   "n_remesh": 67,
   "nodes": 4035.7611940298507,
-  "seconds": 0.38039135932922363,
+  "seconds": 0.54437255859375,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.01
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2856,12 +3880,20 @@
   "steps": 2400,
   "n_remesh": 77,
   "nodes": 4035.8311688311687,
-  "seconds": 0.7362260818481445,
+  "seconds": 0.9526252746582031,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.005
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2880,12 +3912,20 @@
   "steps": 6000,
   "n_remesh": 86,
   "nodes": 4035.767441860465,
-  "seconds": 1.782362699508667,
+  "seconds": 2.3044190406799316,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.002
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2904,12 +3944,20 @@
   "steps": 12000,
   "n_remesh": 89,
   "nodes": 4035.752808988764,
-  "seconds": 3.9884564876556396,
+  "seconds": 5.171587228775024,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.001
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2920,20 +3968,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6285108633245695,
-  "c_num": 0.6716134249036497,
-  "err": -0.9568974384209198,
-  "err_lsq": -0.9568974384209198,
-  "err_end": -0.9573476328522692,
+  "c_num": 0.6716134695555239,
+  "err": -0.9568973937690456,
+  "err_lsq": -0.9568973937690456,
+  "err_end": -0.9573476270344212,
   "cycles": null,
   "steps": 400,
   "n_remesh": 74,
   "nodes": 3305.7702702702704,
-  "seconds": 0.17148852348327637,
+  "seconds": 0.20830965042114258,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.02
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2952,12 +4008,20 @@
   "steps": 800,
   "n_remesh": 95,
   "nodes": 3305.7473684210527,
-  "seconds": 0.2853059768676758,
+  "seconds": 0.49202561378479004,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.01
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -2976,12 +4040,20 @@
   "steps": 1600,
   "n_remesh": 112,
   "nodes": 3305.723214285714,
-  "seconds": 0.46828484535217285,
+  "seconds": 0.6415214538574219,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.005
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -3000,12 +4072,20 @@
   "steps": 4000,
   "n_remesh": 137,
   "nodes": 3305.7737226277372,
-  "seconds": 1.2374904155731201,
+  "seconds": 1.7584819793701172,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.002
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B1",
@@ -3016,20 +4096,28 @@
   "T": 8.0,
   "c0": 1.632993161855452,
   "c_eps": 1.6285108633245695,
-  "c_num": 1.424957203915569,
-  "err": -0.2035536594090006,
-  "err_lsq": -0.2035536594090006,
-  "err_end": -0.20357879124549005,
+  "c_num": 1.4249571292348666,
+  "err": -0.2035537340897029,
+  "err_lsq": -0.2035537340897029,
+  "err_end": -0.20357883380907493,
   "cycles": null,
   "steps": 8000,
   "n_remesh": 153,
-  "nodes": 3305.764705882353,
-  "seconds": 2.215707302093506,
+  "nodes": 3305.7581699346406,
+  "seconds": 3.2647440433502197,
   "trials_per_step": 0.0,
   "solves_per_step": 2.0,
   "dts": [
    0.001
-  ]
+  ],
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -3052,10 +4140,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 12686.248333333333,
-  "seconds": 8.934094905853271,
+  "seconds": 11.89478349685669,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -3078,10 +4174,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 12910.1875,
-  "seconds": 9.297173738479614,
+  "seconds": 13.431867361068726,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -3104,10 +4208,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 13359.438333333334,
-  "seconds": 10.436577320098877,
+  "seconds": 13.680588006973267,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -3130,10 +4242,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 14251.438333333334,
-  "seconds": 10.639527320861816,
+  "seconds": 14.716966152191162,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2h",
@@ -3156,10 +4276,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 16024.561666666666,
-  "seconds": 11.730484962463379,
+  "seconds": 16.31681489944458,
   "trials_per_step": 3.0025,
   "solves_per_step": 6.005,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -3182,10 +4310,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 2621.0,
-  "seconds": 2.2882025241851807,
+  "seconds": 4.959280967712402,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -3208,10 +4344,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 3385.8125,
-  "seconds": 3.1360881328582764,
+  "seconds": 6.037926197052002,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -3234,10 +4378,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 4929.5625,
-  "seconds": 3.6682136058807373,
+  "seconds": 6.9146728515625,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -3260,10 +4412,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 8032.0,
-  "seconds": 6.492582321166992,
+  "seconds": 7.793763160705566,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B2c",
@@ -3286,10 +4446,18 @@
   "steps": 1200,
   "n_remesh": 5,
   "nodes": 14251.438333333334,
-  "seconds": 10.77346682548523,
+  "seconds": 13.681535005569458,
   "trials_per_step": 3.0016666666666665,
   "solves_per_step": 6.003333333333333,
-  "dts": null
+  "dts": null,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3305,7 +4473,15 @@
   "steps": 19,
   "n_remesh": 9,
   "nodes": 1341.3157894736842,
-  "seconds": 0.043097734451293945
+  "seconds": 0.10718798637390137,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3321,7 +4497,15 @@
   "steps": 38,
   "n_remesh": 11,
   "nodes": 1341.4473684210527,
-  "seconds": 0.07224655151367188
+  "seconds": 0.15737414360046387,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3337,7 +4521,15 @@
   "steps": 75,
   "n_remesh": 11,
   "nodes": 1341.4666666666667,
-  "seconds": 0.11763286590576172
+  "seconds": 0.3072390556335449,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3353,7 +4545,15 @@
   "steps": 150,
   "n_remesh": 12,
   "nodes": 1341.5,
-  "seconds": 0.23132753372192383
+  "seconds": 0.5331230163574219,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3369,7 +4569,15 @@
   "steps": 300,
   "n_remesh": 12,
   "nodes": 1341.4766666666667,
-  "seconds": 0.45603060722351074
+  "seconds": 0.9080867767333984,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3385,7 +4593,15 @@
   "steps": 19,
   "n_remesh": 11,
   "nodes": 1415.0,
-  "seconds": 0.0482640266418457
+  "seconds": 0.07299494743347168,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3401,7 +4617,15 @@
   "steps": 38,
   "n_remesh": 13,
   "nodes": 1415.2105263157894,
-  "seconds": 0.08106184005737305
+  "seconds": 0.19079875946044922,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3417,7 +4641,15 @@
   "steps": 75,
   "n_remesh": 13,
   "nodes": 1415.0,
-  "seconds": 0.14270687103271484
+  "seconds": 0.2447834014892578,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3433,7 +4665,15 @@
   "steps": 150,
   "n_remesh": 14,
   "nodes": 1415.0,
-  "seconds": 0.35379862785339355
+  "seconds": 0.6001272201538086,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "group": "B4",
@@ -3449,6 +4689,14 @@
   "steps": 300,
   "n_remesh": 14,
   "nodes": 1415.0,
-  "seconds": 0.6993231773376465
+  "seconds": 0.9971165657043457,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  }
 ]

@@ -257,7 +257,7 @@ The arguments are:
 
 ## Reproducing the paper
 
-One command reruns every experiment and redraws every figure (roughly 1–1.5 h with
+One command reruns every experiment and redraws every figure (about 2 h 10 min, measured on a 4-core machine, with
 4 processes on the machine where the results were generated; this and the other times
 below are approximate and machine dependent, and a laptop can be several times slower):
 

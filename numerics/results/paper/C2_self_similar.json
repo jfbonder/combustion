@@ -21883,8 +21883,12 @@
      }
     ],
     "steps": 7110,
-    "seconds": 11.707732677459717,
-    "error": null
+    "seconds": 16.836127758026123,
+    "error": null,
+    "status": "ok",
+    "reason": null,
+    "n_secant_fail": 0,
+    "n_mesh_remesh": 0
    },
    {
     "eps": 0.002,
@@ -44325,8 +44329,12 @@
      }
     ],
     "steps": 28863,
-    "seconds": 49.82677602767944,
-    "error": null
+    "seconds": 66.79067707061768,
+    "error": null,
+    "status": "ok",
+    "reason": null,
+    "n_secant_fail": 0,
+    "n_mesh_remesh": 0
    }
   ],
   "bdf_run": {
@@ -52845,7 +52853,15 @@
     }
    ],
    "steps": 8358,
-   "seconds": 18.622823476791382
+   "seconds": 23.28424572944641
+  },
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
   }
  },
  {
@@ -73672,8 +73688,12 @@
      }
     ],
     "steps": 4959,
-    "seconds": 8.654729843139648,
-    "error": null
+    "seconds": 11.147881746292114,
+    "error": null,
+    "status": "ok",
+    "reason": null,
+    "n_secant_fail": 0,
+    "n_mesh_remesh": 0
    },
    {
     "eps": 0.002,
@@ -91772,8 +91792,12 @@
      }
     ],
     "steps": 20132,
-    "seconds": 36.61203742027283,
-    "error": null
+    "seconds": 47.403443813323975,
+    "error": null,
+    "status": "ok",
+    "reason": null,
+    "n_secant_fail": 0,
+    "n_mesh_remesh": 0
    }
   ],
   "bdf_run": {
@@ -100232,7 +100256,15 @@
     }
    ],
    "steps": 6985,
-   "seconds": 15.669278621673584
+   "seconds": 18.62553334236145
+  },
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
   }
  }
 ]

@@ -10,6 +10,9 @@ This repository contains:
   [`numerics/README.md`](numerics/README.md) for installation, usage and reproduction.
 - The two thesis papers (below), on which the article builds.
 
+`paper/referato_editorial.md` is an internal adversarial referee report on an earlier
+draft, and `paper/respuesta_referato.md` the point-by-point response (both in Spanish).
+
 ## Tesis doctoral
 
 Papers de la tesis doctoral de Julián Fernández Bonder, en colaboración con Noemí Wolanski.

@@ -37,7 +37,7 @@ convergence for this singular limit, of order $\ve$ up to a logarithm. We
 also propose a numerical method whose mesh follows the flame front, and show
 that the same barriers, evaluated on the mesh, give the convergence of the
 fully discrete scheme to the free boundary problem, with explicit error
-bounds, on meshes that move with a prescribed velocity. Numerical experiments
+bounds, for radial data and meshes that move with a prescribed velocity. Numerical experiments
 illustrate the method and the estimates.
 \end{abstract}
 
@@ -211,7 +211,9 @@ travelling waves of \eqref{eq:Peps}, for which we obtain the first-order correct
 the flame speed with a rigorous remainder (Proposition~\ref{prop:speed}), and the
 radial self-similar solutions of \eqref{eq:P}. Section~\ref{sec:experiments} shows the
 meshes and how they are refined and coarsened, tests the estimates, compares
-\eqref{eq:Peps} with a front-fixing solver for \eqref{eq:P} for general data, follows
+\eqref{eq:Peps} with a front-fixing solver for \eqref{eq:P} for general data, including a
+non-constant $w_0$, compares the cost of the method with that of other solvers at equal
+accuracy, follows
 the approach to self-similar extinction of \cite{GalaktionovHulshofVazquez1997}, and
 displays the dependence of the limit on $w_0$.
 
@@ -1275,7 +1277,8 @@ step BDF method of SciPy with the analytic sparse Jacobian
 ($\mathrm{rtol}=10^{-5}$, $\mathrm{atol}=10^{-4}\ve$), and transfer by monotone cubic
 (PCHIP) interpolation. It is not monotone and is not covered by the analysis; we use
 it as an accurate reference. Its time step must resolve the passage of the front
-through each fine cell, so the number of steps grows like $\ve^{-1}$ to $\ve^{-3/2}$.
+through each fine cell, so the number of steps grows faster than $\ve^{-1}$ (like
+$\ve^{-1.4}$ in Section~\ref{sec:exp:work}).
 
 \emph{Initial data.} Given the initial datum $u_0\ge0$ of \eqref{eq:P} and $w_0$ we take
 \begin{equation}\label{eq:initdata}
@@ -1840,14 +1843,11 @@ translate with the flame, and the band nodes stay on their lattice at remeshing:
 planar wave with $\ve=0.01$ and $0\le t\le4$ the mesh is rebuilt once. On meshes that do not
 move it is rebuilt $31$ times, and at each rebuild the band jumps ahead of the front.
 
-\emph{Cost.} For a fixed ratio $h_f/\ve$ the number of nodes is constant in time and
-grows only logarithmically in $1/\ve$: for the planar travelling wave ($w_0=0$, $L=27$,
-$0\le t\le4$) the mesh has $3573$ nodes for $\ve=0.01$ and $3671$ for $\ve=0.001$, of which $882$
-are in the band; the difference is in the transitions. Each ALE step costs six
-tridiagonal solves, and with $\Delta t=0.01$ the run takes $400$ steps and $1.1$ to $1.6$
-seconds for every $\ve$, whereas the adaptive BDF solver takes $932$ steps ($5.5$ s) for
-$\ve=0.01$ and $22687$ steps ($122$ s) for $\ve=0.001$: its number of steps grows like
-$\ve^{-1.4}$.
+\emph{Number of nodes.} For a fixed ratio $h_f/\ve$ the number of nodes is constant in
+time and grows only logarithmically in $1/\ve$: for the planar travelling wave ($w_0=0$,
+$L=27$, $0\le t\le4$) the mesh has $3573$ nodes for $\ve=0.01$ and $3671$ for $\ve=0.001$, of
+which $882$ are in the band; the difference is in the transitions. The cost of the method
+is compared with that of other methods, at equal accuracy, in Section~\ref{sec:exp:work}.
 
 \subsection{Travelling waves: the discretization error}\label{sec:exp:tw}
 
@@ -1880,7 +1880,9 @@ sharp.
 computed. Figure~\ref{fig:D1} shows $E$ and $E_s$ for $\Delta t$ from $0.0025$ to $0.1$ and
 $\ve\in\{0.01,0.003,0.001\}$, that is, $\Delta t/\ve$ up to $100$ and $\Delta t/\ve^2$ up to $10^5$. For
 $w_0=0$ and $T=8$ we find $E=4.4$--$4.8\cdot10^{-4}$ and $E_s=4.3$--$4.4\cdot10^{-5}$ for all of
-them ($E_s=6$--$7\cdot10^{-5}$ for $\Delta t=0.1$): no dependence on $\Delta t$ or on $\ve$. As
+them ($E_s=6$--$7\cdot10^{-5}$ for $\Delta t=0.1$): no dependence on $\Delta t$ or on $\ve$. The same
+values are found for $\ve=0.1$ and $\ve=0.05$ ($E=4.2$--$4.4\cdot10^{-4}$,
+$E_s=4.1$--$4.3\cdot10^{-5}$), the range of realistic Zeldovich numbers. As
 explained in Section~\ref{an:sec:impl}, $\mathcal M_T$ coincides with the error in the position of the
 front, $7.7$--$8.3\cdot10^{-4}$, and $E\approx\Phi'(0)\mathcal M_T$; the maximum of $|v_n-c_\ve|$, on the
 contrary, is attained in the first steps and grows as $\Delta t\to0$ (from $2.7\cdot10^{-4}$ for
@@ -1969,6 +1971,84 @@ divided by $\Delta t/\ve$; dotted: the value \eqref{an:eq:solv}. Right: ALE from
 ($\ve=0.01$, $\Delta t=0.02$): mesh velocity error $v_n-c_\ve$ for four positions $\vartheta$ of
 the front in its cell.}\label{fig:D6}
 \end{figure}
+
+\subsection{Work and accuracy}\label{sec:exp:work}
+
+For the planar travelling wave ($w_0=0$, $A=1$, started from $\Phi_\ve$, $0\le t\le4$) we
+compare, at equal accuracy, the cost of five methods: ALE; the Eulerian version of (S),
+on band meshes and, for $\ve=0.01$, on a uniform mesh of size $\ve/16$; the BDF solver of
+Section~\ref{sec:eulerian}; and the same method of lines, on the same band meshes, with
+the unknowns interleaved so that the Jacobian is banded, integrated with the variable
+order solver LSODA and its banded linear algebra. Figure~\ref{fig:J1} shows the error in
+the position of the front at $t=4$ against the running time, and Table~\ref{tab:work} gives
+the number of steps and of linear solves, which do not depend on the implementation; the
+times are those of our Python implementations on one core, and they are only indicative.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/J1_work_precision.png}
+\caption{Planar travelling wave, $0\le t\le4$: error in the position of the front at the
+final time against the running time. ALE with $\Delta t$ from $0.2$ to $0.0025$ and four band
+mesh sizes; Eulerian (S) with $\Delta t=\ve/4,\dots,\ve/1024$; BDF and LSODA with relative
+tolerances from $10^{-3}$ to $10^{-6}$.}\label{fig:J1}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l ccc ccc}
+\toprule
+& \multicolumn{3}{c}{$\ve=0.01$} & \multicolumn{3}{c}{$\ve=0.001$}\\
+method & error & steps & solves & error & steps & solves\\
+\midrule
+ALE, $\ve/16$, $\Delta t=0.1$  & $4.5\cdot10^{-4}$ & $40$ & $240$ & $4.6\cdot10^{-4}$ & $40$ & $240$\\
+ALE, $\ve/32$, $\Delta t=0.1$  & $1.0\cdot10^{-4}$ & $40$ & $240$ & $9.9\cdot10^{-5}$ & $40$ & $240$\\
+ALE, $\ve/64$, $\Delta t=0.01$ & $8.9\cdot10^{-6}$ & $400$ & $2400$ & $5.6\cdot10^{-6}$ & $400$ & $2400$\\
+BDF, rtol $10^{-4}$                & $3.3\cdot10^{-5}$ & $727$ & $999$ & $4.4\cdot10^{-5}$ & $23397$ & $49297$\\
+BDF, rtol $10^{-5}$                & $5.5\cdot10^{-5}$ & $907$ & $1174$ & $2.9\cdot10^{-5}$ & $23301$ & $31322$\\
+LSODA, rtol $10^{-4}$              & $1.5\cdot10^{-4}$ & $2732$ & $651$ & $1.1\cdot10^{-5}$ & $45420$ & $13597$\\
+LSODA, rtol $10^{-5}$              & $3.0\cdot10^{-5}$ & $17074$ & $5707$ & $3.7\cdot10^{-5}$ & $413042$ & $184098$\\
+Eul.\ (S), $\Delta t=\ve/64$     & $2.3\cdot10^{-2}$ & $25600$ & $51200$ & $2.1\cdot10^{-2}$ & $256000$ & $512000$\\
+Eul.\ (S), $\Delta t=\ve/1024$   & $1.3\cdot10^{-3}$ & $409600$ & $819200$ & & &\\
+\bottomrule
+\end{tabular}
+\caption{Planar travelling wave, $0\le t\le4$: error in the position of the front at the
+final time, number of time steps, and number of linear solves; for ALE the first entry
+is $h_f$ (tridiagonal solves for
+(S), sparse LU factorizations of the $2J\times2J$ Jacobian for BDF, banded Jacobian
+evaluations and factorizations for LSODA). The meshes have between $3100$ and $6300$
+nodes.}\label{tab:work}
+\end{table}
+
+For ALE the error is determined by the mesh of the band: $1.9\cdot10^{-3}$, $4.5\cdot10^{-4}$,
+$1.0\cdot10^{-4}$ and about $10^{-5}$ for $h_f=\ve/8$, $\ve/16$, $\ve/32$ and $\ve/64$, for both values
+of $\ve$ and for every time step between $0.0025$ and $0.2$. (This is the lattice pinning
+error for the phase $\vartheta=0.37$ of these runs; for other phases it lies between much
+smaller values and about twice this one, see Section~\ref{sec:exp:tw}.) Hence the largest
+time step can be used, and the cost, $240$
+tridiagonal solves, a few tenths of a second, does not depend on $\ve$. The two
+method-of-lines solvers reach errors between $10^{-5}$ and $6\cdot10^{-5}$, which they do not
+improve when the tolerance is reduced, because of the transfers between the band
+meshes, which are rebuilt about $30$ times for $\ve=0.01$ and $300$ times for $\ve=0.001$. For
+errors below $10^{-4}$ BDF needs $700$ to $900$ steps and $5$ to $6$ seconds for $\ve=0.01$, and
+$2.3\cdot10^4$ steps and $130$ to $190$ seconds for $\ve=0.001$ (its number of steps grows like
+$\ve^{-1.4}$); LSODA needs $1.7\cdot10^4$ steps and $18$ seconds, and $4.5\cdot10^4$ steps and
+$43$ seconds. The banded solver is
+faster per step than the sparse one, but the number of steps, not the linear algebra, is
+what makes these methods expensive for small $\ve$. For the Eulerian version of (S) the
+error is proportional to $\Delta t/\ve$, between $0.31$ and $0.36$ times $(\Delta t/\ve)\,T$ (the
+coefficient $0.23$ of Section~\ref{sec:exp:tw} is reached only after the transient), on
+band meshes and on the uniform mesh alike, and an error of $10^{-3}$ already requires
+$\Delta t\approx\ve/1000$.
+
+Two remarks limit the scope of this comparison. First, the travelling wave is the most
+favourable case for ALE, because the solution is steady in the frame of the band and the
+time step does not enter the error; for other data the error is of first order in
+$\Delta t$ (Section~\ref{sec:exp:thm}), and the time step has to be chosen accordingly.
+Second, we have not compared with moving mesh methods based on equidistribution
+\cite{HuangRussell2011}, which are the natural alternative to a band that follows the
+front.
 
 \subsection{An accelerating front: the setting of Theorem~\ref{cv:thm:main}}\label{sec:exp:thm}
 
@@ -2060,8 +2140,8 @@ $\ve$ & front$^*/\ve$ & sup$/\ve$ & front$^*/\ve$ & sup$/\ve$ & front$^*/\ve$ & 
 0.02  & 0.325 & 0.327 & 0.118 & 0.102 & 0.115 & 0.096\\
 0.01  & 0.302 & 0.311 & 0.096 & 0.090 & 0.089 & 0.089\\
 0.005 & 0.300 & 0.312 & 0.083 & 0.092 & 0.075 & 0.089\\
-0.002 & 0.302 & 0.315 & 0.065 & 0.100 & 0.065 & 0.095\\
-0.001 & 0.285 & 0.292 & 0.067 & 0.093 & 0.053 & 0.101\\
+0.002 & 0.321 & 0.333 & 0.065 & 0.100 & 0.065 & 0.095\\
+0.001 & 0.296 & 0.302 & 0.067 & 0.093 & 0.053 & 0.101\\
 \bottomrule
 \end{tabular}
 \caption{\eqref{eq:Peps} (BDF) against the computed solution of \eqref{eq:P}: error in the
@@ -2092,6 +2172,55 @@ $u_0=a(1-r^2/R_0^2)^+$ ($w_0=0.5$). Left: fronts ($N=2$). Middle: front$^*$. Rig
 error at the final time. Colour: ALE with $\Delta t=0.002$, $0.0005$, $0.000125$; grey:
 BDF.}\label{fig:C1}
 \end{figure}
+
+\subsection{A non-constant $w_0$}\label{sec:exp:varw}
+
+In all the experiments above $w^\ve\equiv\ve w_0$ with $w_0$ constant. When $w^\ve(\cdot,0)=\ve
+W_0$ with $W_0$ not constant, $w_0(x,t)$ is the solution of the heat equation with initial
+datum $W_0$, and the free boundary condition of \eqref{eq:P} is
+$|\nabla u|=\sqrt{2M(w_0(x,t))}$: the flame moves in a mixture that is stratified in
+enthalpy. This is the feature that distinguishes \eqref{eq:P} from the problem of
+\cite{CaffarelliVazquez1995}. The scheme needs no change, since $W_h=Y-U$ solves the
+discrete heat equation, and in the front-fixing solver $M$ is evaluated at the current
+front. We consider a planar front, with $L=24$,
+\[
+w_0(x,t)=0.5+0.4\,e^{-k^2t}\cos(kx),\quad k=\tfrac\pi6,\qquad
+u_0=A\tanh\big(\sqrt{2M(w_0(2,0))}\,(x-2)/A\big)^+,\quad A=1,
+\]
+up to $t=6$, and a pocket of fresh gas in radial symmetry, with $N=3$, $L=6$,
+\[
+w_0(r,t)=0.5-0.3\,e^{-k^2t}\,\frac{\sin(kr)}{kr},\quad \tan(kL)=kL,\qquad
+u_0=a\,(1-r^2/R_0^2)^+,\quad R_0=2,
+\]
+with $a=\sqrt{2M(w_0(R_0,0))}\,R_0/2$,
+until the radius halves. In both cases $w_0$ has zero flux at the ends of the domain and
+the data satisfy the free boundary condition at $t=0$; in the second one $w_0$
+satisfies the monotonicity condition \eqref{q:eq:mono} in a neighbourhood of the pocket,
+so that this example is in the setting of Theorem~\ref{q:thm:rate}, provided that the
+limit problem has a regular classical solution (Remark~\ref{q:rem:rate}). Along the free
+boundary $w_0$ goes from $0.70$ to $0.36$ and back to $0.45$ in the planar case, and
+from $0.30$ to $0.28$ in the radial one (Figure~\ref{fig:I1}); at $t=6$ the planar front
+is at $x=7.50$, while with $w_0$ replaced by its mean value $0.5$ it would be at $7.97$.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{../numerics/figures/paper/I1_variable_w0.png}
+\caption{Non-constant $w_0$. Left: fronts of the computed limit problem \eqref{eq:P}
+(solid), of \eqref{eq:P} with $w_0\equiv0.5$ (dotted) and of \eqref{eq:Peps} with $\ve=0.01$
+(circles). Middle: $w_0$ at the free boundary. Right: front$^*$ and sup error, as in
+Table~\ref{tab:limit}, for BDF and for ALE ($\Delta t=2.5\cdot10^{-4}$ planar,
+$1.25\cdot10^{-4}$ radial).}\label{fig:I1}
+\end{figure}
+
+The errors of \eqref{eq:Peps}, computed with BDF, against the computed limit problem are
+proportional to $\ve$, with no visible logarithm: for $\ve$ from $0.05$ to $0.001$, front$^*/\ve$
+(with the shift $\ve/\sqrt{2M}$ evaluated at the current front) is $0.80$, $0.75$, $0.74$,
+$0.72$, $0.73$, $0.73$ in the planar case and $0.55$, $0.47$, $0.44$, $0.42$, $0.41$, $0.40$
+in the radial one, and the sup error divided by $\ve$ is between $0.72$ and $0.73$, and
+between $0.33$ and $0.34$, respectively. With ALE the errors are the same up to the time
+discretization, which is visible for the smallest values of $\ve$ (front$^*=1.9\,\ve$ and
+$0.75\,\ve$ for $\ve=0.001$), as in Section~\ref{sec:limit}. The discrete $W_h/\ve$ differs
+from the exact $w_0$ by at most $10^{-4}$ at the final time.
 
 \subsection{Approach to the self-similar extinction profile}
 
@@ -2226,10 +2355,10 @@ $\Theta_s\ge c\,\Theta\ge c\,e^{-CS}$ on $[-S,s_m]$; and $\Theta(s)\le\Theta(0)e
 $0<\Theta\le\Theta_m$, with $P_W=O(\Theta)$ and $P_{WW}=O(\Theta)$ as $\Theta\to0$. Write
 $P=\Theta Q$. By \eqref{q:eq:Psup} and \eqref{q:eq:Plin}, on every interval $(0,\Theta_1]$
 with $\Theta_1\le1+W$ the function $Q$ is the fixed point of
-\[
-\mathcal T(Q;W)(\Theta)=\frac{\sqrt2}{G(W)}\Big(\beta(\Theta;W)-\kappa\int_0^1\tau\,Q(\Theta\tau)\,d\tau\Big)^{1/2},
-\qquad\beta(\Theta;W)=\frac{\tilde B(\Theta;W)}{\Theta^2}=\int_0^1\tau f(\Theta\tau-W)\,d\tau,
-\]
+\begin{gather*}
+\mathcal T(Q;W)(\Theta)=\frac{\sqrt2}{G(W)}\Big(\beta(\Theta;W)-\kappa\int_0^1\tau\,Q(\Theta\tau)\,d\tau\Big)^{1/2},\\
+\beta(\Theta;W)=\frac{\tilde B(\Theta;W)}{\Theta^2}=\int_0^1\tau f(\Theta\tau-W)\,d\tau,
+\end{gather*}
 in the set $\{c\le Q\le C\}$ of $C([0,\Theta_1])$, where $\beta\ge c$ by \eqref{q:eq:Bquad}; for
 $\kappa$ small $\mathcal T(\cdot\,;W)$ maps this set into itself and is a contraction with
 constant $\frac12$. Fix $W_*$ and $\Theta_1<1+W_*$. By (F$_2$), $f''$ is uniformly

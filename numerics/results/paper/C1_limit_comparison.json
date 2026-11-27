@@ -1329,7 +1329,15 @@
   "steps": 282,
   "n_remesh": 10,
   "nodes": 1015.8687943262412,
-  "seconds": 0.49854564666748047
+  "seconds": 0.5594813823699951,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -2982,8 +2990,16 @@
   ],
   "steps": 1130,
   "n_remesh": 10,
-  "nodes": 1015.929203539823,
-  "seconds": 1.7466850280761719
+  "nodes": 1015.9247787610619,
+  "seconds": 3.175320625305176,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -5925,7 +5941,15 @@
   "steps": 4520,
   "n_remesh": 10,
   "nodes": 1015.8396017699115,
-  "seconds": 6.985194206237793
+  "seconds": 11.233497381210327,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -7225,7 +7249,15 @@
   "steps": 196,
   "n_remesh": 9,
   "nodes": 1015.8316326530612,
-  "seconds": 0.2940099239349365
+  "seconds": 0.5136840343475342,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -8748,8 +8780,16 @@
   ],
   "steps": 786,
   "n_remesh": 10,
-  "nodes": 1015.9185750636133,
-  "seconds": 1.2906606197357178
+  "nodes": 1015.9134860050891,
+  "seconds": 1.6236774921417236,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -11168,8 +11208,16 @@
   ],
   "steps": 3144,
   "n_remesh": 10,
-  "nodes": 1015.8517811704835,
-  "seconds": 5.127258062362671
+  "nodes": 1015.8460559796438,
+  "seconds": 7.987706422805786,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -12501,7 +12549,15 @@
   "steps": 282,
   "n_remesh": 9,
   "nodes": 1196.145390070922,
-  "seconds": 0.4413766860961914
+  "seconds": 0.6302554607391357,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -14155,7 +14211,15 @@
   "steps": 1130,
   "n_remesh": 10,
   "nodes": 1196.0017699115044,
-  "seconds": 1.8860228061676025
+  "seconds": 2.9801154136657715,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -17097,7 +17161,15 @@
   "steps": 4520,
   "n_remesh": 10,
   "nodes": 1196.0,
-  "seconds": 6.888018369674683
+  "seconds": 13.479910850524902,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -18397,7 +18469,15 @@
   "steps": 196,
   "n_remesh": 9,
   "nodes": 1196.1632653061224,
-  "seconds": 0.30935192108154297
+  "seconds": 0.4677848815917969,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -19921,7 +20001,15 @@
   "steps": 786,
   "n_remesh": 10,
   "nodes": 1196.0636132315522,
-  "seconds": 1.4658935070037842
+  "seconds": 2.094759225845337,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -22341,7 +22429,15 @@
   "steps": 3144,
   "n_remesh": 10,
   "nodes": 1196.0,
-  "seconds": 6.905212640762329
+  "seconds": 10.205915689468384,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -23673,7 +23769,15 @@
   "steps": 282,
   "n_remesh": 9,
   "nodes": 1264.372340425532,
-  "seconds": 0.4442296028137207
+  "seconds": 0.9053184986114502,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -25327,7 +25431,15 @@
   "steps": 1130,
   "n_remesh": 10,
   "nodes": 1264.9982300884956,
-  "seconds": 2.210016965866089
+  "seconds": 4.042951583862305,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -28269,7 +28381,15 @@
   "steps": 4520,
   "n_remesh": 10,
   "nodes": 1265.0,
-  "seconds": 8.123471975326538
+  "seconds": 12.594794750213623,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -29569,7 +29689,15 @@
   "steps": 196,
   "n_remesh": 9,
   "nodes": 1264.4132653061224,
-  "seconds": 0.47728490829467773
+  "seconds": 0.45150136947631836,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -31093,7 +31221,15 @@
   "steps": 786,
   "n_remesh": 9,
   "nodes": 1264.6157760814249,
-  "seconds": 1.3256781101226807
+  "seconds": 1.823241949081421,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -33513,7 +33649,15 @@
   "steps": 3144,
   "n_remesh": 10,
   "nodes": 1265.0,
-  "seconds": 5.858691453933716
+  "seconds": 8.801421880722046,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -34845,7 +34989,15 @@
   "steps": 282,
   "n_remesh": 9,
   "nodes": 1306.0,
-  "seconds": 0.41978955268859863
+  "seconds": 0.6568026542663574,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -36499,7 +36651,15 @@
   "steps": 1130,
   "n_remesh": 10,
   "nodes": 1306.0,
-  "seconds": 2.2241616249084473
+  "seconds": 3.193571090698242,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -39441,7 +39601,15 @@
   "steps": 4520,
   "n_remesh": 10,
   "nodes": 1306.0,
-  "seconds": 8.63263988494873
+  "seconds": 13.43077564239502,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -40741,7 +40909,15 @@
   "steps": 196,
   "n_remesh": 9,
   "nodes": 1306.0,
-  "seconds": 0.33345580101013184
+  "seconds": 0.5271921157836914,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -42265,7 +42441,15 @@
   "steps": 786,
   "n_remesh": 9,
   "nodes": 1306.0,
-  "seconds": 1.5624394416809082
+  "seconds": 1.950392723083496,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -44685,7 +44869,15 @@
   "steps": 3144,
   "n_remesh": 10,
   "nodes": 1306.0,
-  "seconds": 5.951559066772461
+  "seconds": 10.89796757698059,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -46017,7 +46209,15 @@
   "steps": 282,
   "n_remesh": 9,
   "nodes": 1341.6702127659576,
-  "seconds": 0.4573783874511719
+  "seconds": 0.7855381965637207,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -47671,7 +47871,15 @@
   "steps": 1130,
   "n_remesh": 10,
   "nodes": 1341.1309734513275,
-  "seconds": 1.9001693725585938
+  "seconds": 3.0310609340667725,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -50613,7 +50821,15 @@
   "steps": 4520,
   "n_remesh": 10,
   "nodes": 1341.0,
-  "seconds": 7.356455087661743
+  "seconds": 11.63990592956543,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -51913,7 +52129,15 @@
   "steps": 196,
   "n_remesh": 9,
   "nodes": 1341.3163265306123,
-  "seconds": 0.33991146087646484
+  "seconds": 0.6162903308868408,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -53437,7 +53661,15 @@
   "steps": 786,
   "n_remesh": 9,
   "nodes": 1341.2773536895675,
-  "seconds": 1.57254958152771
+  "seconds": 2.696295738220215,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -55857,7 +56089,15 @@
   "steps": 3144,
   "n_remesh": 10,
   "nodes": 1341.0,
-  "seconds": 5.547428607940674
+  "seconds": 9.585347652435303,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -57189,7 +57429,15 @@
   "steps": 282,
   "n_remesh": 9,
   "nodes": 1361.0921985815603,
-  "seconds": 0.518608570098877
+  "seconds": 0.774036169052124,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -58843,7 +59091,15 @@
   "steps": 1130,
   "n_remesh": 10,
   "nodes": 1361.0,
-  "seconds": 1.9179725646972656
+  "seconds": 2.975529909133911,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial2",
@@ -61785,7 +62041,15 @@
   "steps": 4520,
   "n_remesh": 10,
   "nodes": 1361.0,
-  "seconds": 7.50761079788208
+  "seconds": 13.69753360748291,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -63085,7 +63349,15 @@
   "steps": 196,
   "n_remesh": 9,
   "nodes": 1361.2091836734694,
-  "seconds": 0.3706166744232178
+  "seconds": 0.47809386253356934,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -64609,7 +64881,15 @@
   "steps": 786,
   "n_remesh": 9,
   "nodes": 1361.0610687022902,
-  "seconds": 1.5057802200317383
+  "seconds": 2.2588796615600586,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  },
  {
   "geom": "radial3",
@@ -67029,6 +67309,14 @@
   "steps": 3144,
   "n_remesh": 10,
   "nodes": 1361.0,
-  "seconds": 5.969359636306763
+  "seconds": 8.308095932006836,
+  "provenance": {
+   "git": "2e050488dad6f63d31dce2160bc708644a91e515",
+   "git_dirty": true,
+   "python": "3.13.18",
+   "numpy": "2.5.3",
+   "scipy": "1.18.1",
+   "platform": "Linux x86_64"
+  }
  }
 ]

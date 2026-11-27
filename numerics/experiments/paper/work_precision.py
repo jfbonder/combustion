@@ -191,12 +191,12 @@ def plot():
                     and r.get("pts", 16) == 16]
             if not rows:
                 continue
-            rows.sort(key=lambda r: r["seconds"])
+            rows.sort(key=lambda r: -r.get("dt", r.get("rtol")))   # coarse to fine
             a.loglog([r["seconds"] for r in rows], [r["front_err"] for r in rows], mk, color=col,
                      ms=4, mfc="none", label=lab)
         for pts, ls in ((8, ":"), (32, "--"), (64, "-.")):
             rows = sorted((r for r in d["rows"] if r["kind"] == "ale" and r["eps"] == eps
-                           and r.get("pts") == pts), key=lambda r: r["seconds"])
+                           and r.get("pts") == pts), key=lambda r: -r["dt"])
             a.loglog([r["seconds"] for r in rows], [r["front_err"] for r in rows], "o" + ls,
                      color="C0", ms=3, alpha=0.6, label=f"ALE, $h_f=\\varepsilon/{pts}$")
         a.set_title(f"$\\varepsilon={eps:g}$", fontsize=10)
