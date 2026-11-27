@@ -1,22 +1,28 @@
-"""Truncation error of the monotone scheme (S) on the exact travelling wave.
+"""Equation (an:eq:solv) of the article (Section 5.4; (37) in the draft in
+paper/): truncation error of the monotone scheme (S) on the exact travelling
+wave, and its average with the adjoint eigenfunction.
 
 For the travelling wave Phi of (P_eps) with speed c (w = eps*w0 constant) we
 evaluate, on a grid x_j = (j + s) h,
     tau_j = (V^{n+1}_j - V^n_j)/dt - delta^2 V^{n+1}_j + f_eps(V^n_j)(V^{n+1}_j + eps w0),
     V^n_j = Phi(x_j),  V^{n+1}_j = Phi(x_j - c dt),
 and report
-  * max_j |tau_j|  (what a pointwise barrier must absorb; Theorem: O(rho)),
+  * max_j |tau_j|  (what a pointwise barrier must absorb),
   * the drift predicted by the solvability condition of the linearized
     problem, delta_c = sum tau_j psi*_j / sum Phi'_j psi*_j, psi* = e^{cz} Phi',
-    averaged over the offset s in [0, 1)
-(the numerical front then moves at c + delta_c).
+    averaged over 16 offsets s in [0, 1)
+(the numerical front then moves at c + delta_c). No PDE is solved.
 
-Run from numerics/:  python -m experiments.truncation_check
+Prints two tables and writes them to results/paper/truncation_check.json:
+  "time_step"  w0 = 0, h = eps/64, dt = kappa eps^2, eps in {0.02, 0.01, 0.005},
+               kappa in {1, 0.25}; keys eps, kappa, dt, h, max_tau, dc and the
+               normalised values max_tau_eps2_over_dt, dc_over_dt_eps. The three
+               values of dc_over_dt_eps with kappa = 1 are those of (an:eq:solv).
+  "mesh_size"  dt = 1e-3 eps^2, h = eps/m, m in {8, 16}, w0 in {0, 1},
+               eps in {0.01, 0.005}; keys w0, eps, m, h, dt, max_tau, dc and
+               max_tau_eps2_over_h, dc_over_h_eps_sq (not quoted in the paper).
 
-Prints the two tables and writes them to results/paper/truncation_check.json
-(rows "time_step": eps, kappa, dt, h, max_tau, dc and the normalised values
-max_tau*eps^2/dt and dc/(dt/eps); rows "mesh_size": w0, eps, m, h, dt,
-max_tau, dc and max_tau*eps^2/h, dc/(h/eps)^2).
+Run from numerics/:  python -m experiments.truncation_check   (about 10 s)
 """
 
 from pathlib import Path

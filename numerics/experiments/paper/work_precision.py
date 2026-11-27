@@ -1,8 +1,12 @@
-"""Group J: work-precision comparison for the planar travelling wave.
+"""Group J: work-precision comparison for the planar travelling wave. Figure S5
+(label fig:J1, figures/paper/J1_work_precision.png) and Table S1 (label
+tab:work) of the supplement, and the paragraph on the cost in Section 6.6 of
+the article; numbers of the drafts in paper/.
 
-Problem: (P_eps) with w0 = 0, A = 1, started from the exact travelling wave
-Phi_eps, on [0, L], up to T = 4. Error at the final time: the error in the
-position of the front {u = eps} and the sup error against Phi_eps(x - x0 - c_eps T).
+Problem: (P_eps) with w0 = 0, A = 1, eps in {0.01, 0.001}, started from the
+exact travelling wave Phi_eps, on [0, L], up to T = 4. Error at the final time:
+the error in the position of the front {u = eps} and the sup error against
+Phi_eps(x - x0 - c_eps T).
 Work: wall-clock seconds of the solver call (single thread, pure Python/SciPy
 implementations, so only indicative) and implementation-independent counts
 (time steps; tridiagonal solves for the scheme (S); LU factorizations and
@@ -10,17 +14,26 @@ right-hand side evaluations for the method-of-lines solvers).
 
 Methods
   ale       scheme (S) on the moving band mesh, implicit mesh velocity
-            (combustion1d.ale), h_f = eps/8, ..., eps/64, several dt;
+            (combustion1d.ale), h_f = eps/8, ..., eps/64, dt from 0.2 to 0.0025;
   eul       scheme (S) on band meshes that do not move (combustion1d.simple),
-            h_f = eps/16;
+            h_f = eps/16, dt = eps/4, ..., eps/1024 (up to eps/64 for eps = 0.001);
   uni       scheme (S) on a uniform mesh of size eps/16 (eps = 0.01 only);
   bdf       method of lines on band meshes, SciPy BDF with the sparse analytic
-            Jacobian and SuperLU (combustion1d.solver.simulate), several rtol;
+            Jacobian and SuperLU (combustion1d.solver.simulate), rtol from
+            1e-3 to 1e-6;
   lsoda     the same method of lines with the unknowns interleaved
             (u_0, w_0, u_1, w_1, ...), which makes the Jacobian banded
             (bandwidth 2), integrated with LSODA and its banded linear algebra.
 
-Run from numerics/:  python -m experiments.paper.work_precision [run|plot]   (~45 min)
+Output: results/paper/J_work_precision.json = {"T", "w0", "workers", "rows"};
+rows: kind, eps, dt or rtol, pts (ale), front_err, sup_err, seconds, steps,
+nodes and the counters solves (ale, eul, uni), n_lu and n_fev (bdf), n_fev,
+n_jev and n_remesh (lsoda). The column "solves" of Table S1 is solves, n_lu
+and n_jev, respectively.
+
+Run from numerics/:  python -m experiments.paper.work_precision [run|plot]
+(about 26 min, 2 processes. The measured seconds depend on the machine and on
+its load.)
 """
 
 import sys

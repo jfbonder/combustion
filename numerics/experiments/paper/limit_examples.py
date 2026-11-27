@@ -1,4 +1,10 @@
-"""Group C: the limit problem and examples from the literature.
+"""Group C: (P_eps) with ALE against the computed limit problem, and two examples
+from the literature.
+
+In the article: C1 is Figure 2 (label fig:C1, figures/paper/C1_ale_vs_limit.png,
+Section 6.2) and C2 is Figure 6 (label fig:C2,
+figures/paper/C2_self_similar_convergence.png, Section 6.7), with the numbers
+quoted in those sections. C3 is not in the paper.
 
 C1  ALE (P_eps) vs the computed limit problem, radial data
     u0 = a (1 - r^2/R0^2)^+, a = sqrt(2M) R0/2, R0 = 2, w0 = 0.5 (N = 2, 3)
@@ -7,8 +13,16 @@ C2  convergence to the self-similar extinction profile (Galaktionov-Hulshof-
 C3  quenching of small burnt kernels (expanding flame, tanh data): critical
     initial radius vs eps, front radius r_f(t) for several r0
 
+Output: results/paper/C1_limit_comparison.json, C2_self_similar.json,
+C3_quenching.json and the figures C1_ale_vs_limit.png,
+C2_self_similar_convergence.png, C3_quenching.png in figures/paper. The grey
+points of C1 (BDF) are read from results/limit_comparison.json: run
+experiments.limit_comparison first.
+
 Run from numerics/:
     OMP_NUM_THREADS=1 python -m experiments.paper.limit_examples [run|plot] [C1 C2 C3]
+(about 13 min with 4 processes: C1 1 min, C2 2 min, C3 10 min. `plot` draws
+the figures whose data exist.)
 
 Failures. A numerical failure of a run (Peclet condition, invalid mesh, BDF
 integrator) is never used as a result: C2 and C3 stop with an error. In C3 a
@@ -17,6 +31,8 @@ run counts as "quenching" only if the front {u = eps} disappeared (status
 stored in the history of C3_quenching.json. A bisection that cannot decide
 a step is aborted: its steps are written to C3_quenching_aborted.json and
 the script stops without touching C3_quenching.json.
+
+Numbers of figures and sections are those of the draft in paper/.
 """
 
 import json

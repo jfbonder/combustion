@@ -11,8 +11,12 @@ cold), with the numerical front {u = eps} (solid circle) and the exact free
 boundary |x| = R (T - t)^{1/2} of the limit problem (dashed circle).
 Right: radial profiles u^eps(r, t) (solid) and V(r, t) (dashed).
 
+Not used in the paper. Uses the BDF solver (eps = 0.01, t <= 0.99).
+
 Run from numerics/:  python -m experiments.movie_radial
-Writes figures/flame_extinction.{mp4,gif} and figures/flame_extinction_still.png
+Writes figures/flame_extinction.mp4, figures/flame_extinction.gif (not kept in
+git) and figures/flame_extinction_still.png. Needs ffmpeg. Not run again for
+the current documentation: the run time was not measured.
 """
 
 from pathlib import Path

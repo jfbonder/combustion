@@ -2,6 +2,9 @@
 and process pools that carry the reaction rate to the workers.
 
 Kept free of matplotlib so that every script (and the tests) can import it.
+
+Not an experiment.  python -m experiments.util  (from numerics/) prints the
+provenance record of the current checkout.
 """
 
 import json

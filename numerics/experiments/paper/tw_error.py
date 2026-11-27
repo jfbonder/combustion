@@ -1,4 +1,5 @@
-"""Group D: the error that the theorems bound, for the planar travelling wave.
+"""Group D: the discretization error for the planar travelling wave (Section S1
+of the supplement, summarized in Section 6.6 of the article).
 
 Initial datum: the exact eps-travelling wave, U^0_j = Phi_eps(x_j - x0)
 (`exact.tw_profile_eps`, normalised Phi_eps(0) = eps), w = eps*w0. We record
@@ -14,14 +15,29 @@ t_n >= 1), and two speed estimators from s: slope of s on [T/2, T] (least
 squares) and s(T)/T.
 
 D1  ALE: vs dt (0.1 ... 0.0025), eps in {0.01, 0.003, 0.001}, w0 in {0, 1}
+    -> Figure S1 (label fig:D1, figures/paper/D1_ale_error_vs_dt.png)
 D2  ALE: vs h_f/eps (1/2 ... 1/32; h_c = 0.0025) and vs h_c (h_f = eps/32)
-D3  ALE: speed error vs the lattice phase of the front (the "floor")
+    -> Figure S3 (label fig:D2, figures/paper/D2_ale_error_vs_mesh.png)
+D3  ALE: speed error vs the lattice phase of the front (lattice pinning)
+    -> Figure S2 (label fig:D3, figures/paper/D3_phase_pinning.png)
 D4  rigid mesh with prescribed v = c_eps + dv: drag ratio (c_h - c_eps)/dv
+    -> the ratios quoted in Section S1 and in Section 6.6 (key "ratio");
+       figures/paper/D4_drag.png is not in the paper
 D5  Eulerian scheme (S) (simple.py, exact nominal dt): vs dt/eps and h/eps
-F   the old "floor" setup (B1 data, T = 12) with three speed estimators
+    -> not in the paper (figures/paper/D5_eulerian_error.png)
+F   the set-up of group B1 (convergence.py; T = 12) with three speed
+    estimators -> not in the paper, no figure
+
+Output: results/paper/D_tw_error.json, a list of records selected by "group"
+(D1, D2h, D2c, D3, D4, D5, D5h, F). `run` with a list of groups replaces the
+records of those groups and keeps the others; a failed case is stored as
+{..., "failed": message}.
 
 Run from numerics/:
-    OMP_NUM_THREADS=1 ../.venv/bin/python -m experiments.paper.tw_error [run|plot] [groups]
+    OMP_NUM_THREADS=1 python -m experiments.paper.tw_error [run|plot] [D1 D2 D3 D4 D5 F]
+(about 8 min for all the groups, 4 processes.)
+
+Numbers of figures and sections are those of the drafts in paper/.
 """
 
 import sys

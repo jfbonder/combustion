@@ -1,16 +1,20 @@
-"""Figure A5: the solution and the mesh at successive times.
+"""Figure 1 of the article (label fig:A5, figures/paper/A5_mesh_snapshots.png;
+number of the draft in paper/): the solution and the mesh at successive times.
 
 For each time the panel shows u and Y, and below them one tick per mesh node
 (the fine band appears as a solid block, the geometric transitions as
 gradients, the coarse zone as sparse ticks). ALE scheme, h_f = eps/16,
 h_c = 0.05 so that individual coarse nodes are visible.
 
-Left:  planar travelling wave (w0 = 0, eps = 0.02), the band travels with the flame.
-Right: radial extinction (N = 2, w0 = 0.5, eps = 0.02), self-similar data,
-       the band follows the shrinking ball until it disappears.
+Left:  planar travelling wave (w0 = 0, eps = 0.02, dt = 0.01, t = 0, 1.5, 3, 4.5),
+       the band travels with the flame.
+Right: radial extinction (N = 2, w0 = 0.5, eps = 0.02, dt = 0.0025, t = 0, 0.3,
+       0.6, 0.85), self-similar data, the band follows the shrinking ball.
 
-Run from numerics/:  python -m experiments.paper.mesh_snapshots   (~10 s)
-Figure: figures/paper/A5_mesh_snapshots.png
+The two simulations are run every time; no data file is written and there
+are no arguments.
+
+Run from numerics/:  python -m experiments.paper.mesh_snapshots   (about 5 s)
 """
 
 import numpy as np

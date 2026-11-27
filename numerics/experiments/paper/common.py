@@ -1,7 +1,11 @@
-"""Shared setup, I/O and plotting helpers for the paper experiments.
+"""Shared setup, I/O and plotting helpers for the scripts of experiments/paper
+(not a script itself): the test problems, save_json / load_json (results/paper,
+with the provenance record), the node histories (*.npz), the mesh analysis and
+the plot helpers.
 
-Run the group scripts from numerics/, e.g.
+The scripts are run from numerics/, e.g.
     OMP_NUM_THREADS=1 python -m experiments.paper.meshes
+experiments/paper/README.md lists them with the items of the paper they produce.
 """
 
 import json

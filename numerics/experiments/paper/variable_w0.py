@@ -1,4 +1,6 @@
-"""Group I: a non-constant perturbation w0 (Section 6, "A non-constant w0").
+"""Group I: a non-constant perturbation w0. Figure 3 of the article (label fig:I1,
+figures/paper/I1_variable_w0.png) and the numbers of Section 6.3 (label
+sec:exp:varw); numbers of the draft in paper/.
 
 All the other experiments use w^eps = eps*w0 with w0 constant, so that M(w0)
 is a constant. Here w^eps(x, 0) = eps*W(x, 0) with a non-constant W; then
@@ -8,14 +10,16 @@ W(x, t) solves the heat equation and the limit problem is
 
 We compare (P_eps), computed with the reference solver (BDF) and with ALE,
 against the limit problem solved by front fixing (combustion1d.limit with a
-callable w0).
+callable w0), for eps in {0.05, 0.02, 0.01, 0.005, 0.002, 0.001}.
 
   planar   L = 24, W(x, t) = 0.5 + 0.4 exp(-k^2 t) cos(k x), k = pi/6 (zero flux
            at both ends), u0(x) = A tanh(lam0 (x - 2)/A)^+, lam0 = sqrt(2M(W(2, 0)));
            a front that propagates into a mixture stratified in enthalpy.
+           t <= 6; ALE with dt = 2.5e-4.
   radial3  N = 3, L = 6, W(r, t) = 0.5 - 0.3 exp(-k^2 t) sin(k r)/(k r) with
            tan(kL) = kL (zero flux at r = L), u0 = a (1 - r^2/R0^2)^+, R0 = 2,
-           a = sqrt(2M(W(R0, 0))) R0/2; a pocket of fresh gas. Here
+           a = sqrt(2M(W(R0, 0))) R0/2; a pocket of fresh gas, until the radius
+           of the limit solution is R0/2; ALE with dt = 1.25e-4. Here
            lambda -> W(lambda x, lambda^2 t) is nondecreasing, which is the
            monotonicity condition of the rate theorem.
 
@@ -26,7 +30,13 @@ In both cases the data satisfy the free boundary condition at t = 0. We record
   * the error of the discrete W_h = (Y - U)/eps against the exact caloric W
     at the final time (a check of the scheme for W).
 
-Run from numerics/:  python -m experiments.paper.variable_w0 [run|plot]   (~10 min)
+Output: results/paper/I_variable_w0.json = {"eps", "t_end", "rows", "limits"};
+rows: geom, solver ("bdf" or "ale"), eps, dt, status, front_err,
+front_err_shifted, sup_err, W_err, t, front, steps, seconds; limits[geom]: the
+fronts of the limit problem with W (t, s) and with w0 = 0.5 (t_const,
+s_const), and W at the free boundary (W_front).
+
+Run from numerics/:  python -m experiments.paper.variable_w0 [run|plot]   (about 9 min, 4 processes)
 """
 
 import sys

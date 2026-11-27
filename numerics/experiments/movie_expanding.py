@@ -17,8 +17,12 @@ Left: disk view of -u (burnt = hot, fresh = cold) with the numerical front
 {u = eps}. Right: front radius r_f(t) and the planar reference r0 + c0 t;
 inset: radial profile u(r, t).
 
+Not used in the paper. Uses the BDF solver (eps = 0.01, t <= 8.5).
+
 Run from numerics/:  python -m experiments.movie_expanding
-Writes figures/flame_expanding.mp4 and figures/flame_expanding_still.png
+Writes figures/flame_expanding.mp4 and figures/flame_expanding_still.png.
+Needs ffmpeg. Not run again for the current documentation: the run time was
+not measured.
 """
 
 from pathlib import Path

@@ -1,4 +1,6 @@
-"""Experiment 2: radial self-similar solution (N = 2, 3).
+"""Radial self-similar solution (N = 2, 3) with the BDF solver. Not used in the
+paper (the corresponding experiment of the paper, with the ALE scheme, is group
+B4 of experiments/paper/convergence.py).
 
 The limit problem has the exact solution
     V(x, t) = kappa (T - t)^{1/2} phi(|x| (T - t)^{-1/2}),
@@ -6,7 +8,8 @@ whose support is a ball of radius R (T - t)^{1/2} that shrinks to a point at
 t = T (cf. Proposition 4.3 of the SIAM paper). V is radially decreasing, so
 u_0 = V(., 0) is starshaped, and w0 is constant: the hypotheses of the
 uniqueness theorem hold and u^eps must converge to V. We start (P_eps) from
-u_0^eps built from V(., 0) and measure, as eps -> 0,
+u_0^eps built from V(., 0) (w0 = 0.5, T = 1) and measure, for eps from 0.05
+to 0.001,
     * the front radius error  max_t |r_eps(t) - R (T - t)^{1/2}|,
     * the sup error           max_x |(u^eps)^+(x, t) - V(x, t)| at t = 0.75 T
       (in the burnt region u^eps = -eps w0, which is trivially O(eps)), and
@@ -14,7 +17,12 @@ u_0^eps built from V(., 0) and measure, as eps -> 0,
       layer, where (u^eps)^+ ~ eps psi(d/eps) differs from the linear profile
       of V by O(eps) by construction).
 
-Run from numerics/:  python -m experiments.radial
+Output: results/radial.json, a list of 12 records with the keys N, eps, w0, R,
+kappa, front_err, sup_err, sup_err_int, t, front, snapshots, steps, nodes,
+seconds. experiments/plots.py draws from it figures/radial_convergence.png
+and figures/radial_snapshots.png.
+
+Run from numerics/:  python -m experiments.radial   (about 1 min, 4 processes)
 """
 
 import time

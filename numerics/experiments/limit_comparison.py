@@ -1,19 +1,32 @@
-"""Experiment 3: (P_eps) versus the limit problem (P), both computed.
+"""Table 2 of the article (label tab:limit): (P_eps) with the BDF solver against
+the computed limit problem (P).
 
 The limit problem is solved by front fixing (combustion1d.limit, second
 order, validated against the exact solutions). We compare with (P_eps) for
-initial data that are NOT exact solutions:
+initial data that are NOT exact solutions (w0 = 0.5):
 
-  radial  (N = 2, 3): u0(r) = a (1 - r^2/R0^2)^+,  a = lam R0 / 2,
-  planar  (N = 1):    u0(x) = A tanh(lam (x - x0)/A)^+,
+  radial  (N = 2, 3): u0(r) = a (1 - r^2/R0^2)^+,  a = lam R0 / 2, R0 = 2,
+                      until the radius of the limit solution is R0/2,
+  planar  (N = 1):    u0(x) = A tanh(lam (x - x0)/A)^+, A = 1, x0 = 2, t <= 6,
 with lam = sqrt(2 M(w0)) (so that the data are compatible with the free
-boundary condition). We record, as eps -> 0,
+boundary condition). We record, for eps in {0.05, 0.02, 0.01, 0.005, 0.002, 0.001},
   * front error  max_t |x_eps(t) - s(t)|,
   * the same after removing the trivial shift eps/lam between the level set
     {u = eps} that we track and the free boundary,
   * sup error    max_x |(u^eps)^+ - u| at the final time.
 
-Run from numerics/:  python -m experiments.limit_comparison
+Output: results/limit_comparison.json, a list of 18 records with the keys
+geom, eps, t_end, front_err, front_err_shifted, sup_err, steps, seconds and
+the fronts (t, front, lim_t, lim_s). The entries of Table 2 are
+front_err_shifted/eps and sup_err/eps. The radial records are also the grey
+points of Figure 2 (figures/paper/C1_ale_vs_limit.png, drawn by
+experiments/paper/limit_examples.py, which imports case, limit_solution and
+t_end_of from this module). experiments/plots.py draws from this file
+figures/limit_fronts.png and figures/limit_convergence.png (not in the paper).
+
+Run from numerics/:  python -m experiments.limit_comparison   (about 8 min, 4 processes)
+
+Numbers of tables, figures and sections are those of the draft in paper/.
 """
 
 import time

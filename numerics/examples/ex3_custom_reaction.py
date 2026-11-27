@@ -6,7 +6,8 @@ travelling wave speed of (P_eps) by shooting and by the ALE scheme (eps = 0.01
 and 0.002, dt = 0.02), and the limit speed sqrt(2 M)/A. The default rate is
 restored at the end.
 
-Not an item of the paper (all its experiments but one use f(s) = (1 - s)^+).
+Not an item of the paper, whose experiments use f(s) = (1 - s)^+ (and, in one
+test of experiments/paper/in_hypotheses.py, f(s) = 3 ((1 - s)^+)^2).
 
 Run from numerics/:  python -m examples.ex3_custom_reaction      (about 3 s)
 """

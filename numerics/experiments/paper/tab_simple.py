@@ -1,4 +1,10 @@
-"""Table tab:simple: Eulerian scheme (S) (simple.py) with dt proportional to eps^2.
+"""Eulerian scheme (S) (simple.py) with dt proportional to eps^2. NOT USED in the
+paper: it produced a table (tab:simple) of an earlier draft, which was replaced
+by group E1 of transient.py (the same scheme on long time windows). The values
+OLD below are those of that earlier table and are only printed for comparison.
+The script is not run by reproduce_paper.sh, and the stored
+results/paper/tab_simple.json was written by an earlier version of the code
+(it has no provenance record).
 
 Planar travelling wave, w0 = 0, A = 1, eps in {0.02, 0.01}, dt in {4 eps^2,
 eps^2, eps^2/4} (exactly the nominal step; see simple.py), default band mesh
@@ -11,8 +17,12 @@ Two set-ups:
   'Phi' : datum Phi_eps (exact eps-wave), T = 6; speed from the front
           position error s(T)/T and least squares of s on [T/2, T].
 
-Run from numerics/:
-    OMP_NUM_THREADS=1 ../.venv/bin/python -m experiments.paper.tab_simple
+Output: results/paper/tab_simple.json (keys eps, k, dt, setup, T, c_eps,
+err_lsq, err_end, steps, dts, seconds, old; for 'Phi' also s_end, err_pos).
+
+Run from numerics/:  python -m experiments.paper.tab_simple
+(4 processes; about 3 min according to the earlier documentation, not measured
+again.)
 """
 
 import numpy as np

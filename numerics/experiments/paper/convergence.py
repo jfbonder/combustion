@@ -1,13 +1,27 @@
-"""Group B: convergence (verification of the error estimates).
+"""Group B: convergence in the time step and in the mesh sizes.
+
+In the article: B4 is Figure 5 (label fig:B4,
+figures/paper/B4_radial_extinction_dt.png, Section 6.5). B1-B3 are not in the
+paper (the travelling-wave experiments of the supplement are in tw_error.py).
 
 B1  travelling wave speed error vs eps: Eulerian monotone scheme (simple.py,
     fixed dt) vs ALE, dt in {0.02, 0.01, 0.005}
 B2  ALE: error vs h_f = eps/pts_per_eps and vs h_coarse
 B3  rigid mesh at the exact speed c_eps: error vs dt (flat)
-B4  radial extinction (N = 2, 3) with ALE: shifted front error vs dt
+B4  radial extinction of the self-similar ball (N = 2, 3, w0 = 0.5, t <= 0.75)
+    with ALE: shifted front error vs dt, eps in {0.01, 0.002, 0.001},
+    dt in {0.04, 0.02, 0.01, 0.005, 0.0025}
+
+Output: results/paper/B_convergence.json, a list of 156 records selected by
+"group" (B1, B2h, B2c, B3, B4) and "kind"; a failed case is stored as
+{..., "failed": message}. Figures: figures/paper/B1_tw_speed_eulerian_vs_ale.png,
+B2_ale_mesh_sizes.png, B3_rigid_mesh_dt.png, B4_radial_extinction_dt.png.
+All groups are always run.
 
 Run from numerics/:
-    OMP_NUM_THREADS=1 ../.venv/bin/python -m experiments.paper.convergence [run|plot]
+    python -m experiments.paper.convergence [run|plot]   (about 3 min, 4 processes)
+
+Numbers of figures and sections are those of the draft in paper/.
 """
 
 import sys

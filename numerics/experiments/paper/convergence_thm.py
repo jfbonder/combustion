@@ -1,7 +1,10 @@
-"""Experiment in the setting of Theorem cv:thm:main (convergence of (S) to the limit problem).
+"""Group H: an experiment in the setting of Theorem cv:thm:main (convergence of (S)
+to the limit problem). No figure: the numbers are quoted in Section 6.5 of the
+article (label sec:exp:thm; number of the draft in paper/).
 
 Radial self-similar solution v of the limit problem (N = 2, w0 = 0.5, extinction time 1),
-data (eq:initdata), 0 <= t <= 0.5, no remeshing, and two kinds of meshes:
+data (eq:initdata), 0 <= t <= 0.5, no remeshing, eps in {0.02, 0.01, 0.005},
+dt/eps in {1/64, 1/16, 1/4, 1, 4}, and two kinds of meshes:
 
   fixed : uniform mesh of size h_f = eps/16 that does not move (v_n = 0, mu = max |R'|);
   band  : band mesh (h_f = eps/16 in the band, h_c = 0.01 initially) whose band moves
@@ -13,8 +16,11 @@ eps log(1/eps) + h_f/eps + h_c + dt + mu min(1, dt/eps), and the error of the fr
 {u = eps} at t = 0.5 (which contains the shift -eps/sqrt(2M) between that level set and
 the free boundary).
 
-Run from numerics/:  python -m experiments.paper.convergence_thm     (~3 min, 2 processes)
-Results: results/paper/H_convergence_thm.json
+Output: results/paper/H_convergence_thm.json, a list of 30 records with the keys
+mesh ("fixed" or "band"), eps, dt_over_eps, E, front_error, nodes, steps, hmax, seconds.
+
+Run from numerics/:  python -m experiments.paper.convergence_thm   (about 25 s, 2 processes)
+(no arguments)
 """
 
 import numpy as np

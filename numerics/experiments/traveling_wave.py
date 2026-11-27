@@ -1,17 +1,29 @@
-"""Experiment 1: planar travelling waves.
+"""Figure 4 of the article (label fig:instability, figures/tw_instability.png,
+Section 6.4): planar travelling waves with the BDF solver.
 
-A. Convergence of the flame speed as eps -> 0, for several w0:
-   c_pde  : speed measured from the moving-mesh PDE solution of (P_eps),
+A. Convergence of the flame speed as eps -> 0, for w0 in {-0.5, 0, 1} and
+   eps from 0.1 to 0.001 (not in the paper; figures/tw_speed_convergence.png):
+   c_pde  : speed measured from the PDE solution of (P_eps) (BDF solver),
    c_eps  : exact speed of the (P_eps) travelling wave (ODE shooting),
    c_0    : speed of the limit problem, sqrt(2 M(w0)) / A.
    |c_pde - c_eps| measures the discretization error, |c_eps - c_0| the
    O(eps) distance to the free boundary problem.
 
-B. Instability with respect to O(eps) perturbations of the data: the SAME
-   initial temperature u_0 and Y_0 = u_0 + eps w0 with three different w0
-   produce three different flames, with speeds approaching sqrt(2M(w0))/A.
+B. Dependence of the limit on w0 (this is Figure 4): the SAME initial
+   temperature u_0 (the limit travelling wave for w0 = 0) and
+   Y_0 = u_0 + eps w0 with three different w0 produce three different flames,
+   with speeds approaching sqrt(2M(w0))/A. eps = 0.005, 0 <= t <= 20.
 
-Run from numerics/:  python -m experiments.traveling_wave
+Output: results/traveling_wave.json = {"A": [...], "B": [...]}; records of A:
+w0, eps, c0, c_eps, c_pde, steps, nodes, seconds; records of B: w0, c0, the
+front (t, front) and the solution at t = 20 (x, u, Y). The figures are drawn
+by experiments/plots.py.
+
+Run from numerics/:  python -m experiments.traveling_wave   (about 21 min, 4 processes;
+                     most of it is part A with eps = 0.002 and 0.001)
+then                 python -m experiments.plots
+
+Numbers of figures and sections are those of the draft in paper/.
 """
 
 import time

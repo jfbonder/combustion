@@ -1,6 +1,20 @@
-"""Figures from results/*.json  ->  figures/*.png
+"""Figures of the BDF experiments: results/*.json  ->  figures/*.png
 
-Run from numerics/:  python -m experiments.plots
+  results/traveling_wave.json   -> tw_instability.png: Figure 4 of the article
+                                   (label fig:instability; number of the draft in
+                                   paper/). Its dashed lines, the fronts of the
+                                   limit problem, are computed here with
+                                   combustion1d.limit.solve_planar.
+                                   tw_speed_convergence.png (not in the paper)
+  results/radial.json           -> radial_convergence.png, radial_snapshots.png
+                                   (not in the paper)
+  results/limit_comparison.json -> limit_fronts.png, limit_convergence.png
+                                   (not in the paper)
+
+A file that does not exist is skipped. This module also defines the colours and
+the matplotlib settings used by the scripts of experiments/paper.
+
+Run from numerics/:  python -m experiments.plots   (about 5 s)
 """
 
 import json

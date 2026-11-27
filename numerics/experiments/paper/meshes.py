@@ -1,12 +1,31 @@
-"""Group A: the meshes (ALE vs Eulerian), how they move, refine and coarsen.
+"""Group A: the band meshes of the ALE scheme and of the BDF solver (called
+"euler" / "Eulerian" in this file): how they move, refine and coarsen.
 
-A1  space-time diagram of the nodes, planar travelling wave (ALE | Eulerian)
+In the article: the numbers of Section 6.1 (one remeshing against 31 for the
+planar wave with eps = 0.01 and 0 <= t <= 4; 3573 and 3671 nodes, 882 of them
+in the band) are in results/paper/A_meshes.json. The figures A1-A4 are not in
+the paper; its Figure 1 is drawn by mesh_snapshots.py.
+
+A1  space-time diagram of the nodes, planar travelling wave (ALE | BDF)
 A2  local mesh size h(x) at several times (travelling wave, radial extinction)
 A3  number of nodes vs time and vs eps (band / transition / coarse), cost
 A4  node trajectories r(t) for the radial extinction and an expanding flame
 
+Planar travelling wave: w0 = 0, A = 1, 0 <= t <= 4, ALE with dt = 0.01, default
+mesh (h_c = 0.01) for eps in {0.01, 0.005, 0.002, 0.001} and h_c = 0.04
+("ill") for the pictures with eps = 0.01. Radial: N = 2, w0 = 0.5, eps = 0.01.
+
+Output: results/paper/A_meshes.json = {"tw": [...], "radial", "expanding",
+"radial_def", "expanding_def"} (keys of the records in experiments/paper/README.md);
+results/paper/A_mesh_*.npz, the node histories (not in git; written by `run`,
+needed by `plot`); figures/paper/A1_spacetime_nodes_tw.png, A2_mesh_size.png,
+A3_node_count.png, A4_radial_meshes.png.
+
 Run from numerics/:
-    OMP_NUM_THREADS=1 ../.venv/bin/python -m experiments.paper.meshes [run|plot]
+    python -m experiments.paper.meshes [run|plot]   (about 3 min: run 2 min, plot 1 min;
+                                                     4 processes)
+
+Numbers of figures and sections are those of the draft in paper/.
 """
 
 import sys

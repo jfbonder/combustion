@@ -1,9 +1,15 @@
-"""Group E: slow transients and the accumulated mesh-velocity error.
+"""Group E: slow transients and the accumulated mesh-velocity error (Section S1
+of the supplement, summarized in Section 6.6 of the article).
 
-E1  Eulerian scheme (S) from Phi_eps, long runs (T = 60, w0 = 0): the speed
-    error measured on successive time windows, divided by dt/eps, against the
+In the supplement: E1 and E2 are Figure S4 (label fig:D6,
+figures/paper/D6_transients.png); E3 gives the values of M_T and E4 the range
+of E and E_s over the position of the front in its cell, both quoted in
+Section S1 (and the range of E in Section 6.6 of the article).
+
+E1  Eulerian scheme (S) from Phi_eps, long runs (T = 60, w0 = 0, eps in
+    {0.01, 0.02}, dt in {eps^2/4, eps^2, 4 eps^2}): the speed error measured
+    on successive time windows of length 6, divided by dt/eps, against the
     solvability prediction of experiments/truncation_check.py (-0.235).
-    This is Table tab:simple, with the time window made explicit.
 E2  ALE from Phi_eps (eps = 0.01, dt = 0.02, T = 24): realised mesh velocity
     v_n - c_eps as a function of time for four lattice phases of the front.
 E3  ALE from Phi_eps (T = 8, phase 0.37): for dt in {0.1, 0.02, 0.0025} and
@@ -13,10 +19,18 @@ E3  ALE from Phi_eps (T = 8, phase 0.37): for dt in {0.1, 0.02, 0.0025} and
 E4  ALE from Phi_eps (T = 8, dt = 0.02): E, E_s and the speed error for 16
     lattice phases (eps = 0.01) and 8 phases (eps = 0.001).
 
+Output: results/paper/E_transient.json, a list of records selected by "group"
+(E1: "windows" = [t_a, t_b, slope, slope/(dt/eps)]; E2-E4: E, E_shift,
+speed_lsq, mu, M_T, X_T, theta, ...). `run` with a list of groups replaces the
+records of those groups and keeps the others.
+
 Run from numerics/:
-    OMP_NUM_THREADS=1 ../.venv/bin/python -m experiments.paper.transient [run|plot] [groups]
-Figure: figures/paper/D6_transients.png.  Results: results/paper/E_transient.json.
-Runtime: E1 about 25 min on 4 cores (2.4e6 steps for eps = 0.01, dt = eps^2/4); E2-E4 2 min.
+    OMP_NUM_THREADS=1 python -m experiments.paper.transient [run|plot] [E1 E2 E3 E4]
+(about 33 min on 4 cores: this is the time of one run of E1, 2.4e6 steps for
+eps = 0.01 and dt = eps^2/4; the other runs finish meanwhile on the other
+processes.)
+
+Numbers of figures and sections are those of the drafts in paper/.
 """
 
 import sys

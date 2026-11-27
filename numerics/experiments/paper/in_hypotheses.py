@@ -1,23 +1,29 @@
-"""An experiment inside the hypotheses of Theorem an:thm:ale (uniform rigid mesh, h << eps^2).
+"""Group G: experiments inside the hypotheses of Theorem an:thm:ale (uniform rigid
+mesh, h << eps^2). No figure: the numbers are quoted in Section S1 of the
+supplement and in Section 6.6 of the article.
 
-Uniform mesh of size h = eps^2/k translating rigidly with a prescribed velocity
-v = c_eps + mu, from U^0 = Phi_eps. We report
+Uniform mesh of size h = eps^2/k (k = 8, 16; eps = 0.1, 0.05) translating
+rigidly with a prescribed velocity v = c_eps + mu (mu = 0, 0.01), from
+U^0 = Phi_eps, w0 = 0, T = 3, dt = 0.1 and 0.01. We report
     E   = max_{t_n <= T} max_j |U^n_j - Phi_eps(x^n_j - x0 - c_eps t_n)|,
     E_s = the same with the front shift removed,
 and compare E with the quantities of the theorem, rho_h T = (h/eps^2) T and mu T.
+Results: results/paper/G_in_hypotheses.json (keys eps, k, dt, mu, h, rho_h,
+nodes, steps, E, E_shift, s_max, seconds)
 
 Two more groups are run by this script:
 
-* regular: the same experiment with the rate f(s) = 3 ((1 - s)^+)^2, which is
+* large_eps: the method itself (implicit mesh velocity, default band mesh,
+  remeshing) from Phi_eps for eps = 0.1 and 0.05, the values that correspond
+  to realistic Zeldovich numbers; dt = 0.1 and 0.01, T = 8.
+  Results: results/paper/G_large_eps.json (records of tw_error.run_ale)
+* regular: the first experiment with the rate f(s) = 3 ((1 - s)^+)^2, which is
   C^{1,1}(R); then the theorem holds with rho_h = h^2/eps^3. Mesh sizes
   h = eps^{3/2}/k, k = 2, 4, 8, 16 (rho_h = 1/k^2), dt = 0.1 and 0.01, mu = 0.
   Results: results/paper/G_regular_f.json
-* large_eps: the method itself (implicit mesh velocity, default band mesh,
-  remeshing) from Phi_eps for eps = 0.1 and 0.05, the values that correspond
-  to realistic Zeldovich numbers. Results: results/paper/G_large_eps.json
 
-Run from numerics/:  python -m experiments.paper.in_hypotheses     (~5 min, 2 processes)
-Results: results/paper/G_in_hypotheses.json
+Run from numerics/:  python -m experiments.paper.in_hypotheses   (about 45 s, 2 processes)
+(no arguments: the three groups are always run)
 """
 
 import numpy as np
