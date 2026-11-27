@@ -90,7 +90,8 @@ and the author showed that if $w^\ve/\ve\to w_0>-1$ then limits of $u^\ve$ solve
 u_t=\Delta u\ \text{ in }\{u>0\},\qquad |\nabla u|=\sqrt{2M}\ \text{ on }\partial\{u>0\},\qquad
 M=M(w_0)=\int_{-w_0}^1(s+w_0)f(s)\,ds,
 \end{equation}
-in a pointwise and viscosity sense, and in \cite{FernandezBonderWolanski2004} that, under
+in a pointwise sense at regular points of the free boundary and, under additional
+assumptions, in the viscosity sense, and in \cite{FernandezBonderWolanski2004} that, under
 geometric assumptions, the limit is unique and coincides with the classical
 solution when one exists. Thus the high activation energy limit is not determined by
 the limit of $u^\ve_0$: perturbations of order $\ve$ of the initial data, which do
@@ -135,15 +136,19 @@ strictly starshaped, then
 the fresh region $\{u_0>0\}$ is bounded and starshaped, a pocket of fresh gas surrounded
 by burnt gas, which is consumed in finite time; flames with an unbounded fresh region
 (planar or expanding fronts) are not covered. The order $\ve$ cannot be improved in the
-sup norm when $w_0\not\equiv0$, and for travelling waves, which are outside this setting,
+sup norm when $w_0\not\equiv0$, for the simple reason that the temperature of the burnt
+gas is $T_f+\ve w_0$; for travelling waves, which are outside this setting,
 the position of the front also differs by a quantity of order $\ve$
 (Remark~\ref{q:rem:rate}). The proof rests on
 an explicit barrier, an inner profile composed with an extension of a strict
 super- or subsolution, whose error does not depend on the strictness. Barriers of
 this type are classical for Allen--Cahn type limits
 \cite{Chen1992,AlfaroHilhorstMatano2008}. To our knowledge no rate has been stated for
-the present singular limit beyond travelling waves; for $w^\ve=0$ an upper bound with an
-additional logarithm can be extracted from the construction of \cite{Petrosyan2002}. The
+the present singular limit beyond travelling waves. When $w^\ve/\ve$ is constant the
+problem reduces to the scalar one of \cite{CaffarelliVazquez1995,Petrosyan2002}, and a
+two-sided bound of order $\ve\log(1/\ve)$ can be extracted from the barriers of
+\cite{Petrosyan2002}; what Theorem~\ref{q:thm:rate} adds is the upper bound of order
+$\ve$, without logarithm, and the case in which $w^\ve/\ve$ is not constant. The
 relation with that construction and with the one of \cite{FernandezBonderWolanski2004}
 is discussed in Section~\ref{sec:rate}. For the rate we assume that $f$ is nonincreasing and of class
 $C^2$ up to $1$, as $f(s)=(1-s)^+$; the second derivative is used only to differentiate
@@ -165,7 +170,7 @@ where $h_f$ and $h_c$ are the mesh sizes in the band and outside it, and $\mu$ i
 largest difference between the velocity of the band and that of the
 free boundary (Theorem~\ref{cv:thm:main}); the time step is restricted by
 $\Delta t\lesssim\ve$ divided by the bound. Thus, for time steps of order $\ve$, the layer has to be
-resolved, $h_f\ll\ve$, but nothing finer is needed. On a mesh that follows the front the
+resolved, $h_f\ll\ve$, and this is enough. On a mesh that follows the front the
 time step enters as $\Delta t$; on a mesh that does not move it enters as $\Delta t/\ve$, and
 indeed the computed front lags, by about $0.23\,(\Delta t/\ve)T$ for a travelling wave. For
 a travelling wave on a mesh that translates rigidly with the wave, the solution is steady
@@ -464,7 +469,7 @@ with compact support shrinking to a point at $t=T$: a ball of fresh gas that is 
 by the flame, whose front is concave towards the fresh gas and moves with speed
 proportional to $(T-t)^{-1/2}$. (As a model of a flame, \eqref{eq:P} is meaningful while
 the radius is large compared with $\ve$.) Following
-\cite{FernandezBonderWolanski2004,GalaktionovHulshofVazquez1997}, we call the instant at
+\cite{GalaktionovHulshofVazquez1997,Petrosyan2002}, we call the instant at
 which the fresh region disappears the \emph{extinction time}; note that it is the fresh
 pocket that is extinguished, not the flame in the sense of combustion theory. These
 solutions are used in
@@ -473,7 +478,7 @@ finite time. Substituting, $V$ is caloric in its positivity set if and only if
 \begin{equation}\label{eq:h}
 h''+\Big(\frac{N-1}r-\frac r2\Big)h'+\frac12h=0.
 \end{equation}
-(In \cite[(4.6)]{FernandezBonderWolanski2004} the sign of $r/2$ is misprinted.) The change of
+The change of
 variables $z=r^2/4$ turns \eqref{eq:h} into Kummer's equation
 $zh_{zz}+(\frac N2-z)h_z+\frac12h=0$, so the solutions with $h'(0)=0$ are
 \[
@@ -518,22 +523,31 @@ strictness $\delta$ one can check that it is a supersolution of \eqref{eq:Peps} 
 $\ve\log(1/\delta)\le c\,\delta$, at distance $O(\ve\log(1/\delta))$ from $\tilde u$, because the
 truncated profile has a length of order $\log(1/\delta)$; with the dilations used in the
 proof of Theorem~\ref{q:thm:rate} this would give the upper bound $u^\ve\le v+C\ve\log(1/\ve)$ in the case
-$w^\ve=0$. Strict subsolutions are not treated in \cite{Petrosyan2002}, and, as observed in
-\cite{FernandezBonderWolanski2004}, the construction does not extend to $w^\ve\ne0$ without
+$w^\ve=0$. The analogous statement for strict subsolutions is asserted in
+\cite[Remark~2.6]{Petrosyan2002}, and the same count gives
+$u^\ve\ge v-C\ve\log(1/\ve)$. Moreover, if $w^\ve\equiv\ve w_0$ with $w_0$ constant, then
+$Y^\ve=u^\ve+\ve w_0$ solves the scalar equation $Y_t=\Delta Y-\ve^{-1}\beta(Y/\ve)$ with
+$\beta(s)=sf(s-w_0)$, $\int\beta=M(w_0)$, which is the problem of
+\cite{CaffarelliVazquez1995,Petrosyan2002} with another constant in the free boundary
+condition. Hence, for constant $w_0$, a two-sided bound of order $\ve\log(1/\ve)$ can be
+extracted from those barriers, with less regularity of $\tilde u$ than we require (no
+extension is needed), and what is new in Theorem~\ref{q:thm:rate} is the upper bound
+without logarithm. When $W^\ve=w^\ve/\ve$ is not constant there is no such reduction, and, as
+observed in \cite{FernandezBonderWolanski2004}, the construction does not extend without
 further conditions on $f$.
 In \cite{FernandezBonderWolanski2004}, following
 \cite{LedermanVazquezWolanski2001}, the approximating function $u^\ve$ equals the strict
 supersolution $\tilde u$ where $\tilde u\ge(1-\theta)\ve$ and solves \eqref{eq:Peps} in the
-layer $\{\tilde u<(1-\theta)\ve\}$, so that $|u^\ve-\tilde u|\le C\ve$ is immediate; that
+set $\{\tilde u<(1-\theta)\ve\}$, which contains the burnt region, so that $|u^\ve-\tilde u|\le C\ve$ is immediate; that
 $u^\ve$ is a supersolution, that is, that the jump of its gradient across the boundary of
-the layer has the right sign, is proved for $\ve<\ve_0$ by a blow-up argument by
+that set has the right sign, is proved for $\ve<\ve_0$ by a blow-up argument by
 contradiction, which gives no information on how $\ve_0$ depends on the strictness
 $\delta$. What is new here is that the explicit barriers of
 Propositions~\ref{q:prop:super} and \ref{q:prop:sub}, which keep the whole profile and
 are composed with an extension of $\tilde u$ to the burnt region, are super- and
 subsolutions as soon
 as $\ve\le c_*\delta$, with a threshold that is linear in $\delta$ and an error that does
-not depend on $\delta$, for $w^\ve\ne0$ and for subsolutions as well; this is what
+not depend on $\delta$, also when $W^\ve$ is not constant; this is what
 produces the rate, without logarithm in the upper bound. With respect to the barriers used
 for Allen--Cahn type limits \cite{Chen1992,DeMottoniSchatzman1995,AlfaroHilhorstMatano2008},
 where the profile is a function of the signed distance to the interface and the
@@ -576,8 +590,10 @@ vanishes, the derivatives of the profiles with respect to $W$ are not needed, an
 assumption (F) is enough in this section.
 
 \textbf{Comparison.} We say that $V$ is a \emph{strong supersolution} of
-\eqref{eq:Peps} in an open set $D\subset Q_T$ if $V$ is bounded, $C^{1,1}$ in $x$ and
-Lipschitz in $t$ in $D$, and $\Delta V-V_t-(V+w^\ve)f_\ve(V)\le0$ a.e.\ in $D$; strong
+\eqref{eq:Peps} in an open set $D\subset Q_T$ if $V$ is bounded and continuous in
+$\overline D$, locally $C^{1,1}$ in $x$ and Lipschitz in $t$ in $D$ (assumption (W) bounds
+$\nabla W^\ve$ up to $t=0$, but $D^2W^\ve$ and $\partial_tW^\ve$ only for $t>0$), and
+$\Delta V-V_t-(V+w^\ve)f_\ve(V)\le0$ a.e.\ in $D$; strong
 subsolutions satisfy the reverse inequality. The initial data $u_0^\ve$ are continuous
 and bounded, and solutions of \eqref{eq:Peps} are bounded classical solutions, continuous
 up to $t=0$. For fixed $\ve$ the nonlinearity is
@@ -728,7 +744,9 @@ continuous on compact subsets of $(-\infty,1]$, so for $W$ near $W_*$ the map
 $W\mapsto\beta(\cdot\,;W)$ is of class $C^2$ with values in $C([0,\Theta_1])$, and so is
 $(Q,W)\mapsto\mathcal T(Q;W)$. By the uniform contraction principle
 \cite[Section~2.2]{ChowHale1982}, $W\mapsto Q(\cdot\,;W)\in C([0,\Theta_1])$ is of class
-$C^2$. Since $\Theta_m<1+W$, this is the claim. We now bound the derivatives with
+$C^2$; with the equation for $P$ in $\Theta$, $P$ is $C^2$ jointly in $(\Theta,W)$ for
+$0<\Theta<\Theta_1$. Since $\Theta_m<1+W$ and $\Theta_m$ is continuous in $W$ (it is a
+transversal zero of $F$, by \eqref{q:eq:top}), this is the claim. We now bound the derivatives with
 constants that do not depend on $\gamma$ and $\kappa$.
 Differentiating \eqref{q:eq:Psup} with respect to $W$ at fixed $\Theta$,
 \[
@@ -790,7 +808,10 @@ moreover $s_c\le2-(2+W)<1$, because $P\le1$.
 $-\bar q\le\Theta<0$, and $|b|\le C|\Theta|\le C\Theta_s$; and $\Theta_s\ge c\Theta$ gives the
 exponential bound on $[s_c,2]$.
 
-(ii) Differentiating \eqref{q:eq:Psub},
+(ii) By \eqref{q:eq:Psub}, in which $\tilde B$ is of class $C^1$ in $W$ with a
+derivative that is Lipschitz, and of class $C^2$ away from $\Theta=1+W$, the function $P$
+is $C^1$ in $W$, with $P$, $P_\Theta$ and $P_W$ continuous across $\Theta=1+W$, and $C^2$ on each
+side. Differentiating \eqref{q:eq:Psub},
 $G^2PP_W=\partial_W\tilde B-M'P^2-\kappa\big(1+\int_\Theta^{2+W}P_W\big)$, because $\gamma$
 does not depend on $W$. Now $|\partial_W\tilde B-M'P^2|\le CP^2$ and
 $\kappa\le c\gamma\le CP^2$, so $|P_W|\le CP+\frac{C\kappa}{P}\int_\Theta^{2+W}|P_W|$ with
@@ -814,7 +835,8 @@ $\overline{Q_T}$, with $\Omega_t$ bounded, is a \emph{regular strict supersoluti
 margins $(\delta,\delta_0,r,K_0)$} if
 \begin{enumerate}
 \item[(R1)] $\tilde u|_{\overline\Omega}$ has an extension $E\tilde u$ to
-$\overline\Omega\cup\{d<r\}$ which is $C^{1,1}$ in $x$ and Lipschitz in $t$, with
+$\overline\Omega\cup\{d<r\}$ which is $C^{1,1}$ in $x$ and Lipschitz in $t$ (on this set,
+which is not a cylinder: $E\tilde u$ is Lipschitz in $(x,t)$ there), with
 $|\nabla E\tilde u|+|D^2E\tilde u|+|\partial_tE\tilde u|\le K_0$, and $E\tilde u<0$ outside
 $\overline\Omega$;
 \item[(R2)] $|\nabla\tilde u|\ge2\delta_0$ on $\Gamma$ and $\tilde u\ge\delta_0\min\{d,r\}$ in $\Omega$;
@@ -827,7 +849,8 @@ $\sqrt{2M(w_0)}+\delta\le|\nabla\tilde u|\le\sqrt{2M(w_0)}+C_1\delta$ on $\Gamma
 \end{definition}
 
 By (R1)--(R2) and the implicit function theorem, $\Gamma_t=\{E\tilde u(\cdot,t)=0\}$ is a
-$C^{1,1}$ hypersurface. Conversely, (R1) holds when $\tilde u$ is $C^{2,1}$ up to
+$C^{1,1}$ hypersurface, which moves with normal velocity bounded by $K_0/(2\delta_0)$; in
+particular $d$ is Lipschitz in $t$. Conversely, (R1) holds when $\tilde u$ is $C^{2,1}$ up to
 $\Gamma$ and $\Gamma$ is locally the graph of a function $x_N=g(x',t)$ with bounded
 $D^2_{x'}g$ and $\partial_tg$: one flattens $\Gamma$ and uses the reflection
 $Eu(y',y_N)=3u(y',-y_N)-2u(y',-2y_N)$, as in \cite[Lemma~6.37]{GilbargTrudinger2001}.
@@ -1040,7 +1063,9 @@ bounded because $\tilde v^-$ is a negative constant away from $\overline\Omega$
 
 \emph{The equation where $s\ge2$.} $V_1=\tilde u\ge2\ve$, there is no reaction, and
 $\mathcal R=\Delta\tilde u-\tilde u_t\ge0$. By Lemma~\ref{q:lem:inner}(b)(ii), $V_1$ is $C^{1,1}$ in
-$x$ and Lipschitz in $t$ in $D$, and the sets where $s=2$ or $\Theta=1+W$ have measure zero.
+$x$ and Lipschitz in $t$ in $D$, and the sets where $s=2$ or $\Theta=1+W$ have measure zero,
+because $\nabla\tilde v\ne0$ there and $\Theta$ is strictly increasing in $s$ with $|\Theta_W|$
+bounded.
 
 \emph{Comparison.} The function $-w-\ve^2\tilde q\le-w\le u$. On the parabolic boundary of
 $D$ we have $V_1\le u$: at $t=0$ by assumption, and on $\partial D\cap Q_T$ because
@@ -1052,7 +1077,8 @@ $s\le2$; outside $D$, $\tilde u=0$ and $\underline V^\ve=-w-\ve^2\tilde q$.
 
 \subsection{Rate of convergence to a classical solution}
 
-We recall the setting of \cite{FernandezBonderWolanski2004}: $u_0\ge0$ is Lipschitz with
+We recall the setting of \cite{FernandezBonderWolanski2004}, to which we add a
+Lipschitz condition on $w_0$: $u_0\ge0$ is Lipschitz with
 compact support, and $w_0$ satisfies the monotonicity condition
 \begin{equation}\label{q:eq:mono}
 \lambda\mapsto w_0(\lambda x,\lambda^2t)\ \text{ is nondecreasing for }\lambda>0,
@@ -1089,7 +1115,8 @@ and let $u^\ve$ be the solution of \eqref{eq:Peps} with initial data such that
 Y_0^\ve:=u_0^\ve+w^\ve(\cdot,0)\ge0,\qquad |u_0^\ve-u_0|\le C_0\ve\ \text{ in }\Omega_0,\qquad
 Y_0^\ve\le C_0\ve^2\ \text{ outside }\Omega_0 .
 \end{equation}
-Then for every $T<T^*$ there are $C,\ve_1>0$ such that, for $0<\ve\le\ve_1$,
+Assume that (W) holds in $Q_{T^*}$. Then for every $T<T^*$ there are $C,\ve_1>0$ such that,
+if $\ve+\eta_\ve\le\ve_1$,
 \[
 -C\Big(\ve\log\frac1\ve+\eta_\ve\Big)\le u^\ve-v\le C(\ve+\eta_\ve)\qquad\text{in }\R^N\times[0,T].
 \]
@@ -1214,8 +1241,9 @@ up to $t=0$ is proved in \cite[Theorem~2.8]{BaconneauLunardi2004} for free bound
 conditions of the form $u=g_0(x,t)$, $\partial_nu=g_1(x,t)$ with $g_1\ne\partial_ng_0$, when
 $\partial\Omega_0$ and $u_0$ are of class $C^{3+\alpha}$ and satisfy the compatibility
 conditions; with $g_0=0$ and $g_1=-\sqrt{2M(w_0)}$ this covers \eqref{eq:P}, for constant
-$w_0$ and also for a sufficiently smooth $w_0(x,t)$. Hence, for such data that are in
-addition strictly starshaped, the theorem applies on a short time interval. The radial
+$w_0$ and also for a sufficiently smooth $w_0(x,t)$. Hence, if in addition (H),
+\eqref{q:eq:mono} and \eqref{q:eq:data} hold, the theorem applies on a short time
+interval (on which the solution is positive in $\Omega_t$, by continuity). The radial
 self-similar solutions of Section~\ref{sec:selfsimilar} are
 explicit regular classical solutions that satisfy all the assumptions of the theorem
 on $[0,T^*]$ for every $T^*<T$, that is, up to any time before extinction. In all cases
@@ -2287,8 +2315,12 @@ $0.25$, and the self-similar profile $h$ (grey).}\label{fig:C2}
 When the free boundary problem \eqref{eq:P} has a regular classical solution and the
 data are strictly starshaped, the solutions of \eqref{eq:Peps} converge to it with
 rate $O(\ve)$ from above and $O(\ve\log(1/\ve))$ from below
-(Theorem~\ref{q:thm:rate}); this makes the convergence theorems of
-\cite{FernandezBonderWolanski2004} quantitative. For planar waves the first-order
+(Theorem~\ref{q:thm:rate}), up to the distance $\eta_\ve$ between $w^\ve/\ve$ and its limit;
+this makes the convergence theorems of
+\cite{FernandezBonderWolanski2004} quantitative, under stronger assumptions on the
+regularity of the super- and subsolutions and on $f$. For constant $w_0$ the new
+information with respect to the barriers of \cite{Petrosyan2002} is the absence of the
+logarithm in the upper bound. For planar waves the first-order
 correction of the speed is explicit (Proposition~\ref{prop:speed}).
 
 On the numerical side, the linearly implicit scheme (S) satisfies a discrete
@@ -2299,7 +2331,7 @@ radial symmetry and band meshes with prescribed velocities, the fully discrete s
 converges to the solution of the free boundary problem with the bound
 $C(\ve\log\frac1\ve+\frac{h_f}\ve+h_c+\Delta t+\mu\min\{1,\frac{\Delta t}\ve\})$
 (Theorem~\ref{cv:thm:main}), for time steps $\Delta t\lesssim\ve$ divided by the bound: the layer
-must be resolved, and nothing more; on meshes that do not move the time step is divided
+has to be resolved, and this is enough; on meshes that do not move the time step is divided
 by $\ve$, and on meshes that follow the front it is not. In the experiments the terms in
 $\Delta t$ and $\mu$ are observed, also for $\Delta t\gg\ve$, while the mesh sizes enter as
 $(h_f/\ve)^2$ and $h_c^2$.
