@@ -38,7 +38,8 @@ the data. We prove a rate of convergence for this singular limit, of order
 $\ve$ up to a logarithm, by means of explicit barriers whose error does not
 depend on the strictness of the super- and subsolutions that they approximate.
 The same barriers, evaluated on a mesh, are discrete barriers for a monotone
-scheme: for radial data we prove that a fully discrete scheme, on meshes with
+scheme: for radial data, and a perturbation that need not be constant, we prove that a
+fully discrete scheme, on meshes with
 a fine band that follows the front with a prescribed velocity, converges to
 the solution of the free boundary problem, with an explicit error bound.
 Numerical experiments, including a perturbation that is not constant,
@@ -159,7 +160,8 @@ Our second result is the convergence of a fully discrete scheme to the free boun
 problem (Sections~\ref{sec:method} and \ref{sec:analysis}). The barriers of the rate
 theorem are explicit, and, evaluated on a mesh, they are discrete super- and subsolutions
 of a scheme that satisfies a discrete comparison principle. For radial
-data (in dimension $1$, $2$ or $3$) and meshes with a fine band that moves with a prescribed
+data (in dimension $1$, $2$ or $3$), a perturbation $w_0(x,t)$ that need not be constant, and
+meshes with a fine band that moves with a prescribed
 velocity, we
 prove that the fully discrete solution $U$ converges to the classical solution $v$ of
 \eqref{eq:P}, with
@@ -176,7 +178,10 @@ indeed the computed front lags, by about $0.23\,(\Delta t/\ve)T$ for a travellin
 a travelling wave on a mesh that translates rigidly with the wave, the solution is steady
 in the frame of the mesh and the time step does not appear in the error at all
 (Theorem~\ref{an:thm:ale}). These results have limitations, which we state clearly
-(Section~\ref{an:sec:impl}): the analysis is in planar or radial symmetry; in the method
+(Section~\ref{an:sec:impl}): the analysis is in planar or radial symmetry, for pockets of
+fresh gas, and it assumes a regularity of the solution of the limit problem that is known
+for the self-similar solutions but has not been proved when $w_0$ is not constant; in the
+method
 that we implement the velocity of the mesh is computed, not
 prescribed, so that $\mu$ is an output and the estimate is a posteriori; the band must be
 wider than the bound itself, and remeshing is not covered; and the terms $h_f/\ve$ and
@@ -643,7 +648,7 @@ G_-(W)^2\Theta_{ss}+\kappa\Theta_s=b(\Theta;W)\quad\text{for }s<s_m,\qquad\Theta
 and
 \begin{enumerate}
 \item[(i)] $0<\Theta_s\le1$ and $0\le\Theta_{ss}\le C\Theta_s$; $0<\Theta\le Ce^{\lambda_0s}$ for
-$s\le0$ and $\Theta_s\le C\Theta$; $\Theta_s\ge c\,e^{-CS}$ on $[-S,s_m]$ for every $S\ge0$; and
+$s\le0$ and $c\,\Theta\le\Theta_s\le C\Theta$ for $s\le s_m$; $\Theta_s\ge c\,e^{-CS}$ on $[-S,s_m]$ for every $S\ge0$; and
 $b(\Theta;W)\ge\gamma/4$ where $\frac{1+W}2\le\Theta\le\Theta(s_m)$;
 \item[(ii)] $\Theta$ is $C^{1,1}$ in $(s,W)$, of class $C^2$ on $\{s\ne s_m(W)\}$, and
 \[
@@ -1514,30 +1519,59 @@ evaluated on the mesh. In this section we show that, with a dilation that depend
 time and a damping of the inner profile that is proportional to the truncation errors
 in the layer, they are discrete super- and subsolutions of the scheme (S). By the
 discrete comparison principle this gives the convergence of the fully discrete solution
-to the solution of the free boundary problem \eqref{eq:P}, for general radial data, with
+to the solution of the free boundary problem \eqref{eq:P}, for radial data and a
+perturbation $w_0$ that need not be constant, with
 an explicit error bound (Theorem~\ref{cv:thm:main}). For
 travelling waves on meshes that move with the wave we also prove an estimate in which
 the time step does not appear at all (Theorem~\ref{an:thm:ale}).
 
 \subsection{Setting and main result}\label{cv:sec:main}
 
-Let $N\in\{1,2,3\}$, let $w^\ve\equiv\ve w_0$ with $w_0>-1$ constant, and assume
-(F$_2$). Let $v$ be a radial regular classical solution of \eqref{eq:P} on $[0,T^*]$, in
-the sense of Section~\ref{sec:rate}, with $u_0=v(\cdot,0)$, such that
+Let $N\in\{1,2,3\}$ and assume (F$_2$). Let $w_0=w_0(x,t)$ be a radial solution of the heat
+equation in $\{|x|<L\}\times(0,T^*]$ with zero flux on $\{|x|=L\}$ (for $N=1$, an even
+function of $x$), and let $0<L_w\le L$, such that
 \begin{itemize}
-\item[(V1)] $\{v(\cdot,t)>0\}=\{r<R(t)\}$ with $0<R_{\min}\le R(t)\le L-\varrho_L$,
-$\varrho_L>0$, and $v$ is nonincreasing in $r$;
+\item[(W1)] $-1+\delta_1\le w_0\le\bar W$, and $D_x^3w_0$, $\partial_t\nabla w_0$, $\partial_t^2w_0$ are
+bounded;
+\item[(W2)] $x\cdot\nabla w_0+2t\,\partial_tw_0\ge0$ in $\{|x|\le L_w\}\times(0,T^*]$.
+\end{itemize}
+Condition (W2) says that $\lambda\mapsto w_0(\lambda x,\lambda^2t)$ is nondecreasing while $(\lambda x,\lambda^2t)$ stays
+in that set; it is the monotonicity in \eqref{q:eq:mono}, in the region where it will be
+used. A constant $w_0$ satisfies (W1), (W2) with $L_w=L$. Let $w^\ve=\ve w_0$, and let $v$ be a
+radial regular classical solution on $[0,T^*]$, in the sense of Section~\ref{sec:rate}, of
+\eqref{eq:P} with this $w_0$, that is, with $|\nabla v|=\sqrt{2M(w_0(x,t))}$ on the free boundary,
+with $u_0=v(\cdot,0)$, such that
+\begin{itemize}
+\item[(V1)] $\{v(\cdot,t)>0\}=\{r<R(t)\}$ with $0<R_{\min}\le R(t)\le L_w-\varrho_L$, $\varrho_L>0$; $u_0$ is
+nonincreasing in $r$; and $R(t)-2t\dot R(t)\ge c_R>0$ on $[0,T^*]$;
 \item[(V2)] $D_x^3v$, $\partial_t\nabla v$ and $\partial_t^2v$ are bounded in $\{v>0\}$, and the
 extension $Ev$ of (R1) is $C^{1,1}$ jointly in $(x,t)$: $\partial_t\nabla Ev$ and $\partial_t^2Ev$
 are bounded too.
 \end{itemize}
-For $N=1$ this is a slab $\{|x|<R(t)\}$ of fresh gas, computed on $[0,L]$. By (V1), (V2),
-$R\in C^{1,1}$ and (H) holds. The radial self-similar solutions of
-Section~\ref{sec:selfsimilar} satisfy (V1)--(V2) on $[0,T^*]$ for every $T^*$ smaller than
-their extinction time. We may and do assume that $r\le\varrho_L/4$ in (R1), (R2).
+For $N=1$ this is a slab $\{|x|<R(t)\}$ of fresh gas, computed on $[0,L]$. By (V1), (V2) and
+(R2), $R\in C^{1,1}$ and (H) holds. The last condition in (V1) holds, in particular, when
+the pocket does not expand, $\dot R\le0$; it is used through the following consequence,
+which is a strict form of the monotonicity of $v$ under parabolic dilations.
 
-The scheme (S) is run on $[0,L]$ with $U^0_j=u_0^\ve(x^0_j)$ and $Y^0=U^0+\ve w_0$, where
-$u_0^\ve$ is given by \eqref{eq:initdata}; thus $W_h^n\equiv\ve w_0$. We make the following
+\begin{lemma}\label{cv:lem:dil}
+Under (V1), (V2) there is $c_v>0$ such that
+$x\cdot\nabla v+2t\,v_t-\frac12v\le-c_v$ in $\overline{\{v>0\}}$.
+\end{lemma}
+
+\begin{proof}
+The function $\psi=x\cdot\nabla v+2t\,v_t-\frac12v$ is caloric in $\{v>0\}$, because $v$ is, and by
+(V2) it is continuous up to the boundary. On the free boundary $v=0$,
+$x\cdot\nabla v=-R|v_r|$ and, differentiating $v(R(t),t)=0$, $v_t=|v_r|\dot R$; hence
+$\psi=-|v_r|(R-2t\dot R)\le-2\delta_0c_R$ there, by (R2). At $t=0$,
+$\psi=x\cdot\nabla u_0-\frac12u_0\le-\frac12u_0$ in $\overline{\Omega_0}$, which is negative in $\Omega_0$, and
+$\psi=-R|\partial_ru_0|<0$ on $\partial\Omega_0$; so $\psi(\cdot,0)\le-c$ in $\overline{\Omega_0}$. The claim follows
+from the maximum principle in the non-cylindrical domain $\{v>0\}$.
+\end{proof}
+
+The scheme (S) is run on $[0,L]$ with $U^0_j=u_0^\ve(x^0_j)$ and
+$Y^0_j=U^0_j+\ve w_0(x^0_j,0)$, where $u_0^\ve$ is given by \eqref{eq:initdata} with
+$w_0(\cdot,0)$; these data satisfy \eqref{q:eq:data}. We may and do assume that
+$r\le\varrho_L/4$ in (R1), (R2). We make the following
 assumptions on the meshes, in which $h_f\le h_c\le1$, $\ell_b>0$ and $v_{\max}$ are given.
 \begin{itemize}
 \item[(M1)] There is no remeshing, \eqref{eq:peclet} holds, all the spacings are at most
@@ -1557,8 +1591,8 @@ In (M2), $\ell_b<\min\{R_{\min},\varrho_L\}$. A uniform mesh that does not move 
 $\mu=\max|\dot R|$.
 
 \begin{theorem}[Convergence of the scheme]\label{cv:thm:main}
-Assume (F$_2$), (V1), (V2), (M1), (M2), and let $T<T^*$. There are positive constants
-$\ve_0,c_0,C_b,C$, depending only on $f,w_0,N,v,T,L$ and $v_{\max}$, such that, if
+Assume (F$_2$), (W1), (W2), (V1), (V2), (M1), (M2), and let $T<T^*$. There are positive
+constants $\ve_0,c_0,C_b,C$, depending only on $f,w_0,N,v,T,T^*,L$ and $v_{\max}$, such that, if
 $0<\ve\le\ve_0$ and
 \begin{equation}\label{cv:eq:hyp}
 \mathcal E\le c_0,\qquad \Delta t\,(\mu+\mathcal E)\le c_0\,\ve,\qquad \ell_b\ge C_b\,\mathcal E,
@@ -1585,8 +1619,8 @@ $\ve$ of the layer. Since $\mathcal E\ge h_f/\ve+h_c+\Delta t$, it implies
 $\Delta t\le c_0\min\{\ve^2/h_f,\ve/h_c\}$ and $\Delta t^2\le c_0\ve$: for a fixed ratio $h_f/\ve$ the theorem
 covers time steps up to a multiple of $\ve$, and larger ones only on finer meshes.
 \item \emph{Mesh sizes.} Negative powers of $\ve$ multiply only the mesh size of the band,
-through the ratio $h_f/\ve$: for $\Delta t\lesssim\ve$ the layer has to be resolved, but
-$h_f\ll\ve^2$ is not needed, and for a fixed ratio $h_f/\ve$ the bound is uniform in $\ve$. On
+through the ratio $h_f/\ve$: for $\Delta t\lesssim\ve$ it is enough to resolve the layer, and
+$h_f\ll\ve^2$ is not needed; for a fixed ratio $h_f/\ve$ the bound is uniform in $\ve$. On
 the other hand, the band has to contain the fronts of the two barriers, so its width
 must exceed a multiple of the bound itself (for a uniform mesh, this is a further
 smallness condition on $\mathcal E$); and we use the pointwise truncation error of $\Delta_h$,
@@ -1594,90 +1628,153 @@ which is of first order on arbitrary meshes.
 \item \emph{The mesh velocity.} In the theorem the velocities $v_n$ are given. In the
 method of Section~\ref{sec:ale} they are computed, and $\mu$ is an output: for the
 method itself the estimate is a posteriori. See Section~\ref{an:sec:impl}.
+\item \emph{The hypotheses on $w_0$ and $v$.} The theorem is conditional on the existence
+of a solution $v$ with the regularity (V2), which includes compatibility conditions at
+$t=0$. For constant $w_0$ the radial self-similar solutions of
+Section~\ref{sec:selfsimilar} satisfy (V1), (V2) on $[0,T^*]$ for every $T^*$ smaller than
+their extinction time, with $R-2t\dot R=R_*T/\sqrt{T-t}$, where $R_*\sqrt{T-t}$ is the radius. For a
+non-constant $w_0$ we do not know of a solution for which (V2) has been proved (the
+solutions of \cite{BaconneauLunardi2004} are of class $C^{1+\alpha/2,2+\alpha}$), so in that case
+the theorem is a conditional statement. Functions $w_0$ that satisfy (W1), (W2) are easy
+to give: for $N=3$, $w_0=\bar w-b\,e^{-k^2t}\sin(kr)/(kr)$ with $b>0$ and $\tan(kL)=kL$ has zero
+flux at $r=L$ and satisfies (W2) with $L_w=\pi/k\approx0.7\,L$. In a bounded domain (W2) is not
+inherited from $t=0$, so it is a condition for all times. Finally, when $w_0$ is constant
+the last condition in (V1) can be replaced by the assumption that $v$ is nonincreasing
+in $r$: in Step~1 below one takes $\tau=\int_0^t\lambda^2$ instead of $\tau=\lambda^2t$, and then
+$\tilde u_t-\Delta\tilde u=\frac{\dot\lambda}{\lambda'}\big[\frac{y\cdot\nabla v}\lambda-\frac v{2\lambda'}\big]$, whose bracket is negative; this is
+not compatible with (W2) when $w_0$ depends on $t$.
 \end{enumerate}
 \end{remark}
 
 \subsection{Proof of Theorem~\ref{cv:thm:main}}
 
-We write $\Lop[V]^n_j=\Delta t^{-1}(V^{n+1}_j-V^n_j)-(\mathcal D^{n+1}V^{n+1})_j
-+f_\ve(V^n_j)(V^{n+1}_j+\ve w_0)$, and $\Lop_0[V]$ for the same expression without the last
+We write $W_h^n=Y^n-U^n$ for the discrete perturbation,
+$\Lop[V]^n_j=\Delta t^{-1}(V^{n+1}_j-V^n_j)-(\mathcal D^{n+1}V^{n+1})_j
++f_\ve(V^n_j)(V^{n+1}_j+W^{n+1}_{h,j})$, and $\Lop_0[V]$ for the same expression without the last
 term. For a function $V(x,t)$ we set $V^n_j=V(x^n_j,t_n)$. In a step $n\to n+1$ and for a
 node $j$ we write $x'=x^{n+1}_j$ and $x_j(t)=x'-(t_{n+1}-t)\dot x^n_j$, and we call
 \emph{evaluation points} of the node the points $(x,t_{n+1})$ with
 $x^{n+1}_{j-1}\le x\le x^{n+1}_{j+1}$, and the points $(x_j(t),t)$ with $t_n\le t\le t_{n+1}$.
 Quantities evaluated at $(x',t_{n+1})$ carry a prime, and those evaluated at $(x^n_j,t_n)$
 a subscript $j$. Unless otherwise stated, $C,c$ denote constants that depend only on the
-quantities listed in the theorem.
+quantities listed in the theorem. The discrete $W_h$ is not $\ve w_0$, but it is close to it.
+
+\begin{lemma}\label{cv:lem:heat}
+Assume (W1) and (M1). Then
+\[
+\varpi:=\max_{t_n\le T}\max_j\Big|\frac{W^n_{h,j}}\ve-w_0(x^n_j,t_n)\Big|\le C_wT\,(\Delta t+h_c),
+\]
+with $C_w$ depending only on the bounds in (W1), on $N$, $L$ and $v_{\max}$.
+\end{lemma}
+
+\begin{proof}
+$W_h$ solves the scheme without reaction, $\Lop_0[W_h]=0$, and $W_h^0=\ve w_0(\cdot,0)$ on
+the mesh. By (W1), $|\Lop_0[w_0]^n_j|\le C_w(\Delta t+h_c)$: the difference quotient in time along
+the path of a node is $(\partial_t+\dot x_j\partial_x)w_0$ at $(x',t_{n+1})$ up to
+$\frac{\Delta t}2\sup|(\partial_t+\dot x_j\partial_x)^2w_0|$, $D$ is exact on quadratic functions, and $\Delta_h$ is
+consistent of first order on arbitrary meshes for radial functions (even functions, if
+$N=1$) whose third derivatives in Cartesian coordinates are bounded; this includes the
+rows next to $r=0$, the row $j=0$, which is $2N(u_1-u_0)/h_0^2$ and is exact on quadratic
+functions of $r$, and the row $j=J$, because $\partial_rw_0=0$ at $r=L$. Hence $Z=W_h/\ve-w_0$
+satisfies $|\Lop_0[Z]|\le C_w(\Delta t+h_c)$ and $Z^0=0$, and, since $\mathsf A_0^{-1}\ge0$ and
+$\mathsf A_0\mathbf 1=\Delta t^{-1}\mathbf 1$,
+$\max_j|Z^{n+1}_j|\le\max_j|Z^n_j|+C_w\Delta t(\Delta t+h_c)$.
+\end{proof}
+
+We set $\varpi'=\varpi+C\Delta t$, which bounds $|W_{h,j}/\ve-w_0'|$ at every node, because $w_0$ is
+Lipschitz along the paths of the nodes. By the lemma and \eqref{cv:eq:hyp},
+$\varpi'\le C\mathcal E\le Cc_0$.
 
 \emph{Step 1. Dilations that depend on time.} For $\beta,a>0$ let
 $\lambda(t)=1-a\,\mathcal E\,e^{\beta t}$ or $\lambda(t)=1+a\,\mathcal E\,e^{\beta t}$, and
 \[
-\tilde u(x,t)=\frac1{\lambda'(t)}\,v\big(\lambda(t)x,\tau(t)\big),\qquad
-\lambda'=\frac{1+\lambda}2,\quad\tau(t)=\int_0^t\lambda^2 ,
+\tilde u(x,t)=\frac1{\lambda'(t)}\,v\big(\lambda(t)x,\lambda(t)^2t\big),\qquad
+\lambda'=\frac{1+\lambda}2,
 \]
-which is defined on $[0,T]$, with $\tilde R\le L-\varrho_L/2$ below, if $c_0$ is small (depending
-on $a$ and $\beta$). With $y=\lambda x$,
+which is defined on $[0,T]$, with $\tilde R\le L_w-\varrho_L/2$ below, if $c_0$ is small (depending
+on $a$ and $\beta$), because then $\lambda^2T\le T^*$. With $y=\lambda x$ and $\tau=\lambda^2t$,
 \[
-\tilde u_t-\Delta\tilde u=\frac{\dot\lambda}{\lambda'}\Big[\frac{y\cdot\nabla v}{\lambda}-\frac v{2\lambda'}\Big](y,\tau).
+\tilde u_t-\Delta\tilde u=\frac{\dot\lambda}{\lambda'}\Big[\frac{y\cdot\nabla v+2\tau v_t}{\lambda}-\frac v{2\lambda'}\Big](y,\tau).
 \]
-By (V1) and (R2) the bracket is at most $-c_v<0$ in $\{v>0\}$. Hence, for the first
-choice of $\lambda$, $\tilde u_t-\Delta\tilde u\ge\frac{c_v}2|\dot\lambda|$ in $\{\tilde u>0\}$, and for the second
-one $\tilde u_t-\Delta\tilde u\le-\frac{c_v}2|\dot\lambda|$, where $|\dot\lambda|\ge\beta a\mathcal E$. The free boundary
-of $\tilde u$ is $r=\tilde R(t)=R(\tau(t))/\lambda(t)$, and there $|\nabla\tilde u|=\frac\lambda{\lambda'}\sqrt{2M}$. So
+By Lemma~\ref{cv:lem:dil} the bracket is at most $-c_v/2$ in $\{v>0\}$ when $|1-\lambda|$ is small.
+Hence, for the first
+choice of $\lambda$, $\tilde u_t-\Delta\tilde u\ge\frac{c_v}4|\dot\lambda|$ in $\{\tilde u>0\}$, and for the second
+one $\tilde u_t-\Delta\tilde u\le-\frac{c_v}4|\dot\lambda|$, where $|\dot\lambda|\ge\beta a\mathcal E$. The free boundary
+of $\tilde u$ is $r=\tilde R(t)=R(\lambda^2t)/\lambda$, and there
+$|\nabla\tilde u|=\frac\lambda{\lambda'}\sqrt{2M(w_0(\lambda x,\lambda^2t))}$. By (W2) and the monotonicity of $M$, for
+$\lambda<1$ this is at most $\frac\lambda{\lambda'}\sqrt{2M(w_0(x,t))}\le\sqrt{2M(w_0(x,t))}-c\,(1-\lambda)$, and for
+$\lambda>1$ it is at least $\sqrt{2M(w_0(x,t))}+c\,(\lambda-1)$ and, since $w_0$ is Lipschitz in $(x,t)$,
+at most $\sqrt{2M(w_0(x,t))}+C(\lambda-1)$. So
 $\tilde u$ is a regular strict supersolution (resp.\ subsolution) with margins
 $(\delta,\delta_0,r,K_0)$, $\delta=c\,a\mathcal E$, uniformly in $t$ (for the subsolution, with
-$C_1=Ce^{\beta T}$). By (V2), $E\tilde u(x,t)=Ev(\lambda x,\tau)/\lambda'$ is $C^{1,1}$ in $(x,t)$, and so are
+$C_1=Ce^{\beta T}$); this is the reason for the choice of the time $\lambda^2t$, for which the
+dilation acts on $w_0$ as in \eqref{q:eq:mono}. By (V2),
+$E\tilde u(x,t)=Ev(\lambda x,\lambda^2t)/\lambda'$ is $C^{1,1}$ in $(x,t)$, and so are
 $\hat E=\psi(E\tilde u)$ and $\tilde v^\pm=\hat E\pm\Lambda'(\hat E^-)^2$ in the proof of
 Lemma~\ref{q:lem:ext}: in addition to the bounds of that lemma,
 $|\partial_t\nabla\tilde v^\pm|+|\partial_t^2\tilde v^\pm|\le K_1$. (The derivatives of $\lambda$ are bounded by
 $C_\beta a\mathcal E\le1$ for $c_0$ small, so these constants do not depend on $a$.) Moreover
 $|\tilde u-v|\le C_\beta\,a\mathcal E$, where $C_\beta$ depends also on $\beta$, and
 \[
-\dot{\tilde R}=\lambda\dot R(\tau)-\frac{\dot\lambda}{\lambda^2}R(\tau),\qquad
+\dot{\tilde R}=\lambda\dot R(\tau)-\frac{\dot\lambda}{\lambda^2}\big(R(\tau)-2\tau\dot R(\tau)\big),\qquad
 |\lambda\dot R(\tau)-\dot R(t)|\le C_R|1-\lambda(t)| ,
 \]
-because $|\tau-t|\le3t|1-\lambda(t)|$. We fix $\beta$ with $\beta R_{\min}/4\ge C_R+2$. Then
+because $|\tau-t|\le3t|1-\lambda(t)|$. By (V1), $R-2\tau\dot R\ge c_R$; we fix $\beta$ with
+$\beta c_R/4\ge C_R+2$. Then
 \begin{equation}\label{cv:eq:speed}
 \pm\big(\dot{\tilde R}-\dot R\big)(t)\ge2|1-\lambda(t)|\ge2a\mathcal E,\qquad|\dot{\tilde R}-\dot R|\le C_\beta\,a\mathcal E,
 \end{equation}
 with the sign $+$ for the supersolution: its front moves outwards with respect to the
 front of $v$, and the front of the subsolution inwards.
 
-\emph{Step 2. The barriers and the parameters.} Let $\tilde q=\max\{1,|w_0|\}$, $\Theta^\pm=\Theta^\pm(\cdot\,;w_0)$,
+\emph{Step 2. The barriers and the parameters.} Let $\tilde q=\max\{1,\sup|w_0|\}$,
 $s=\tilde v^\pm/\ve$, and
 \[
-V=-\ve w_0+\ve\,\Theta^+(s)+\ve^2\tilde q,\qquad
-\underline V=\max\big\{V_1,\,-\ve w_0-\ve^2\tilde q\big\},\quad V_1=-\ve w_0+\ve\,\Theta^-(s),
+V=-W_h+\ve\,\Theta^+(s;w_0)+\ve^2\tilde q,\qquad
+\underline V=-W_h+Z,\quad Z=\max\big\{\ve\,\Theta^-(s;w_0),\,-\ve^2\tilde q\big\},
 \]
-as in Propositions~\ref{q:prop:super} and \ref{q:prop:sub}, with $\gamma=c_1\delta$,
-$\bar q=\ve\tilde q$ and $\kappa=K\ve$; here $\Theta^-$ is continued to $s<s_*$ by the solution of
+where $W_h$ is the discrete function and the profiles are evaluated with the exact
+$w_0$ at the node, $w_0=w_0(x^n_j,t_n)$. These are the barriers of
+Propositions~\ref{q:prop:super} and \ref{q:prop:sub} with $W^\ve=w_0$, $\gamma=c_1\delta$,
+$\bar q=\ve\tilde q$ and $\kappa=K\ve$, except that the offset is $W_h$ instead of $\ve w_0$. The
+profiles carry the exact $w_0$, so that their derivatives are controlled by
+Lemma~\ref{q:lem:inner}; the offset is discrete, so that $\Lop_0[W_h]=0$ exactly and
+\begin{equation}\label{cv:eq:split}
+\Lop[V]^n_j=\Lop_0[\mathcal V]^n_j+f_\ve(V_j)\,(\mathcal V'+\ve^2\tilde q),\qquad
+\mathcal V=\ve\,\Theta^+(s;w_0),\qquad
+f_\ve(V_j)=\frac1{\ve^2}f\Big(\Theta_j+\ve\tilde q-\frac{W_{h,j}}\ve\Big),
+\end{equation}
+and similarly $\Lop[\underline V]^n_j=\Lop_0[Z]^n_j+f_\ve(\underline V_j)\,Z'$. Here $\Theta^-$ is continued to
+$s<s_*$ by the solution of
 the same equation down to $\Theta^-=-1$, and by $-1$ further on. On the continuation the
-bounds $c\sqrt\gamma\le\Theta^-_s\le C$ and $|\Theta^-_{ss}|\le C\Theta^-_s$ still hold, by the proof of
-Lemma~\ref{q:lem:inner}(b) (the bound $|\Theta^-_{ss}|\le C(\bar q+\kappa\Theta^-_s)$ does not, and it
+bounds $c\sqrt\gamma\le\Theta^-_s\le C$ and $|\Theta^-_{ss}|\le C\Theta^-_s$ and those of
+Lemma~\ref{q:lem:inner}(b)(ii) still hold, by the proof of that lemma, which covers
+$-1\le\Theta\le2+W$ (the bound $|\Theta^-_{ss}|\le C(\bar q+\kappa\Theta^-_s)$ does not, and it
 is not used there), and its length in $s$ is at least $c_e>0$; the margin
 \eqref{q:eq:marginsub} also holds there, since its proof only uses that
 $d\le C\ve\log(1/\gamma)\le r_1$ and Lemma~\ref{q:lem:ext}(iii). The new
 point is the size of the damping: we take
 \begin{equation}\label{cv:eq:K}
-K=C_K\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big),\qquad
+K=C_K\Big(\log\frac1\ve+\frac{h_f}{\ve^2}+\frac{\Delta t+h_c}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big),\qquad
 \mu_*=\begin{cases}\mu&\text{if }\Delta t<\ve,\\ 0&\text{if }\Delta t\ge\ve,\end{cases}
 \end{equation}
-so that $K\ve\le3C_K\mathcal E$ (recall that $\ve\le\ve\log\frac1\ve\le\mathcal E$).
+so that $K\ve\le5C_K\mathcal E$.
 Lemma~\ref{q:lem:inner} requires $\kappa\le c\gamma$, that is,
-$3C_K\mathcal E\le c\,c_1\delta$, which holds if $a$ is large; the conditions $\delta\le\delta_*$ and
+$5C_K\mathcal E\le c\,c_1\delta$, which holds if $a$ is large; the conditions $\delta\le\delta_*$ and
 $\ve\le c_*\delta$ of the margins hold too, because $\delta=c\,a\mathcal E\ge c\,a\,\ve\log\frac1\ve$, for
 $a$ large and then $c_0$ and $\ve_0$ small; this is where the truncation errors of
 the layer enter the error bound. From Section~\ref{sec:rate} we only take $\Lambda$, $c_1$
 and the thresholds $\delta_*$, $c_*$ under which the margins \eqref{q:eq:marginsup} and
-\eqref{q:eq:marginsub} hold (with $C_1$ fixed by $\beta$); these do not involve the damping.
+\eqref{q:eq:marginsub} hold (with $\eta_\ve=0$, and $C_1$ fixed by $\beta$); these do not involve
+the damping.
 The further restrictions on $c_*$ and $\delta_*$ in Propositions~\ref{q:prop:super} and
 \ref{q:prop:sub}, which depend on $K$, are not used: here $\kappa\le c\gamma$ is obtained by
 taking $a$ large, and the term that they absorb in Proposition~\ref{q:prop:sub} is
 estimated in a different way in Step~6. The constants are chosen in the order $\beta$;
 $\Lambda$, $c_1$, $\delta_*$, $c_*$; $C_S$, $C_K$; $a$;
-$c_0$, $\ve_0$, $C_b$. Recall that $\Theta^+$ is convex, so $\Theta^+\ge s+w_0$, with equality for
-$s\ge s_m$; and $\Theta^-$ is convex on $[s_c,2]$ with $s_c<1$, so $\Theta^-\ge s+w_0$ for $s\ge1$, with
-equality for $s\ge2$.
+$c_0$, $\ve_0$, $C_b$. Recall that $\Theta^+$ is convex in $s$, so $\Theta^+\ge s+w_0$, with equality for
+$s\ge s_m$; that $\Theta^-$ is convex on $[s_c,2]$ with $s_c<1$, so $\Theta^-\ge s+w_0$ for $s\ge1$, with
+equality for $s\ge2$; and that $c\,\Theta^+\le\Theta^+_s\le C\Theta^+$ for $s\le s_m$, by \eqref{q:eq:Plin}.
 
 \emph{Step 3. Elementary facts.} (i) If $g\in C^{1,1}([t_n,t_{n+1}])$ then
 $g'(t_{n+1})-\frac{\Delta t}2\sup(g'')^+\le\Delta t^{-1}(g(t_{n+1})-g(t_n))\le
@@ -1690,18 +1787,32 @@ On an arbitrary mesh $|\Delta_hV_j|\le C(\sup|V_{xx}|+\sup|V_x|)$ and $|DV_j|\le
 $x_j\ge R_{\min}/2$ and $j<J$, the suprema being taken on the stencil; and for $N\ge2$, on a uniform
 stencil with $x_j\ge R_{\min}/2$,
 $\Delta_h=(1+\epsilon_j)\delta^2+(\frac{N-1}{x_j}+\epsilon_j')D$ with $|\epsilon_j|+|\epsilon_j'|\le Ch^2$. (iii) If all the
-evaluation points of a node lie in $\overline{\{\tilde u>0\}}$, then by (V2)
+evaluation points of a node lie in $\overline{\{\tilde u>0\}}$, then by (V2), as in the proof of
+Lemma~\ref{cv:lem:heat},
 \begin{equation}\label{cv:eq:outer}
-\Lop_0[\tilde u]^n_j=(\tilde u_t-\Delta\tilde u)(x',t_{n+1})+\vartheta,\qquad|\vartheta|\le C_\beta(\Delta t+h_c),
+\Lop_0[\tilde u]^n_j=(\tilde u_t-\Delta\tilde u)(x',t_{n+1})+\vartheta,\qquad|\vartheta|\le C_\beta(\Delta t+h_c).
 \end{equation}
-because $\Delta_h$ is consistent of first order on arbitrary meshes for radial functions
-(even functions, if $N=1$) whose third derivatives in Cartesian coordinates are bounded.
-This includes the rows next to $r=0$ and the row $j=0$, which is
-$2N(u_1-u_0)/h_0^2$ and is exact on quadratic functions of $r$. By Step~1, if $a$ is large the right hand side has the
-sign of $\mp\dot\lambda$: $\Lop_0[\tilde u]\ge0$ for the supersolution and $\Lop_0[\tilde u]\le0$ for the
-subsolution. (iv) Since $|\Theta^\pm_{ss}|\le C\Theta^\pm_s$, we have
-$\Theta^\pm_s(s_1)\le e^{C|s_1-s_2|}\Theta^\pm_s(s_2)$; and $(1+|s|)\Theta^+\le C$ for $s\le1$,
-$(1+|s|)|\Theta^-|\le C$ for $s_*\le s\le2$.
+By Step~1, if $a$ is large, $\Lop_0[\tilde u]\ge\frac{c_v}8\beta a\mathcal E$ for the supersolution and
+$\Lop_0[\tilde u]\le-\frac{c_v}8\beta a\mathcal E$ for the subsolution; and
+$\ve|\Lop_0[w_0]|\le C\ve(\Delta t+h_c)$ is smaller than half of these quantities. (iv) Since
+$|\Theta^\pm_{ss}|\le C\Theta^\pm_s$, we have
+$\Theta^\pm_s(s_1)\le e^{C|s_1-s_2|}\Theta^\pm_s(s_2)$ at a fixed $W$; and $(1+|s|)\Theta^+\le C$ for $s\le1$,
+$(1+|s|)|\Theta^-|\le C$ for $s_*\le s\le2$. (v) Let $\mathcal V=\ve\,\Theta^\pm(\tilde v^\pm/\ve;w_0)$. A.e.,
+\begin{equation}\label{cv:eq:Vder}
+\mathcal V_x=\Theta_s\tilde v_x+\ve\Theta_W\partial_xw_0,\qquad
+\mathcal V_{xx}=\frac1\ve\Theta_{ss}\tilde v_x^2+\Theta_s\tilde v_{xx}+\mathcal P_x,
+\end{equation}
+with $\mathcal P_x=2\Theta_{sW}\tilde v_x\partial_xw_0+\ve\Theta_{WW}(\partial_xw_0)^2+\ve\Theta_W\partial_x^2w_0$, and, by
+Lemma~\ref{q:lem:inner}(ii), where $|s|\le C\log\frac1\ve$,
+\begin{equation}\label{cv:eq:Px}
+|\mathcal P_x|\le C_3(1+|s|)|\Theta_{ss}|+C\Theta_s,\qquad|\ve\Theta_W|\le C\ve\log\tfrac1\ve\,\Theta_s .
+\end{equation}
+In the same way, along the path of a node, $g(t)=\mathcal V(x_j(t),t)$ satisfies
+$g'=\Theta_s\dot{\tilde v}+\ve\Theta_W\dot w_0$ and
+$g''=\ve^{-1}\Theta_{ss}\dot{\tilde v}^2+\Theta_s\ddot{\tilde v}+\mathcal P_t$ with
+$|\mathcal P_t|\le C\big((1+|s|)|\Theta_{ss}|+\Theta_s\big)(1+|\dot{\tilde v}|)$, where the dots are derivatives along
+the path and $\dot w_0$, $\ddot w_0$ are bounded by (W1) and (M1). On the linear parts of the
+profiles ($s\ge s_m$ for $\Theta^+$, $s\ge2$ for $\Theta^-$), $\mathcal V=\tilde v+\ve w_0$.
 
 \emph{Step 4. The band nodes.} By (M2), a band node has a
 uniform stencil of size $h_f$, whose nodes moved with velocity $v_n$, so that
@@ -1721,13 +1832,17 @@ $\mathcal E\ge\mu+\Delta t$, and the front of the supersolution moves outwards w
 and that of the subsolution inwards. This is the favourable direction for the lagged
 reaction rate, as we shall see. Let
 \[
-\zeta=\frac{2K_0h_f+\Delta t\sup\mu'}{\ve}
+\zeta=\frac{2K_0h_f+\Delta t\sup\mu'}{\ve}+C(h_f+\Delta t)\log\frac1\ve
 \]
-(the supremum over $d\le C\ve\log(1/\ve)$), which bounds the variation of $s$ on the
-evaluation points of a band node at distance $d\le C\ve\log(1/\ve)$ from the front. By
+(the supremum over $d\le C\ve\log(1/\ve)$). The first term bounds the variation of $s$ on the
+evaluation points of a band node at distance $d\le C\ve\log(1/\ve)$ from the front, and the
+second one the variation there of $s_m(w_0)$, $s_c(w_0)$, $s_*(w_0)$, whose derivatives with
+respect to $W$ are bounded by $C\log(1/\gamma)$, and that of $\Theta^\pm(s;w_0)$ through $w_0$, relative
+to $\Theta^\pm_s$. By
 \eqref{cv:eq:hyp}, which implies $\Delta t\log(1/\ve)\le c_0$, $\zeta$ is as small as we wish if
-$c_0$ is small (depending on $a$); in particular $\zeta\le\min\{\frac14,c_e\}$, and then, by
-(iv), $\Theta_s$ varies by a factor at most $2$ on these evaluation points; moreover
+$c_0$ is small (depending on $a$); in particular $\zeta\le\min\{\frac14,c_e\}/2$, and then, by
+(iv) and Lemma~\ref{q:lem:inner}(ii), $\Theta_s$ varies by a factor at most $2$ on these
+evaluation points; moreover
 $\Delta t\,\mu'^2\le\ve$ there (note that $\mu\le v_{\max}+\sup|\dot R|$ by (M1), so $\mu'$ is
 bounded). For $N\ge2$ the terms with $\epsilon_j,\epsilon_j'$ and $\frac{N-1}{x_j}D$ in (ii) are bounded by
 $C\sup\Theta_s$, and they only change the constants below; we write the proof for $N=1$.
@@ -1735,63 +1850,72 @@ The decomposition in (ii) is used only at band nodes at distance at most
 $C\ve\log(1/\ve)$ from the front or on the burnt side of it, where $x_j\ge R_{\min}/2$; the
 other band nodes on the fresh side, which may be close to $x=0$, are treated with (iii).
 
-\emph{Step 5. The supersolution.} Here $\Theta=\Theta^+$, $\tilde v=\tilde v^+$. Let
-$S_1=\lambda_0^{-1}\log(C_S/\ve)$. Since $V_x=\Theta_s\tilde v_x$ and
-$V_{xx}=\ve^{-1}\Theta_{ss}\tilde v_x^2+\Theta_s\tilde v_{xx}$, the equation of $\Theta$, the inequality
-$\tilde v_x^2\le G_-^2$ of \eqref{q:eq:marginsup} and $\Theta_{ss}\ge0$ give, a.e.\ where
-$s\ge-3S_1$,
+\emph{Step 5. The supersolution.} Here $\Theta=\Theta^+$, $\tilde v=\tilde v^+$, $\mathcal V=\ve\Theta^+(s;w_0)$. Let
+$S_1=\lambda_0^{-1}\log(C_S/\ve)$. Where $s<s_m$, the equation of $\Theta$ and \eqref{q:eq:marginsup} give
+$\frac1\ve\Theta_{ss}\tilde v_x^2\le\frac1\ve b(\Theta;w_0)-K\Theta_s-\Theta_{ss}\big(\frac{c\,\delta}\ve+\Lambda_1|s|\big)$, and
+$\Theta_{ss}\ge0$; for $\Lambda$ large and $a$ large the last term absorbs the first term of
+\eqref{cv:eq:Px}, as in region (A) of the proof of Proposition~\ref{q:prop:super}. Hence, a.e.\
+where $s\ge-3S_1$,
 \begin{equation}\label{cv:eq:Vxx}
-V_{xx}\le\Big[\frac1\ve\,b(\Theta)-K\Theta_s\Big]\mathbf 1_{\{s<s_m\}}+K_1\Theta_s ,
+\mathcal V_{xx}\le\Big[\frac1\ve\,b(\Theta;w_0)-K\Theta_s\Big]\mathbf 1_{\{s<s_m\}}+K_2\Theta_s ,
 \end{equation}
-where $b(\Theta)=b(\Theta;w_0)$ and the bracket is nonnegative. Let $\omega$ be the weight, in the
-formula for $\delta^2$ in (ii), of the part of the stencil where $s<s_m$. As $\tilde v$ is monotone
-near the front, $\omega\ge\frac12$ if $s'<s_m$ and $\omega\le\frac12$ if $s'\ge s_m$.
+with $K_2=K_1+C$, and the bracket, which equals $\ve^{-1}G_-^2\Theta_{ss}$, is nonnegative. Let
+$\omega$ be the weight, in the
+formula for $\delta^2$ in (ii), of the part of the stencil where $s<s_m(w_0)$. As $\tilde v$ is
+monotone near the front, $\omega\ge\frac12$ if $s'<s_m$ and $\omega\le\frac12$ if $s'\ge s_m$.
 
 \smallskip
-(a) \emph{Band nodes with $-2S_1\le s'<s_m$.} By (i) with $g(t)=V(x_j(t),t)$,
-$g''\le\ve^{-1}\Theta_{ss}\dot{\tilde v}^2+\Theta_s|\ddot{\tilde v}|$, and (iv),
+(a) \emph{Band nodes with $-2S_1\le s'<s_m$.} By (i), (v) and (iv),
 \[
-\frac{V'-V_j}{\Delta t}\ge\Theta_s'\dot{\tilde v}'-C\Big(\frac{\Delta t\,\mu'^2}\ve+\Delta t\Big)\Theta_s'
+\frac{\mathcal V'-\mathcal V_j}{\Delta t}\ge\Theta_s'\dot{\tilde v}'-C\Big(\frac{\Delta t\,\mu'^2}\ve+\big(\ve+\Delta t\big)\log\frac1\ve\Big)\Theta_s'
 \ge\Theta_s'\dot{\tilde v}'-C\,\Theta_s' .
 \]
-By (ii), $|v_n(V_x'-DV')|\le C\frac{h_f}\ve\Theta_s'$; and by \eqref{cv:eq:Vxx}, since
-$b\circ\Theta$ is Lipschitz with constant $C\sup\Theta_s$, $b\ge0$ and $\omega\ge\frac12$,
+By (ii), $|v_n(\mathcal V_x'-D\mathcal V')|\le C\frac{h_f}\ve\Theta_s'$; and by \eqref{cv:eq:Vxx}, since
+$x\mapsto b(\Theta;w_0)$ is Lipschitz with constant $C\ve^{-1}\sup\Theta_s$ on the stencil (we use
+$|\partial_Wb|\le C\Theta\le C\Theta_s$), $b\ge0$ and $\omega\ge\frac12$,
 \[
-\delta^2V'\le\frac1\ve\,b(\Theta')+C\frac{h_f}{\ve^2}\Theta_s'-\frac K4\Theta_s'+2K_1\Theta_s' .
+\delta^2\mathcal V'\le\frac1\ve\,b(\Theta';w_0')+C\frac{h_f}{\ve^2}\Theta_s'-\frac K4\Theta_s'+2K_2\Theta_s' .
 \]
-For the reaction term, $f$ is nonincreasing and Lipschitz, so
+For the reaction term in \eqref{cv:eq:split}: $f$ is nonincreasing and Lipschitz and
+$W_{h,j}/\ve\ge w_0'-\varpi'$, so
+$f(\Theta_j+\ve\tilde q-W_{h,j}/\ve)\ge f(\Theta'-w_0')-L_f(\Theta_j-\Theta')^+-L_f(\ve\tilde q+\varpi')$, and
 \[
-f_\ve(V_j)(V'+\ve w_0)=\frac1\ve f(\Theta_j+\ve\tilde q-w_0)(\Theta'+\ve\tilde q)
-\ge\frac1\ve\,b(\Theta')-\frac{L_f}\ve(\Theta_j-\Theta')^+\Theta'-L_f\tilde q\,\Theta'+\tilde q\,f(\Theta_j+\ve\tilde q-w_0).
+f_\ve(V_j)(\mathcal V'+\ve^2\tilde q)
+\ge\frac1\ve\,b(\Theta';w_0')-\frac{L_f}\ve(\Theta_j-\Theta')^+\Theta'-L_f\tilde q\,\Theta'+\tilde q\,f\Big(\Theta_j+\ve\tilde q-\frac{W_{h,j}}\ve\Big)
+-L_f\frac{\varpi'}\ve\,\Theta' .
 \]
-The second term on the right is the lag. It vanishes when $s_j\le s'$, that is, when the
+The second term on the right is the lag. Its main part vanishes when $s_j\le s'$, that
+is, when the
 node moves towards the fresh side with respect to the barrier. In general, by
-\eqref{cv:eq:rel}, $d\le C\ve(1+|s|)$ and (iv),
+\eqref{cv:eq:rel}, $d\le C\ve(1+|s|)$, (iv), and the bound for $\Theta_W$ in
+Lemma~\ref{q:lem:inner}(ii) for the variation of $w_0$ along the path,
 \[
-(\Theta_j-\Theta')^+\Theta'\le2\Theta_s'\,(s_j-s')^+\Theta'\le C\,\frac{\Delta t}\ve\big(\mu_*+\ve(1+|s'|)\big)\Theta'\,\Theta_s'
+(\Theta_j-\Theta')^+\Theta'\le\Big(2(s_j-s')^++C(1+|s'|)\Delta t\Big)\Theta_s'\,\Theta'
 \le C\Big(\frac{\mu_*\Delta t}\ve+\Delta t\Big)\Theta_s' .
 \]
-Adding up, and using $|\tilde v_t|\le K_1$,
+The last term is at most $C(\varpi'/\ve)\Theta_s'$, because $\Theta\le C\Theta_s$. Adding up, and using
+$|\tilde v_t|\le K_1$ and Lemma~\ref{cv:lem:heat},
 \[
-\Lop[V]^n_j\ge\Big[\frac K4-C_2\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big)\Big]\Theta_s'
--L_f\tilde q\,\Theta'+\tilde q\,f(\Theta_j+\ve\tilde q-w_0).
+\Lop[V]^n_j\ge\Big[\frac K4-C_2\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t+h_c}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big)\Big]\Theta_s'
+-L_f\tilde q\,\Theta'+\tilde q\,f\Big(\Theta_j+\ve\tilde q-\frac{W_{h,j}}\ve\Big).
 \]
 The last two terms are treated as in regions (A) and (B) of the proof of
 Proposition~\ref{q:prop:super}: where $\Theta'\le\Theta_0/2$ their sum is at least $a_0\tilde q$
-(because then $\Theta_j\le e^{C\zeta}\Theta'\le\Theta_0$, by $\Theta_s\le C\Theta$ and $|s_j-s'|\le\zeta$, so that
-$f(\Theta_j+\ve\tilde q-w_0)\ge2a_0$), and
+(because then $\Theta_j\le2\Theta'\le\Theta_0$, by $\Theta_s\le C\Theta$ and the choice of $\zeta$, so that
+$\Theta_j+\ve\tilde q-W_{h,j}/\ve\le1-\delta_1/4$ for $c_0$ small and the value of $f$ is at least $2a_0$), and
 where $\Theta'>\Theta_0/2$ we have $L_f\tilde q\,\Theta'\le C\Theta_s'$. Hence $\Lop[V]^n_j\ge0$ if $C_K$ is large.
 
 \smallskip
-(b) \emph{Band nodes with $s'\ge s_m$ and $\omega>0$.} Then $s'\le s_m+2K_0h_f/\ve$, all the
+(b) \emph{Band nodes with $s'\ge s_m$ and $\omega>0$.} Then
+$s'\le s_m+2K_0h_f/\ve+Ch_f$, all the
 evaluation points have $|s-s_m|\le2\zeta$, and there $\frac12\le\Theta_s\le1$. As in (a), now with
 $\omega\le\frac12$ and dropping the term with $K$,
-\[
-\Lop[V]^n_j\ge-C\Big(1+\frac{\Delta t\,\mu'^2}\ve\Big)-\frac1{2\ve}\Big(b(\Theta')+C\frac{h_f}\ve\Big)
-+\frac1\ve\Big(b(\Theta')-C\frac{\mu_*\Delta t}\ve-C\Delta t-C\ve\Big)
-\ge\frac1{2\ve}\Big(b(\Theta')-C\,\frac{K\ve}{C_K}\Big).
-\]
-By Lemma~\ref{q:lem:inner}(a), $b(\Theta')\ge b(\Theta(s_m))-Ch_f/\ve\ge\frac\gamma4-Ch_f/\ve$, and
+\begin{align*}
+\Lop[V]^n_j&\ge-C\Big(1+\frac{\Delta t\,\mu'^2}\ve\Big)-\frac1{2\ve}\Big(b(\Theta';w_0')+C\frac{h_f}\ve\Big)
++\frac1\ve\Big(b(\Theta';w_0')-C\frac{\mu_*\Delta t}\ve-C\Delta t-C\ve-C\varpi'\Big)\\
+&\ge\frac1{2\ve}\Big(b(\Theta';w_0')-C\,\frac{K\ve}{C_K}\Big).
+\end{align*}
+By Lemma~\ref{q:lem:inner}(a), $b(\Theta';w_0')\ge b(\Theta(s_m);w_0')-Ch_f/\ve\ge\frac\gamma4-Ch_f/\ve$, and
 $\gamma\ge K\ve/c$, so $\Lop[V]^n_j\ge0$ if $C_K$ is large: at these nodes the slack is the
 reaction term itself, which is of order $\gamma/\ve$ because $s_m<1$.
 
@@ -1803,13 +1927,19 @@ $v_{\max}\Delta t$. For a band node of this case, if its path $(x_j(t),t)$ met $
 at some time of the step, then by \eqref{cv:eq:rel} the node would stay within a distance
 $C\ve$ of the front during the whole step, and $|s-s'|\le\zeta<s_m$ on the path; hence in
 all cases the evaluation points lie in $\overline{\{\tilde u>0\}}$, $s_j>0$, and $s_j<s_m$ is
-possible only for a band node. In both cases $V=\tilde u+\ve^2\tilde q$ on the stencil, and
-$V_j=\tilde u_j+\ve^2\tilde q+\ve g(s_j)$ with $g=\Theta-s-w_0\ge0$, $g=0$ for $s\ge s_m$ and
-$g(s)\le C(s_m-s)^2$ for $s<s_m$. If $s_j\ge s_m$, then $\Lop[V]^n_j\ge\Lop_0[\tilde u]^n_j\ge0$ by
+possible only for a band node. In both cases $V=\tilde u+(\ve w_0-W_h)+\ve^2\tilde q$ on the
+stencil, and
+$V_j=\tilde u_j+(\ve w_{0,j}-W_{h,j})+\ve^2\tilde q+\ve g_j$ with $g=\Theta-s-w_0\ge0$, $g=0$ for $s\ge s_m$ and
+$g\le C(s_m-s)^2$ for $s<s_m$. Since $\Lop_0[W_h]=0$,
+$\Lop_0[V]^n_j=\Lop_0[\tilde u]^n_j+\ve\Lop_0[w_0]^n_j-\ve g_j/\Delta t$. If $s_j\ge s_m$, then $g_j=0$ and
+$\Lop[V]^n_j\ge\Lop_0[\tilde u]^n_j+\ve\Lop_0[w_0]^n_j\ge0$ by
 (iii), because the reaction term is nonnegative. If $s_j<s_m$ (a band node), then
-$s_m-s_j\le s'-s_j\le\Delta t\,\mu'/\ve$ and $\ve g(s_j)/\Delta t\le C\Delta t\,\mu'^2/\ve\le C$, while $\Theta_j<\Theta(s_m)$ and
-$\Theta'\ge\Theta(s_m)$ give $f_\ve(V_j)(V'+\ve w_0)\ge\ve^{-1}(b(\Theta(s_m))-C\ve)\ge\gamma/(8\ve)$; hence
-$\Lop[V]^n_j\ge\Lop_0[\tilde u]^n_j-C+\gamma/(8\ve)\ge0$.
+$s_m(w_{0,j})-s_j\le(s'-s_j)+C\Delta t\le\Delta t(\mu'/\ve+C)$, because $s'\ge s_m(w_0')$ and
+$|s_m'(W)|\le C$, so that $\ve g_j/\Delta t\le C(\Delta t\,\mu'^2/\ve+\ve\Delta t)\le C$, while $\Theta_j<\Theta(s_m;w_{0,j})$ and
+$\Theta'\ge\Theta(s_m;w_0')$ give, with $f$ nonincreasing and Lipschitz and $|s_m'(W)|\le C$,
+$f_\ve(V_j)(V'+W_h')\ge\ve^{-1}\big(b(\Theta(s_m);w_0')-C(\ve+\Delta t+\varpi')\big)\ge\gamma/(8\ve)$ for $a$ large;
+hence
+$\Lop[V]^n_j\ge\Lop_0[\tilde u]^n_j+\ve\Lop_0[w_0]^n_j-C+\gamma/(8\ve)\ge0$.
 
 \smallskip
 (d) \emph{The tail.} The remaining nodes are the band nodes with $s'<-2S_1$ and the
@@ -1818,254 +1948,90 @@ former: where $d\le r_1$, by \eqref{cv:eq:rel}, $d\le C\ve|s|$ and Gronwall's in
 along the path, $s$ changes by at most
 $\zeta+C\Delta t|s'|\le\zeta+|s'|/2$ on the evaluation points, and where $d>r_1$ we have
 $s\le-\delta_0r_1/(2\ve)$. For the latter by Lemma~\ref{q:lem:ext}(i), if $C_b$ is large. There
-$\Theta$, $\Theta_s$ and $\Theta_{ss}$ are at most $Ce^{-\lambda_0(S_1-1)}\le Ce^{-\lambda_0S_1}$, so by the mean
-value theorem, (ii) and
-$|\dot x_j|\le v_{\max}$ the terms of $\Lop_0[V]^n_j$ are bounded by
-$C\ve^{-1}e^{-\lambda_0S_1}\le a_0$ if $C_S$ is large, while
-$f_\ve(V_j)(V'+\ve w_0)\ge\ve^{-2}f(\Theta_j+\ve\tilde q-w_0)\,\ve^2\tilde q\ge2a_0$. Within a distance
+$\Theta$, $\Theta_s$ and $\Theta_{ss}$ are at most $Ce^{\lambda_0s}\le Ce^{-\lambda_0S_1}$, and the derivatives of $\Theta$ with
+respect to $W$, which by Lemma~\ref{q:lem:inner}(ii) are at most $C(1+|s|)^2e^{\lambda_0s}$, are
+multiplied by $\ve$ in \eqref{cv:eq:Vder}; so by the mean
+value theorem, (ii), (v) and
+$|\dot x_j|\le v_{\max}$ the terms of $\Lop_0[\mathcal V]^n_j$ are bounded by
+$C\ve^{-1}e^{-\lambda_0S_1}+C\ve S_1^2e^{-\lambda_0S_1}\le a_0$ if $C_S$ is large, while, by \eqref{cv:eq:split},
+$f_\ve(V_j)(\mathcal V'+\ve^2\tilde q)\ge f(\Theta_j+\ve\tilde q-W_{h,j}/\ve)\,\tilde q\ge2a_0$, because
+$-W_{h,j}/\ve\le1-\delta_1+\varpi$. Within a distance
 $\varrho_L/4$ of $x=L$ the function $\tilde v$ is constant, by the proof of Lemma~\ref{q:lem:ext}
-and $r\le\varrho_L/4$, so $\Lop_0[V]^n_J=0$ in the zero-flux row.
+and $r\le\varrho_L/4$, and $\partial_rw_0=0$ at $r=L$, so the zero-flux row $j=J$ is bounded in the
+same way.
 
 \smallskip
-Since $V+\ve w_0>0$, $V$ is a discrete supersolution.
+Since $V+W_h=\ve(\Theta^++\ve\tilde q)>0$, $V$ is a discrete supersolution.
 
-\emph{Step 6. The subsolution.} Here $\Theta=\Theta^-$, $\tilde v=\tilde v^-$. At a node with $s'<s_*$,
-$\underline V'=-\ve w_0-\ve^2\tilde q$ is a minimum of $\underline V^{n+1}$, so
-$(\mathcal D^{n+1}\underline V^{n+1})_j\ge0$ by \eqref{eq:peclet}, and
-$\Lop[\underline V]^n_j\le-f_\ve(\underline V_j)\,\ve^2\tilde q\le0$. At a node with $s'\ge s_*$ we have
-$\underline V'=V_1'$, and $\underline V\ge V_1$ elsewhere, so that, again by \eqref{eq:peclet},
+\emph{Step 6. The subsolution.} Here $\Theta=\Theta^-$, $\tilde v=\tilde v^-$, $\mathcal V_1=\ve\Theta^-(s;w_0)$ and
+$Z=\max\{\mathcal V_1,-\ve^2\tilde q\}$. At a node with $s'<s_*(w_0')$,
+$Z'=-\ve^2\tilde q$ is the minimum of $Z$, so $Z'\le Z_j$ and
+$(\mathcal D^{n+1}Z^{n+1})_j\ge0$ by \eqref{eq:peclet}, and
+$\Lop[\underline V]^n_j\le-f_\ve(\underline V_j)\,\ve^2\tilde q\le0$. At a node with $s'\ge s_*(w_0')$ we have
+$Z'=\mathcal V_1'$, and $Z\ge\mathcal V_1$ elsewhere, so that, again by \eqref{eq:peclet},
 \begin{equation}\label{cv:eq:sub1}
-\Lop[\underline V]^n_j\le\frac{V_1'-V_{1,j}}{\Delta t}-(\mathcal D^{n+1}V_1^{n+1})_j
-+f_\ve(\underline V_j)\,(V_1'+\ve w_0).
+\Lop[\underline V]^n_j\le\frac{\mathcal V_1'-\mathcal V_{1,j}}{\Delta t}-(\mathcal D^{n+1}\mathcal V_1^{n+1})_j
++f_\ve(\underline V_j)\,\mathcal V_1'.
 \end{equation}
 
 (a) \emph{Nodes with $s'\ge2$} (in the band, or outside it on the fresh side). All their
-evaluation points have $s\ge1$: near the front by the choice of $\zeta$, and at a distance
+evaluation points have $s\ge\frac32$: near the front by the choice of $\zeta$, and at a distance
 $d\ge C\ve\log(1/\ve)$ from it because there $s'\ge\delta_0\min\{d,r\}/\ve$ and, as in
 Step~5(d), by Gronwall's inequality $s$ varies by at most $\zeta+C\Delta t\,s'\le\zeta+s'/2$ on
-the evaluation points. There $V_1=\tilde u+\ve g$ with $g=\Theta-s-w_0\ge0$, and $g$
+the evaluation points. There $\mathcal V_1=\tilde u+\ve w_0+\ve g$ with $g=\Theta-s-w_0\ge0$, and $g$
 vanishes at $(x',t_{n+1})$. Hence $\Lop_0[\ve g]^n_j\le0$ by \eqref{eq:peclet}, so
-$\Lop_0[V_1]^n_j\le\Lop_0[\tilde u]^n_j\le0$ by (iii), and the reaction term
-vanishes because $\underline V_j\ge V_{1,j}\ge\ve$. Note that this uses that the profile is
+$\Lop_0[\mathcal V_1]^n_j\le\Lop_0[\tilde u]^n_j+\ve\Lop_0[w_0]^n_j\le0$ by (iii), and the reaction term
+vanishes because $(\underline V_j+W_{h,j})/\ve\ge\Theta_j\ge s_j+w_{0,j}$, so that
+$\underline V_j/\ve\ge s_j-\varpi\ge1$. Note that this uses that the profile is
 linear only for $s\ge2$: a node that leaves the set $\{s<1\}$ during the step still carries
 a positive lagged reaction rate, and it is then inside the damped part of the profile,
 which is case (b).
 
-(b) \emph{Band nodes with $s_*\le s'<2$.} All the evaluation points have
-$s\ge s_*-c_e$. By the equation of $\Theta$ and \eqref{q:eq:marginsub},
-$1\le\tilde v_x^2/G_+^2\le1+C(\delta+\ve|s|)$, so that a.e.
+(b) \emph{Band nodes with $s_*(w_0')\le s'<2$.} All the evaluation points have
+$s\ge s_*(w_0)-c_e$, by the choice of $\zeta$. By the equation of $\Theta$,
+$\frac1\ve\Theta_{ss}\tilde v_x^2=\frac{\tilde v_x^2}{G_+^2}\big(\frac1\ve b(\Theta;w_0)+K\Theta_s\big)$, and by
+\eqref{q:eq:marginsub}, $1\le\tilde v_x^2/G_+^2\le1+C(\delta+\ve|s|)$. Where $\Theta\ge0$ we have $\Theta_{ss}\ge0$,
+and the lower bound in \eqref{q:eq:marginsub} absorbs the first term of \eqref{cv:eq:Px}, as
+in Step~5. Where $\Theta<0$ we use $|\Theta_{ss}|\le C\Theta_s$ in \eqref{cv:eq:Px}, so that
+$|\mathcal P_x|\le C\log\frac1\ve\,\Theta_s$, which is at most $\frac K8\Theta_s$ because $K\ge C_K\log\frac1\ve$. Hence, a.e.,
 \[
-V_{1,xx}\ge\Big[\frac1\ve\,b(\Theta)+K\Theta_s\Big]\mathbf 1_{\{s<2\}}-K_1\Theta_s
--C\Big(\delta+\ve\log\frac1\ve\Big)\frac{b(\Theta)^-}\ve ,
+\mathcal V_{1,xx}\ge\Big[\frac1\ve\,b(\Theta;w_0)+\frac K2\Theta_s\Big]\mathbf 1_{\{s<2\}}-K_2\Theta_s
+-C\Big(\delta+\ve\log\frac1\ve\Big)\frac{b(\Theta;w_0)^-}\ve ,
 \]
-and $b(\Theta)^-\le C(\ve\tilde q+\frac{h_f}\ve\Theta_s')$ on the stencil. If the stencil meets $\{s\ge2\}$ then
-$b(\Theta)=0$ on it. Arguing as in Step~5(a), with the reverse inequalities, and using
-\eqref{cv:eq:sub1},
+and $b(\Theta;w_0)^-\le C(\ve\tilde q+\frac{h_f}\ve\Theta_s')$ on the stencil. If the stencil meets $\{s\ge2\}$ then
+$b(\Theta;w_0)=0$ on it. Arguing as in Step~5(a), with the reverse inequalities (the
+estimates of the difference quotient in time and of the convection term only use
+$|\Theta_{ss}|\le C\Theta_s$ and (v)), and using \eqref{cv:eq:sub1},
 \[
-\Lop[\underline V]^n_j\le-\Big[\frac K4-C_2\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big)\Big]\Theta_s'
-+C\Big(\delta+\ve\log\frac1\ve\Big)\mathbf 1_{\{\Theta<0\text{ on the stencil}\}} .
+\Lop[\underline V]^n_j\le-\Big[\frac K8-C_2\Big(1+\frac{h_f}{\ve^2}+\frac{\Delta t+h_c}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big)\Big]\Theta_s'
++C\Big(\delta+\ve\log\frac1\ve+\varpi'\Big)\mathbf 1_{\{\Theta<0\text{ on the stencil}\}} .
 \]
 (The constants depend on $C_1$, hence on $\beta$ and $T$.) For the reaction term we used
-that, where $\Theta'\ge0$,
-$f(\underline\Theta_j-w_0)\Theta'\le b(\Theta')+L_f(\Theta'-\Theta_j)^+\Theta'$ with
-$\underline\Theta_j=\max\{\Theta_j,-\ve\tilde q\}$, the lag being now controlled by
-$(\dot{\tilde v})^+$ in \eqref{cv:eq:rel}; and that, where $\Theta'<0$,
-$f(\underline\Theta_j-w_0)\Theta'\le b(\Theta')+L_f|\Theta_j-\Theta'|\,\ve\tilde q$. Where the stencil meets
-$\{\Theta<0\}$ we have $\Theta_s'\ge c\sqrt\gamma\ge C(\delta+\ve\log\frac1\ve)$ for $c_0$ small, because
-$\ve\log\frac1\ve\le\delta$. Hence $\Lop[\underline V]^n_j\le0$ if $C_K$ is large.
+the following. Let $\underline\Theta_j=\max\{\Theta_j,-\ve\tilde q\}$, so that
+$f_\ve(\underline V_j)=\ve^{-2}f(\underline\Theta_j-W_{h,j}/\ve)$, and recall that
+$|W_{h,j}/\ve-w_0'|\le\varpi'$. Where $\Theta'\ge0$,
+$f(\underline\Theta_j-W_{h,j}/\ve)\Theta'\le b(\Theta';w_0')+L_f\big((\Theta'-\Theta_j)^++\varpi'\big)\Theta'$; the lag is
+now controlled by
+$(\dot{\tilde v})^+$ in \eqref{cv:eq:rel} and by the variation of $w_0$ along the path, as in
+Step~5(a), and $\varpi'\Theta'\le C\varpi'\Theta_s'$ because $\Theta^-_s\ge c\,\Theta^-$ where $\Theta^-\ge0$. Where
+$\Theta'<0$, $|f(\underline\Theta_j-W_{h,j}/\ve)-f(\Theta'-w_0')|\le L_f(|\underline\Theta_j-\Theta'|+\varpi')$ and
+$|\Theta'|\le\ve\tilde q$, so that
+$f(\underline\Theta_j-W_{h,j}/\ve)\Theta'\le b(\Theta';w_0')+L_f\big(|\Theta_j-\Theta'|+\varpi'\big)\ve\tilde q$. Where the stencil meets
+$\{\Theta<0\}$ we have $\frac K{16}\Theta_s'\ge c\sqrt\gamma\ge C(\delta+\ve\log\frac1\ve+\varpi')$ for $c_0$ small
+(depending on $a$), because
+$\delta+\ve\log\frac1\ve+\varpi'\le C(a+1)\mathcal E$ and $\gamma=c_1c\,a\mathcal E$. Hence $\Lop[\underline V]^n_j\le0$ if $C_K$ is large.
 
-If $C_b$ is large, every node with $s'\ge s_*$ is of one of these two kinds, because
-$s_*\ge-C\log(1/\ve)$. So $\underline V$ is a discrete subsolution.
+If $C_b$ is large, every node with $s'\ge s_*(w_0')$ is of one of these two kinds, because
+$s_*\ge-C\log(1/\ve)$. Since no sign condition is required for subsolutions, $\underline V$ is a
+discrete subsolution.
 
-\emph{Step 7. Conclusion.} At $t=0$ the dilations are those of the proof of
-Theorem~\ref{q:thm:rate}, with $|1-\lambda(0)|=a\mathcal E\ge a\,\ve\log\frac1\ve$, and that proof gives
-$\underline V(\cdot,0)\le u_0^\ve\le V(\cdot,0)$ in $[0,L]$ if $a$ is large. By
+\emph{Step 7. Conclusion.} At $t=0$, $W_h^0=\ve w_0(\cdot,0)$ on the mesh, and
+$|1-\lambda(0)|=a\mathcal E\ge a\,\ve\log\frac1\ve$. The verification of the initial ordering in the proof of
+Theorem~\ref{q:thm:rate}, which only uses (H), \eqref{q:eq:data}, Lemma~\ref{q:lem:ext}(i) and
+the bounds $s_c\ge-C\log(1/\gamma)$ and $\Theta^-\le0$ for $s\le s_c$ of Lemma~\ref{q:lem:inner}(b),
+gives $\underline V(\cdot,0)\le u_0^\ve\le V(\cdot,0)$ in $[0,L]$ if $a$ is large. By
 Lemma~\ref{lem:comparison}, $\underline V^n_j\le U^n_j\le V^n_j$ for $t_n\le T$, and
-$|V-\tilde u|+|\underline V-\tilde u|\le C\ve$, $|\tilde u-v|\le C_\beta a\mathcal E$. \qed
-
-\subsection{A perturbation that is not constant}\label{cv:sec:var}
-
-Theorem~\ref{cv:thm:main} assumes that $w_0$ is constant; then, as we observed in
-Section~\ref{sec:rate}, the problem is a scalar one. We now show that the same bound
-holds when $w_0$ is not constant, which is the case in which the profiles of
-Lemma~\ref{q:lem:inner} depend on $x$ and $t$ through $w_0$. Two things change: the
-discrete function $W_h=Y-U$ is no longer the exact $w^\ve$, and the dilations must be
-compatible with the monotonicity condition \eqref{q:eq:mono}.
-
-Let $N\in\{1,2,3\}$ and let $w_0=w_0(x,t)$ be a radial solution of the heat equation in
-$\{|x|<L\}\times(0,T^*]$ with zero flux on $\{|x|=L\}$, such that
-\begin{itemize}
-\item[(W1)] $-1+\delta_1\le w_0\le\bar W$, and $D_x^3w_0$, $\partial_t\nabla w_0$, $\partial_t^2w_0$ are
-bounded;
-\item[(W2)] for $|x|\le L-\varrho_L/2$, $t\le T^*$ and $\lambda$ in a neighbourhood of $1$, the function
-$\lambda\mapsto w_0(\lambda x,\lambda^2t)$ is nondecreasing.
-\end{itemize}
-Let $w^\ve=\ve w_0$, and let $v$ be a radial regular classical solution on $[0,T^*]$ of
-\eqref{eq:P} with this $w_0$, that is, with $|\nabla v|=\sqrt{2M(w_0(x,t))}$ on the free
-boundary, which satisfies (V2) and, instead of (V1),
-\begin{itemize}
-\item[(V1$'$)] $\{v(\cdot,t)>0\}=\{r<R(t)\}$ with $0<R_{\min}\le R(t)\le L-\varrho_L$, $u_0=v(\cdot,0)$ is
-nonincreasing in $r$, and there is $c_v>0$ such that
-\[
-x\cdot\nabla v+2t\,v_t-\tfrac12v\le-c_v\qquad\text{in }\{v>0\}.
-\]
-\end{itemize}
-The left hand side is the derivative at $\lambda=1$ of $\frac{2}{1+\lambda}v(\lambda x,\lambda^2t)$: (V1$'$)
-is a strict form of the monotonicity of $v$ under parabolic dilations. It holds for the self-similar solutions of
-Section~\ref{sec:selfsimilar}, for which the left hand side equals
-$\xi h'(\xi)(\rho+t/\rho)-h(\xi)(\rho/2+t/\rho)$ with $\rho=\sqrt{T-t}$, $\xi=r/\rho$. The scheme (S) is run
-with $U^0_j=u_0^\ve(x^0_j)$ and $Y^0_j=U^0_j+\ve w_0(x^0_j,0)$, where
-$u_0^\ve=u_0-\ve w_0(\cdot,0)(1-u_0/\ve)^+$, on meshes that satisfy (M1), (M2).
-
-\begin{lemma}\label{cv:lem:heat}
-Assume (W1) and (M1). Then $W_h^n=Y^n-U^n$ satisfies
-\[
-\omega:=\max_{t_n\le T}\max_j\Big|\frac{W^n_{h,j}}\ve-w_0(x^n_j,t_n)\Big|\le C_wT\,(\Delta t+h_c),
-\]
-with $C_w$ depending only on the bounds in (W1), on $N$, $L$ and $v_{\max}$.
-\end{lemma}
-
-\begin{proof}
-$W_h^n$ solves the scheme without reaction, $\Lop_0[W_h]=0$, and $W_h^0=\ve w_0(\cdot,0)$ on
-the mesh. By (W1), as in Step~3(iii) of the proof of Theorem~\ref{cv:thm:main}, including the
-zero-flux rows $j=0$ and $j=J$, where $\partial_rw_0=0$, we have $|\Lop_0[w_0]^n_j|\le C_w(\Delta t+h_c)$.
-Hence $Z=W_h/\ve-w_0$ satisfies $|\Lop_0[Z]|\le C_w(\Delta t+h_c)$ and $Z^0=0$, and, since
-$\mathsf A_0^{-1}\ge0$ and $\mathsf A_0\mathbf 1=\Delta t^{-1}\mathbf 1$,
-$\max_j|Z^{n+1}_j|\le\max_j|Z^n_j|+C_w\Delta t(\Delta t+h_c)$.
-\end{proof}
-
-\begin{theorem}[Convergence of the scheme, non-constant $w_0$]\label{cv:thm:var}
-Assume (F$_2$), (W1), (W2), (V1$'$), (V2), (M1), (M2), and let $T<T^*$. There are positive
-constants $\ve_0,c_0,C_b,C$, depending only on $f,w_0,N,v,T,T^*,L$ and $v_{\max}$, such that, if
-$0<\ve\le\ve_0$ and \eqref{cv:eq:hyp} holds, then the solution of (S) satisfies
-\[
-\big|U^n_j-v(x^n_j,t_n)\big|\le C\,\mathcal E\qquad\text{for all }j\text{ and all }t_n\le T,
-\]
-with the same $\mathcal E$ as in Theorem~\ref{cv:thm:main}.
-\end{theorem}
-
-\begin{proof}
-We follow the proof of Theorem~\ref{cv:thm:main} and indicate the changes. We write
-$w_0'=w_0(x',t_{n+1})$, $w_{0,j}=w_0(x^n_j,t_n)$, and $\omega'=\omega+C\Delta t$, which bounds
-$|W_{h,j}/\ve-w_0'|$ at a node, because $w_0$ is Lipschitz along the path of the node. By
-Lemma~\ref{cv:lem:heat} and \eqref{cv:eq:hyp}, $\omega'\le C\mathcal E\le Cc_0$.
-
-\emph{Step 1$'$. Dilations.} We take $\lambda(t)=1\mp a\,\mathcal E\,e^{\beta t}$ as before, but now
-\[
-\tilde u(x,t)=\frac1{\lambda'(t)}\,v\big(\lambda(t)x,\lambda(t)^2t\big),\qquad\lambda'=\frac{1+\lambda}2,
-\]
-which is defined on $[0,T]$ if $c_0$ is small, because $\lambda^2T\le T^*$. With $y=\lambda x$ and
-$\tau=\lambda^2t$,
-\[
-\tilde u_t-\Delta\tilde u=\frac{\dot\lambda}{\lambda'}\Big[\frac{y\cdot\nabla v+2\tau v_t}{\lambda}-\frac v{2\lambda'}\Big](y,\tau),
-\]
-and by (V1$'$) the bracket is at most $-c_v/2$ in $\{v>0\}$ when $|1-\lambda|$ is small. The free
-boundary of $\tilde u$ is $r=\tilde R(t)=R(\lambda^2t)/\lambda$, and there
-$|\nabla\tilde u|=\frac\lambda{\lambda'}\sqrt{2M(w_0(\lambda x,\lambda^2t))}$. By (W2) and the monotonicity of $M$,
-for $\lambda<1$ this is at most $\frac\lambda{\lambda'}\sqrt{2M(w_0(x,t))}\le\sqrt{2M(w_0(x,t))}-c\,(1-\lambda)$, and
-for $\lambda>1$ it is at least $\sqrt{2M(w_0(x,t))}+c\,(\lambda-1)$ and, since $w_0$ is Lipschitz, at
-most $\sqrt{2M(w_0(x,t))}+C(\lambda-1)$. So $\tilde u$ is a regular strict super- or subsolution
-with $\delta=c\,a\mathcal E$, as in Step~1; this is the reason for the choice $\tau=\lambda^2t$, for which
-the dilation acts on $w_0$ as in \eqref{q:eq:mono}. Moreover
-\[
-\dot{\tilde R}=\lambda\dot R(\tau)-\frac{\dot\lambda}{\lambda^2}\big(R(\tau)-2\tau\dot R(\tau)\big),
-\]
-and (V1$'$) at the free boundary, where $v=0$, $x\cdot\nabla v=-R|v_r|$ and $v_t=|v_r|\dot R$, gives
-$R-2\tau\dot R\ge c_v/K_0$. Since $|\tau-t|\le3t|1-\lambda|$, fixing $\beta$ with
-$\beta c_v/(2K_0)\ge C_R+2$ we obtain \eqref{cv:eq:speed}. The remaining statements of
-Step~1 hold without change.
-
-\emph{Step 2$'$. The barriers.} Let $\tilde q=\max\{1,\sup|w_0|\}$, $s=\tilde v^\pm/\ve$, and
-\[
-V=-W_h+\ve\,\Theta^+(s;w_0)+\ve^2\tilde q,\qquad
-\underline V=-W_h+\max\big\{\ve\,\Theta^-(s;w_0),\,-\ve^2\tilde q\big\},
-\]
-where $W_h$ is the discrete function, $w_0=w_0(x^n_j,t_n)$ in the profiles, and $\Theta^-$ is
-continued as in Step~2; the bounds of Lemma~\ref{q:lem:inner}(b)(ii) hold on the
-continuation, because its proof covers $-1\le\Theta\le2+W$. The profiles carry the exact
-$w_0$, so that their derivatives are controlled, and the offset is the discrete $W_h$,
-so that $\Lop_0[W_h]=0$ exactly, $V+W_h=\ve(\Theta^++\ve\tilde q)>0$, and
-\[
-\Lop[V]^n_j=\Lop_0[\mathcal V]^n_j+f_\ve(V_j)\,(\mathcal V'+\ve^2\tilde q),\qquad
-\mathcal V=\ve\,\Theta^+(s;w_0),\qquad f_\ve(V_j)=\frac1{\ve^2}f\Big(\Theta_j+\ve\tilde q-\frac{W_{h,j}}\ve\Big),
-\]
-and similarly for $\underline V$. The damping is now
-\[
-K=C_K\Big(\log\frac1\ve+\frac{h_f}{\ve^2}+\frac{\Delta t+h_c}\ve+\frac{\mu_*\Delta t}{\ve^2}\Big),
-\]
-so that $K\ve\le5C_K\mathcal E$ still holds, and $\kappa\le c\gamma$ for $a$ large. The margins
-\eqref{q:eq:marginsup} and \eqref{q:eq:marginsub} are those of
-Propositions~\ref{q:prop:super} and \ref{q:prop:sub} with $W^\ve=w_0$ and $\eta_\ve=0$, and
-$\Lambda$ is taken as in those propositions.
-
-\emph{Step 5$'$. The supersolution.} Where $s<s_m(w_0)$, a.e.,
-\[
-\mathcal V_{xx}=\frac1\ve\Theta_{ss}\tilde v_x^2+\Theta_s\tilde v_{xx}
-+2\Theta_{sW}\tilde v_x\,\partial_xw_0+\ve\,\Theta_{WW}(\partial_xw_0)^2+\ve\,\Theta_W\partial_x^2w_0 .
-\]
-By the equation of $\Theta^+$ and \eqref{q:eq:marginsup},
-\[
-\frac1\ve\Theta_{ss}\tilde v_x^2\le\frac1\ve b(\Theta;w_0)-K\Theta_s-\Theta_{ss}\Big(\frac{c\,\delta}\ve+\Lambda_1|s|\Big),
-\]
-and by Lemma~\ref{q:lem:inner}(a)(ii) the last three terms are bounded as in \eqref{q:eq:Pbound};
-for $s\ge-3S_1$ and $\Lambda$ large, as in region (A) of the proof of
-Proposition~\ref{q:prop:super}, they are absorbed by the margin, up to $C\Theta_s$. Hence
-\eqref{cv:eq:Vxx} holds for $\mathcal V$, with $b(\Theta;w_0)$ and with $K_1+C$ in the place of
-$K_1$, and $x\mapsto b(\Theta;w_0)$ is Lipschitz with constant $C\ve^{-1}\sup\Theta_s$ on the stencil.
-In the same way, along the path of a band node, $g(t)=\mathcal V(x_j(t),t)$ satisfies
-$g'=\Theta_s\dot{\tilde v}+\ve\Theta_W\dot w_0$ and
-$g''\le\ve^{-1}\Theta_{ss}\dot{\tilde v}^2+C\Theta_s\big(1+(1+|s|)\mu'\big)$, where $\dot w_0$ is bounded, so
-that the estimate of the time difference in Step~5(a) holds with an additional term
-$C(\ve+\Delta t\,\mu')\log\frac1\ve\,\Theta_s'\le C\Theta_s'$. In the reaction term, since $f$ is
-nonincreasing and Lipschitz and $W_{h,j}/\ve\ge w_0'-\omega'$,
-\[
-f\Big(\Theta_j+\ve\tilde q-\frac{W_{h,j}}\ve\Big)\ge f(\Theta_j+\ve\tilde q-w_0')-L_f\omega' ,
-\]
-and $\Theta_j-\Theta'$ contains, besides the term of Step~5(a), the variation of $w_0$ along
-the path, which is at most $C(1+|s|)\Theta_s\Delta t$. With $\Theta^+\le C\Theta^+_s$ and $(1+|s|)\Theta^+\le C$, the
-reaction term is therefore at least the one of Step~5(a), written with $w_0'$, minus
-\[
-C\,\frac{\omega'+\Delta t}{\ve}\,\Theta_s'+L_f\,\omega'\,\tilde q .
-\]
-The first term is absorbed by $K$, by Lemma~\ref{cv:lem:heat}. The second one is at most
-$a_0\tilde q/2$ if $c_0$ is small, and it is absorbed by $a_0\tilde q$ where $\Theta'\le\Theta_0/2$, and by
-$C\tilde q\,\Theta_s'/p_0$ where $\Theta'>\Theta_0/2$, as the term $L_f\tilde q\,\Theta'$. This gives case (a). In
-case (b) the slack is $b(\Theta';w_0')\ge\gamma/4-Ch_f/\ve$, from which we now also subtract
-$C\omega'$; since $\gamma=c_1c\,a\mathcal E$, it is enough to take $a$ large. In case (c),
-$V=\tilde u+(\ve w_0-W_h)+\ve^2\tilde q$ on the stencil, so
-$\Lop_0[V]=\Lop_0[\tilde u]+\ve\Lop_0[w_0]\ge\Lop_0[\tilde u]-C\ve(\Delta t+h_c)$, and the conclusion is the
-same, because $\Lop_0[\tilde u]\ge\frac{c_v}4\beta a\mathcal E-C_\beta(\Delta t+h_c)$. In case (d) all the
-derivatives of $\Theta^+(s;w_0)$ with respect to $s$ and $W$ are bounded by
-$C(1+|s|)^2e^{\lambda_0s}$, so the terms of $\Lop_0[\mathcal V]$ are bounded as before (also in the
-row $j=J$, where $\tilde v$ is constant but $w_0$ is not), and
-$f(\Theta_j+\ve\tilde q-W_{h,j}/\ve)\ge2a_0$ because $-W_{h,j}/\ve\le1-\delta_1+\omega$.
-
-\emph{Step 6$'$. The subsolution.} Let $Z=\max\{\ve\Theta^-(s;w_0),-\ve^2\tilde q\}$, so that
-$\underline V=-W_h+Z$ and $\Lop[\underline V]^n_j=\Lop_0[Z]^n_j+f_\ve(\underline V_j)Z'$. At a node with
-$s'<s_*(w_0')$, $Z'=-\ve^2\tilde q$ is a minimum of $Z^{n+1}$ and of $Z$, so $\Lop_0[Z]^n_j\le0$ by
-\eqref{eq:peclet}, and the reaction term is nonpositive. At the other nodes
-\eqref{cv:eq:sub1} holds for $\mathcal V_1=\ve\Theta^-(s;w_0)$ in the place of $V_1$. In case (a),
-near the front all the evaluation points have $s\ge2-\zeta\ge\frac74$, and far from it $s$ is
-large; there $\mathcal V_1=\tilde u+\ve w_0+\ve g$ with $g=\Theta^--s-w_0\ge0$ vanishing at
-$(x',t_{n+1})$, so $\Lop_0[\mathcal V_1]\le\Lop_0[\tilde u]+\ve\Lop_0[w_0]\le0$, and the reaction term
-vanishes because $Z_j/\ve-W_{h,j}/\ve\ge s_j-\omega\ge1$. In case (b), writing
-$\frac1\ve\Theta_{ss}\tilde v_x^2=\frac{\tilde v_x^2}{G_+^2}\big(\frac1\ve b(\Theta;w_0)+K\Theta_s\big)$, the argument
-of Step~6(b) applies, with the additional terms of $\mathcal V_{1,xx}$ that come from $w_0$:
-where $\Theta^-\ge0$ they are absorbed by the margin, as in Step~5$'$; where $\Theta^-<0$ we use
-$|\Theta^-_{ss}|\le C\Theta^-_s$, so that they are bounded by $C\log\frac1\ve\,\Theta_s$, and they are
-absorbed by the damping, because $K\ge C_K\log\frac1\ve$. In the reaction term, with
-$\underline\Theta_j=\max\{\Theta_j,-\ve\tilde q\}$, we have
-$f(\underline\Theta_j-W_{h,j}/\ve)\le f(\underline\Theta_j-w_0')+L_f\omega'$; where $\Theta'\ge0$ this adds
-$C(\omega'/\ve)\Theta'\le C(\omega'/\ve)\Theta_s'$, absorbed by $K$, and where $\Theta'<0$ it adds
-$L_f\omega'\tilde q$, which is absorbed by $\frac K8\Theta_s'\ge c\sqrt\gamma$ because $\omega'\le C\mathcal E$ and
-$\gamma=c_1c\,a\mathcal E$, for $a$ large and $c_0$ small.
-
-\emph{Step 7$'$. Conclusion.} At $t=0$, $W_h^0=\ve w_0(\cdot,0)$ on the mesh, and the barriers are
-those of the proof of Theorem~\ref{q:thm:rate} with $W^\ve=w_0$, for which (H) holds by
-(V1$'$) and \eqref{q:eq:mono} by (W2); hence $\underline V(\cdot,0)\le u_0^\ve\le V(\cdot,0)$ for $a$
-large. By Lemma~\ref{lem:comparison}, $\underline V^n\le U^n\le V^n$, and
-$|V-\tilde u|+|\underline V-\tilde u|\le C\ve+|\ve w_0-W_h|\le C\ve$, $|\tilde u-v|\le C_\beta a\mathcal E$.
-\end{proof}
+$|V-\tilde u|+|\underline V-\tilde u|\le C\ve+|\ve w_0-W_h|\le C\ve$, $|\tilde u-v|\le C_\beta a\mathcal E$. \qed
 
 \subsection{Travelling waves: no time step in the error}\label{an:sec:ale}
 
@@ -2369,7 +2335,9 @@ the data satisfy the free boundary condition at $t=0$; in the second one $w_0$
 satisfies the monotonicity condition \eqref{q:eq:mono} in a neighbourhood of the pocket,
 so that this example is in the setting of Theorem~\ref{q:thm:rate} as long as the
 limit problem has a regular classical solution, which is known for short times
-(Remark~\ref{q:rem:rate}). Along the free
+(Remark~\ref{q:rem:rate}). This $w_0$ also satisfies (W1) and (W2) of
+Section~\ref{cv:sec:main}, with $L_w=\pi/k\approx4.2$, so that it is of the kind considered in
+Theorem~\ref{cv:thm:main}; we do not know whether the solution has the regularity (V2). Along the free
 boundary $w_0$ goes from $0.70$ to $0.36$ and back to $0.45$ in the planar case, and
 from $0.30$ to $0.28$ in the radial one (Figure~\ref{fig:I1}); at $t=6$ the planar front
 is at $x=7.50$, while with $w_0$ replaced by its mean value $0.5$ it would be at $7.97$.
@@ -2539,7 +2507,8 @@ On the numerical side, the linearly implicit scheme (S) satisfies a discrete
 comparison principle for every time step and every admissible mesh, and the barriers
 of the rate theorem, with a dilation that depends on time and a damping proportional
 to the truncation errors of the layer, are discrete barriers. For data in planar or
-radial symmetry and band meshes with prescribed velocities, the fully discrete solution
+radial symmetry, a perturbation $w_0$ that is monotone under parabolic dilations, and band
+meshes with prescribed velocities, the fully discrete solution
 converges to the solution of the free boundary problem with the bound
 $C(\ve\log\frac1\ve+\frac{h_f}\ve+h_c+\Delta t+\mu\min\{1,\frac{\Delta t}\ve\})$
 (Theorem~\ref{cv:thm:main}), for time steps $\Delta t\lesssim\ve$ divided by the bound: the layer
