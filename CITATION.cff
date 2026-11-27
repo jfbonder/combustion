@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite the article."
+title: "The high activation energy limit of an equidiffusional flame model: rate of convergence and a convergent front-following scheme"
+type: software
+authors:
+  - family-names: "Fernández Bonder"
+    given-names: "Julián"
+    affiliation: "Instituto de Cálculo (UBA-CONICET) and Departamento de Matemática, FCEyN, Universidad de Buenos Aires"
+repository-code: "https://github.com/jfbonder/combustion"
+preferred-citation:
+  type: unpublished
+  title: "The high activation energy limit of an equidiffusional flame model: rate of convergence and a convergent front-following scheme"
+  authors:
+    - family-names: "Fernández Bonder"
+      given-names: "Julián"
+  year: 2026
+  notes: "Preprint"
+  url: "https://github.com/jfbonder/combustion"

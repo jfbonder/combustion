@@ -1,40 +1,84 @@
-# Combustion
+# The high activation energy limit of an equidiffusional flame model
 
-This repository contains:
+Source of the article
 
-- **`paper/`** — the article *The high activation energy limit of an equidiffusional flame
-  model: rate of convergence and a front-following numerical method* (J. Fernández Bonder,
-  2026): LaTeX source `main.tex`, bibliography and the compiled draft.
-- **`numerics/`** — the Python code of the article (package `combustion1d`), the scripts
-  that reproduce every figure and table, and examples. See
-  [`numerics/README.md`](numerics/README.md) for installation, usage and reproduction.
-- The two thesis papers (below), on which the article builds.
+> J. Fernández Bonder, *The high activation energy limit of an equidiffusional flame model:
+> rate of convergence and a convergent front-following scheme* (2026, draft),
 
-`paper/referato_editorial.md` is an internal adversarial referee report on an earlier
-draft, and `paper/respuesta_referato.md` the point-by-point response (both in Spanish).
-`paper/supplement.tex` is the supplementary material (experiments on travelling waves and
-on the cost of the method); compile `main.tex` first, since it uses its labels.
+and the code that produces all its numerical results.
 
-## Tesis doctoral
+The article studies the limit of large activation energy in a model of premixed flames
+with equal diffusivities, whose limit is a free boundary problem for the heat equation.
+It proves a rate of convergence for this singular limit and the convergence, with an
+explicit error bound, of a fully discrete scheme whose mesh has a fine band that follows
+the flame front.
 
-Papers de la tesis doctoral de Julián Fernández Bonder, en colaboración con Noemí Wolanski.
+## Contents
 
-| Archivo | Referencia |
+| Path | What it is |
 |---|---|
-| `ifbj.tex`, `ifbj.pdf` | J. Fernández Bonder and N. Wolanski. *A free boundary problem in combustion theory*. Interfaces Free Bound. **2** (2000), 381–411. |
-| `final.tex`, `final.pdf` | J. Fernández Bonder and N. Wolanski. *Uniqueness of limit solutions to a free boundary problem from combustion*. SIAM J. Math. Anal. **36** (2004), no. 1, 172–185. |
+| [`paper/main.pdf`](paper/main.pdf), `paper/main.tex` | The article. |
+| [`paper/supplement.pdf`](paper/supplement.pdf), `paper/supplement.tex` | Supplementary material: experiments on travelling waves and on the cost of the method. |
+| `paper/references.bib` | Bibliography. |
+| [`numerics/`](numerics/README.md) | The Python package `combustion1d`, examples, tests, and the scripts, data and figures of every numerical experiment of the article. |
 
-## Compilación
+## The code
 
-- `final.tex` usa la clase `siamltex.cls` de SIAM, que no viene con TeX Live y hay que tenerla
-  aparte. Necesita `amsmath`/`amssymb`, que ahora se cargan en el preámbulo.
-- `ifbj.tex` está escrito en LaTeX 2.09 (`\documentstyle{amsart}`) y compila en modo de
-  compatibilidad. Los dos avisos sobre `\negmedspace`/`\negthickspace` son inocuos.
+`numerics/` contains a small Python package (NumPy, SciPy, Matplotlib) with
 
-Los PDFs del repositorio se generaron en noviembre de 2026 a partir de estos fuentes:
-`ifbj.pdf` con `amsart` y `final.pdf` con la clase original de SIAM (`siamltex.cls` y
-`siam10.clo`, versión 1.0 de 1995). Esos dos archivos no están en el repositorio, porque su
-licencia no permite distribuirlos por separado del paquete completo de SIAM.
+- the monotone, linearly implicit scheme of the article on a moving band mesh (ALE) and
+  on meshes that do not move;
+- a reference solver (method of lines with BDF);
+- the exact travelling waves and self-similar solutions;
+- a front-fixing solver for the limit free boundary problem.
 
-Los comentarios `% NOTE (2026 review)` en los fuentes marcan puntos que conviene revisar.
-No modifican el texto compilado.
+Quick start:
+
+```bash
+cd numerics
+python -m pip install -r requirements.txt
+python -m pytest -q
+python -m examples.ex1_travelling_wave
+```
+
+Installation, usage, the description of each solver and the instructions to reproduce
+each figure and table are in [`numerics/README.md`](numerics/README.md); the experiments
+are documented one by one in
+[`numerics/experiments/paper/README.md`](numerics/experiments/paper/README.md).
+
+## Building the article
+
+The figures are read from `numerics/figures/`, so the article must be compiled inside
+`paper/`. With a TeX distribution that provides `latexmk`:
+
+```bash
+cd paper
+latexmk -pdf main.tex
+latexmk -pdf supplement.tex
+```
+
+Compile `main.tex` first: the supplement takes the numbers of the sections, theorems
+and equations of the article from `main.aux`.
+
+## Reproducing the numerical results
+
+```bash
+cd numerics
+./reproduce_paper.sh
+```
+
+reruns every experiment and redraws every figure (about two hours on four cores).
+`./reproduce_paper.sh plots` only redraws the figures from the stored results in
+`numerics/results/`. See [`numerics/README.md`](numerics/README.md) for the individual
+experiments.
+
+## Use of AI tools
+
+The code, the numerical experiments, the figures and the tables were produced with
+Claude Code (Anthropic), which also assisted in the proofs and in the writing of the
+article; see the statement at the end of the article.
+
+## Citing
+
+Until the article is published, please cite it as a preprint, with the address of this
+repository; see [`CITATION.cff`](CITATION.cff).

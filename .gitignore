@@ -4,6 +4,18 @@ __pycache__/
 .pytest_cache/
 *.log
 paper/pdfs/
+# published papers of the bibliography: kept locally, not distributed
+/ifbj.*
+/final.*
+# LaTeX build files
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.out
+paper/*.toc
+paper/*.synctex.gz
 numerics/figures/*.gif
 numerics/results/paper/*.npz
 # internal working files (not part of the paper)
