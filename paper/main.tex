@@ -178,8 +178,9 @@ indeed the computed front lags, by about $0.23\,(\Delta t/\ve)T$ for a travellin
 a travelling wave on a mesh that translates rigidly with the wave, the solution is steady
 in the frame of the mesh and the time step does not appear in the error at all
 (Theorem~\ref{an:thm:ale}). These results have limitations, which we state clearly
-(Section~\ref{an:sec:impl}): the analysis is in planar or radial symmetry, for pockets of
-fresh gas and a regular solution of the limit problem; in the
+(Section~\ref{an:sec:impl}): the analysis is in planar or radial symmetry, for a regular
+solution of the limit problem and pockets of fresh gas whose radius satisfies
+$R-2t\dot R>0$, in particular pockets that do not expand; in the
 method
 that we implement the velocity of the mesh is computed, not
 prescribed, so that $\mu$ is an output and the estimate is a posteriori; the band must be
@@ -657,7 +658,8 @@ $b(\Theta;W)\ge\gamma/4$ where $\frac{1+W}2\le\Theta\le\Theta(s_m)$;
 \]
 \end{enumerate}
 \textbf{(b) Subsolution profile.} For $W\in\mathcal W$, $0\le\kappa\le c\gamma$ and
-$0<\bar q\le1$ there are $s_*=s_*(W)<s_c(W)<1$, continuous in $W$, and
+$0<\bar q\le1$ there are $s_*=s_*(W)<s_c(W)<1$, Lipschitz in $W$ with constant
+$C\log(1/\gamma)$, and
 $\Theta=\Theta^-(s;W)$, defined for $s\ge s_*$, with $\Theta(s)=s+W$ for $s\ge2$,
 \[
 G_+(W)^2\Theta_{ss}-\kappa\Theta_s=b(\Theta;W)\quad\text{for }s_*<s<2,\qquad
@@ -824,7 +826,9 @@ gives $|P_W|\le CP$; similarly $|P_{WW}|\le CP$ a.e.\ ($\partial_W^2\tilde B$ ma
 $\Theta=1+W$). Here $s_W=-1+\int_\Theta^{2+W}P_W/P^2$ and
 $s_{WW}=P_W(2+W)+\int_\Theta^{2+W}(P_{WW}/P^2-2P_W^2/P^3)$, with no dependence on a point
 $\Theta_m$, and the three bounds follow as in (a), using $|P_\Theta|=|\Theta_{ss}|/\Theta_s\le C$.
-At $s=2$, $\Theta_s=1$ and $\Theta_W=1$ from both sides.
+At $s=2$, $\Theta_s=1$ and $\Theta_W=1$ from both sides. Since $s_c(W)$ and $s_*(W)$ are the values
+of $s$ at $\Theta=0$ and $\Theta=-\bar q$, their derivatives are values of $s_W$, which is bounded by
+$C(1+|s|)\le C\log(1/\gamma)$.
 \end{proof}
 
 \subsection{Strict super- and subsolutions and their extensions}
@@ -1532,7 +1536,7 @@ function of $x$), and let $0<L_w\le L$, such that
 \begin{itemize}
 \item[(W1)] $-1+\delta_1\le w_0\le\bar W$, and $D_x^3w_0$, $\partial_t\nabla w_0$, $\partial_t^2w_0$ are
 bounded;
-\item[(W2)] $x\cdot\nabla w_0+2t\,\partial_tw_0\ge0$ in $\{|x|\le L_w\}\times(0,T^*]$.
+\item[(W2)] $x\cdot\nabla w_0+2t\,\partial_tw_0\ge0$ in $\{|x|\le L_w\}\times[0,T^*]$.
 \end{itemize}
 Condition (W2) says that $\lambda\mapsto w_0(\lambda x,\lambda^2t)$ is nondecreasing while $(\lambda x,\lambda^2t)$ stays
 in that set; it is the monotonicity in \eqref{q:eq:mono}, in the region where it will be
@@ -1631,8 +1635,13 @@ method itself the estimate is a posteriori. See Section~\ref{an:sec:impl}.
 $v$ of the limit problem is assumed to be regular; (V2) includes compatibility conditions
 on the data at $t=0$. The radial self-similar solutions of
 Section~\ref{sec:selfsimilar}, for which $w_0$ is constant, satisfy (V1), (V2) on $[0,T^*]$ for
-every $T^*$ smaller than their extinction time, with $R-2t\dot R=R_*T/\sqrt{T-t}$, where
-$R_*\sqrt{T-t}$ is the radius. Functions $w_0$ that satisfy (W1), (W2) are easy
+every $T^*$ smaller than their extinction time $T_e$: their radius is $\varrho\sqrt{T_e-t}$, so
+that $R-2t\dot R=\varrho\,T_e/\sqrt{T_e-t}$. They also give an example with a non-constant
+perturbation: if $V$ is the self-similar solution for a constant $\bar w$, continued to
+$r>R(t)$ by the same formula, and $b<0$ is small, then $w_0=\bar w+b\,V$ is caloric, equals
+$\bar w$ on the free boundary, so that $V$ solves \eqref{eq:P} with this $w_0$, and satisfies
+(W1), (W2), because $x\cdot\nabla V+2t\,V_t\le0$; only the zero-flux condition at $|x|=L$ fails.
+Functions $w_0$ that satisfy (W1), (W2) and that condition are also easy
 to give: for $N=3$, $w_0=\bar w-b\,e^{-k^2t}\sin(kr)/(kr)$ with $b>0$ and $\tan(kL)=kL$ has zero
 flux at $r=L$ and satisfies (W2) with $L_w=\pi/k\approx0.7\,L$. In a bounded domain (W2) is not
 inherited from $t=0$, so it is a condition for all times. Finally, when $w_0$ is constant
@@ -1657,7 +1666,8 @@ a subscript $j$. Unless otherwise stated, $C,c$ denote constants that depend onl
 quantities listed in the theorem. The discrete $W_h$ is not $\ve w_0$, but it is close to it.
 
 \begin{lemma}\label{cv:lem:heat}
-Assume (W1) and (M1). Then
+Let $w_0$ and the initial data of the scheme be as in Section~\ref{cv:sec:main}, and
+assume (W1) and (M1). Then
 \[
 \varpi:=\max_{t_n\le T}\max_j\Big|\frac{W^n_{h,j}}\ve-w_0(x^n_j,t_n)\Big|\le C_wT\,(\Delta t+h_c),
 \]
@@ -1837,7 +1847,8 @@ second one the variation there of $s_m(w_0)$, $s_c(w_0)$, $s_*(w_0)$, whose deri
 respect to $W$ are bounded by $C\log(1/\gamma)$, and that of $\Theta^\pm(s;w_0)$ through $w_0$, relative
 to $\Theta^\pm_s$. By
 \eqref{cv:eq:hyp}, which implies $\Delta t\log(1/\ve)\le c_0$, $\zeta$ is as small as we wish if
-$c_0$ is small (depending on $a$); in particular $\zeta\le\min\{\frac14,c_e\}/2$, and then, by
+$c_0$ is small (depending on $a$); in particular $\zeta\le\min\{\frac14,c_e\}/2$ and
+$e^{C\zeta}\le2$ for the constants $C$ of (iv) and of Lemma~\ref{q:lem:inner}(ii), and then, by
 (iv) and Lemma~\ref{q:lem:inner}(ii), $\Theta_s$ varies by a factor at most $2$ on these
 evaluation points; moreover
 $\Delta t\,\mu'^2\le\ve$ there (note that $\mu\le v_{\max}+\sup|\dot R|$ by (M1), so $\mu'$ is
@@ -1864,7 +1875,7 @@ monotone near the front, $\omega\ge\frac12$ if $s'<s_m$ and $\omega\le\frac12$ i
 \smallskip
 (a) \emph{Band nodes with $-2S_1\le s'<s_m$.} By (i), (v) and (iv),
 \[
-\frac{\mathcal V'-\mathcal V_j}{\Delta t}\ge\Theta_s'\dot{\tilde v}'-C\Big(\frac{\Delta t\,\mu'^2}\ve+\big(\ve+\Delta t\big)\log\frac1\ve\Big)\Theta_s'
+\frac{\mathcal V'-\mathcal V_j}{\Delta t}\ge\Theta_s'\dot{\tilde v}'-C\Big(\frac{\Delta t\,\mu'^2}\ve+\big(\ve+\Delta t(1+\mu')\big)\log\frac1\ve\Big)\Theta_s'
 \ge\Theta_s'\dot{\tilde v}'-C\,\Theta_s' .
 \]
 By (ii), $|v_n(\mathcal V_x'-D\mathcal V')|\le C\frac{h_f}\ve\Theta_s'$; and by \eqref{cv:eq:Vxx}, since
@@ -1946,11 +1957,12 @@ along the path, $s$ changes by at most
 $\zeta+C\Delta t|s'|\le\zeta+|s'|/2$ on the evaluation points, and where $d>r_1$ we have
 $s\le-\delta_0r_1/(2\ve)$. For the latter by Lemma~\ref{q:lem:ext}(i), if $C_b$ is large. There
 $\Theta$, $\Theta_s$ and $\Theta_{ss}$ are at most $Ce^{\lambda_0s}\le Ce^{-\lambda_0S_1}$, and the derivatives of $\Theta$ with
-respect to $W$, which by Lemma~\ref{q:lem:inner}(ii) are at most $C(1+|s|)^2e^{\lambda_0s}$, are
-multiplied by $\ve$ in \eqref{cv:eq:Vder}; so by the mean
+respect to $W$ are at most $C(1+|s|)^2e^{\lambda_0s}$ by Lemma~\ref{q:lem:inner}(ii), so that
+$|\mathcal P_x|+|\mathcal P_t|\le CS_1^2e^{-\lambda_0S_1}$ in \eqref{cv:eq:Vder}, without the factor $\ve^{-1}$ of
+the terms with $\Theta_{ss}$; so by the mean
 value theorem, (ii), (v) and
 $|\dot x_j|\le v_{\max}$ the terms of $\Lop_0[\mathcal V]^n_j$ are bounded by
-$C\ve^{-1}e^{-\lambda_0S_1}+C\ve S_1^2e^{-\lambda_0S_1}\le a_0$ if $C_S$ is large, while, by \eqref{cv:eq:split},
+$C\ve^{-1}e^{-\lambda_0S_1}+CS_1^2e^{-\lambda_0S_1}\le a_0$ if $C_S$ is large, while, by \eqref{cv:eq:split},
 $f_\ve(V_j)(\mathcal V'+\ve^2\tilde q)\ge f(\Theta_j+\ve\tilde q-W_{h,j}/\ve)\,\tilde q\ge2a_0$, because
 $-W_{h,j}/\ve\le1-\delta_1+\varpi$. Within a distance
 $\varrho_L/4$ of $x=L$ the function $\tilde v$ is constant, by the proof of Lemma~\ref{q:lem:ext}
@@ -1975,7 +1987,8 @@ $Z'=\mathcal V_1'$, and $Z\ge\mathcal V_1$ elsewhere, so that, again by \eqref{e
 evaluation points have $s\ge\frac32$: near the front by the choice of $\zeta$, and at a distance
 $d\ge C\ve\log(1/\ve)$ from it because there $s'\ge\delta_0\min\{d,r\}/\ve$ and, as in
 Step~5(d), by Gronwall's inequality $s$ varies by at most $\zeta+C\Delta t\,s'\le\zeta+s'/2$ on
-the evaluation points. There $\mathcal V_1=\tilde u+\ve w_0+\ve g$ with $g=\Theta-s-w_0\ge0$, and $g$
+the evaluation points; for the nodes outside the band, whose stencils are not uniform,
+the evaluation points lie in $\{\tilde u\ge2\ve\}$ if $C_b$ is large, as in Step~5(c). There $\mathcal V_1=\tilde u+\ve w_0+\ve g$ with $g=\Theta-s-w_0\ge0$, and $g$
 vanishes at $(x',t_{n+1})$. Hence $\Lop_0[\ve g]^n_j\le0$ by \eqref{eq:peclet}, so
 $\Lop_0[\mathcal V_1]^n_j\le\Lop_0[\tilde u]^n_j+\ve\Lop_0[w_0]^n_j\le0$ by (iii), and the reaction term
 vanishes because $(\underline V_j+W_{h,j})/\ve\ge\Theta_j\ge s_j+w_{0,j}$, so that
@@ -2013,7 +2026,8 @@ $(\dot{\tilde v})^+$ in \eqref{cv:eq:rel} and by the variation of $w_0$ along th
 Step~5(a), and $\varpi'\Theta'\le C\varpi'\Theta_s'$ because $\Theta^-_s\ge c\,\Theta^-$ where $\Theta^-\ge0$. Where
 $\Theta'<0$, $|f(\underline\Theta_j-W_{h,j}/\ve)-f(\Theta'-w_0')|\le L_f(|\underline\Theta_j-\Theta'|+\varpi')$ and
 $|\Theta'|\le\ve\tilde q$, so that
-$f(\underline\Theta_j-W_{h,j}/\ve)\Theta'\le b(\Theta';w_0')+L_f\big(|\Theta_j-\Theta'|+\varpi'\big)\ve\tilde q$. Where the stencil meets
+$f(\underline\Theta_j-W_{h,j}/\ve)\Theta'\le b(\Theta';w_0')+L_f\big(|\Theta_j-\Theta'|+\varpi'\big)\ve\tilde q$, and
+$|\Theta_j-\Theta'|\le C\zeta\,\Theta_s'$ goes into the term with $C_2$. Where the stencil meets
 $\{\Theta<0\}$ we have $\frac K{16}\Theta_s'\ge c\sqrt\gamma\ge C(\delta+\ve\log\frac1\ve+\varpi')$ for $c_0$ small
 (depending on $a$), because
 $\delta+\ve\log\frac1\ve+\varpi'\le C(a+1)\mathcal E$ and $\gamma=c_1c\,a\mathcal E$. Hence $\Lop[\underline V]^n_j\le0$ if $C_K$ is large.
@@ -2329,10 +2343,9 @@ u_0=a\,(1-r^2/R_0^2)^+,\quad R_0=2,
 with $a=\sqrt{2M(w_0(R_0,0))}\,R_0/2$,
 until the radius halves. In both cases $w_0$ has zero flux at the ends of the domain and
 the data satisfy the free boundary condition at $t=0$; in the second one $w_0$
-satisfies the monotonicity condition \eqref{q:eq:mono} in a neighbourhood of the pocket,
-so that this example is in the setting of Theorem~\ref{q:thm:rate} as long as the
-limit problem has a regular classical solution, which is known for short times
-(Remark~\ref{q:rem:rate}). This $w_0$ also satisfies (W1) and (W2) of
+is monotone under parabolic dilations in a neighbourhood of the pocket, which is the
+condition \eqref{q:eq:mono} of Theorem~\ref{q:thm:rate} (stated there in the whole space):
+it satisfies (W1) and (W2) of
 Section~\ref{cv:sec:main}, with $L_w=\pi/k\approx4.2$, so that it is of the kind considered in
 Theorem~\ref{cv:thm:main}. Along the free
 boundary $w_0$ goes from $0.70$ to $0.36$ and back to $0.45$ in the planar case, and
@@ -2504,7 +2517,8 @@ On the numerical side, the linearly implicit scheme (S) satisfies a discrete
 comparison principle for every time step and every admissible mesh, and the barriers
 of the rate theorem, with a dilation that depends on time and a damping proportional
 to the truncation errors of the layer, are discrete barriers. For data in planar or
-radial symmetry, a perturbation $w_0$ that is monotone under parabolic dilations, and band
+radial symmetry, a regular solution whose radius satisfies $R-2t\dot R>0$, a perturbation
+$w_0$ that is monotone under parabolic dilations, and band
 meshes with prescribed velocities, the fully discrete solution
 converges to the solution of the free boundary problem with the bound
 $C(\ve\log\frac1\ve+\frac{h_f}\ve+h_c+\Delta t+\mu\min\{1,\frac{\Delta t}\ve\})$
