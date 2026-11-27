@@ -1,0 +1,6 @@
+# Exact versions with which the results stored in results/ and the figures in
+# figures/ were produced (Python 3.13). requirements.txt gives the minimal versions.
+numpy==2.5.3
+scipy==1.18.1
+matplotlib==3.11.2
+pytest==9.1.1

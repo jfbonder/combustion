@@ -1,9 +1,14 @@
 """Example 1: a planar travelling wave with the ALE scheme.
 
-Starts from the exact travelling wave Phi_eps of (P_eps) and compares the
-computed solution with the exact one at the final time. Runtime: a few seconds.
+Starts from the exact travelling wave Phi_eps of (P_eps) (w0 = 0, eps = 0.002,
+h_f = eps/16, dt = 0.02 = 10 eps) and prints the computed speed, the sup error
+against the exact solution at the final time t = 4, and the cost (nodes, steps,
+remeshings, tridiagonal solves).
 
-Run from numerics/:  python -m examples.ex1_travelling_wave
+Not an item of the paper; it is a small version of the experiments of
+Section S1 of the supplement (experiments/paper/tw_error.py).
+
+Run from numerics/:  python -m examples.ex1_travelling_wave      (about 2 s)
 """
 
 import numpy as np
@@ -31,6 +36,7 @@ print(f"max |U - Phi_eps| at t = {T}: {err:.2e}")
 # The speed error (here about -2e-4) is dominated by "lattice pinning": the front
 # stays at a fixed position inside a band cell (here exactly on a node, since
 # x0 is a multiple of h_f), and the speed depends on that position with an
-# amplitude O((h_f/eps)^2); see the paper, Section 7, Figure D3.
+# amplitude O((h_f/eps)^2); see the supplement, Section S1 (figure
+# D3_phase_pinning.png).
 print(f"{x.size} nodes, {res.n_steps} steps of size {dt}, {res.n_remesh} remeshings, "
       f"{res.n_solves} tridiagonal solves")

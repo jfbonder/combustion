@@ -1,10 +1,15 @@
 """Example 2: a shrinking radial flame, compared with the limit problem.
 
 Initial temperature u0(r) = a (1 - r^2/R0^2)^+ in N = 2 dimensions, with
-w0 = 0.5. Solves (P_eps) with the ALE scheme and the free boundary problem (P)
-with the front-fixing solver, and compares the fronts. Runtime: ~20 s.
+w0 = 0.5. Solves (P_eps) with the ALE scheme (eps = 0.005, dt = 2.5e-4) and
+the free boundary problem (P) with the front-fixing solver up to t = 0.4, and
+prints the difference between the two fronts, after adding the distance
+eps/sqrt(2M) between the level set {u = eps} and the free boundary.
 
-Run from numerics/:  python -m examples.ex2_radial_vs_limit
+Not an item of the paper; it is one case of the comparison of Section 6.2
+(experiments/paper/limit_examples.py, group C1), with other eps and dt.
+
+Run from numerics/:  python -m examples.ex2_radial_vs_limit      (about 3 s)
 """
 
 import numpy as np

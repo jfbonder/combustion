@@ -2,10 +2,13 @@
 
 Installs f(s) = ((1 - s)^+)^2 (Lipschitz, nonincreasing, positive for s < 1,
 zero for s >= 1); M(w0) is then computed by quadrature. Computes the
-travelling wave speed of (P_eps) by shooting and by the ALE scheme, and the
-limit speed sqrt(2 M)/A. Runtime: a few seconds.
+travelling wave speed of (P_eps) by shooting and by the ALE scheme (eps = 0.01
+and 0.002, dt = 0.02), and the limit speed sqrt(2 M)/A. The default rate is
+restored at the end.
 
-Run from numerics/:  python -m examples.ex3_custom_reaction
+Not an item of the paper (all its experiments but one use f(s) = (1 - s)^+).
+
+Run from numerics/:  python -m examples.ex3_custom_reaction      (about 3 s)
 """
 
 import numpy as np
