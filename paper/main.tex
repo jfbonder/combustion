@@ -28,6 +28,8 @@ Universidad de Buenos Aires, Ciudad Universitaria, (1428) Buenos Aires, Argentin
 
 \date{\today}
 
+\subjclass[2020]{Primary 35R35, 35B25, 65M12; Secondary 35K57, 80A25, 65M08, 65M50}
+
 \begin{document}
 
 \begin{abstract}
@@ -116,7 +118,7 @@ with strict super- and subsolutions; none of them gives a rate. The same is true
 the finer analysis of the limit \cite{Weiss2003,PetrosyanYip2008,WeissZhang2009} and of
 the recent regularity theory for singular perturbation problems of this type, in the
 parabolic \cite{RicarteTeymurazyanUrbano2019,AudritoSanzPerela2024} and in the elliptic
-case \cite{AudritoSerra2022}: the estimates are
+case \cite{AudritoSerra2022,AraujoRicarteTeixeira2017}: the estimates are
 uniform in $\ve$, but they do not measure the distance to the limit. For travelling waves, whose
 high activation energy limit is studied in
 \cite{BerestyckiNicolaenkoScheurer1985,Glangetas1992}, quantitative
@@ -157,76 +159,50 @@ the inner profiles with respect to $w^\ve/\ve$, and is not needed when $w^\ve/\v
 constant.
 
 Our second result is the convergence of a fully discrete scheme to the free boundary
-problem (Sections~\ref{sec:method} and \ref{sec:analysis}). The barriers of the rate
-theorem are explicit, and, evaluated on a mesh, they are discrete super- and subsolutions
-of a scheme that satisfies a discrete comparison principle. For radial
-data (in dimension $1$, $2$ or $3$), a perturbation $w_0(x,t)$ that need not be constant, and
-meshes with a fine band that moves with a prescribed
-velocity, we
-prove that the fully discrete solution $U$ converges to the classical solution $v$ of
-\eqref{eq:P}, with
+problem (Sections~\ref{sec:method} and \ref{sec:analysis}). The idea is simple: the
+barriers of the rate theorem are explicit functions, so they can be evaluated on a
+mesh, and if the scheme has a discrete comparison principle they can be used as discrete
+barriers. The scheme that we use is linearly implicit in time: the reaction rate is
+taken at the previous time level and the reactant at the new one. When $f$ is
+nonincreasing this gives a comparison principle for every time step, and the error
+analysis reduces to the construction of barriers. Since the reaction takes place in a
+layer of width $O(\ve)$, the mesh has a fine band, of size $h_f$, around the front, and
+is coarse, of size $h_c$, elsewhere; the band moves with the front.
+
+For radial data (in dimension $1$, $2$ or $3$), a perturbation $w_0(x,t)$ that need not be
+constant, and a band that moves with a prescribed velocity, we prove that the discrete
+solution $U$ converges to the classical solution $v$ of \eqref{eq:P}, with
 \[
 |U-v|\le C\Big(\ve\log\frac1\ve+\frac{h_f}\ve+h_c+\Delta t+\mu\,\min\Big\{1,\frac{\Delta t}\ve\Big\}\Big),
 \]
-where $h_f$ and $h_c$ are the mesh sizes in the band and outside it, and $\mu$ is the
-largest difference between the velocity of the band and that of the
-free boundary (Theorem~\ref{cv:thm:main}); the time step is restricted by
-$\Delta t\lesssim\ve$ divided by the bound. Thus, for time steps of order $\ve$, the layer has to be
-resolved, $h_f\ll\ve$, and this is enough. On a mesh that follows the front the
-time step enters as $\Delta t$; on a mesh that does not move it enters as $\Delta t/\ve$, and
-indeed the computed front lags, by about $0.23\,(\Delta t/\ve)T$ for a travelling wave. For
-a travelling wave on a mesh that translates rigidly with the wave, the solution is steady
-in the frame of the mesh and the time step does not appear in the error at all
-(Theorem~\ref{an:thm:ale}). These results have limitations, which we state clearly
-(Section~\ref{an:sec:impl}): the analysis is in planar or radial symmetry, for a regular
-solution of the limit problem and pockets of fresh gas whose radius satisfies
-$R-2t\dot R>0$, in particular pockets that do not expand; in the
-method
-that we implement the velocity of the mesh is computed, not
-prescribed, so that $\mu$ is an output and the estimate is a posteriori; the band must be
-wider than the bound itself, and remeshing is not covered; and the terms $h_f/\ve$ and
-$h_c$ are not sharp, the experiments showing errors of order $(h_f/\ve)^2$ and $h_c^2$.
+where $\mu$ is the largest difference between the velocity of the band and that of the
+free boundary (Theorem~\ref{cv:thm:main}). Thus it is enough to resolve the layer,
+$h_f\ll\ve$. The time step, instead, depends on the mesh: if the mesh does not move it
+enters as $\Delta t/\ve$, and indeed the computed front lags, by about
+$0.23\,(\Delta t/\ve)T$ for a travelling wave, while on a mesh that follows the front it
+enters as $\Delta t$. For a travelling wave on a mesh that moves with it the time step
+does not appear at all (Theorem~\ref{an:thm:ale}). In the code the velocity of the band
+is computed, not prescribed, so that $\mu$ is only known a posteriori; this and the
+other differences between the theorem and the method, as well as the terms of the bound
+that are not sharp, are discussed in Section~\ref{an:sec:impl}.
 
-The scheme is linearly implicit in time and satisfies a discrete comparison
-principle for every time step, on every mesh that satisfies a cell P\'eclet condition,
-which reduces the error analysis to the construction of barriers. The mesh has a fine
-band, of size $h_f$, on the reaction layer, of width $O(\ve)$, and it is coarse, of size
-$h_c$, elsewhere. In the method the
-band travels with the front in an arbitrary Lagrangian--Eulerian (ALE) formulation with
-an implicitly determined velocity, so the mesh is refined ahead of the flame and
-coarsened behind it.
+Moving and adaptive meshes for thin flame fronts are classical (see
+\cite{HuangRussell2011} and the references therein), but they work at a fixed
+activation energy, and we are not aware of error estimates for them that are uniform in
+$\ve$, or that measure the distance to the limit problem. The closest results that we
+know are those for the Allen--Cahn and double obstacle approximations of mean curvature
+flow \cite{NochettoVerdi1996,NochettoVerdi1997}, where fully discrete schemes are shown
+to converge to the limit interface, with rates. Theorem~\ref{cv:thm:main} is a result of
+this kind for the present problem.
 
-Adaptive and moving meshes for thin combustion fronts have a long history
-\cite{DwyerSanders1978,Smooke1982,BaylissGottliebMatkowskyMinkoff1989,FurzelandVerwerZegeling1990,HuangRussell2011},
-and so has the computation of the flame speed as an unknown of a problem posed in the
-frame of the flame \cite{SmookeMillerKee1983,BeynThummler2004}; these methods work at
-a fixed activation energy, and we are not aware of error estimates for them that are
-uniform in $\ve$, or of estimates for the convergence to the free boundary problem.
-Parameter-uniform methods on layer-adapted meshes are well developed
-for layers at known positions \cite{RoosStynesTobiska2008}, and for interior layers that
-move along a curve determined by the reduced problem \cite{GraciaORiordan2012a}; here the
-position of the layer is part of the solution. The numerical literature on the limit
-problem concerns its elliptic (Bernoulli) analogue
-\cite{AltCaffarelli1981,BerestyckiCaffarelliNirenberg1990}; see
-\cite{FlucherRumpf1997,HarbrechtMitrou2014,ShenDaiHuang2024}. The closest results are
-those for the Allen--Cahn and double obstacle approximations of mean curvature flow
-\cite{NochettoPaoliniVerdi1994,NochettoVerdi1996,NochettoVerdi1997,FengProhl2003}: in
-\cite{NochettoVerdi1996,NochettoVerdi1997} fully discrete schemes are shown to converge
-to the limit interface, with rates, when $h^2$ and $\Delta t$ are bounded by powers of
-$\ve$, and Theorem~\ref{cv:thm:main} is a result of this kind for the present problem.
-Travelling waves of a singularly perturbed (phase relaxation) model and of its
-discretization in time are compared in \cite{NochettoPaoliniVerdi1994a}.
-
-Both results rely on exact solutions, collected in Section~\ref{sec:exact}: the
-travelling waves of \eqref{eq:Peps}, for which we obtain the first-order correction of
-the flame speed with a rigorous remainder (Proposition~\ref{prop:speed}), and the
-radial self-similar solutions of \eqref{eq:P}. In Section~\ref{sec:experiments} we compare
-\eqref{eq:Peps} with a front-fixing solver for \eqref{eq:P} for general data, including a
-perturbation $w_0$ that is not constant, display the dependence of the limit on $w_0$,
-test the scheme in the setting of the convergence theorem, and follow
-the approach to self-similar extinction of \cite{GalaktionovHulshofVazquez1997}. The
-experiments on the discretization error for travelling waves and on the cost of the
-method are summarized there, and reported in full in the supplementary material.
+Both results use exact solutions, which we collect in Section~\ref{sec:exact}: the
+travelling waves of \eqref{eq:Peps}, for which we also obtain the first-order correction
+of the flame speed (Proposition~\ref{prop:speed}), and the radial self-similar
+solutions of \eqref{eq:P}. In Section~\ref{sec:experiments} we compare \eqref{eq:Peps}
+with the limit problem, also for a perturbation $w_0$ that is not constant, and test the
+scheme; the experiments on travelling waves and on the cost of the method are summarized in
+Section~\ref{sec:exp:tw} and reported in full in a supplementary document available
+with the code.
 
 \paragraph{Code availability} The Python code for all the schemes of this paper, and
 the scripts that produce every figure and table, are available at
@@ -442,27 +418,13 @@ finite width of the reaction zone; it is positive, and for $f(s)=(1-s)^+$ it equ
 $(1-\kappa_*)(1+w_0)$. Hence, for this $f$, the first-order correction is positive for
 $w_0<w_0^*=\frac1{\kappa_*}-1\approx0.564$ and negative for $w_0>w_0^*$; the change of sign
 only reflects the choice of $A$ as the reference temperature rise.
-Table~\ref{tab:speedcoef} compares the prediction with the shooting method. The
-differences are $0.10\,\ve$, $0.12\,\ve$ and $0.65\,\ve$ for the three values of $w_0$, in
-agreement with the remainder $O(\ve^2)$ of the proposition. The values $\ve=0.1$ and
+For $f(s)=(1-s)^+$, $A=1$ and $w_0=-0.5$, $0$, $1$ we have compared the prediction with
+the speed obtained by shooting, for $\ve$ from $0.1$ to $10^{-4}$: the differences
+between $(c_\ve-c_0)/\ve$ and its limit value are $0.10\,\ve$, $0.12\,\ve$ and
+$0.65\,\ve$ respectively, in agreement with the remainder $O(\ve^2)$ of the proposition. The values $\ve=0.1$ and
 $0.05$ correspond to Zeldovich numbers of $10$ and $20$, which are realistic; there $c_0$
 differs from $c_\ve$ by $2.5$ to $7\%$ and by $1.3$ to $3.4\%$ respectively, and the
 first-order correction reduces these differences to at most $0.5\%$ and $0.12\%$.
-
-\begin{table}[ht]
-\centering
-\begin{tabular}{rcccccc}
-\toprule
-$w_0$ & Prop.~\ref{prop:speed} & $\ve=0.1$ & $\ve=0.05$ & $\ve=10^{-2}$ & $\ve=10^{-3}$ & $\ve=10^{-4}$\\
-\midrule
-$-0.5$ & $+0.138883$ & $+0.149534$ & $+0.144003$ & $+0.139876$ & $+0.138982$ & $+0.138893$\\
-$0$    & $+0.208290$ & $+0.221355$ & $+0.214589$ & $+0.209515$ & $+0.208412$ & $+0.208303$\\
-$1$    & $-0.454725$ & $-0.392476$ & $-0.422891$ & $-0.448230$ & $-0.454072$ & $-0.454660$\\
-\bottomrule
-\end{tabular}
-\caption{$(c_\ve-c_0)/\ve$ for $f(s)=(1-s)^+$ and $A=1$: the limit value given by
-Proposition~\ref{prop:speed}, and the values obtained by shooting.}\label{tab:speedcoef}
-\end{table}
 
 \subsection{The radial self-similar solution}\label{sec:selfsimilar}
 Caffarelli and V\'azquez \cite{CaffarelliVazquez1995} showed that, for $w_0$ constant,
@@ -485,16 +447,14 @@ h''+\Big(\frac{N-1}r-\frac r2\Big)h'+\frac12h=0.
 \end{equation}
 The change of
 variables $z=r^2/4$ turns \eqref{eq:h} into Kummer's equation
-$zh_{zz}+(\frac N2-z)h_z+\frac12h=0$, so the solutions with $h'(0)=0$ are
+$zh_{zz}+(\frac N2-z)h_z+\frac12h=0$, so that a solution with $h'(0)=0$ is
 \[
 h(r)=\beta\,{}_1F_1\big(-\tfrac12;\tfrac N2;\tfrac{r^2}4\big),
 \qquad
 {}_1F_1(a;b;z)=\sum_{k=0}^\infty\frac{(a)_k}{(b)_k}\frac{z^k}{k!},
 \]
 where ${}_1F_1$ is Kummer's confluent hypergeometric function,
-$(a)_k=a(a+1)\cdots(a+k-1)$ is the Pochhammer symbol, and $\beta$ is a constant (the
-second solution of Kummer's equation is singular at $z=0$ when $N\ge2$, and odd in $r$
-when $N=1$). Since $-1<-\frac12<0$, ${}_1F_1(-\frac12;\frac N2;\cdot)$ has exactly one
+$(a)_k=a(a+1)\cdots(a+k-1)$ is the Pochhammer symbol, and $\beta$ is a constant. Since $-1<-\frac12<0$, ${}_1F_1(-\frac12;\frac N2;\cdot)$ has exactly one
 positive zero $z_N$ \cite[\S13.9]{DLMF}. Then $h>0$ on $[0,R)$ with $R=2\sqrt{z_N}$, and
 $\beta>0$ is fixed by the free boundary condition $h'(R)=-\sqrt{2M}$. Numerically
 $R=1.8483$, $2.5139$ and $3.0040$ for $N=1,2,3$. The free boundary is the sphere of
@@ -2433,8 +2393,8 @@ $N=2,3$ and $\ve\in\{0.01,0.002,0.001\}$.}\label{fig:B4}
 
 For travelling waves the exact solution $\Phi_\ve$ of \eqref{eq:Peps} is available, and the
 discretization error can be separated from the error of the singular limit. We summarize
-here the results; the details, with figures and tables, are in the supplementary
-material.
+here the results; the details, with figures and tables, are in a supplementary
+document available with the code.
 
 \emph{Meshes that follow the front.} Starting from $U^0=\Phi_\ve$ with $w_0=0$, $A=1$ and
 $h_f=\ve/16$, the method of Section~\ref{sec:ale} gives, up to $T=8$, a sup error
@@ -2557,10 +2517,8 @@ that follows the flame, or with a moving mesh method
 
 \section*{Use of AI tools}
 
-The problem and the main ideas of this work are due to the author. The work was prepared
-with the assistance of Claude Code (Anthropic), an AI coding and writing assistant. The
-tool wrote all the numerical code, ran the simulations and produced the figures and
-tables; it assisted in the development and writing of the proofs, in drafting and
+The problem and the main ideas and the original draft of this work are due to the author. The work was prepared
+with the assistance of Claude Code (Anthropic). The tool wrote all the numerical code, ran the simulations and produced the figures and tables; it assisted in the development and writing of the proofs, in drafting and
 revising the manuscript, and in searching the literature. The author reviewed and
 verified all the statements, proofs, computations and references, and takes full
 responsibility for the content of the article.

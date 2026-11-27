@@ -19,6 +19,7 @@ the flame front.
 |---|---|
 | [`paper/main.pdf`](paper/main.pdf), `paper/main.tex` | The article. |
 | [`paper/supplement.pdf`](paper/supplement.pdf), `paper/supplement.tex` | Supplementary material: experiments on travelling waves and on the cost of the method. |
+| `paper/old_versions/` | The version of the article before submission (not maintained; its figure paths assume `paper/`). |
 | `paper/references.bib` | Bibliography. |
 | [`numerics/`](numerics/README.md) | The Python package `combustion1d`, examples, tests, and the scripts, data and figures of every numerical experiment of the article. |
 
