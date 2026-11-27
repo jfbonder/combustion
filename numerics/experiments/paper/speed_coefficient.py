@@ -4,7 +4,7 @@ flame speed.
 Compares (c_eps - c_0)/eps, with c_eps the exact speed of the travelling wave
 of (P_eps) (ODE shooting, combustion1d.exact.tw_speed_eps), against the
 prediction of Proposition prop:speed (Proposition 2.2 in the draft in paper/;
-the header printed by this script says "Prop 2.1", its number in an earlier
+the header printed by this script says "Prop 2.2", its number in an earlier
 draft),
 
     c_eps = c_0 [1 + (eps/A)(1 - kappa (1 + w0))] + O(eps^2),
@@ -32,7 +32,7 @@ KAPPA = (3.0 * np.sqrt(3.0) - 2.0) / 5.0
 
 def main():
     rows = []
-    print(f"{'w0':>6} {'Prop 2.1':>11}" + "".join(f"{'eps=%g' % e:>12}" for e in EPS))
+    print(f"{'w0':>6} {'Prop 2.2':>11}" + "".join(f"{'eps=%g' % e:>12}" for e in EPS))
     for w0 in W0S:
         c0 = tw_speed_limit(A, w0)
         pred = c0 / A * (1.0 - KAPPA * (1.0 + w0))
