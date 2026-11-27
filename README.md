@@ -12,6 +12,8 @@ This repository contains:
 
 `paper/referato_editorial.md` is an internal adversarial referee report on an earlier
 draft, and `paper/respuesta_referato.md` the point-by-point response (both in Spanish).
+`paper/supplement.tex` is the supplementary material (experiments on travelling waves and
+on the cost of the method); compile `main.tex` first, since it uses its labels.
 
 ## Tesis doctoral
 

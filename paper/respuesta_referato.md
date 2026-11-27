@@ -104,3 +104,15 @@ La verificación se hizo solo con resultados de búsqueda: no se pudo abrir ning
 - **Largo:** 38 páginas. No verifiqué el límite de SINUM. Si hay que acortar, los candidatos son la subsección de dependencia en w₀, el detalle del pinning y parte de la figura de transitorios.
 - **Petrosyan 2002** y las referencias de la sección 5: leerlas y ajustar las dos frases que dependen de ellas.
 - **Experimento de quenching:** ya no está en el artículo; decidir si se conserva en el repositorio.
+
+## 7. Reorientación posterior: *Interfaces and Free Boundaries*
+
+Después de escrita esta respuesta se decidió apuntar a *Interfaces and Free Boundaries* en lugar de SINUM, porque la parte numérica es esencialmente unidimensional. Cambios respecto de lo descripto arriba:
+
+- **Eje del artículo:** el resultado principal es la tasa del límite singular; el segundo, la convergencia de un esquema totalmente discreto al problema de frontera libre. Título, abstract e introducción se reordenaron en ese sentido.
+- **Pruebas:** las de los Lemas 3.1 y 3.3 volvieron al cuerpo del artículo (ya no hay apéndice).
+- **Sección 6:** se reordenó (comparación con el problema límite, w₀ no constante, dependencia en w₀, marco del teorema de convergencia, ondas viajeras, perfil autosemejante). El detalle de los experimentos con ondas viajeras (pinning, tamaños de malla, arrastre, retraso en mallas fijas) y la comparación de trabajo–precisión pasaron a `paper/supplement.tex`; en el artículo queda un resumen.
+- **Largo:** 34 páginas el artículo y 5 el suplemento.
+
+Con este destino pesan más los puntos de EDP que quedaron abiertos: M2 (el logaritmo), M3 (Petrosyan 2002) y la existencia de soluciones clásicas para w₀ variable.
+
