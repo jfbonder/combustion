@@ -142,10 +142,11 @@ the position of the front also differs by a quantity of order $\ve$
 an explicit barrier, an inner profile composed with an extension of a strict
 super- or subsolution, whose error does not depend on the strictness. Barriers of
 this type are classical for Allen--Cahn type limits
-\cite{Chen1992,AlfaroHilhorstMatano2008}; to our knowledge this is
-the first rate for the present singular limit beyond travelling waves. The relation
-with the constructions of \cite{Petrosyan2002,FernandezBonderWolanski2004} is discussed
-in Section~\ref{sec:rate}. For the rate we assume that $f$ is nonincreasing and of class
+\cite{Chen1992,AlfaroHilhorstMatano2008}. To our knowledge no rate has been stated for
+the present singular limit beyond travelling waves; for $w^\ve=0$ an upper bound with an
+additional logarithm can be extracted from the construction of \cite{Petrosyan2002}. The
+relation with that construction and with the one of \cite{FernandezBonderWolanski2004}
+is discussed in Section~\ref{sec:rate}. For the rate we assume that $f$ is nonincreasing and of class
 $C^2$ up to $1$, as $f(s)=(1-s)^+$; the second derivative is used only to differentiate
 the inner profiles with respect to $w^\ve/\ve$, and is not needed when $w^\ve/\ve$ is
 constant.
@@ -507,10 +508,20 @@ for the convergence of $u^\ve$ to a classical solution
 (Theorem~\ref{q:thm:rate}).
 
 \emph{Relation with previous constructions.} For $w^\ve=0$ the uniqueness of the limit
-for starshaped data is due to Petrosyan \cite{Petrosyan2002}, whose results are
-qualitative; as observed in \cite{FernandezBonderWolanski2004}, the construction of
-approximating supersolutions used there does not extend to $w^\ve\ne0$ without further
-conditions on $f$.
+for starshaped data is due to Petrosyan \cite{Petrosyan2002}. There
+\cite[Proposition~2.5]{Petrosyan2002} the solutions of \eqref{eq:Peps} are compared with
+an explicit supersolution, the composition of the strict supersolution $\tilde u$ with the
+solution of the one-dimensional equation in which the reaction term is cut off below a
+level $a\ve$ and multiplied by a constant, so that the profile is constant on the burnt
+side and no extension of $\tilde u$ is needed. The statement is qualitative, but the
+construction can be made quantitative: for a regular strict supersolution with
+strictness $\delta$ one can check that it is a supersolution of \eqref{eq:Peps} when
+$\ve\log(1/\delta)\le c\,\delta$, at distance $O(\ve\log(1/\delta))$ from $\tilde u$, because the
+truncated profile has a length of order $\log(1/\delta)$; with the dilations used in the
+proof of Theorem~\ref{q:thm:rate} this would give the upper bound $u^\ve\le v+C\ve\log(1/\ve)$ in the case
+$w^\ve=0$. Strict subsolutions are not treated in \cite{Petrosyan2002}, and, as observed in
+\cite{FernandezBonderWolanski2004}, the construction does not extend to $w^\ve\ne0$ without
+further conditions on $f$.
 In \cite{FernandezBonderWolanski2004}, following
 \cite{LedermanVazquezWolanski2001}, the approximating function $u^\ve$ equals the strict
 supersolution $\tilde u$ where $\tilde u\ge(1-\theta)\ve$ and solves \eqref{eq:Peps} in the
@@ -519,9 +530,12 @@ $u^\ve$ is a supersolution, that is, that the jump of its gradient across the bo
 the layer has the right sign, is proved for $\ve<\ve_0$ by a blow-up argument by
 contradiction, which gives no information on how $\ve_0$ depends on the strictness
 $\delta$. What is new here is that the explicit barriers of
-Propositions~\ref{q:prop:super} and \ref{q:prop:sub} are super- and subsolutions as soon
+Propositions~\ref{q:prop:super} and \ref{q:prop:sub}, which keep the whole profile and
+are composed with an extension of $\tilde u$ to the burnt region, are super- and
+subsolutions as soon
 as $\ve\le c_*\delta$, with a threshold that is linear in $\delta$ and an error that does
-not depend on $\delta$; this is what produces a rate. With respect to the barriers used
+not depend on $\delta$, for $w^\ve\ne0$ and for subsolutions as well; this is what
+produces the rate, without logarithm in the upper bound. With respect to the barriers used
 for Allen--Cahn type limits \cite{Chen1992,DeMottoniSchatzman1995,AlfaroHilhorstMatano2008},
 where the profile is a function of the signed distance to the interface and the
 strictness is provided by a shift of the interface that grows in time, there are three
@@ -1196,15 +1210,17 @@ $z_\ve=\log(1-\ve/A)/c_\ve=-\ve/\sqrt{2M}+O(\ve^2)$; this shift depends on the l
 defines the front, and it is observed for general data in Section~\ref{sec:limit}.
 \item \emph{Existence of regular classical solutions.} The theorem is conditional on
 the existence of a regular classical solution, which includes the compatibility of the
-data at $t=0$. Local existence of smooth
-solutions for smooth compatible data is proved in \cite{BaconneauLunardi2004} for
-constant $M$; for variable $w_0$ we do not know of an existence result. The radial
+data at $t=0$. Local existence of solutions of class $C^{1+\alpha/2,2+\alpha}$
+up to $t=0$ is proved in \cite[Theorem~2.8]{BaconneauLunardi2004} for free boundary
+conditions of the form $u=g_0(x,t)$, $\partial_nu=g_1(x,t)$ with $g_1\ne\partial_ng_0$, when
+$\partial\Omega_0$ and $u_0$ are of class $C^{3+\alpha}$ and satisfy the compatibility
+conditions; with $g_0=0$ and $g_1=-\sqrt{2M(w_0)}$ this covers \eqref{eq:P}, for constant
+$w_0$ and also for a sufficiently smooth $w_0(x,t)$. Hence, for such data that are in
+addition strictly starshaped, the theorem applies on a short time interval. The radial
 self-similar solutions of Section~\ref{sec:selfsimilar} are
 explicit regular classical solutions that satisfy all the assumptions of the theorem
-on $[0,T^*]$ for every $T^*<T$. Thus the class of solutions to which the theorem is known
-to apply consists of pockets of fresh gas with $w_0$ constant: smooth, compatible, strictly
-starshaped data, for short times, and the self-similar solutions up to any time before
-extinction.
+on $[0,T^*]$ for every $T^*<T$, that is, up to any time before extinction. In all cases
+the fresh region is a bounded pocket.
 \item \emph{The constants.} The constant $C$ depends on $f,\delta_1,\bar W,C_W,C_w,C_0$ and
 $\varrho_0$, on the margins $\delta_0,r,K_0$ of $v$ on $[0,T^*]$, and on the Lipschitz constant
 of $v$ in $(x,t)$ and the diameter of its support, through \eqref{q:eq:vlam}; $\ve_1$
@@ -2112,8 +2128,9 @@ with $a=\sqrt{2M(w_0(R_0,0))}\,R_0/2$,
 until the radius halves. In both cases $w_0$ has zero flux at the ends of the domain and
 the data satisfy the free boundary condition at $t=0$; in the second one $w_0$
 satisfies the monotonicity condition \eqref{q:eq:mono} in a neighbourhood of the pocket,
-so that this example is in the setting of Theorem~\ref{q:thm:rate}, provided that the
-limit problem has a regular classical solution (Remark~\ref{q:rem:rate}). Along the free
+so that this example is in the setting of Theorem~\ref{q:thm:rate} as long as the
+limit problem has a regular classical solution, which is known for short times
+(Remark~\ref{q:rem:rate}). Along the free
 boundary $w_0$ goes from $0.70$ to $0.36$ and back to $0.45$ in the planar case, and
 from $0.30$ to $0.28$ in the radial one (Figure~\ref{fig:I1}); at $t=6$ the planar front
 is at $x=7.50$, while with $w_0$ replaced by its mean value $0.5$ it would be at $7.97$.
