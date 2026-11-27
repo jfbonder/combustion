@@ -179,8 +179,7 @@ a travelling wave on a mesh that translates rigidly with the wave, the solution 
 in the frame of the mesh and the time step does not appear in the error at all
 (Theorem~\ref{an:thm:ale}). These results have limitations, which we state clearly
 (Section~\ref{an:sec:impl}): the analysis is in planar or radial symmetry, for pockets of
-fresh gas, and it assumes a regularity of the solution of the limit problem that is known
-for the self-similar solutions but has not been proved when $w_0$ is not constant; in the
+fresh gas and a regular solution of the limit problem; in the
 method
 that we implement the velocity of the mesh is computed, not
 prescribed, so that $\mu$ is an output and the estimate is a posteriori; the band must be
@@ -1628,14 +1627,12 @@ which is of first order on arbitrary meshes.
 \item \emph{The mesh velocity.} In the theorem the velocities $v_n$ are given. In the
 method of Section~\ref{sec:ale} they are computed, and $\mu$ is an output: for the
 method itself the estimate is a posteriori. See Section~\ref{an:sec:impl}.
-\item \emph{The hypotheses on $w_0$ and $v$.} The theorem is conditional on the existence
-of a solution $v$ with the regularity (V2), which includes compatibility conditions at
-$t=0$. For constant $w_0$ the radial self-similar solutions of
-Section~\ref{sec:selfsimilar} satisfy (V1), (V2) on $[0,T^*]$ for every $T^*$ smaller than
-their extinction time, with $R-2t\dot R=R_*T/\sqrt{T-t}$, where $R_*\sqrt{T-t}$ is the radius. For a
-non-constant $w_0$ we do not know of a solution for which (V2) has been proved (the
-solutions of \cite{BaconneauLunardi2004} are of class $C^{1+\alpha/2,2+\alpha}$), so in that case
-the theorem is a conditional statement. Functions $w_0$ that satisfy (W1), (W2) are easy
+\item \emph{The hypotheses on $w_0$ and $v$.} As usual in error estimates, the solution
+$v$ of the limit problem is assumed to be regular; (V2) includes compatibility conditions
+on the data at $t=0$. The radial self-similar solutions of
+Section~\ref{sec:selfsimilar}, for which $w_0$ is constant, satisfy (V1), (V2) on $[0,T^*]$ for
+every $T^*$ smaller than their extinction time, with $R-2t\dot R=R_*T/\sqrt{T-t}$, where
+$R_*\sqrt{T-t}$ is the radius. Functions $w_0$ that satisfy (W1), (W2) are easy
 to give: for $N=3$, $w_0=\bar w-b\,e^{-k^2t}\sin(kr)/(kr)$ with $b>0$ and $\tan(kL)=kL$ has zero
 flux at $r=L$ and satisfies (W2) with $L_w=\pi/k\approx0.7\,L$. In a bounded domain (W2) is not
 inherited from $t=0$, so it is a condition for all times. Finally, when $w_0$ is constant
@@ -2337,7 +2334,7 @@ so that this example is in the setting of Theorem~\ref{q:thm:rate} as long as th
 limit problem has a regular classical solution, which is known for short times
 (Remark~\ref{q:rem:rate}). This $w_0$ also satisfies (W1) and (W2) of
 Section~\ref{cv:sec:main}, with $L_w=\pi/k\approx4.2$, so that it is of the kind considered in
-Theorem~\ref{cv:thm:main}; we do not know whether the solution has the regularity (V2). Along the free
+Theorem~\ref{cv:thm:main}. Along the free
 boundary $w_0$ goes from $0.70$ to $0.36$ and back to $0.45$ in the planar case, and
 from $0.30$ to $0.28$ in the radial one (Figure~\ref{fig:I1}); at $t=6$ the planar front
 is at $x=7.50$, while with $w_0$ replaced by its mean value $0.5$ it would be at $7.97$.
