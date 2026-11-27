@@ -139,8 +139,9 @@ meshes that are rebuilt around the front and do not move. `dt` defaults to
 **`simulate(u0, w0, eps, L, t_end, N=1, ...)`**: method of lines on the same meshes with
 SciPy's adaptive BDF and an analytic sparse Jacobian (`rtol=1e-5`, `atol=1e-4*eps`).
 Accurate, but not covered by the analysis of the paper, and its number of steps grows
-faster than $1/\varepsilon$. Both Eulerian solvers rebuild the mesh every
-$\min(7.5\,\varepsilon/v_{est},$ `max_dt_remesh`$)$, with `max_dt_remesh = 0.05*t_end` by default.
+faster than $1/\varepsilon$. Both Eulerian solvers rebuild the mesh after every time interval
+`min(7.5*eps/v_est, max_dt_remesh)`, where `v_est` is the measured speed of the front and
+`max_dt_remesh = 0.05*t_end` by default.
 
 All three return a `Result`:
 
