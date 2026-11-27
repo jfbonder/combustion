@@ -184,7 +184,9 @@ print(res.status, "|", res.reason)      # failed | step 1 (t = 0.01): PecletErro
 - Invalid arguments (nonpositive `dt` or `ell0`, an initial datum without a front) raise
   `ValueError`.
 
-Always look at `res.status` before using a result.
+Always look at `res.status` before using a result: the Eulerian solvers return
+`status == "failed"`, without raising, if they find non-finite values when the front
+disappears.
 
 ### Exact solutions and the limit problem
 
